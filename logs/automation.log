@@ -392,3 +392,384 @@ Call log:
 2026-04-11 22:35:44,113 [INFO] web_app_operator: URL入力完了: 19件
 2026-04-11 22:35:44,114 [INFO] web_app_operator: コンテンツ生成開始...
 2026-04-11 22:35:47,239 [INFO] web_app_operator: コンテンツ生成中... (最大5分待機)
+2026-04-11 22:43:41,019 [INFO] __main__: ============================================================
+2026-04-11 22:43:41,019 [INFO] __main__: DOCdemo 自動化フロー 開始
+2026-04-11 22:43:41,020 [INFO] __main__: 開始時刻: 2026-04-11 22:43:41
+2026-04-11 22:43:41,020 [INFO] __main__: ============================================================
+2026-04-11 22:43:41,021 [INFO] spreadsheet_manager: 企業リスト読み込み完了: 147社
+2026-04-11 22:43:41,021 [INFO] spreadsheet_manager: 処理対象企業: 147社 / 全147社
+2026-04-11 22:43:41,021 [INFO] __main__: 処理対象: 1社
+2026-04-11 22:43:41,965 [INFO] web_app_operator: 管理画面にログイン中...
+2026-04-11 22:43:50,696 [INFO] web_app_operator: ログイン成功
+2026-04-11 22:43:50,696 [INFO] __main__: 
+2026-04-11 22:43:50,696 [INFO] __main__: ──────────────────────────────────────────────────
+2026-04-11 22:43:50,696 [INFO] __main__: [1/1] 株式会社Felnis (ステータス: 未処理)
+2026-04-11 22:43:50,697 [INFO] __main__: ──────────────────────────────────────────────────
+2026-04-11 22:43:50,697 [INFO] __main__: Step 1/6: ホームページURL検索...
+2026-04-11 22:43:50,697 [INFO] url_finder: URL検索開始: 株式会社Felnis 公式サイト
+2026-04-11 22:43:55,069 [INFO] url_finder: URL特定成功: 株式会社Felnis -> https://felnis.com
+2026-04-11 22:43:55,070 [INFO] spreadsheet_manager: 企業リスト保存完了: 147社 → C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\data\company_list.csv
+2026-04-11 22:43:55,070 [INFO] __main__:   → URL: https://felnis.com
+2026-04-11 22:43:55,070 [INFO] __main__: Step 2/6: 企業追加...
+2026-04-11 22:43:55,070 [INFO] web_app_operator: 企業追加開始: 株式会社Felnis
+2026-04-11 22:44:09,502 [INFO] web_app_operator: 企業追加完了: 株式会社Felnis (ID: felnis)
+2026-04-11 22:44:09,509 [INFO] spreadsheet_manager: 企業リスト保存完了: 147社 → C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\data\company_list.csv
+2026-04-11 22:44:09,510 [INFO] __main__:   → 企業追加完了 (ID: felnis)
+2026-04-11 22:44:09,510 [INFO] __main__: Step 3/6: リンク抽出 & スクリーンショット...
+2026-04-11 22:44:10,170 [INFO] link_extractor: 解析および画像取得中: https://felnis.com
+2026-04-11 22:44:10,170 [INFO] link_extractor: ページを読み込んでいます...
+2026-04-11 22:44:11,848 [INFO] link_extractor: スクリーンショットを撮影中...
+2026-04-11 22:44:12,116 [INFO] link_extractor: スクリーンショット保存: C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\screenshots\shot_felnis_com_20260411_224409.png
+2026-04-11 22:44:12,117 [INFO] link_extractor: リンクを抽出中...
+2026-04-11 22:44:12,142 [INFO] link_extractor: 抽出した 18 件のリンクの有効性を検証中...
+2026-04-11 22:44:12,364 [INFO] link_extractor: 抽出完了: 18件の有効リンク
+2026-04-11 22:44:12,364 [INFO] __main__:   → 18件のリンク抽出, スクリーンショット: C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\screenshots\shot_felnis_com_20260411_224409.png
+2026-04-11 22:44:12,364 [INFO] __main__: Step 4/6: コンテンツ生成...
+2026-04-11 22:44:12,364 [INFO] web_app_operator: 企業選択 (ID): felnis
+2026-04-11 22:44:22,526 [INFO] web_app_operator: ヘッダー検証開始: felnis
+2026-04-11 22:44:27,550 [INFO] web_app_operator: ヘッダーとしての特定は不十分ですが、ページ内に felnis を確認しました
+2026-04-11 22:44:27,550 [INFO] web_app_operator: 企業選択・検証完了: felnis
+2026-04-11 22:44:27,551 [INFO] web_app_operator: URL入力開始: 18件
+2026-04-11 22:44:34,795 [INFO] web_app_operator: URL入力完了: 18件
+2026-04-11 22:44:34,795 [INFO] web_app_operator: コンテンツ生成開始...
+2026-04-11 22:44:38,011 [INFO] web_app_operator: コンテンツ生成中... (最大5分待機)
+2026-04-11 22:44:43,039 [INFO] web_app_operator: 生成完了検出 (経過: 5.0秒)
+2026-04-11 22:44:43,039 [INFO] web_app_operator: コンテンツ生成完了
+2026-04-11 22:44:43,039 [INFO] web_app_operator: コンテンツ保存開始...
+2026-04-11 22:45:54,150 [INFO] __main__: ============================================================
+2026-04-11 22:45:54,151 [INFO] __main__: DOCdemo 自動化フロー 開始
+2026-04-11 22:45:54,151 [INFO] __main__: 開始時刻: 2026-04-11 22:45:54
+2026-04-11 22:45:54,151 [INFO] __main__: ============================================================
+2026-04-11 22:45:54,152 [INFO] spreadsheet_manager: 企業リスト読み込み完了: 147社
+2026-04-11 22:45:54,152 [INFO] spreadsheet_manager: 処理対象企業: 147社 / 全147社
+2026-04-11 22:45:54,152 [INFO] __main__: 処理対象: 1社
+2026-04-11 22:45:55,051 [INFO] web_app_operator: 管理画面にログイン中...
+2026-04-11 22:46:03,760 [INFO] web_app_operator: ログイン成功
+2026-04-11 22:46:03,760 [INFO] __main__: 
+2026-04-11 22:46:03,760 [INFO] __main__: ──────────────────────────────────────────────────
+2026-04-11 22:46:03,760 [INFO] __main__: [1/1] 株式会社Felnis (ステータス: 企業追加済)
+2026-04-11 22:46:03,760 [INFO] __main__: ──────────────────────────────────────────────────
+2026-04-11 22:46:03,760 [INFO] __main__: Step 3/6: リンク抽出 & スクリーンショット...
+2026-04-11 22:46:04,418 [INFO] link_extractor: 解析および画像取得中: https://felnis.com
+2026-04-11 22:46:04,419 [INFO] link_extractor: ページを読み込んでいます...
+2026-04-11 22:46:05,993 [INFO] link_extractor: スクリーンショットを撮影中...
+2026-04-11 22:46:06,244 [INFO] link_extractor: スクリーンショット保存: C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\screenshots\shot_felnis_com_20260411_224603.png
+2026-04-11 22:46:06,244 [INFO] link_extractor: リンクを抽出中...
+2026-04-11 22:46:06,266 [INFO] link_extractor: 抽出した 18 件のリンクの有効性を検証中...
+2026-04-11 22:46:06,468 [INFO] link_extractor: 抽出完了: 18件の有効リンク
+2026-04-11 22:46:06,468 [INFO] __main__:   → 18件のリンク抽出, スクリーンショット: C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\screenshots\shot_felnis_com_20260411_224603.png
+2026-04-11 22:46:06,468 [INFO] __main__: Step 4/6: コンテンツ生成...
+2026-04-11 22:46:08,587 [INFO] web_app_operator: 企業選択 (ID): felnis
+2026-04-11 22:46:15,354 [INFO] web_app_operator: ヘッダー検証開始: felnis
+2026-04-11 22:46:15,372 [INFO] web_app_operator: ヘッダー検証成功: felnis を検出
+2026-04-11 22:46:15,372 [INFO] web_app_operator: 企業選択・検証完了: felnis
+2026-04-11 22:46:15,372 [INFO] web_app_operator: URL入力開始: 18件
+2026-04-11 22:46:22,619 [INFO] web_app_operator: URL入力完了: 18件
+2026-04-11 22:46:22,619 [INFO] web_app_operator: コンテンツ生成開始...
+2026-04-11 22:46:25,719 [INFO] web_app_operator: コンテンツ生成中... (最大5分待機)
+2026-04-11 22:46:30,745 [INFO] web_app_operator: 生成完了検出 (経過: 5.0秒)
+2026-04-11 22:46:30,745 [INFO] web_app_operator: コンテンツ生成完了
+2026-04-11 22:46:30,745 [INFO] web_app_operator: コンテンツ保存開始...
+2026-04-11 22:46:38,365 [INFO] web_app_operator: コンテンツ保存完了
+2026-04-11 22:46:38,366 [INFO] spreadsheet_manager: 企業リスト保存完了: 147社 → C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\data\company_list.csv
+2026-04-11 22:46:38,367 [INFO] __main__:   → コンテンツ生成・保存完了
+2026-04-11 22:46:38,367 [INFO] __main__: Step 5/6: 背景画像アップロード...
+2026-04-11 22:46:38,367 [INFO] web_app_operator: 背景画像アップロード開始: C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\screenshots\shot_felnis_com_20260411_224603.png
+2026-04-11 22:46:48,611 [INFO] web_app_operator: 背景画像アップロード完了: C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\screenshots\shot_felnis_com_20260411_224603.png
+2026-04-11 22:46:48,612 [INFO] spreadsheet_manager: 企業リスト保存完了: 147社 → C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\data\company_list.csv
+2026-04-11 22:46:48,612 [INFO] __main__:   → 背景画像アップロード完了
+2026-04-11 22:46:48,612 [INFO] __main__: Step 6/6: フロントエンドアプリURL取得...
+2026-04-11 22:46:48,612 [INFO] web_app_operator: フロントエンドアプリURL取得開始...
+2026-04-11 22:46:52,782 [INFO] web_app_operator: フロントエンドURL取得成功: https://casual-interview-dev.brainverse-ai.com/felnis
+2026-04-11 22:46:52,784 [INFO] spreadsheet_manager: 企業リスト保存完了: 147社 → C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\data\company_list.csv
+2026-04-11 22:46:52,785 [INFO] __main__:   → フロントエンドURL: https://casual-interview-dev.brainverse-ai.com/felnis
+2026-04-11 22:46:52,785 [INFO] __main__: [OK] 株式会社Felnis: 全処理完了!
+2026-04-11 22:46:53,129 [INFO] __main__: 
+2026-04-11 22:46:53,129 [INFO] __main__: ============================================================
+2026-04-11 22:46:53,130 [INFO] __main__: DOCdemo 自動化フロー 完了サマリー
+2026-04-11 22:46:53,130 [INFO] __main__: ============================================================
+2026-04-11 22:46:53,130 [INFO] __main__:   処理対象:    1社
+2026-04-11 22:46:53,130 [INFO] __main__:   処理完了:    1社
+2026-04-11 22:46:53,130 [INFO] __main__:   [OK] 成功:   1社
+2026-04-11 22:46:53,130 [INFO] __main__:   [SKIP] スキップ: 0社
+2026-04-11 22:46:53,130 [INFO] __main__:   [ERR] エラー:  0社
+2026-04-11 22:46:53,130 [INFO] __main__:   所要時間:    0:00:58.978883
+2026-04-11 22:46:53,130 [INFO] __main__: ============================================================
+2026-04-11 22:50:26,661 [INFO] __main__: ============================================================
+2026-04-11 22:50:26,661 [INFO] __main__: DOCdemo 自動化フロー 開始
+2026-04-11 22:50:26,661 [INFO] __main__: 開始時刻: 2026-04-11 22:50:26
+2026-04-11 22:50:26,661 [INFO] __main__: ============================================================
+2026-04-11 22:50:26,662 [INFO] spreadsheet_manager: 企業リスト読み込み完了: 147社
+2026-04-11 22:50:26,662 [INFO] spreadsheet_manager: 処理対象企業: 147社 / 全147社
+2026-04-11 22:50:26,662 [INFO] __main__: 処理対象: 147社
+2026-04-11 22:50:27,554 [INFO] web_app_operator: 管理画面にログイン中...
+2026-04-11 22:50:36,304 [INFO] web_app_operator: ログイン成功
+2026-04-11 22:50:36,304 [INFO] __main__: 
+2026-04-11 22:50:36,305 [INFO] __main__: ──────────────────────────────────────────────────
+2026-04-11 22:50:36,305 [INFO] __main__: [1/147] one-hat株式会社 (ステータス: 未処理)
+2026-04-11 22:50:36,305 [INFO] __main__: ──────────────────────────────────────────────────
+2026-04-11 22:50:36,305 [INFO] __main__: Step 1/6: ホームページURL検索...
+2026-04-11 22:50:36,305 [INFO] url_finder: URL検索開始: one-hat株式会社 公式サイト
+2026-04-11 22:50:39,728 [INFO] url_finder: URL特定成功: one-hat株式会社 -> https://one-hat.com
+2026-04-11 22:50:39,729 [INFO] spreadsheet_manager: 企業リスト保存完了: 147社 → C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\data\company_list.csv
+2026-04-11 22:50:39,729 [INFO] __main__:   → URL: https://one-hat.com
+2026-04-11 22:50:39,729 [INFO] __main__: Step 2/6: 企業追加...
+2026-04-11 22:50:39,729 [INFO] web_app_operator: 企業追加開始: one-hat株式会社
+2026-04-11 22:50:54,114 [INFO] web_app_operator: 企業追加完了: one-hat株式会社 (ID: one-hat)
+2026-04-11 22:50:54,116 [INFO] spreadsheet_manager: 企業リスト保存完了: 147社 → C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\data\company_list.csv
+2026-04-11 22:50:54,116 [INFO] __main__:   → 企業追加完了 (ID: one-hat)
+2026-04-11 22:50:54,117 [INFO] __main__: Step 3/6: リンク抽出 & スクリーンショット...
+2026-04-11 22:50:54,825 [INFO] link_extractor: 解析および画像取得中: https://one-hat.com
+2026-04-11 22:50:54,825 [INFO] link_extractor: ページを読み込んでいます...
+2026-04-11 22:50:57,177 [INFO] link_extractor: スクリーンショットを撮影中...
+2026-04-11 22:50:57,336 [INFO] link_extractor: スクリーンショット保存: C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\screenshots\shot_one-hat_com_20260411_225054.png
+2026-04-11 22:50:57,336 [INFO] link_extractor: リンクを抽出中...
+2026-04-11 22:50:57,360 [INFO] link_extractor: 抽出した 20 件のリンクの有効性を検証中...
+2026-04-11 22:50:58,136 [INFO] link_extractor: 抽出完了: 19件の有効リンク
+2026-04-11 22:50:58,136 [INFO] __main__:   → 19件のリンク抽出, スクリーンショット: C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\screenshots\shot_one-hat_com_20260411_225054.png
+2026-04-11 22:50:58,137 [INFO] __main__: Step 4/6: コンテンツ生成...
+2026-04-11 22:51:00,223 [INFO] web_app_operator: 企業選択 (ID): one-hat
+2026-04-11 22:51:06,929 [INFO] web_app_operator: ヘッダー検証開始: one-hat
+2026-04-11 22:51:06,939 [INFO] web_app_operator: ヘッダー検証成功: one-hat を検出
+2026-04-11 22:51:06,939 [INFO] web_app_operator: 企業選択・検証完了: one-hat
+2026-04-11 22:51:06,940 [INFO] web_app_operator: URL入力開始: 19件
+2026-04-11 22:51:14,203 [INFO] web_app_operator: URL入力完了: 19件
+2026-04-11 22:51:14,204 [INFO] web_app_operator: コンテンツ生成開始...
+2026-04-11 22:51:17,284 [INFO] web_app_operator: コンテンツ生成中... (最大5分待機)
+2026-04-11 23:13:03,561 [INFO] __main__: ============================================================
+2026-04-11 23:13:03,561 [INFO] __main__: DOCdemo 自動化フロー 開始
+2026-04-11 23:13:03,561 [INFO] __main__: 開始時刻: 2026-04-11 23:13:03
+2026-04-11 23:13:03,561 [INFO] __main__: ============================================================
+2026-04-11 23:13:03,562 [INFO] spreadsheet_manager: 企業リスト読み込み完了: 147社
+2026-04-11 23:13:03,562 [INFO] spreadsheet_manager: 処理対象企業: 147社 / 全147社
+2026-04-11 23:13:03,562 [INFO] __main__: 処理対象: 1社
+2026-04-11 23:13:04,616 [INFO] web_app_operator: 管理画面にログイン中...
+2026-04-11 23:13:13,377 [INFO] web_app_operator: ログイン成功
+2026-04-11 23:13:13,377 [INFO] __main__: 
+2026-04-11 23:13:13,377 [INFO] __main__: ──────────────────────────────────────────────────
+2026-04-11 23:13:13,377 [INFO] __main__: [1/1] 株式会社Felnis (ステータス: 未処理)
+2026-04-11 23:13:13,377 [INFO] __main__: ──────────────────────────────────────────────────
+2026-04-11 23:13:13,378 [INFO] __main__: Step 1/6: ホームページURL検索...
+2026-04-11 23:13:13,379 [INFO] url_finder: URL検索開始: 株式会社Felnis 公式サイト
+2026-04-11 23:13:16,635 [INFO] url_finder: URL特定成功: 株式会社Felnis -> https://felnis.com
+2026-04-11 23:13:16,639 [INFO] spreadsheet_manager: 企業リスト保存完了: 147社 → C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\data\company_list.csv
+2026-04-11 23:13:16,639 [INFO] __main__:   → URL: https://felnis.com
+2026-04-11 23:13:16,639 [INFO] __main__: Step 2/6: 企業追加...
+2026-04-11 23:13:16,639 [INFO] web_app_operator: 企業追加開始: 株式会社Felnis
+2026-04-11 23:13:31,059 [INFO] web_app_operator: 企業追加完了: 株式会社Felnis (ID: felnis)
+2026-04-11 23:13:31,063 [INFO] spreadsheet_manager: 企業リスト保存完了: 147社 → C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\data\company_list.csv
+2026-04-11 23:13:31,063 [INFO] __main__:   → 企業追加完了 (ID: felnis)
+2026-04-11 23:13:31,063 [INFO] __main__: Step 3/6: リンク抽出 & スクリーンショット...
+2026-04-11 23:13:31,754 [INFO] link_extractor: 解析および画像取得中: https://felnis.com
+2026-04-11 23:13:31,754 [INFO] link_extractor: ページを読み込んでいます...
+2026-04-11 23:13:35,890 [INFO] link_extractor: スクリーンショットを撮影中...
+2026-04-11 23:13:36,215 [INFO] link_extractor: スクリーンショット保存: C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\screenshots\shot_felnis_com_20260411_231331.png
+2026-04-11 23:13:36,216 [INFO] link_extractor: リンクを抽出中...
+2026-04-11 23:13:36,245 [INFO] link_extractor: 抽出した 18 件のリンクの有効性を検証中...
+2026-04-11 23:13:36,516 [INFO] link_extractor: 抽出完了: 18件の有効リンク
+2026-04-11 23:13:36,516 [INFO] __main__:   → 18件のリンク抽出, スクリーンショット: C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\screenshots\shot_felnis_com_20260411_231331.png
+2026-04-11 23:13:36,517 [INFO] __main__: Step 4/6: コンテンツ生成...
+2026-04-11 23:13:38,577 [INFO] web_app_operator: 企業選択 (ID): felnis
+2026-04-11 23:13:45,288 [INFO] web_app_operator: ヘッダー検証開始: felnis
+2026-04-11 23:13:45,299 [INFO] web_app_operator: ヘッダー検証成功: felnis を検出
+2026-04-11 23:13:45,299 [INFO] web_app_operator: 企業選択・検証完了: felnis
+2026-04-11 23:13:45,299 [INFO] web_app_operator: URL入力開始: 18件
+2026-04-11 23:13:53,096 [INFO] web_app_operator:   「全入力を処理」ボタンをクリックしました
+2026-04-11 23:13:57,622 [INFO] web_app_operator: URL入力・処理開始完了: 18件
+2026-04-11 23:13:57,622 [INFO] web_app_operator: コンテンツ生成開始...
+2026-04-11 23:14:00,193 [INFO] web_app_operator:   生成準備完了の待機中...
+2026-04-11 23:14:00,213 [WARNING] web_app_operator:   生成準備完了メッセージが見つかりませんが、続行を試みます
+2026-04-11 23:14:00,739 [INFO] web_app_operator: コンテンツ生成中... (最大5分待機)
+2026-04-11 23:14:05,765 [INFO] web_app_operator: 生成完了検出 (経過: 5.0秒)
+2026-04-11 23:14:05,765 [INFO] web_app_operator: コンテンツ生成完了
+2026-04-11 23:14:05,765 [INFO] web_app_operator: コンテンツ保存開始...
+2026-04-11 23:14:09,831 [INFO] web_app_operator:   FAQプレビューの確認中...
+2026-04-11 23:14:19,840 [WARNING] web_app_operator:   FAQプレビューのテキストが見つかりません
+2026-04-11 23:14:24,909 [INFO] web_app_operator: コンテンツ保存完了
+2026-04-11 23:14:24,910 [INFO] spreadsheet_manager: 企業リスト保存完了: 147社 → C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\data\company_list.csv
+2026-04-11 23:14:24,911 [INFO] __main__:   → コンテンツ生成・保存完了
+2026-04-11 23:14:24,911 [INFO] __main__: Step 5/6: 背景画像アップロード...
+2026-04-11 23:14:24,911 [INFO] web_app_operator: 背景画像アップロード開始: C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\screenshots\shot_felnis_com_20260411_231331.png
+2026-04-11 23:14:35,043 [INFO] web_app_operator: 背景画像アップロード完了: C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\screenshots\shot_felnis_com_20260411_231331.png
+2026-04-11 23:14:35,044 [INFO] spreadsheet_manager: 企業リスト保存完了: 147社 → C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\data\company_list.csv
+2026-04-11 23:14:35,044 [INFO] __main__:   → 背景画像アップロード完了
+2026-04-11 23:14:35,044 [INFO] __main__: Step 6/6: フロントエンドアプリURL取得...
+2026-04-11 23:14:35,044 [INFO] web_app_operator: フロントエンドアプリURL取得開始...
+2026-04-11 23:14:39,227 [INFO] web_app_operator: フロントエンドURL取得成功: https://casual-interview-dev.brainverse-ai.com/felnis
+2026-04-11 23:14:39,229 [INFO] spreadsheet_manager: 企業リスト保存完了: 147社 → C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\data\company_list.csv
+2026-04-11 23:14:39,229 [INFO] __main__:   → フロントエンドURL: https://casual-interview-dev.brainverse-ai.com/felnis
+2026-04-11 23:14:39,229 [INFO] __main__: [OK] 株式会社Felnis: 全処理完了!
+2026-04-11 23:14:39,598 [INFO] __main__: 
+2026-04-11 23:14:39,598 [INFO] __main__: ============================================================
+2026-04-11 23:14:39,598 [INFO] __main__: DOCdemo 自動化フロー 完了サマリー
+2026-04-11 23:14:39,598 [INFO] __main__: ============================================================
+2026-04-11 23:14:39,598 [INFO] __main__:   処理対象:    1社
+2026-04-11 23:14:39,598 [INFO] __main__:   処理完了:    1社
+2026-04-11 23:14:39,598 [INFO] __main__:   [OK] 成功:   1社
+2026-04-11 23:14:39,598 [INFO] __main__:   [SKIP] スキップ: 0社
+2026-04-11 23:14:39,598 [INFO] __main__:   [ERR] エラー:  0社
+2026-04-11 23:14:39,598 [INFO] __main__:   所要時間:    0:01:36.037391
+2026-04-11 23:14:39,598 [INFO] __main__: ============================================================
+2026-04-11 23:15:42,624 [INFO] __main__: ============================================================
+2026-04-11 23:15:42,624 [INFO] __main__: DOCdemo 自動化フロー 開始
+2026-04-11 23:15:42,625 [INFO] __main__: 開始時刻: 2026-04-11 23:15:42
+2026-04-11 23:15:42,625 [INFO] __main__: ============================================================
+2026-04-11 23:15:42,626 [INFO] spreadsheet_manager: 企業リスト読み込み完了: 147社
+2026-04-11 23:15:42,626 [INFO] spreadsheet_manager: 処理対象企業: 146社 / 全147社
+2026-04-11 23:15:42,626 [ERROR] __main__: テスト対象企業が見つかりません: Felnis
+2026-04-11 23:16:04,272 [INFO] __main__: ============================================================
+2026-04-11 23:16:04,272 [INFO] __main__: DOCdemo 自動化フロー 開始
+2026-04-11 23:16:04,273 [INFO] __main__: 開始時刻: 2026-04-11 23:16:04
+2026-04-11 23:16:04,273 [INFO] __main__: ============================================================
+2026-04-11 23:16:04,274 [INFO] spreadsheet_manager: 企業リスト読み込み完了: 147社
+2026-04-11 23:16:04,274 [INFO] spreadsheet_manager: 処理対象企業: 147社 / 全147社
+2026-04-11 23:16:04,274 [INFO] __main__: 処理対象: 1社
+2026-04-11 23:16:05,183 [INFO] web_app_operator: 管理画面にログイン中...
+2026-04-11 23:16:14,537 [INFO] web_app_operator: ログイン成功
+2026-04-11 23:16:14,537 [INFO] __main__: 
+2026-04-11 23:16:14,537 [INFO] __main__: ──────────────────────────────────────────────────
+2026-04-11 23:16:14,537 [INFO] __main__: [1/1] 株式会社Felnis (ステータス: 未処理)
+2026-04-11 23:16:14,537 [INFO] __main__: ──────────────────────────────────────────────────
+2026-04-11 23:16:14,537 [INFO] __main__: Step 1/6: ホームページURL検索...
+2026-04-11 23:16:14,537 [INFO] url_finder: URL検索開始: 株式会社Felnis 公式サイト
+2026-04-11 23:16:17,741 [INFO] url_finder: URL特定成功: 株式会社Felnis -> https://felnis.com
+2026-04-11 23:16:17,743 [INFO] spreadsheet_manager: 企業リスト保存完了: 147社 → C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\data\company_list.csv
+2026-04-11 23:16:17,743 [INFO] __main__:   → URL: https://felnis.com
+2026-04-11 23:16:17,743 [INFO] __main__: Step 2/6: 企業追加...
+2026-04-11 23:16:17,743 [INFO] web_app_operator: 企業追加開始: 株式会社Felnis
+2026-04-11 23:16:32,119 [INFO] web_app_operator: 企業追加完了: 株式会社Felnis (ID: felnis)
+2026-04-11 23:16:32,123 [INFO] spreadsheet_manager: 企業リスト保存完了: 147社 → C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\data\company_list.csv
+2026-04-11 23:16:32,124 [INFO] __main__:   → 企業追加完了 (ID: felnis)
+2026-04-11 23:16:32,124 [INFO] __main__: Step 3/6: リンク抽出 & スクリーンショット...
+2026-04-11 23:16:32,807 [INFO] link_extractor: 解析および画像取得中: https://felnis.com
+2026-04-11 23:16:32,808 [INFO] link_extractor: ページを読み込んでいます...
+2026-04-11 23:16:34,207 [INFO] link_extractor: スクリーンショットを撮影中...
+2026-04-11 23:16:34,469 [INFO] link_extractor: スクリーンショット保存: C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\screenshots\shot_felnis_com_20260411_231632.png
+2026-04-11 23:16:34,469 [INFO] link_extractor: リンクを抽出中...
+2026-04-11 23:16:34,494 [INFO] link_extractor: 抽出した 18 件のリンクの有効性を検証中...
+2026-04-11 23:16:34,752 [INFO] link_extractor: 抽出完了: 18件の有効リンク
+2026-04-11 23:16:34,752 [INFO] __main__:   → 18件のリンク抽出, スクリーンショット: C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\screenshots\shot_felnis_com_20260411_231632.png
+2026-04-11 23:16:34,752 [INFO] __main__: Step 4/6: コンテンツ生成...
+2026-04-11 23:16:36,860 [INFO] web_app_operator: 企業選択 (ID): felnis
+2026-04-11 23:16:43,522 [INFO] web_app_operator: ヘッダー検証開始: felnis
+2026-04-11 23:16:43,540 [INFO] web_app_operator: ヘッダー検証成功: felnis を検出
+2026-04-11 23:16:43,540 [INFO] web_app_operator: 企業選択・検証完了: felnis
+2026-04-11 23:16:43,540 [INFO] web_app_operator: URL入力開始: 18件
+2026-04-11 23:16:51,297 [INFO] web_app_operator:   「全入力を処理」ボタンをクリックしました
+2026-04-11 23:16:55,829 [INFO] web_app_operator: URL入力・処理開始完了: 18件
+2026-04-11 23:16:55,829 [INFO] web_app_operator: コンテンツ生成開始...
+2026-04-11 23:16:58,395 [INFO] web_app_operator:   生成準備完了の待機中...
+2026-04-11 23:16:58,399 [WARNING] web_app_operator:   生成準備完了メッセージが見つかりませんが、続行を試みます
+2026-04-11 23:16:58,924 [INFO] web_app_operator: コンテンツ生成中... (最大5分待機)
+2026-04-11 23:17:54,156 [INFO] web_app_operator: 生成完了検出 (経過: 55.0秒)
+2026-04-11 23:17:54,157 [INFO] web_app_operator: コンテンツ生成完了
+2026-04-11 23:17:54,157 [INFO] web_app_operator: コンテンツ保存開始...
+2026-04-11 23:17:58,307 [INFO] web_app_operator:   FAQプレビューの確認中...
+2026-04-11 23:18:08,320 [WARNING] web_app_operator:   FAQプレビューのテキストが見つかりません
+2026-04-11 23:18:13,407 [INFO] web_app_operator: コンテンツ保存完了
+2026-04-11 23:18:13,407 [INFO] spreadsheet_manager: 企業リスト保存完了: 147社 → C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\data\company_list.csv
+2026-04-11 23:18:13,408 [INFO] __main__:   → コンテンツ生成・保存完了
+2026-04-11 23:18:13,408 [INFO] __main__: Step 5/6: 背景画像アップロード...
+2026-04-11 23:18:13,408 [INFO] web_app_operator: 背景画像アップロード開始: C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\screenshots\shot_felnis_com_20260411_231632.png
+2026-04-11 23:18:23,554 [INFO] web_app_operator: 背景画像アップロード完了: C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\screenshots\shot_felnis_com_20260411_231632.png
+2026-04-11 23:18:23,556 [INFO] spreadsheet_manager: 企業リスト保存完了: 147社 → C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\data\company_list.csv
+2026-04-11 23:18:23,556 [INFO] __main__:   → 背景画像アップロード完了
+2026-04-11 23:18:23,556 [INFO] __main__: Step 6/6: フロントエンドアプリURL取得...
+2026-04-11 23:18:23,556 [INFO] web_app_operator: フロントエンドアプリURL取得開始...
+2026-04-11 23:18:27,683 [INFO] web_app_operator: フロントエンドURL取得成功: https://casual-interview-dev.brainverse-ai.com/felnis
+2026-04-11 23:18:27,685 [INFO] spreadsheet_manager: 企業リスト保存完了: 147社 → C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\data\company_list.csv
+2026-04-11 23:18:27,685 [INFO] __main__:   → フロントエンドURL: https://casual-interview-dev.brainverse-ai.com/felnis
+2026-04-11 23:18:27,685 [INFO] __main__: [OK] 株式会社Felnis: 全処理完了!
+2026-04-11 23:18:27,970 [INFO] __main__: 
+2026-04-11 23:18:27,970 [INFO] __main__: ============================================================
+2026-04-11 23:18:27,970 [INFO] __main__: DOCdemo 自動化フロー 完了サマリー
+2026-04-11 23:18:27,970 [INFO] __main__: ============================================================
+2026-04-11 23:18:27,970 [INFO] __main__:   処理対象:    1社
+2026-04-11 23:18:27,970 [INFO] __main__:   処理完了:    1社
+2026-04-11 23:18:27,970 [INFO] __main__:   [OK] 成功:   1社
+2026-04-11 23:18:27,970 [INFO] __main__:   [SKIP] スキップ: 0社
+2026-04-11 23:18:27,970 [INFO] __main__:   [ERR] エラー:  0社
+2026-04-11 23:18:27,970 [INFO] __main__:   所要時間:    0:02:23.698175
+2026-04-11 23:18:27,970 [INFO] __main__: ============================================================
+2026-04-11 23:19:00,317 [INFO] __main__: ============================================================
+2026-04-11 23:19:00,317 [INFO] __main__: DOCdemo 自動化フロー 開始
+2026-04-11 23:19:00,317 [INFO] __main__: 開始時刻: 2026-04-11 23:19:00
+2026-04-11 23:19:00,317 [INFO] __main__: ============================================================
+2026-04-11 23:19:00,318 [INFO] spreadsheet_manager: 企業リスト読み込み完了: 147社
+2026-04-11 23:19:00,318 [INFO] spreadsheet_manager: 処理対象企業: 146社 / 全147社
+2026-04-11 23:19:00,318 [ERROR] __main__: テスト対象企業が見つかりません: Felnis
+2026-04-11 23:24:07,633 [INFO] __main__: ============================================================
+2026-04-11 23:24:07,633 [INFO] __main__: DOCdemo 自動化フロー 開始
+2026-04-11 23:24:07,633 [INFO] __main__: 開始時刻: 2026-04-11 23:24:07
+2026-04-11 23:24:07,633 [INFO] __main__: ============================================================
+2026-04-11 23:24:07,634 [INFO] spreadsheet_manager: 企業リスト読み込み完了: 147社
+2026-04-11 23:24:07,634 [INFO] spreadsheet_manager: 処理対象企業: 147社 / 全147社
+2026-04-11 23:24:07,634 [INFO] __main__: 処理対象: 1社
+2026-04-11 23:24:08,559 [INFO] web_app_operator: 管理画面にログイン中...
+2026-04-11 23:24:17,398 [INFO] web_app_operator: ログイン成功
+2026-04-11 23:24:17,398 [INFO] __main__: 
+2026-04-11 23:24:17,398 [INFO] __main__: ──────────────────────────────────────────────────
+2026-04-11 23:24:17,398 [INFO] __main__: [1/1] 株式会社Felnis (ステータス: 未処理)
+2026-04-11 23:24:17,398 [INFO] __main__: ──────────────────────────────────────────────────
+2026-04-11 23:24:17,398 [INFO] __main__: Step 1/6: ホームページURL検索...
+2026-04-11 23:24:17,398 [INFO] url_finder: URL検索開始: 株式会社Felnis 公式サイト
+2026-04-11 23:24:20,629 [INFO] url_finder: URL特定成功: 株式会社Felnis -> https://felnis.com
+2026-04-11 23:24:20,631 [INFO] spreadsheet_manager: 企業リスト保存完了: 147社 → C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\data\company_list.csv
+2026-04-11 23:24:20,631 [INFO] __main__:   → URL: https://felnis.com
+2026-04-11 23:24:20,631 [INFO] __main__: Step 2/6: 企業追加...
+2026-04-11 23:24:20,631 [INFO] web_app_operator: 企業追加開始: 株式会社Felnis
+2026-04-11 23:24:35,007 [INFO] web_app_operator: 企業追加完了: 株式会社Felnis (ID: felnis)
+2026-04-11 23:24:35,009 [INFO] spreadsheet_manager: 企業リスト保存完了: 147社 → C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\data\company_list.csv
+2026-04-11 23:24:35,009 [INFO] __main__:   → 企業追加完了 (ID: felnis)
+2026-04-11 23:24:35,009 [INFO] __main__: Step 3/6: リンク抽出 & スクリーンショット...
+2026-04-11 23:24:35,676 [INFO] link_extractor: 解析および画像取得中: https://felnis.com
+2026-04-11 23:24:35,676 [INFO] link_extractor: ページを読み込んでいます...
+2026-04-11 23:24:37,077 [INFO] link_extractor: スクリーンショットを撮影中...
+2026-04-11 23:24:37,340 [INFO] link_extractor: スクリーンショット保存: C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\screenshots\shot_felnis_com_20260411_232435.png
+2026-04-11 23:24:37,340 [INFO] link_extractor: リンクを抽出中...
+2026-04-11 23:24:37,363 [INFO] link_extractor: 抽出した 18 件のリンクの有効性を検証中...
+2026-04-11 23:24:37,570 [INFO] link_extractor: 抽出完了: 18件の有効リンク
+2026-04-11 23:24:37,570 [INFO] __main__:   → 18件のリンク抽出, スクリーンショット: C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\screenshots\shot_felnis_com_20260411_232435.png
+2026-04-11 23:24:37,570 [INFO] __main__: Step 4/6: コンテンツ生成...
+2026-04-11 23:24:39,662 [INFO] web_app_operator: 企業選択 (ID): felnis
+2026-04-11 23:24:46,428 [INFO] web_app_operator: ヘッダー検証開始: felnis
+2026-04-11 23:24:46,458 [INFO] web_app_operator: ヘッダー検証成功: felnis を検出
+2026-04-11 23:24:46,458 [INFO] web_app_operator: 企業選択・検証完了: felnis
+2026-04-11 23:24:46,459 [INFO] web_app_operator: URL入力開始: 18件
+2026-04-11 23:24:54,224 [INFO] web_app_operator:   「全入力を処理」ボタンをクリックしました
+2026-04-11 23:24:58,756 [INFO] web_app_operator: URL入力・処理開始完了: 18件
+2026-04-11 23:24:58,757 [INFO] web_app_operator: コンテンツ生成開始...
+2026-04-11 23:25:01,332 [INFO] web_app_operator:   生成準備完了の待機中...
+2026-04-11 23:25:01,332 [ERROR] __main__: [ERROR] 株式会社Felnis: 処理失敗 -- name 're' is not defined
+2026-04-11 23:25:01,334 [INFO] spreadsheet_manager: 企業リスト保存完了: 147社 → C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\data\company_list.csv
+2026-04-11 23:25:01,644 [INFO] __main__: 
+2026-04-11 23:25:01,645 [INFO] __main__: ============================================================
+2026-04-11 23:25:01,645 [INFO] __main__: DOCdemo 自動化フロー 完了サマリー
+2026-04-11 23:25:01,645 [INFO] __main__: ============================================================
+2026-04-11 23:25:01,645 [INFO] __main__:   処理対象:    1社
+2026-04-11 23:25:01,645 [INFO] __main__:   処理完了:    1社
+2026-04-11 23:25:01,645 [INFO] __main__:   [OK] 成功:   0社
+2026-04-11 23:25:01,645 [INFO] __main__:   [SKIP] スキップ: 0社
+2026-04-11 23:25:01,645 [INFO] __main__:   [ERR] エラー:  1社
+2026-04-11 23:25:01,645 [INFO] __main__:   所要時間:    0:00:54.011303
+2026-04-11 23:25:01,645 [INFO] __main__: ============================================================
+2026-04-11 23:27:19,983 [INFO] __main__: ============================================================
+2026-04-11 23:27:19,984 [INFO] __main__: DOCdemo 自動化フロー 開始
+2026-04-11 23:27:19,984 [INFO] __main__: 開始時刻: 2026-04-11 23:27:19
+2026-04-11 23:27:19,984 [INFO] __main__: ============================================================
+2026-04-11 23:27:19,984 [INFO] spreadsheet_manager: 企業リスト読み込み完了: 147社
+2026-04-11 23:27:19,985 [INFO] spreadsheet_manager: 処理対象企業: 147社 / 全147社
+2026-04-11 23:27:19,985 [INFO] __main__: 処理対象: 1社
+2026-04-11 23:27:20,922 [INFO] web_app_operator: 管理画面にログイン中...
+2026-04-11 23:27:29,623 [INFO] web_app_operator: ログイン成功
+2026-04-11 23:27:29,624 [INFO] __main__: 
+2026-04-11 23:27:29,624 [INFO] __main__: ──────────────────────────────────────────────────
+2026-04-11 23:27:29,624 [INFO] __main__: [1/1] 株式会社Felnis (ステータス: 未処理)
+2026-04-11 23:27:29,624 [INFO] __main__: ──────────────────────────────────────────────────
+2026-04-11 23:27:29,624 [INFO] __main__: Step 1/6: ホームページURL検索...
+2026-04-11 23:27:29,624 [INFO] url_finder: URL検索開始: 株式会社Felnis 公式サイト
+2026-04-11 23:27:32,964 [INFO] url_finder: URL特定成功: 株式会社Felnis -> https://felnis.com
+2026-04-11 23:27:32,966 [INFO] spreadsheet_manager: 企業リスト保存完了: 147社 → C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\data\company_list.csv
+2026-04-11 23:27:32,966 [INFO] __main__:   → URL: https://felnis.com
+2026-04-11 23:27:32,967 [INFO] __main__: Step 2/6: 企業追加...
+2026-04-11 23:27:32,967 [INFO] web_app_operator: 企業追加開始: 株式会社Felnis

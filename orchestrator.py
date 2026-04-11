@@ -257,6 +257,9 @@ class Orchestrator:
         ):
             logger.info("Step 4/6: コンテンツ生成...")
 
+            # コンテンツ生成ページへ遷移
+            await web_operator.navigate_to_content_generator()
+
             # 企業選択
             await web_operator.select_company(company.enterprise_id)
 
