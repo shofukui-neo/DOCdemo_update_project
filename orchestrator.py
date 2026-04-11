@@ -40,11 +40,21 @@ def setup_logging():
     """ロギングの初期化"""
     LOGS_DIR.mkdir(parents=True, exist_ok=True)
 
+    # Windows cp932対策: stdout をUTF-8に設定
+    if sys.platform == "win32":
+        import io
+        sys.stdout = io.TextIOWrapper(
+            sys.stdout.buffer, encoding="utf-8", errors="replace"
+        )
+        sys.stderr = io.TextIOWrapper(
+            sys.stderr.buffer, encoding="utf-8", errors="replace"
+        )
+
     # ルートロガー設定
     root_logger = logging.getLogger()
     root_logger.setLevel(getattr(logging, LOG_LEVEL, logging.INFO))
 
-    # コンソールハンドラ
+    # コンソールハンドラ（UTF-8ストリームを使用）
     console_handler = logging.StreamHandler(sys.stdout)
     console_handler.setFormatter(logging.Formatter(LOG_FORMAT))
     root_logger.addHandler(console_handler)
@@ -151,7 +161,7 @@ class Orchestrator:
                     )
                     self.stats["success"] += 1
                 except Exception as e:
-                    logger.error(f"❌ {company.name}: 処理失敗 — {e}")
+                    logger.error(f"[ERROR] {company.name}: 処理失敗 -- {e}")
                     company.mark_error(str(e))
                     self.sheet_manager.update_company(company, companies)
                     self.stats["error"] += 1
@@ -193,7 +203,7 @@ class Orchestrator:
                 company.mark_skipped("ホームページURLが見つかりませんでした")
                 self.sheet_manager.update_company(company, companies)
                 self.stats["skipped"] += 1
-                logger.warning(f"⏭️ {company.name}: URL不明のためスキップ")
+                logger.warning(f"[SKIP] {company.name}: URL不明のためスキップ")
                 return
 
             company.homepage_url = homepage_url
@@ -248,7 +258,7 @@ class Orchestrator:
             logger.info("Step 4/6: コンテンツ生成...")
 
             # 企業選択
-            await web_operator.select_company(company.name)
+            await web_operator.select_company(company.enterprise_id)
 
             # URL入力
             if company.extracted_links:
@@ -284,7 +294,7 @@ class Orchestrator:
                     self.sheet_manager.update_company(company, companies)
                     logger.info("  → 背景画像アップロード完了")
                 except Exception as e:
-                    logger.warning(f"  ⚠️ 画像アップロード失敗: {e} (続行)")
+                    logger.warning(f"  [WARN] 画像アップロード失敗: {e} (続行)")
                     company.status = ProcessStatus.IMAGE_UPLOADED  # スキップして続行
                     self.sheet_manager.update_company(company, companies)
             else:
@@ -303,7 +313,7 @@ class Orchestrator:
             self.sheet_manager.update_company(company, companies)
             logger.info(f"  → フロントエンドURL: {frontend_url}")
 
-        logger.info(f"✅ {company.name}: 全処理完了！")
+        logger.info(f"[OK] {company.name}: 全処理完了!")
 
     def _print_summary(self, elapsed):
         """処理完了後のサマリーを出力"""
@@ -311,12 +321,12 @@ class Orchestrator:
         logger.info("=" * 60)
         logger.info("DOCdemo 自動化フロー 完了サマリー")
         logger.info("=" * 60)
-        logger.info(f"  処理対象:   {self.stats['total']}社")
-        logger.info(f"  処理完了:   {self.stats['processed']}社")
-        logger.info(f"  ✅ 成功:    {self.stats['success']}社")
-        logger.info(f"  ⏭️ スキップ: {self.stats['skipped']}社")
-        logger.info(f"  ❌ エラー:  {self.stats['error']}社")
-        logger.info(f"  所要時間:   {elapsed}")
+        logger.info(f"  処理対象:    {self.stats['total']}社")
+        logger.info(f"  処理完了:    {self.stats['processed']}社")
+        logger.info(f"  [OK] 成功:   {self.stats['success']}社")
+        logger.info(f"  [SKIP] スキップ: {self.stats['skipped']}社")
+        logger.info(f"  [ERR] エラー:  {self.stats['error']}社")
+        logger.info(f"  所要時間:    {elapsed}")
         logger.info("=" * 60)
 
 

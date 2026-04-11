@@ -73,13 +73,14 @@ BROWSER_SLOW_MO = 500  # 操作間の遅延 (ms) — Streamlit UIの安定性の
 # =============================================================================
 # URL検索設定
 # =============================================================================
-# Google検索で除外するドメイン（求人・SNS系）
+# 検索結果から除外するドメイン（求人・SNS系のみ。企業公式サイトを除外しないよう限定的に設定）
 EXCLUDED_DOMAINS = [
     "indeed.com", "linkedin.com", "facebook.com", "twitter.com",
-    "instagram.com", "youtube.com", "tiktok.com",
-    "recruit.co.jp", "en-japan.com", "doda.jp", "mynavi.jp",
+    "instagram.com", "youtube.com", "tiktok.com", "x.com",
+    "en-japan.com", "doda.jp", "mynavi.jp",
     "rikunabi.com", "wantedly.com", "green-japan.com",
-    "wikipedia.org", "amazon.co.jp", "rakuten.co.jp",
+    "wikipedia.org",
+    "yahoo.co.jp", "search.yahoo.co.jp",
 ]
 
 # リンク抽出の同時接続数

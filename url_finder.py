@@ -1,37 +1,37 @@
 """
 DOCdemo 自動化フロー — URL検索モジュール
 
-企業名からホームページURLをGoogle検索で自動特定する。
+企業名からホームページURLをYahoo! Japan検索で自動特定する。
+Google/Bing/DuckDuckGoはCAPTCHA/JSレンダリング制約があるため、
+Yahoo! Japan検索をメインに使用する。
 """
 
 import asyncio
 import logging
 import re
-from urllib.parse import urlparse, unquote
+from urllib.parse import urlparse, quote
 from typing import Optional
 
-from playwright.async_api import async_playwright, Page
+from playwright.async_api import Page
 
-from config import EXCLUDED_DOMAINS, PAGE_LOAD_TIMEOUT, RETRY_COUNT, RETRY_DELAY
+from config import PAGE_LOAD_TIMEOUT, RETRY_COUNT, RETRY_DELAY, EXCLUDED_DOMAINS
 
 logger = logging.getLogger(__name__)
 
 
 class URLFinder:
-    """Google検索を使い、企業のホームページURLを自動で特定するクラス"""
+    """Yahoo! Japan検索を使い、企業のホームページURLを自動で特定するクラス"""
 
     def __init__(self, page: Optional[Page] = None):
         """
         Args:
             page: Playwrightのページインスタンス。
-                  Noneの場合は内部で新規ブラウザを起動。
         """
         self._page = page
-        self._owns_browser = page is None
 
     async def find_homepage_url(self, company_name: str) -> str:
         """
-        Google検索で企業のホームページURLを自動特定する。
+        Yahoo! Japan検索で企業のホームページURLを自動特定する。
 
         Args:
             company_name: 企業名（例: "one-hat株式会社"）
@@ -40,9 +40,9 @@ class URLFinder:
             ホームページURL。見つからない場合は空文字列。
 
         戦略:
-        1. Google検索「{企業名} 公式サイト」を実行
-        2. オーガニック検索結果からリンクを取得
-        3. 除外ドメイン（求人サイト・SNS等）をフィルタリング
+        1. Yahoo! Japan検索「{企業名} 公式サイト」を実行
+        2. 検索結果からリンクを取得
+        3. 除外ドメイン（求人・SNS等）をフィルタリング
         4. 最初の有効な結果を返す
         """
         search_query = f"{company_name} 公式サイト"
@@ -50,7 +50,15 @@ class URLFinder:
 
         for attempt in range(RETRY_COUNT):
             try:
-                return await self._search_google(search_query, company_name)
+                result = await self._search_yahoo(search_query, company_name)
+                if result:
+                    return result
+                # 結果が空の場合はクエリを変えてリトライ
+                if attempt == 0:
+                    search_query = f"{company_name}"
+                elif attempt == 1:
+                    search_query = f"{company_name} ホームページ"
+                logger.debug(f"クエリ変更してリトライ: {search_query}")
             except Exception as e:
                 logger.warning(
                     f"URL検索エラー (試行 {attempt + 1}/{RETRY_COUNT}): {e}"
@@ -61,36 +69,30 @@ class URLFinder:
         logger.error(f"URL検索失敗: {company_name}")
         return ""
 
-    async def _search_google(self, query: str, company_name: str) -> str:
+    async def _search_yahoo(self, query: str, company_name: str) -> str:
         """
-        Google検索を実行し、最適なURLを返す。
+        Yahoo! Japan検索を実行し、最適なURLを返す。
 
         Args:
             query: 検索クエリ
             company_name: 企業名（フィルタリング用）
 
         Returns:
-            見つかったURL
+            見つかったURL（見つからない場合は空文字列）
         """
         page = self._page
-        search_url = f"https://www.google.com/search?q={query}&hl=ja"
+        search_url = f"https://search.yahoo.co.jp/search?p={quote(query)}"
 
-        await page.goto(search_url, wait_until="domcontentloaded",
-                        timeout=PAGE_LOAD_TIMEOUT)
+        await page.goto(
+            search_url,
+            wait_until="domcontentloaded",
+            timeout=PAGE_LOAD_TIMEOUT,
+        )
+        await page.wait_for_timeout(2000)
 
-        # Cookie同意ダイアログが出る場合は承認
-        try:
-            consent_btn = page.locator("button:has-text('すべて同意')")
-            if await consent_btn.count() > 0:
-                await consent_btn.first.click()
-                await page.wait_for_timeout(1000)
-        except Exception:
-            pass
-
-        # Google検索結果のリンクを取得
-        # 主要な検索結果のセレクター
+        # Yahoo!検索結果のリンクを取得
         result_links = await page.eval_on_selector_all(
-            "#search a[href]",
+            ".sw-Card__title a, #contents .sw-Card a[href^='http']",
             """elements => elements.map(el => ({
                 href: el.href,
                 text: el.textContent || ''
@@ -100,7 +102,7 @@ class URLFinder:
         if not result_links:
             # 代替セレクター
             result_links = await page.eval_on_selector_all(
-                "a[href^='http']",
+                "a[href^='http']:not([href*='yahoo']):not([href*='yimg'])",
                 """elements => elements.map(el => ({
                     href: el.href,
                     text: el.textContent || ''
@@ -113,9 +115,10 @@ class URLFinder:
             if not href or not href.startswith("http"):
                 continue
 
-            # Google内部リンクをスキップ
             parsed = urlparse(href)
-            if "google" in parsed.netloc:
+
+            # Yahoo内部リンクをスキップ
+            if "yahoo" in parsed.netloc or "yimg" in parsed.netloc:
                 continue
 
             # 除外ドメインをスキップ
@@ -123,16 +126,14 @@ class URLFinder:
                 logger.debug(f"除外ドメイン: {href}")
                 continue
 
-            # 有効なURLとして返す
-            # ルートドメインを返す（深いパスの場合）
+            # ルートドメインを返す（深いパスの場合はトップに近いURLを優先）
             clean_url = f"{parsed.scheme}://{parsed.netloc}"
             if parsed.path and parsed.path != "/":
-                # トップページに近いURLを優先
                 path_depth = len([p for p in parsed.path.split("/") if p])
                 if path_depth <= 1:
                     clean_url = f"{parsed.scheme}://{parsed.netloc}{parsed.path}"
 
-            logger.info(f"URL特定成功: {company_name} → {clean_url}")
+            logger.info(f"URL特定成功: {company_name} -> {clean_url}")
             return clean_url
 
         logger.warning(f"URL特定失敗: {company_name} — 検索結果に適切なリンクなし")
@@ -161,8 +162,11 @@ class URLFinder:
 
         page = self._page
         try:
-            response = await page.goto(url, wait_until="domcontentloaded",
-                                       timeout=PAGE_LOAD_TIMEOUT)
+            response = await page.goto(
+                url,
+                wait_until="domcontentloaded",
+                timeout=PAGE_LOAD_TIMEOUT,
+            )
             return response is not None and response.ok
         except Exception as e:
             logger.warning(f"URL検証エラー: {url} — {e}")
