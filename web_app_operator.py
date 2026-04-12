@@ -415,7 +415,10 @@ class WebAppOperator:
     # 画像アップロード
     # =========================================================================
     async def upload_background_image(self, image_path: str):
-        """システム設定ページで背景画像をアップロードする。"""
+        """
+        システム設定ページで背景画像をアップロードする。
+        「企業アセット管理」セクション内の「背景画像」という見出しの下にあるアップロード欄を操作する。
+        """
         logger.info(f"背景画像アップロード開始: {image_path}")
 
         if not Path(image_path).exists():
@@ -423,27 +426,57 @@ class WebAppOperator:
 
         await self.navigate_to_settings()
         await self.page.wait_for_timeout(2000)
+        await self._wait_for_streamlit_load()
 
-        # ページを下にスクロール
-        await self.page.evaluate("window.scrollTo(0, document.body.scrollHeight)")
-        await self.page.wait_for_timeout(1000)
+        # 1. 「企業アセット管理」セクションを探す
+        # div, section 等の中から「企業アセット管理」テキストを含むコンテナを絞り込む
+        asset_mgmt_section = self.page.locator('div, section, [data-testid="stVerticalBlock"]').filter(
+            has=self.page.locator('h1, h2, h3, p, span').filter(has_text="企業アセット管理")
+        ).last
 
-        # Streamlitのファイルアップローダー
-        # section[aria-label="背景画像をアップロード:"] 内の input[type='file']
-        file_input = self.page.locator(
-            'section[aria-label*="背景画像"] input[type="file"]'
-        )
-        if await file_input.count() == 0:
-            # フォールバック: 任意のfile input
-            file_input = self.page.locator('input[type="file"]')
+        # 2. その中で「背景画像」という見出しを含むエリアを特定
+        bg_image_area = asset_mgmt_section.locator('div, section, [data-testid="stVerticalBlock"]').filter(
+            has=self.page.locator('h1, h2, h3, p, span').filter(has_text="背景画像")
+        ).first
 
-        if await file_input.count() > 0:
+        # 万が一セクションが見つからない場合のフォールバック
+        if await bg_image_area.count() == 0:
+            logger.debug("  特定のセクションが見つからないため、ページ全体から「背景画像」を探します")
+            bg_image_area = self.page.locator('div, section, [data-testid="stVerticalBlock"]').filter(
+                has=self.page.locator('h1, h2, h3, p, span').filter(has_text="背景画像")
+            ).first
+
+        # 3. 「Upload」ボタンまたはファイル入力欄を探して操作
+        # ユーザー提示の「Upload」ボタンを優先
+        upload_btn = bg_image_area.locator('button:has-text("Upload"), button:has-text("アップロード"), button:has-text("Browse")')
+        file_input = bg_image_area.locator('input[type="file"]')
+
+        if await upload_btn.count() > 0:
+            logger.info("  「Upload」関連ボタンを検出。ファイル選択を開始します。")
+            try:
+                # ボタンクリックからファイル選択を試行
+                async with self.page.expect_file_chooser(timeout=5000) as fc_info:
+                    await upload_btn.first.click()
+                file_chooser = await fc_info.value
+                await file_chooser.set_files(image_path)
+            except Exception:
+                # 直接 input にセットを試行
+                if await file_input.count() > 0:
+                    await file_input.first.set_input_files(image_path)
+        elif await file_input.count() > 0:
+            logger.info("  ボタンではなくファイル入力欄を直接操作します。")
             await file_input.first.set_input_files(image_path)
-            await self.page.wait_for_timeout(3000)
-            await self._wait_for_streamlit_load()
-            logger.info(f"背景画像アップロード完了: {image_path}")
         else:
-            logger.warning("ファイルアップロード欄が見つかりません")
+            logger.warning("  指定されたセクションにアップロード欄が見つかりません。全体検索へ切り替えます。")
+            global_file_input = self.page.locator('input[type="file"]')
+            if await global_file_input.count() > 0:
+                await global_file_input.first.set_input_files(image_path)
+            else:
+                raise RuntimeError("アップロード可能なファイル入力欄が見つかりませんでした。")
+
+        await self.page.wait_for_timeout(3000)
+        await self._wait_for_streamlit_load()
+        logger.info(f"背景画像アップロード完了: {image_path}")
 
     # =========================================================================
     # フロントエンドアプリURL取得
