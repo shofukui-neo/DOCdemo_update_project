@@ -291,6 +291,7 @@ class Orchestrator:
             if company.screenshot_path:
                 try:
                     await web_operator.upload_background_image(
+                        company.enterprise_id,
                         company.screenshot_path
                     )
                     company.status = ProcessStatus.IMAGE_UPLOADED
