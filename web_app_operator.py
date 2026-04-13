@@ -23,6 +23,9 @@ from config import (
     PAGE_LOAD_TIMEOUT,
     NAVIGATION_TIMEOUT,
     CONTENT_GENERATION_TIMEOUT,
+    ELEMENT_WAIT_TIMEOUT,
+    RETRY_COUNT,
+    RETRY_DELAY,
 )
 from models import CompanyInfo
 
@@ -48,34 +51,50 @@ class WebAppOperator:
         """管理画面にログインする。"""
         logger.info("管理画面にログイン中...")
 
-        await self.page.goto(
-            WEB_APP_BASE_URL,
-            wait_until="domcontentloaded",
-            timeout=PAGE_LOAD_TIMEOUT,
-        )
-        await self._wait_for_streamlit_load()
+    async def login(self):
+        """ログイン画面で認証を実行する。リトライ機能付き。"""
+        logger.info("管理画面にログイン中...")
+        
+        for attempt in range(RETRY_COUNT):
+            try:
+                await self.page.goto(
+                    WEB_APP_BASE_URL,
+                    wait_until="networkidle",
+                    timeout=PAGE_LOAD_TIMEOUT,
+                )
+                await self._wait_for_streamlit_load()
+                await self._dismiss_popup()
 
-        # Page not found ポップアップがあれば閉じる
-        await self._dismiss_popup()
+                # ログイン画面の要素を待機
+                # セレクターをより柔軟にするため、aria-label優先、なければ placeholders
+                email_selector = 'input[aria-label="メールアドレス"]'
+                await self.page.wait_for_selector(email_selector, timeout=ELEMENT_WAIT_TIMEOUT)
+                
+                # メールアドレス入力
+                await self.page.locator(email_selector).fill(LOGIN_EMAIL)
 
-        # メールアドレス入力 (aria-label="メールアドレス")
-        email_input = self.page.locator('input[aria-label="メールアドレス"]')
-        await email_input.fill(LOGIN_EMAIL)
+                # パスワード入力
+                password_selector = 'input[aria-label="パスワード"]'
+                await self.page.locator(password_selector).fill(LOGIN_PASSWORD)
 
-        # パスワード入力 (aria-label="パスワード")
-        password_input = self.page.locator('input[aria-label="パスワード"]')
-        await password_input.fill(LOGIN_PASSWORD)
+                # ログインボタンクリック
+                login_btn = self.page.locator('button:has-text("ログイン")')
+                await login_btn.click()
 
-        # ログインボタンクリック
-        login_btn = self.page.locator('button:has-text("ログイン")')
-        await login_btn.click()
+                # ログイン完了（サイドバーの出現）を待機
+                await self.page.wait_for_selector("[data-testid='stSidebar']", timeout=ELEMENT_WAIT_TIMEOUT)
+                await self._wait_for_streamlit_load()
 
-        # ログイン完了を待機
-        await self.page.wait_for_timeout(3000)
-        await self._wait_for_streamlit_load()
-
-        self._logged_in = True
-        logger.info("ログイン成功")
+                self._logged_in = True
+                logger.info("ログイン成功")
+                return # 成功したら抜ける
+                
+            except Exception as e:
+                logger.warning(f"ログイン試行 {attempt + 1}/{RETRY_COUNT} 失敗: {e}")
+                if attempt < RETRY_COUNT - 1:
+                    await asyncio.sleep(RETRY_DELAY)
+                else:
+                    raise e
 
     async def ensure_logged_in(self):
         """ログイン済みか確認し、未ログインなら再ログイン"""
@@ -386,30 +405,60 @@ class WebAppOperator:
         await self.page.wait_for_timeout(2000)
         await self._wait_for_streamlit_load()
 
-        # 「FAQ」プレビューの表示を確認
+        # 「FAQ」プレビューの表示を確認（厳密に待機）
         logger.info("  FAQプレビューの確認中...")
-        # 「FAQ」という単語を含む見出しやテキストを探す
-        faq_preview = self.page.locator('h1, h2, h3, p, span').filter(has_text=re.compile(r"FAQ", re.IGNORECASE))
+        # FAQセクション自体を特定 (st.markdown等で出力される場合を想定)
+        faq_preview = self.page.locator('div, h1, h2, h3, p, span').filter(has_text=re.compile(r"FAQ", re.IGNORECASE))
+        
         try:
-            await faq_preview.first.wait_for(state="visible", timeout=15000)
+            # プレビューが表示されるまで最大20秒待機
+            await faq_preview.first.wait_for(state="visible", timeout=20000)
             logger.info("  FAQプレビューの表示を確認しました")
         except Exception:
-            logger.warning("  FAQプレビューのテキストが確認できませんでしたが、保存を試みます")
+            # プレビューが見つからない場合は致命的なエラーとして扱う
+            logger.error("  FAQプレビューが確認できません。コンテンツ生成に失敗している可能性があります。")
+            # 念のためスクリーンショットを撮る
+            screenshot_err = f"screenshots/faq_not_found_{int(asyncio.get_event_loop().time())}.png"
+            await self.page.screenshot(path=screenshot_err)
+            raise RuntimeError(f"FAQプレビューが確認できませんでした。詳細は {screenshot_err} を確認してください。")
 
-        # 「FAQ保存（置換）」ボタンをクリック
+        # 「FAQ保存（置換）」ボタンを確実にクリック
+        # 複数の「保存」ボタンがある場合に備え、より具体的なセレクタを使用
         save_button = self.page.locator(
-            'button:has-text("FAQ保存（置換）"), button:has-text("保存"), button:has-text("Save")'
-        )
-        if await save_button.count() > 0:
-            # 「FAQ保存（置換）」が複数ある場合は最初の方を選択
-            await save_button.first.click()
-        else:
-            logger.warning("保存ボタンが見つかりません")
-            return
+            'button:has-text("FAQ保存（置換）"), '
+            'button:has-text("FAQ保存"), '
+            'button:has-text("保存")'
+        ).first
 
-        await self.page.wait_for_timeout(3000)
+        if await save_button.count() > 0:
+            # 要素までスクロール
+            await save_button.scroll_into_view_if_needed()
+            await self.page.wait_for_timeout(500)
+            
+            logger.info("  「FAQ保存」ボタンをクリックします")
+            await save_button.click()
+        else:
+            logger.error("  保存ボタンが見つかりません")
+            raise RuntimeError("FAQ保存ボタンが見つかりませんでした。")
+
+        # 保存完了の検証（StreamlitのToast通知や成功メッセージを待機）
+        logger.info("  保存完了の検証中...")
+        success_msg = self.page.locator('[data-testid="stNotification"], .stAlert').filter(
+            has_text=re.compile(r"(保存|成功|完了|Success|saved)", re.IGNORECASE)
+        )
+        
+        try:
+            # 保存後のUI変化を待機 (3-5秒程度)
+            await success_msg.first.wait_for(state="visible", timeout=10000)
+            logger.info("  保存完了メッセージを確認しました")
+        except Exception:
+            # メッセージが見つからなくても、ボタンの状態が変わっている可能性があるため警告に留める
+            logger.warning("  明確な保存完了メッセージは確認できませんでしたが、処理を続行します")
+
+        await self.page.wait_for_timeout(2000)
         await self._wait_for_streamlit_load()
-        logger.info("コンテンツ保存完了")
+        logger.info("コンテンツ保存処理完了")
+
 
     # =========================================================================
     # 画像アップロード
@@ -509,15 +558,16 @@ class WebAppOperator:
                     await btn.first.click()
                 new_page = await new_page_info.value
                 
-                # 新しいページの読み込みを少し待機
-                await new_page.wait_for_load_state("domcontentloaded")
-                await new_page.wait_for_timeout(3000)
-                
-                url = new_page.url
-                logger.info(f"  新規タブからURLを取得成功: {url}")
-                
-                await new_page.close()
-                return url
+                try:
+                    # 新しいページの読み込みを少し待機
+                    await new_page.wait_for_load_state("domcontentloaded")
+                    await new_page.wait_for_timeout(3000)
+                    
+                    url = new_page.url
+                    logger.info(f"  新規タブからURLを取得成功: {url}")
+                    return url
+                finally:
+                    await new_page.close()
             except Exception as e:
                 logger.warning(f"  新規タブの捕捉またはURL取得に失敗しました: {e}")
                 # 失敗した場合はフォールバックへ進む
