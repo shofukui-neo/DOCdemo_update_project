@@ -10,6 +10,7 @@ import asyncio
 import logging
 import os
 import sys
+import csv
 from datetime import datetime
 from pathlib import Path
 from urllib.parse import urljoin, urlparse
@@ -130,17 +131,37 @@ async def extract_internal_links_and_screenshot(
         finally:
             await browser.close()
 
-    # 6. 結果
+    # 6. 結果の出力とファイル保存
+    csv_filepath = None
     sorted_links = sorted(list(unique_links))
     logger.info(f"抽出完了: {len(sorted_links)}件の有効リンク")
     
     if sorted_links:
+        print("\n--- 抽出された関連ページURL ---")
         for link in sorted_links:
+            print(link)
             logger.debug(f"  {link}")
+            
+        # CSVファイルの保存
+        csv_filename = f"links_{timestamp}.csv"
+        csv_filepath = os.path.join(os.path.expanduser("~"), "Downloads", csv_filename)
+        try:
+            with open(csv_filepath, 'w', newline='', encoding='utf-8') as f:
+                writer = csv.writer(f)
+                writer.writerow(['URL'])
+                for link in sorted_links:
+                    writer.writerow([link])
+            print(f"\n✅ リンク一覧をCSVに保存しました: {csv_filepath}")
+            logger.info(f"CSV保存: {csv_filepath}")
+        except Exception as e:
+            print(f"❌ CSV保存エラー: {e}")
+            logger.error(f"CSV保存エラー: {e}")
 
     return {
         "links": sorted_links,
         "screenshot_path": filepath,
+        "csv_path": csv_filepath,
+        "total_links": len(sorted_links),
     }
 
 
