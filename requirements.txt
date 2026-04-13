@@ -6,3 +6,5 @@ pytest
 pytest-asyncio
 requests
 beautifulsoup4
+google-auth
+
