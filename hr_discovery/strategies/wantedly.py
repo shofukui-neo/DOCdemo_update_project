@@ -23,6 +23,8 @@ def discover_from_wantedly(search_engine: SearchEngine, company_name: str, homep
                     title=candidate.title,
                     source_url=result.url,
                     source_label="Wantedly",
+                    candidate_tier=candidate.tier,
+                    confidence_score=candidate.score,
                 )
             )
 

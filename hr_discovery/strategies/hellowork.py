@@ -23,6 +23,8 @@ def discover_from_hellowork(search_engine: SearchEngine, company_name: str, home
                     title=candidate.title,
                     source_url=result.url,
                     source_label="HelloWork",
+                    candidate_tier=candidate.tier,
+                    confidence_score=candidate.score,
                 )
             )
 

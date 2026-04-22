@@ -11,3 +11,5 @@ class DiscoveryRecord:
     title: str
     source_url: str
     source_label: str
+    candidate_tier: str
+    confidence_score: int

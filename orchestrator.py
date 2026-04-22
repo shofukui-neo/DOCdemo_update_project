@@ -4,6 +4,12 @@ DOCdemo 自動化フロー — メインオーケストレーター
 全自動化フローの統合・進捗管理・エラーハンドリングを担当する。
 企業リストの読み込みから、企業追加、コンテンツ生成、画像アップロード、
 リンク取得、スプレッドシート書き戻しまでの全工程を制御する。
+
+変更履歴:
+- 2026-04-22: 1件ごとに再ログイン＆キャッシュクリアを追加
+- 2026-04-22: 企業IDをURLから抽出するように変更
+- 2026-04-22: 画像取得をHP実際の画像に変更（スクショ非推奨）
+- 2026-04-22: 企業選択をサイドバーから行うよう変更
 """
 
 import asyncio
@@ -30,7 +36,7 @@ from config import (
 from models import CompanyInfo, ProcessStatus
 from spreadsheet_manager import SpreadsheetManager
 from url_finder import URLFinder
-from link_extractor import extract_internal_links_and_screenshot
+from image_fetcher import fetch_company_image, extract_enterprise_id_from_url
 from web_app_operator import WebAppOperator
 
 logger = logging.getLogger(__name__)
@@ -54,7 +60,7 @@ def setup_logging():
     root_logger = logging.getLogger()
     root_logger.setLevel(getattr(logging, LOG_LEVEL, logging.INFO))
 
-    # コンソールハンドラ（UTF-8ストリームを使用）
+    # コンソールハンドラ
     console_handler = logging.StreamHandler(sys.stdout)
     console_handler.setFormatter(logging.Formatter(LOG_FORMAT))
     root_logger.addHandler(console_handler)
@@ -74,6 +80,7 @@ class Orchestrator:
     - 各モジュールの呼び出しと結果の受け渡し
     - エラーハンドリングとリトライ
     - 処理済み企業のスキップ（レジューム機能）
+    - 1件完了ごとに再ログイン＆キャッシュクリア
     """
 
     def __init__(
@@ -168,6 +175,15 @@ class Orchestrator:
 
                 self.stats["processed"] += 1
 
+                # ===== 1件完了後に再ログイン＆キャッシュクリア =====
+                if idx < len(pending):  # 最後の企業では不要
+                    logger.info("")
+                    logger.info("1件処理完了 → 再ログイン＆キャッシュクリアを実行")
+                    try:
+                        await web_operator.re_login_with_cache_clear()
+                    except Exception as e:
+                        logger.warning(f"再ログイン失敗（続行）: {e}")
+
             # クリーンアップ
             await browser.close()
 
@@ -193,7 +209,6 @@ class Orchestrator:
             logger.info("Step 1/6: ホームページURL検索...")
 
             if "リンクなし" in company.name or "見当たらず" in company.name:
-                # 備考付き企業名のクリーニング
                 clean_name = company.name.split("（")[0].split("(")[0].strip()
                 company.name = clean_name
 
@@ -207,9 +222,24 @@ class Orchestrator:
                 return
 
             company.homepage_url = homepage_url
+
+            # === 企業IDをURLから抽出 ===
+            url_based_id = extract_enterprise_id_from_url(homepage_url)
+            if url_based_id and url_based_id != "unknown":
+                logger.info(f"  企業ID (URLから抽出): {url_based_id}")
+                company.enterprise_id = url_based_id
+            else:
+                logger.warning(f"  URLからIDを抽出できないため、企業名から生成します: {company.enterprise_id}")
+
             company.status = ProcessStatus.URL_FOUND
             self.sheet_manager.update_company(company, companies)
-            logger.info(f"  → URL: {homepage_url}")
+            logger.info(f"  → URL: {homepage_url}, ID: {company.enterprise_id}")
+
+        # URLが既にある場合もIDをURLから再確認
+        elif company.status != ProcessStatus.PENDING and company.homepage_url:
+            url_based_id = extract_enterprise_id_from_url(company.homepage_url)
+            if url_based_id and url_based_id != "unknown":
+                company.enterprise_id = url_based_id
 
         # ===== Step 2: 企業追加 =====
         if company.status == ProcessStatus.URL_FOUND:
@@ -233,52 +263,52 @@ class Orchestrator:
             self.sheet_manager.update_company(company, companies)
             logger.info(f"  → 企業追加完了 (ID: {company.enterprise_id})")
 
-        # ===== Step 3: リンク抽出 + スクリーンショット =====
+        # ===== Step 3: HP画像取得（スクショではなく実際のHP画像） =====
         if company.status == ProcessStatus.COMPANY_ADDED:
-            logger.info("Step 3/6: リンク抽出 & スクリーンショット...")
+            logger.info("Step 3/6: HP画像取得...")
 
-            result = await extract_internal_links_and_screenshot(
-                company.homepage_url
-            )
-            company.extracted_links = result["links"]
-            company.screenshot_path = result["screenshot_path"]
+            try:
+                image_path = await fetch_company_image(
+                    company.homepage_url,
+                    company.name,
+                )
+                company.screenshot_path = image_path
 
-            logger.info(
-                f"  → {len(company.extracted_links)}件のリンク抽出, "
-                f"スクリーンショット: {company.screenshot_path}"
-            )
+                # 内部リンクも並行取得（URLの収集のみ、スクリーンショットなし）
+                extracted_links = await self._extract_links_only(company.homepage_url)
+                company.extracted_links = extracted_links
 
-            # Step 3 完了だがステータスはCOMPANY_ADDEDのまま
-            # (コンテンツ生成完了後にまとめて更新)
+                logger.info(
+                    f"  → 画像取得: {image_path}, "
+                    f"抽出リンク: {len(extracted_links)}件"
+                )
+            except Exception as e:
+                logger.warning(f"  [WARN] 画像/リンク取得失敗: {e} (続行)")
+                company.extracted_links = [company.homepage_url]
 
         # ===== Step 4: コンテンツ生成 =====
-        if company.status in (
-            ProcessStatus.COMPANY_ADDED,
-        ):
+        if company.status in (ProcessStatus.COMPANY_ADDED,):
             logger.info("Step 4/6: コンテンツ生成...")
 
             # コンテンツ生成ページへ遷移
             await web_operator.navigate_to_content_generator()
+            await web_operator._wait_for_streamlit_load()
 
-            # 企業選択
-            await web_operator.select_company(company.enterprise_id)
+            # === サイドバーから企業を選択（タイトル確認込み） ===
+            await web_operator.select_company_from_sidebar(company)
 
             # URL入力
             if company.extracted_links:
-                await web_operator.input_urls_for_content(
-                    company.extracted_links
-                )
+                await web_operator.input_urls_for_content(company.extracted_links)
             else:
                 logger.warning("  抽出リンクがありません。ホームページURLのみ入力...")
-                await web_operator.input_urls_for_content(
-                    [company.homepage_url]
-                )
+                await web_operator.input_urls_for_content([company.homepage_url])
 
             # 生成実行
             await web_operator.generate_content()
 
-            # 保存
-            await web_operator.save_content()
+            # 保存（2段階 + コンテンツ管理確認）
+            await web_operator.save_content(company)
 
             company.status = ProcessStatus.CONTENT_GENERATED
             self.sheet_manager.update_company(company, companies)
@@ -299,10 +329,10 @@ class Orchestrator:
                     logger.info("  → 背景画像アップロード完了")
                 except Exception as e:
                     logger.warning(f"  [WARN] 画像アップロード失敗: {e} (続行)")
-                    company.status = ProcessStatus.IMAGE_UPLOADED  # スキップして続行
+                    company.status = ProcessStatus.IMAGE_UPLOADED
                     self.sheet_manager.update_company(company, companies)
             else:
-                logger.warning("  スクリーンショットなし: スキップ")
+                logger.warning("  画像なし: スキップ")
                 company.status = ProcessStatus.IMAGE_UPLOADED
                 self.sheet_manager.update_company(company, companies)
 
@@ -318,6 +348,53 @@ class Orchestrator:
             logger.info(f"  → フロントエンドURL: {frontend_url}")
 
         logger.info(f"[OK] {company.name}: 全処理完了!")
+
+    async def _extract_links_only(self, homepage_url: str) -> list:
+        """
+        ページから内部リンクを抽出する（画像取得なし・軽量版）
+
+        Returns:
+            内部リンクのリスト
+        """
+        from urllib.parse import urlparse
+        
+        try:
+            async with async_playwright() as p:
+                browser = await p.chromium.launch(headless=True)
+                context = await browser.new_context(
+                    viewport={"width": 1280, "height": 800}
+                )
+                page = await context.new_page()
+                
+                parsed_base = urlparse(homepage_url)
+                base_domain = parsed_base.netloc
+                
+                await page.goto(homepage_url, wait_until="domcontentloaded", timeout=30000)
+                await page.wait_for_timeout(2000)
+                
+                hrefs = await page.eval_on_selector_all(
+                    "a", "elements => elements.map(el => el.href)"
+                )
+                
+                unique_links = set()
+                for href in hrefs:
+                    if not href:
+                        continue
+                    clean_url = href.split('#')[0].rstrip('/')
+                    from urllib.parse import urlparse as up
+                    parsed_href = up(clean_url)
+                    if parsed_href.netloc == base_domain:
+                        unique_links.add(clean_url)
+                
+                await browser.close()
+                
+                # ホームページURL自体も含める
+                unique_links.add(homepage_url)
+                return sorted(list(unique_links))[:30]  # 最大30件
+                
+        except Exception as e:
+            logger.warning(f"リンク抽出エラー: {e}")
+            return [homepage_url]
 
     def _print_summary(self, elapsed):
         """処理完了後のサマリーを出力"""
