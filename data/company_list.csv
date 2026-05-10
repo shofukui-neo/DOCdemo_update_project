@@ -1,6 +1,6 @@
-﻿企業名,ホームページURL,企業ID,フロントエンドURL,ステータス,エラー詳細,スクリーンショットパス
-ブロードマインド株式会社,,,,未処理,,
-株式会社4976ホールディングス,,,,未処理,,
-株式会社クレーネル,,,,未処理,,
-株式会社カークリニックアキヤマ,,,,未処理,,
-株式会社テラ,,,,未処理,,
+﻿企業名,ホームページURL,URL候補,企業ID,納品URL,ステータス,エラー詳細,スクリーンショットパス
+ブロードマインド株式会社,,,ブロードマインド,,未処理,,
+株式会社4976ホールディングス,,,4976ホールディングス,,未処理,,
+株式会社クレーネル,,,クレーネル,,未処理,,
+株式会社カークリニックアキヤマ,https://www.c-c-akiyama.com,https://akiyama-group.com|https://kei-ichiman.com|https://589kobac.co.jp|https://www.c-c-akiyama.com|https://akiyama-group-recruit.com,c-c-akiyama,https://casual-interview-dev.brainverse-ai.com/c-c-akiyama,完了,,C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\screenshots\img_www_c-c-akiyama_com_20260511_073417.jpg
+株式会社テラ,,,テラ,,未処理,,

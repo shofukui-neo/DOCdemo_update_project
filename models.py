@@ -13,6 +13,7 @@ class ProcessStatus(Enum):
     """企業ごとの処理進捗ステータス"""
     PENDING = "未処理"
     URL_FOUND = "URL特定済"
+    DUPLICATE_DETECTED = "同名企業該当"  # 検索結果に複数候補ドメインあり、人間の手動確認待ち
     COMPANY_ADDED = "企業追加済"
     CONTENT_GENERATED = "コンテンツ生成済"
     IMAGE_UPLOADED = "画像UP済"
@@ -31,7 +32,8 @@ class CompanyInfo:
 
     # 自動生成・取得されるフィールド
     enterprise_id: str = ""           # 企業ID（例: "one-hat"）
-    homepage_url: str = ""            # ホームページURL
+    homepage_url: str = ""            # ホームページURL（採用済み）
+    url_candidates: list = field(default_factory=list)   # 同名検出時の候補URL（手動選択用）
     screenshot_path: str = ""         # スクリーンショットファイルパス
     extracted_links: list = field(default_factory=list)  # 抽出リンク一覧
     frontend_app_url: str = ""        # フロントエンドアプリURL
@@ -108,7 +110,14 @@ class CompanyInfo:
         return name if name else "unknown"
 
     def is_processable(self) -> bool:
-        """処理可能(未処理または途中)かどうかを判定"""
+        """
+        処理可能(未処理または途中)かどうかを判定。
+
+        DUPLICATE_DETECTED は人間の手動介入待ちなので、ホームページURLが
+        手動で確定された場合のみ処理対象とする。
+        """
+        if self.status == ProcessStatus.DUPLICATE_DETECTED:
+            return bool(self.homepage_url)
         return self.status in (
             ProcessStatus.PENDING,
             ProcessStatus.URL_FOUND,
@@ -126,6 +135,21 @@ class CompanyInfo:
         """スキップ状態にする"""
         self.status = ProcessStatus.SKIPPED
         self.error_message = reason
+
+    def mark_duplicate(self, candidates: list, reason: str = ""):
+        """
+        同名企業の候補が複数あり、人間の手動確認待ちの状態にする。
+
+        Args:
+            candidates: 候補URLのリスト
+            reason: 理由メッセージ
+        """
+        self.status = ProcessStatus.DUPLICATE_DETECTED
+        self.url_candidates = list(candidates)
+        self.error_message = reason or (
+            f"同名候補ドメインが {len(candidates)} 件検出されました。"
+            "「ホームページURL」列に正しいURLを入力して再実行してください。"
+        )
 
     def __str__(self) -> str:
         return (

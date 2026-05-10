@@ -27,7 +27,8 @@ with open(checklist_path, 'w', encoding='utf-8') as f:
     
     for row in rows:
         name = row.get('企業名', '').strip()
-        url = row.get('フロントエンドURL', '').strip()
+        # 新カラム名「納品URL」を優先、なければ旧「フロントエンドURL」にフォールバック
+        url = row.get('納品URL', '').strip() or row.get('フロントエンドURL', '').strip()
         # URLが空でも未処理でも (生成中) と表示
         display_url = url if url and url.startswith('http') else "(生成中)"
         if not name:

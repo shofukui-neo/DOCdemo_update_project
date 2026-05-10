@@ -137,6 +137,54 @@ class WebAppOperator:
         await self.login()
         logger.info("再ログイン＆キャッシュクリア完了")
 
+    async def close_page_and_relogin(self):
+        """
+        現在のページタブを完全に閉じ、新しいページタブを開いて再ログインする。
+
+        re_login_with_cache_clear() より強力なリセット手段。
+        Playwright のページ内に蓄積された JavaScript の状態・event listener・
+        Streamlit のセッション state 等を確実に破棄するために使用する。
+
+        企業追加直後（Step 2.5 後）→ コンテンツ生成（Step 4）の間で実行する
+        ことで、企業追加時に残ったページ内キャッシュによる「別企業のコンテンツが
+        生成される」「サイドバー選択が反映されない」等の不具合を防ぐ。
+        """
+        logger.info("ページを閉じて再ログインを開始...")
+
+        context = self.page.context
+        old_page = self.page
+
+        # Cookie・ストレージも念のためクリアしておく
+        try:
+            await old_page.evaluate("""
+                () => {
+                    try { localStorage.clear(); } catch(e) {}
+                    try { sessionStorage.clear(); } catch(e) {}
+                }
+            """)
+        except Exception:
+            pass
+        try:
+            await context.clear_cookies()
+        except Exception:
+            pass
+
+        # 古いページを完全に閉じる
+        try:
+            await old_page.close()
+            logger.info("  古いページタブを閉じました")
+        except Exception as e:
+            logger.warning(f"  古いページのクローズ失敗（続行）: {e}")
+
+        # 新しいページタブを取得
+        self.page = await context.new_page()
+        self._logged_in = False
+        logger.info("  新しいページタブを開きました")
+
+        # 再ログイン
+        await self.login()
+        logger.info("ページクローズ＆再ログイン完了")
+
     async def ensure_logged_in(self):
         """ログイン済みか確認し、未ログインなら再ログイン"""
         if not self._logged_in:
@@ -278,23 +326,44 @@ class WebAppOperator:
         logger.info(f"サイドバーから企業選択開始: {company.name}")
 
         sidebar = self.page.locator("[data-testid='stSidebar']")
-        
-        # 企業選択UIを探す (selectbox / combobox)
-        company_selector = sidebar.locator(
+
+        # まずはセレクトボックス全体（input または baseweb select 用の div）をクリックして開く
+        select_container = sidebar.locator(
             'input[aria-label*="企業を選択"], '
             'input[aria-label*="選択"], '
             '[data-baseweb="select"]'
         )
-        
-        # セレクトボックスをクリックして開く
-        if await company_selector.count() > 0:
-            await company_selector.first.click()
+
+        if await select_container.count() > 0:
+            await select_container.first.click()
             await self.page.wait_for_timeout(800)
-            
-            # 企業名を入力して絞り込み
-            await company_selector.first.fill(company.enterprise_id)
-            await self.page.wait_for_timeout(1000)
-            
+
+            # baseweb select の場合、open 後に内側の <input> が編集可能になる
+            actual_input = sidebar.locator(
+                'input[aria-label*="企業を選択"], '
+                'input[aria-label*="選択"], '
+                '[data-baseweb="select"] input, '
+                'input[role="combobox"]'
+            )
+
+            input_filled = False
+            if await actual_input.count() > 0:
+                try:
+                    await actual_input.first.fill(company.enterprise_id)
+                    input_filled = True
+                except Exception:
+                    # fill 不可なら type フォールバック
+                    try:
+                        await actual_input.first.type(
+                            company.enterprise_id, delay=30
+                        )
+                        input_filled = True
+                    except Exception as e:
+                        logger.warning(f"  入力フィールド書き込み失敗: {e}")
+
+            if input_filled:
+                await self.page.wait_for_timeout(1000)
+
             # ドロップダウンから選択
             option = self.page.locator(
                 f'li[role="option"]:has-text("{company.enterprise_id}")'
@@ -311,8 +380,12 @@ class WebAppOperator:
                     await option_name.click(timeout=3000)
                     logger.debug(f"  企業名でフォールバック選択: {company.name}")
                 except Exception:
-                    await company_selector.first.press("Enter")
-                    logger.debug("  Enterキーで確定")
+                    if input_filled and await actual_input.count() > 0:
+                        await actual_input.first.press("Enter")
+                        logger.debug("  Enterキーで確定")
+                    else:
+                        await select_container.first.press("Enter")
+                        logger.debug("  Enterキーで確定 (container)")
         else:
             # フォールバック: サイドバー全体から探す
             logger.warning("  企業選択セレクターが見つかりません → フォールバック")
@@ -326,53 +399,139 @@ class WebAppOperator:
 
         logger.info(f"サイドバー企業選択完了: {company.name}")
 
-    async def _verify_content_title(self, company: CompanyInfo):
+    async def _verify_content_title(self, company: CompanyInfo, strict: bool = True):
         """
-        コンテンツ生成ページのタイトルが対象企業名を含んでいることを検証する。
+        コンテンツ生成ページのヘッダー部分が対象企業名に変更されていることを検証する。
 
-        タイトルは「🤖 {enterprise_id} コンテンツ生成」 または
-        「{company.name} コンテンツ生成」などの形式になることを確認。
+        Step 4 のコンテンツ生成前に必ず呼ばれ、ヘッダーが対象企業に切り替わって
+        いない場合は RuntimeError を送出してフローを停止する（誤った企業に対する
+        コンテンツ生成を防ぐため）。
+
+        Args:
+            company: 検証対象の企業
+            strict: True の場合、ヘッダー検証失敗で例外を送出する。
+                    False の場合は警告のみ。
+
+        Raises:
+            RuntimeError: strict=True かつヘッダーに企業名/IDが見つからない場合
         """
-        logger.info(f"  タイトル確認中: 企業名={company.name}, ID={company.enterprise_id}")
-        
-        # h1, h2, h3 またはタイトル的な要素を探す
+        logger.info(f"  ヘッダー検証中: 企業名={company.name}, ID={company.enterprise_id}")
+
         title_locators = [
             self.page.locator('h1, h2'),
             self.page.locator('[data-testid="stHeading"] p'),
             self.page.locator('.stMarkdown h1, .stMarkdown h2'),
         ]
-        
+
+        matched_text = ""
         title_found = False
         for locator in title_locators:
             try:
                 count = await locator.count()
                 for i in range(count):
                     text = await locator.nth(i).text_content()
-                    text = text or ""
-                    # 企業ID または 企業名が含まれているか確認
-                    if company.enterprise_id in text or company.name in text:
-                        logger.info(f"  タイトル確認成功: 「{text.strip()}」")
+                    text = (text or "").strip()
+                    if not text:
+                        continue
+                    if company.enterprise_id and company.enterprise_id in text:
+                        matched_text = text
+                        title_found = True
+                        break
+                    if company.name and company.name in text:
+                        matched_text = text
                         title_found = True
                         break
                 if title_found:
                     break
             except Exception:
                 pass
-        
-        if not title_found:
-            # ページ全体テキストで確認
-            page_content = await self.page.content()
-            if company.enterprise_id in page_content or company.name in page_content:
-                logger.info(f"  タイトル: ページ内に企業情報を確認（タイトル要素特定は不完全）")
-            else:
-                logger.warning(
-                    f"  [WARN] タイトルに企業名が見つかりません: "
-                    f"name={company.name}, id={company.enterprise_id}"
-                )
-                # スクリーンショットを撮って記録
-                screenshot_path = f"screenshots/title_warn_{company.enterprise_id}.png"
-                await self.page.screenshot(path=screenshot_path)
-                logger.warning(f"  スクリーンショット保存: {screenshot_path}")
+
+        if title_found:
+            logger.info(f"  [OK] ヘッダー検証成功: 「{matched_text}」")
+            return
+
+        # ヘッダー要素では見つからなかった場合 → ページ全体で再確認
+        page_content = await self.page.content()
+        in_page = (
+            (company.enterprise_id and company.enterprise_id in page_content)
+            or (company.name and company.name in page_content)
+        )
+
+        screenshot_path = f"screenshots/title_warn_{company.enterprise_id}.png"
+        await self.page.screenshot(path=screenshot_path)
+
+        if in_page and not strict:
+            logger.warning(
+                "  [WARN] ヘッダー要素には特定できなかったがページ内に企業情報を確認 "
+                f"(スクショ: {screenshot_path})"
+            )
+            return
+
+        msg = (
+            f"ヘッダーに対象企業名/IDが見つかりません: "
+            f"name={company.name}, id={company.enterprise_id}, "
+            f"スクショ: {screenshot_path}"
+        )
+        if strict:
+            logger.error(f"  [ERR] {msg}")
+            raise RuntimeError(msg)
+        else:
+            logger.warning(f"  [WARN] {msg}")
+
+    async def verify_enterprise_id_in_added_company(self, company: CompanyInfo):
+        """
+        Step 2 と Step 3 の間で呼ばれる検証。
+
+        企業追加直後、追加した企業のデータ（URL/カード/詳細表示）の中に
+        homepage_url から抽出した enterprise_id が含まれているかを確認する。
+        企業追加時に意図しないIDが採用されていた場合に検出できる。
+
+        Raises:
+            RuntimeError: 追加された企業情報内に enterprise_id が見つからない場合
+        """
+        logger.info(
+            f"  企業ID検証中: 期待ID={company.enterprise_id}, URL={company.homepage_url}"
+        )
+
+        if not company.enterprise_id:
+            raise RuntimeError("企業IDが空です。検証を実行できません。")
+
+        await self._wait_for_streamlit_load()
+        await self.page.wait_for_timeout(1000)
+
+        page_text = await self.page.content()
+
+        # 期待されるIDがページ内に出現しているか
+        if company.enterprise_id in page_text:
+            logger.info(f"  [OK] 企業ID '{company.enterprise_id}' をページ内に確認")
+            return
+
+        # ページ内のURL要素から実際に登録されたIDを推測
+        try:
+            anchor_hrefs = await self.page.eval_on_selector_all(
+                "a[href]", "elements => elements.map(el => el.href)"
+            )
+        except Exception:
+            anchor_hrefs = []
+
+        actual_ids = []
+        for href in anchor_hrefs:
+            if "casual-interview" in href:
+                # 例: https://casual-interview-dev.brainverse-ai.com/{id}
+                from urllib.parse import urlparse as _up
+                p = _up(href)
+                last = p.path.rstrip("/").rsplit("/", 1)[-1]
+                if last:
+                    actual_ids.append(last)
+
+        screenshot_path = f"screenshots/id_mismatch_{company.enterprise_id}.png"
+        await self.page.screenshot(path=screenshot_path)
+        msg = (
+            f"企業追加後のページ内に期待ID '{company.enterprise_id}' が見つかりません。"
+            f" 検出された候補ID: {actual_ids}, スクショ: {screenshot_path}"
+        )
+        logger.error(f"  [ERR] {msg}")
+        raise RuntimeError(msg)
 
     async def select_company(self, company_id: str):
         """
@@ -522,17 +681,36 @@ class WebAppOperator:
 
         # === FAQプレビューの表示を確認 ===
         logger.info("  FAQプレビューの確認中...")
-        faq_preview = self.page.locator('div, h1, h2, h3, p, span').filter(
-            has_text=re.compile(r"FAQ", re.IGNORECASE)
-        )
+        # 「生成されたFAQs」見出し or h2/h3/h4 にFAQを含む要素 or 「FAQ 1:」などのテキスト
+        faq_preview = self.page.locator(
+            'h1, h2, h3, h4, [data-testid="stHeading"]'
+        ).filter(has_text="FAQ")
+
         try:
-            await faq_preview.first.wait_for(state="visible", timeout=20000)
+            await faq_preview.first.wait_for(state="visible", timeout=15000)
             logger.info("  FAQプレビューの表示を確認しました")
         except Exception:
-            logger.error("  FAQプレビューが確認できません。コンテンツ生成に失敗している可能性があります。")
-            screenshot_err = f"screenshots/faq_not_found_{company.enterprise_id}.png"
-            await self.page.screenshot(path=screenshot_err)
-            raise RuntimeError(f"FAQプレビューが確認できませんでした。詳細は {screenshot_err} を確認してください。")
+            # フォールバック: ページ全体のテキストにFAQが含まれているかチェック
+            page_text = await self.page.content()
+            if "FAQ" in page_text and (
+                "生成されたFAQ" in page_text or "FAQ 1" in page_text
+                or "FAQ1" in page_text
+            ):
+                logger.info(
+                    "  FAQプレビューはページ内に存在 (見出しセレクター不一致を許容)"
+                )
+            else:
+                logger.error(
+                    "  FAQプレビューが確認できません。コンテンツ生成に失敗している可能性があります。"
+                )
+                screenshot_err = (
+                    f"screenshots/faq_not_found_{company.enterprise_id}.png"
+                )
+                await self.page.screenshot(path=screenshot_err)
+                raise RuntimeError(
+                    f"FAQプレビューが確認できませんでした。詳細は "
+                    f"{screenshot_err} を確認してください。"
+                )
 
         # === STEP 1: 第1保存ボタン（FAQ保存・置換）をクリック ===
         logger.info("  STEP1: 第1保存ボタン（FAQ保存）をクリック...")
@@ -622,44 +800,138 @@ class WebAppOperator:
 
     async def _verify_content_saved(self, company: CompanyInfo):
         """
-        コンテンツ管理タブに移動して、保存が正しく行われたか確認する。
+        コンテンツ管理タブで FAQ と 企業情報 の両タブを開き、
+        対象企業のコンテンツが正しく保存されているかを検証する。
+
+        検証項目:
+        1. コンテンツ管理ページに対象企業が選択できること
+        2. FAQタブ内に企業名 or 企業IDの出現
+        3. 企業情報タブ内に企業名 or 企業IDの出現
+
+        いずれの検証も失敗した場合は RuntimeError を送出して
+        誤った企業のコンテンツが保存された状態を検出する。
+
+        Raises:
+            RuntimeError: FAQ/企業情報の両方で対象企業を確認できなかった場合
         """
         logger.info(f"  コンテンツ管理タブで保存確認中: {company.name}")
-        
-        try:
-            # コンテンツ管理タブへ移動
-            await self.navigate_to_content_management()
-            await self.page.wait_for_timeout(2000)
-            await self._wait_for_streamlit_load()
-            
-            # 企業を選択（コンテンツ管理ページにも企業選択がある場合）
-            await self._try_select_company_in_page(company.enterprise_id)
-            await self.page.wait_for_timeout(1500)
-            
-            # 企業名やコンテンツが表示されているか確認
-            page_content = await self.page.content()
-            
-            if company.enterprise_id in page_content or company.name in page_content:
-                logger.info(f"  [OK] コンテンツ管理タブ: {company.enterprise_id} のコンテンツを確認")
-                
-                # FAQコンテンツの存在確認
-                faq_check = self.page.locator('div, p, span, td').filter(
-                    has_text=re.compile(r"(Q\.|FAQ|よくある質問)", re.IGNORECASE)
-                )
-                if await faq_check.count() > 0:
-                    logger.info("  [OK] FAQコンテンツの存在を確認しました")
-                else:
-                    logger.warning("  [WARN] FAQコンテンツが確認できませんでした")
-            else:
-                logger.warning(f"  [WARN] コンテンツ管理タブに {company.enterprise_id} の情報が見つかりません")
-            
-            # スクリーンショットを保存
-            screenshot_path = f"screenshots/content_mgmt_{company.enterprise_id}.png"
-            await self.page.screenshot(path=screenshot_path)
-            logger.info(f"  コンテンツ管理スクリーンショット: {screenshot_path}")
-            
-        except Exception as e:
-            logger.warning(f"  コンテンツ管理確認中にエラー（無視して続行）: {e}")
+
+        screenshot_path = f"screenshots/content_mgmt_{company.enterprise_id}.png"
+
+        await self.navigate_to_content_management()
+        await self.page.wait_for_timeout(2000)
+        await self._wait_for_streamlit_load()
+
+        # コンテンツ管理ページ側にも企業セレクタがある場合は対象企業を選択
+        await self._try_select_company_in_page(company.enterprise_id)
+        await self.page.wait_for_timeout(1500)
+        await self._wait_for_streamlit_load()
+
+        await self.page.screenshot(path=screenshot_path)
+
+        # ページ全体で企業の存在を確認
+        page_content = await self.page.content()
+        if (company.enterprise_id not in page_content
+                and company.name not in page_content):
+            msg = (
+                f"コンテンツ管理ページに対象企業 ({company.enterprise_id} / "
+                f"{company.name}) の情報が見つかりません。スクショ: {screenshot_path}"
+            )
+            logger.error(f"  [ERR] {msg}")
+            raise RuntimeError(msg)
+
+        logger.info(
+            f"  [OK] コンテンツ管理ページ: {company.enterprise_id} の存在を確認"
+        )
+
+        # FAQタブ・企業情報タブをそれぞれ開いて検証
+        faq_ok = await self._verify_tab_content(
+            company, tab_keywords=["FAQ", "よくある質問", "Q&A"], tab_label="FAQ"
+        )
+        info_ok = await self._verify_tab_content(
+            company,
+            tab_keywords=["企業情報", "会社情報", "企業詳細", "プロフィール"],
+            tab_label="企業情報",
+        )
+
+        if not (faq_ok and info_ok):
+            msg = (
+                f"FAQ/企業情報タブのコンテンツ検証に失敗 "
+                f"(faq_ok={faq_ok}, info_ok={info_ok}, "
+                f"id={company.enterprise_id}, スクショ: {screenshot_path})"
+            )
+            logger.error(f"  [ERR] {msg}")
+            raise RuntimeError(msg)
+
+        logger.info("  [OK] FAQ・企業情報タブともに対象企業のコンテンツを確認")
+
+    async def _verify_tab_content(
+        self,
+        company: CompanyInfo,
+        tab_keywords: list,
+        tab_label: str,
+    ) -> bool:
+        """
+        指定キーワードを持つタブを開き、そのタブ内に対象企業の
+        企業名 or 企業IDが出現するかを検証する。
+
+        Args:
+            company: 検証対象の企業
+            tab_keywords: タブを特定するためのテキスト候補
+            tab_label: ログ用のタブ名
+
+        Returns:
+            タブ内に企業情報が確認できれば True
+        """
+        logger.info(f"  [{tab_label}タブ] 検証開始")
+
+        tab_locators = self.page.locator("[data-baseweb='tab'], [role='tab'], button[role='tab']")
+        tab_count = await tab_locators.count()
+        clicked = False
+
+        for i in range(tab_count):
+            try:
+                text = (await tab_locators.nth(i).text_content()) or ""
+                if any(kw in text for kw in tab_keywords):
+                    await tab_locators.nth(i).click()
+                    await self.page.wait_for_timeout(1500)
+                    await self._wait_for_streamlit_load()
+                    logger.info(f"  [{tab_label}タブ] 開いた: 「{text.strip()}」")
+                    clicked = True
+                    break
+            except Exception:
+                continue
+
+        if not clicked:
+            logger.warning(
+                f"  [{tab_label}タブ] が見つかりません（タブ未表示の可能性、"
+                f"ページ全体で代替検証）"
+            )
+
+        # タブ表示後のページコンテンツで企業が確認できるか
+        body_text = await self.page.content()
+        # FAQ的な要素を探す（FAQタブの場合）/企業情報的な要素を探す
+        in_company = (
+            (company.enterprise_id and company.enterprise_id in body_text)
+            or (company.name and company.name in body_text)
+        )
+
+        screenshot_path = (
+            f"screenshots/tab_{tab_label}_{company.enterprise_id}.png"
+        )
+        await self.page.screenshot(path=screenshot_path)
+
+        if in_company:
+            logger.info(
+                f"  [OK] [{tab_label}タブ] 企業名/IDを確認 (スクショ: {screenshot_path})"
+            )
+            return True
+        else:
+            logger.warning(
+                f"  [WARN] [{tab_label}タブ] 企業名/IDを確認できませんでした "
+                f"(スクショ: {screenshot_path})"
+            )
+            return False
 
     async def _try_select_company_in_page(self, company_id: str):
         """ページ内に企業選択UIがあれば選択を試みる"""

@@ -11,7 +11,7 @@ import os
 from pathlib import Path
 from typing import List, Optional
 
-from config import COMPANY_LIST_CSV, CSV_COLUMNS, DATA_DIR
+from config import COMPANY_LIST_CSV, CSV_COLUMNS, DATA_DIR, LEGACY_COLUMN_ALIASES
 from models import CompanyInfo, ProcessStatus
 
 logger = logging.getLogger(__name__)
@@ -51,6 +51,16 @@ class SpreadsheetManager:
         companies = []
         col = CSV_COLUMNS
 
+        def _get_with_legacy(row: dict, key: str) -> str:
+            """現在のカラム名で取得し、見つからない場合は旧名にフォールバック"""
+            value = row.get(col[key], "")
+            if not value:
+                for alias in LEGACY_COLUMN_ALIASES.get(key, []):
+                    if alias in row and row[alias]:
+                        value = row[alias]
+                        break
+            return value.strip()
+
         with open(self.csv_path, "r", encoding="utf-8-sig", newline="") as f:
             reader = csv.DictReader(f)
             for i, row in enumerate(reader):
@@ -64,12 +74,19 @@ class SpreadsheetManager:
                 except ValueError:
                     status = ProcessStatus.PENDING
 
+                # URL候補列をパイプ区切りで読み込み
+                candidates_raw = row.get(col["url_candidates"], "").strip()
+                url_candidates = [
+                    u.strip() for u in candidates_raw.split("|") if u.strip()
+                ] if candidates_raw else []
+
                 company = CompanyInfo(
                     row_index=i,
                     name=company_name,
                     enterprise_id=row.get(col["enterprise_id"], "").strip(),
                     homepage_url=row.get(col["homepage_url"], "").strip(),
-                    frontend_app_url=row.get(col["frontend_url"], "").strip(),
+                    url_candidates=url_candidates,
+                    frontend_app_url=_get_with_legacy(row, "frontend_url"),
                     status=status,
                     error_message=row.get(col["error_message"], "").strip(),
                     screenshot_path=row.get(col["screenshot_path"], "").strip(),
@@ -97,6 +114,7 @@ class SpreadsheetManager:
                 writer.writerow({
                     col["company_name"]: company.name,
                     col["homepage_url"]: company.homepage_url,
+                    col["url_candidates"]: "|".join(company.url_candidates),
                     col["enterprise_id"]: company.enterprise_id,
                     col["frontend_url"]: company.frontend_app_url,
                     col["status"]: company.status.value,
@@ -171,6 +189,7 @@ class SpreadsheetManager:
                 writer.writerow({
                     col["company_name"]: company.name,
                     col["homepage_url"]: "",
+                    col["url_candidates"]: "",
                     col["enterprise_id"]: company.enterprise_id,
                     col["frontend_url"]: "",
                     col["status"]: ProcessStatus.PENDING.value,

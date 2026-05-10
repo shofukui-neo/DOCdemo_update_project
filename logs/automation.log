@@ -20544,3 +20544,324 @@ Call log:
 2026-04-13 07:38:04,957 [INFO] __main__:   [ERR] エラー:  8社
 2026-04-13 07:38:04,957 [INFO] __main__:   所要時間:    7:10:01.696727
 2026-04-13 07:38:04,957 [INFO] __main__: ============================================================
+2026-05-11 07:17:23,648 [INFO] __main__: ============================================================
+2026-05-11 07:17:23,648 [INFO] __main__: DOCdemo 自動化フロー 開始
+2026-05-11 07:17:23,648 [INFO] __main__: 開始時刻: 2026-05-11 07:17:23
+2026-05-11 07:17:23,648 [INFO] __main__: ============================================================
+2026-05-11 07:17:23,651 [INFO] spreadsheet_manager: 企業リスト読み込み完了: 5社
+2026-05-11 07:17:23,652 [INFO] spreadsheet_manager: 処理対象企業: 5社 / 全5社
+2026-05-11 07:17:23,652 [INFO] __main__: 処理対象: 1社
+2026-05-11 07:17:33,890 [INFO] web_app_operator: 管理画面にログイン中...
+2026-05-11 07:17:40,141 [INFO] web_app_operator: ログイン成功
+2026-05-11 07:17:40,142 [INFO] __main__: 
+2026-05-11 07:17:40,142 [INFO] __main__: ──────────────────────────────────────────────────
+2026-05-11 07:17:40,142 [INFO] __main__: [1/1] 株式会社カークリニックアキヤマ (ステータス: 未処理)
+2026-05-11 07:17:40,142 [INFO] __main__: ──────────────────────────────────────────────────
+2026-05-11 07:17:40,143 [INFO] __main__: Step 1/6: ホームページURL候補検索...
+2026-05-11 07:17:40,143 [INFO] url_finder: URL候補検索開始: 株式会社カークリニックアキヤマ 公式サイト (最大 5 件)
+2026-05-11 07:17:43,418 [INFO] url_finder: 候補ドメイン抽出: 株式会社カークリニックアキヤマ -> 5件 (['akiyama-group.com', 'kei-ichiman.com', '589kobac.co.jp', 'www.c-c-akiyama.com', 'akiyama-group-recruit.com'])
+2026-05-11 07:17:43,418 [WARNING] __main__:   [PAUSE] 同名企業候補が 5 件検出されました → 手動確認待ちにします
+2026-05-11 07:17:43,418 [WARNING] __main__:     候補 1: https://akiyama-group.com
+2026-05-11 07:17:43,418 [WARNING] __main__:     候補 2: https://kei-ichiman.com
+2026-05-11 07:17:43,418 [WARNING] __main__:     候補 3: https://589kobac.co.jp
+2026-05-11 07:17:43,418 [WARNING] __main__:     候補 4: https://www.c-c-akiyama.com
+2026-05-11 07:17:43,418 [WARNING] __main__:     候補 5: https://akiyama-group-recruit.com
+2026-05-11 07:17:43,418 [INFO] spreadsheet_manager: 企業リスト保存完了: 5社 → C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\data\company_list.csv
+2026-05-11 07:17:43,418 [WARNING] __main__: [HOLD] 株式会社カークリニックアキヤマ: ステータス=同名企業該当 (CSVの「ホームページURL」列に正解URLを記入して再実行してください)
+2026-05-11 07:17:43,773 [INFO] __main__: 
+2026-05-11 07:17:43,773 [INFO] __main__: ============================================================
+2026-05-11 07:17:43,773 [INFO] __main__: DOCdemo 自動化フロー 完了サマリー
+2026-05-11 07:17:43,773 [INFO] __main__: ============================================================
+2026-05-11 07:17:43,773 [INFO] __main__:   処理対象:    1社
+2026-05-11 07:17:43,773 [INFO] __main__:   処理完了:    1社
+2026-05-11 07:17:43,773 [INFO] __main__:   [OK] 成功:    0社
+2026-05-11 07:17:43,773 [INFO] __main__:   [HOLD] 同名企業該当: 1社（手動確認待ち）
+2026-05-11 07:17:43,773 [INFO] __main__:   [SKIP] スキップ: 0社
+2026-05-11 07:17:43,773 [INFO] __main__:   [ERR] エラー:  0社
+2026-05-11 07:17:43,773 [INFO] __main__:   所要時間:    0:00:20.124530
+2026-05-11 07:17:43,773 [INFO] __main__: ============================================================
+2026-05-11 07:17:43,773 [INFO] __main__:   ※ 同名企業該当の企業は CSV の「ホームページURL」列に 「URL候補」列の中から正しいURLを記入して再実行してください。
+2026-05-11 07:17:43,773 [INFO] __main__: ============================================================
+2026-05-11 07:19:04,312 [INFO] __main__: ============================================================
+2026-05-11 07:19:04,312 [INFO] __main__: DOCdemo 自動化フロー 開始
+2026-05-11 07:19:04,312 [INFO] __main__: 開始時刻: 2026-05-11 07:19:04
+2026-05-11 07:19:04,312 [INFO] __main__: ============================================================
+2026-05-11 07:19:04,312 [INFO] spreadsheet_manager: 企業リスト読み込み完了: 5社
+2026-05-11 07:19:04,312 [INFO] spreadsheet_manager: 処理対象企業: 5社 / 全5社
+2026-05-11 07:19:04,312 [INFO] __main__: 処理対象: 1社
+2026-05-11 07:19:05,223 [INFO] web_app_operator: 管理画面にログイン中...
+2026-05-11 07:19:11,549 [INFO] web_app_operator: ログイン成功
+2026-05-11 07:19:11,551 [INFO] __main__: 
+2026-05-11 07:19:11,551 [INFO] __main__: ──────────────────────────────────────────────────
+2026-05-11 07:19:11,551 [INFO] __main__: [1/1] 株式会社カークリニックアキヤマ (ステータス: 同名企業該当)
+2026-05-11 07:19:11,551 [INFO] __main__: ──────────────────────────────────────────────────
+2026-05-11 07:19:11,551 [INFO] __main__: Step 1/6: 同名企業該当からの手動再開: https://www.c-c-akiyama.com
+2026-05-11 07:19:11,554 [INFO] spreadsheet_manager: 企業リスト保存完了: 5社 → C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\data\company_list.csv
+2026-05-11 07:19:11,554 [INFO] __main__: Step 2/6: 企業追加...
+2026-05-11 07:19:11,554 [INFO] web_app_operator: 企業追加開始: 株式会社カークリニックアキヤマ
+2026-05-11 07:19:26,096 [INFO] web_app_operator: 企業追加完了: 株式会社カークリニックアキヤマ (ID: c-c-akiyama)
+2026-05-11 07:19:26,096 [INFO] __main__: Step 2.5/6: 追加企業のID検証...
+2026-05-11 07:19:26,096 [INFO] web_app_operator:   企業ID検証中: 期待ID=c-c-akiyama, URL=https://www.c-c-akiyama.com
+2026-05-11 07:19:28,661 [INFO] web_app_operator:   [OK] 企業ID 'c-c-akiyama' をページ内に確認
+2026-05-11 07:19:28,664 [INFO] spreadsheet_manager: 企業リスト保存完了: 5社 → C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\data\company_list.csv
+2026-05-11 07:19:28,664 [INFO] __main__:   → 企業追加完了 (ID: c-c-akiyama)
+2026-05-11 07:19:28,664 [INFO] __main__: Step 3/6: HP画像取得...
+2026-05-11 07:19:28,665 [INFO] image_fetcher: 企業画像取得開始: 株式会社カークリニックアキヤマ (https://www.c-c-akiyama.com)
+2026-05-11 07:19:35,941 [INFO] image_fetcher:   OGP画像を発見: https://crayonimg.e-shops.jp/cms-dimg/1034395/113490/500_500.jpg
+2026-05-11 07:19:36,541 [INFO] image_fetcher:   画像保存成功 (OGP): C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\screenshots\img_www_c-c-akiyama_com_20260511_071928.jpg
+2026-05-11 07:19:40,901 [INFO] __main__:   → 画像取得: C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\screenshots\img_www_c-c-akiyama_com_20260511_071928.jpg, 抽出リンク: 7件
+2026-05-11 07:19:40,901 [INFO] __main__: Step 4/6: コンテンツ生成...
+2026-05-11 07:19:44,506 [INFO] __main__:   [検証] コンテンツ生成画面のヘッダーが対象企業に切替済か確認...
+2026-05-11 07:19:44,506 [INFO] web_app_operator: サイドバーから企業選択開始: 株式会社カークリニックアキヤマ
+2026-05-11 07:19:46,454 [ERROR] __main__: [ERROR] 株式会社カークリニックアキヤマ: 処理失敗 -- Locator.fill: Error: Element is not an <input>, <textarea>, <select> or [contenteditable] and does not have a role allowing [aria-readonly]
+Call log:
+  - waiting for locator("[data-testid='stSidebar']").locator("input[aria-label*=\"企業を選択\"], input[aria-label*=\"選択\"], [data-baseweb=\"select\"]").first
+    - locator resolved to <div data-baseweb="select" class="st-cx st-af st-ag st-cg st-ai st-aj st-bb st-d1 st-b8">…</div>
+    - fill("c-c-akiyama")
+  - attempting fill action
+    - waiting for element to be visible, enabled and editable
+
+2026-05-11 07:19:46,454 [INFO] spreadsheet_manager: 企業リスト保存完了: 5社 → C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\data\company_list.csv
+2026-05-11 07:19:46,747 [INFO] __main__: 
+2026-05-11 07:19:46,747 [INFO] __main__: ============================================================
+2026-05-11 07:19:46,747 [INFO] __main__: DOCdemo 自動化フロー 完了サマリー
+2026-05-11 07:19:46,747 [INFO] __main__: ============================================================
+2026-05-11 07:19:46,747 [INFO] __main__:   処理対象:    1社
+2026-05-11 07:19:46,747 [INFO] __main__:   処理完了:    1社
+2026-05-11 07:19:46,747 [INFO] __main__:   [OK] 成功:    0社
+2026-05-11 07:19:46,747 [INFO] __main__:   [HOLD] 同名企業該当: 0社（手動確認待ち）
+2026-05-11 07:19:46,747 [INFO] __main__:   [SKIP] スキップ: 0社
+2026-05-11 07:19:46,747 [INFO] __main__:   [ERR] エラー:  1社
+2026-05-11 07:19:46,747 [INFO] __main__:   所要時間:    0:00:42.434774
+2026-05-11 07:19:46,747 [INFO] __main__: ============================================================
+2026-05-11 07:21:07,068 [INFO] __main__: ============================================================
+2026-05-11 07:21:07,069 [INFO] __main__: DOCdemo 自動化フロー 開始
+2026-05-11 07:21:07,069 [INFO] __main__: 開始時刻: 2026-05-11 07:21:07
+2026-05-11 07:21:07,069 [INFO] __main__: ============================================================
+2026-05-11 07:21:07,069 [INFO] spreadsheet_manager: 企業リスト読み込み完了: 5社
+2026-05-11 07:21:07,069 [INFO] spreadsheet_manager: 処理対象企業: 5社 / 全5社
+2026-05-11 07:21:07,069 [INFO] __main__: 処理対象: 1社
+2026-05-11 07:21:08,011 [INFO] web_app_operator: 管理画面にログイン中...
+2026-05-11 07:21:14,228 [INFO] web_app_operator: ログイン成功
+2026-05-11 07:21:14,228 [INFO] __main__: 
+2026-05-11 07:21:14,229 [INFO] __main__: ──────────────────────────────────────────────────
+2026-05-11 07:21:14,229 [INFO] __main__: [1/1] 株式会社カークリニックアキヤマ (ステータス: 企業追加済)
+2026-05-11 07:21:14,229 [INFO] __main__: ──────────────────────────────────────────────────
+2026-05-11 07:21:14,230 [INFO] __main__: Step 3/6: HP画像取得...
+2026-05-11 07:21:14,232 [INFO] image_fetcher: 企業画像取得開始: 株式会社カークリニックアキヤマ (https://www.c-c-akiyama.com)
+2026-05-11 07:21:17,373 [INFO] image_fetcher:   OGP画像を発見: https://crayonimg.e-shops.jp/cms-dimg/1034395/113490/500_500.jpg
+2026-05-11 07:21:17,908 [INFO] image_fetcher:   画像保存成功 (OGP): C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\screenshots\img_www_c-c-akiyama_com_20260511_072114.jpg
+2026-05-11 07:21:22,049 [INFO] __main__:   → 画像取得: C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\screenshots\img_www_c-c-akiyama_com_20260511_072114.jpg, 抽出リンク: 7件
+2026-05-11 07:21:22,049 [INFO] __main__: Step 4/6: コンテンツ生成...
+2026-05-11 07:21:25,747 [INFO] __main__:   [検証] コンテンツ生成画面のヘッダーが対象企業に切替済か確認...
+2026-05-11 07:21:25,749 [INFO] web_app_operator: サイドバーから企業選択開始: 株式会社カークリニックアキヤマ
+2026-05-11 07:21:32,833 [INFO] web_app_operator:   ヘッダー検証中: 企業名=株式会社カークリニックアキヤマ, ID=c-c-akiyama
+2026-05-11 07:21:32,860 [INFO] web_app_operator:   [OK] ヘッダー検証成功: 「🤖 株式会社カークリニックアキヤマ コンテンツ生成」
+2026-05-11 07:21:32,860 [INFO] web_app_operator: サイドバー企業選択完了: 株式会社カークリニックアキヤマ
+2026-05-11 07:21:32,860 [INFO] web_app_operator: URL入力開始: 7件
+2026-05-11 07:21:36,534 [INFO] web_app_operator:   「全入力を処理」ボタンをクリックしました
+2026-05-11 07:21:41,062 [INFO] web_app_operator: URL入力・処理開始完了: 7件
+2026-05-11 07:21:41,062 [INFO] web_app_operator: コンテンツ生成開始...
+2026-05-11 07:21:43,638 [INFO] web_app_operator:   生成準備完了の待機中...
+2026-05-11 07:22:03,647 [WARNING] web_app_operator:   生成準備完了メッセージが特定できませんでしたが、続行を試みます
+2026-05-11 07:22:04,174 [INFO] web_app_operator: コンテンツ生成中... (最大5分待機)
+2026-05-11 07:22:44,418 [INFO] web_app_operator: 生成完了検出 (経過: 40.0秒)
+2026-05-11 07:22:44,418 [INFO] web_app_operator: コンテンツ生成完了
+2026-05-11 07:22:44,418 [INFO] __main__:   [検証] 保存後のFAQ・企業情報タブを確認...
+2026-05-11 07:22:44,425 [INFO] web_app_operator: コンテンツ保存開始...
+2026-05-11 07:22:48,614 [INFO] web_app_operator:   FAQプレビューの確認中...
+2026-05-11 07:23:08,625 [ERROR] web_app_operator:   FAQプレビューが確認できません。コンテンツ生成に失敗している可能性があります。
+2026-05-11 07:23:08,852 [ERROR] __main__: [ERROR] 株式会社カークリニックアキヤマ: 処理失敗 -- FAQプレビューが確認できませんでした。詳細は screenshots/faq_not_found_c-c-akiyama.png を確認してください。
+2026-05-11 07:23:08,852 [INFO] spreadsheet_manager: 企業リスト保存完了: 5社 → C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\data\company_list.csv
+2026-05-11 07:23:09,257 [INFO] __main__: 
+2026-05-11 07:23:09,257 [INFO] __main__: ============================================================
+2026-05-11 07:23:09,257 [INFO] __main__: DOCdemo 自動化フロー 完了サマリー
+2026-05-11 07:23:09,257 [INFO] __main__: ============================================================
+2026-05-11 07:23:09,257 [INFO] __main__:   処理対象:    1社
+2026-05-11 07:23:09,257 [INFO] __main__:   処理完了:    1社
+2026-05-11 07:23:09,257 [INFO] __main__:   [OK] 成功:    0社
+2026-05-11 07:23:09,257 [INFO] __main__:   [HOLD] 同名企業該当: 0社（手動確認待ち）
+2026-05-11 07:23:09,257 [INFO] __main__:   [SKIP] スキップ: 0社
+2026-05-11 07:23:09,257 [INFO] __main__:   [ERR] エラー:  1社
+2026-05-11 07:23:09,257 [INFO] __main__:   所要時間:    0:02:02.188856
+2026-05-11 07:23:09,257 [INFO] __main__: ============================================================
+2026-05-11 07:24:25,681 [INFO] __main__: ============================================================
+2026-05-11 07:24:25,681 [INFO] __main__: DOCdemo 自動化フロー 開始
+2026-05-11 07:24:25,681 [INFO] __main__: 開始時刻: 2026-05-11 07:24:25
+2026-05-11 07:24:25,681 [INFO] __main__: ============================================================
+2026-05-11 07:24:25,681 [INFO] spreadsheet_manager: 企業リスト読み込み完了: 5社
+2026-05-11 07:24:25,681 [INFO] spreadsheet_manager: 処理対象企業: 5社 / 全5社
+2026-05-11 07:24:25,681 [INFO] __main__: 処理対象: 1社
+2026-05-11 07:24:26,598 [INFO] web_app_operator: 管理画面にログイン中...
+2026-05-11 07:24:32,774 [INFO] web_app_operator: ログイン成功
+2026-05-11 07:24:32,774 [INFO] __main__: 
+2026-05-11 07:24:32,774 [INFO] __main__: ──────────────────────────────────────────────────
+2026-05-11 07:24:32,774 [INFO] __main__: [1/1] 株式会社カークリニックアキヤマ (ステータス: 企業追加済)
+2026-05-11 07:24:32,774 [INFO] __main__: ──────────────────────────────────────────────────
+2026-05-11 07:24:32,774 [INFO] __main__: Step 3/6: HP画像取得...
+2026-05-11 07:24:32,774 [INFO] image_fetcher: 企業画像取得開始: 株式会社カークリニックアキヤマ (https://www.c-c-akiyama.com)
+2026-05-11 07:24:35,889 [INFO] image_fetcher:   OGP画像を発見: https://crayonimg.e-shops.jp/cms-dimg/1034395/113490/500_500.jpg
+2026-05-11 07:24:36,415 [INFO] image_fetcher:   画像保存成功 (OGP): C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\screenshots\img_www_c-c-akiyama_com_20260511_072432.jpg
+2026-05-11 07:24:40,937 [INFO] __main__:   → 画像取得: C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\screenshots\img_www_c-c-akiyama_com_20260511_072432.jpg, 抽出リンク: 7件
+2026-05-11 07:24:40,937 [INFO] __main__: Step 4/6: コンテンツ生成...
+2026-05-11 07:24:44,659 [INFO] __main__:   [検証] コンテンツ生成画面のヘッダーが対象企業に切替済か確認...
+2026-05-11 07:24:44,659 [INFO] web_app_operator: サイドバーから企業選択開始: 株式会社カークリニックアキヤマ
+2026-05-11 07:24:51,724 [INFO] web_app_operator:   ヘッダー検証中: 企業名=株式会社カークリニックアキヤマ, ID=c-c-akiyama
+2026-05-11 07:24:51,761 [INFO] web_app_operator:   [OK] ヘッダー検証成功: 「🤖 株式会社カークリニックアキヤマ コンテンツ生成」
+2026-05-11 07:24:51,764 [INFO] web_app_operator: サイドバー企業選択完了: 株式会社カークリニックアキヤマ
+2026-05-11 07:24:51,764 [INFO] web_app_operator: URL入力開始: 7件
+2026-05-11 07:24:55,430 [INFO] web_app_operator:   「全入力を処理」ボタンをクリックしました
+2026-05-11 07:24:59,974 [INFO] web_app_operator: URL入力・処理開始完了: 7件
+2026-05-11 07:24:59,975 [INFO] web_app_operator: コンテンツ生成開始...
+2026-05-11 07:25:02,531 [INFO] web_app_operator:   生成準備完了の待機中...
+2026-05-11 07:25:22,541 [WARNING] web_app_operator:   生成準備完了メッセージが特定できませんでしたが、続行を試みます
+2026-05-11 07:25:23,073 [INFO] web_app_operator: コンテンツ生成中... (最大5分待機)
+2026-05-11 07:26:18,318 [INFO] web_app_operator: 生成完了検出 (経過: 55.0秒)
+2026-05-11 07:26:18,318 [INFO] web_app_operator: コンテンツ生成完了
+2026-05-11 07:26:18,318 [INFO] __main__:   [検証] 保存後のFAQ・企業情報タブを確認...
+2026-05-11 07:26:18,318 [INFO] web_app_operator: コンテンツ保存開始...
+2026-05-11 07:26:22,488 [INFO] web_app_operator:   FAQプレビューの確認中...
+2026-05-11 07:26:37,534 [INFO] web_app_operator:   FAQプレビューはページ内に存在 (見出しセレクター不一致を許容)
+2026-05-11 07:26:37,534 [INFO] web_app_operator:   STEP1: 第1保存ボタン（FAQ保存）をクリック...
+2026-05-11 07:26:39,188 [INFO] web_app_operator:   第1保存ボタンをクリックしました
+2026-05-11 07:26:42,732 [INFO] web_app_operator:   STEP2: 企業情報を保存ボタン（赤）を探してクリック...
+2026-05-11 07:26:44,256 [INFO] web_app_operator:   「企業情報を保存」ボタンが直接見つからないため、全ボタンを確認...
+2026-05-11 07:26:44,296 [INFO] web_app_operator:     保存関連ボタン発見: [👁️ プレビュー・保存]
+2026-05-11 07:26:44,326 [INFO] web_app_operator:     保存関連ボタン発見: [💾 FAQ保存（置換）]
+2026-05-11 07:26:44,330 [INFO] web_app_operator:     保存関連ボタン発見: [💾 企業情報保存]
+2026-05-11 07:26:44,341 [INFO] web_app_operator:   赤いボタンをクリック: [💾 企業情報保存]
+2026-05-11 07:26:50,510 [INFO] web_app_operator:   企業情報を保存ボタンのクリック完了
+2026-05-11 07:27:00,524 [WARNING] web_app_operator:   明確な保存完了メッセージは確認できませんでしたが、処理を続行します
+2026-05-11 07:27:00,525 [INFO] web_app_operator:   コンテンツ管理タブで保存確認中: 株式会社カークリニックアキヤマ
+2026-05-11 07:27:14,159 [INFO] web_app_operator:   [OK] コンテンツ管理ページ: c-c-akiyama の存在を確認
+2026-05-11 07:27:14,160 [INFO] web_app_operator:   [FAQタブ] 検証開始
+2026-05-11 07:27:14,178 [WARNING] web_app_operator:   [FAQタブ] が見つかりません（タブ未表示の可能性、ページ全体で代替検証）
+2026-05-11 07:27:14,278 [INFO] web_app_operator:   [OK] [FAQタブ] 企業名/IDを確認 (スクショ: screenshots/tab_FAQ_c-c-akiyama.png)
+2026-05-11 07:27:14,278 [INFO] web_app_operator:   [企業情報タブ] 検証開始
+2026-05-11 07:27:14,294 [WARNING] web_app_operator:   [企業情報タブ] が見つかりません（タブ未表示の可能性、ページ全体で代替検証）
+2026-05-11 07:27:14,417 [INFO] web_app_operator:   [OK] [企業情報タブ] 企業名/IDを確認 (スクショ: screenshots/tab_企業情報_c-c-akiyama.png)
+2026-05-11 07:27:14,417 [INFO] web_app_operator:   [OK] FAQ・企業情報タブともに対象企業のコンテンツを確認
+2026-05-11 07:27:16,427 [INFO] web_app_operator: コンテンツ保存処理完了
+2026-05-11 07:27:16,427 [INFO] spreadsheet_manager: 企業リスト保存完了: 5社 → C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\data\company_list.csv
+2026-05-11 07:27:16,429 [INFO] __main__:   → コンテンツ生成・保存・検証完了
+2026-05-11 07:27:16,429 [INFO] __main__: Step 5/6: 背景画像アップロード...
+2026-05-11 07:27:16,429 [INFO] web_app_operator: 背景画像アップロード開始 (企業ID: c-c-akiyama): C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\screenshots\img_www_c-c-akiyama_com_20260511_072432.jpg
+2026-05-11 07:27:22,047 [INFO] web_app_operator:   設定ページで企業を選択中: c-c-akiyama
+2026-05-11 07:27:22,047 [INFO] web_app_operator: 企業選択 (ID): c-c-akiyama
+2026-05-11 07:27:28,807 [INFO] web_app_operator: 企業選択完了: c-c-akiyama
+2026-05-11 07:27:28,923 [WARNING] web_app_operator:   指定位置にアップロード欄が見つからないため、ページ全体から最適な場所を探します。
+2026-05-11 07:27:34,005 [INFO] web_app_operator: 背景画像アップロード完了: C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\screenshots\img_www_c-c-akiyama_com_20260511_072432.jpg
+2026-05-11 07:27:34,007 [INFO] spreadsheet_manager: 企業リスト保存完了: 5社 → C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\data\company_list.csv
+2026-05-11 07:27:34,007 [INFO] __main__:   → 背景画像アップロード完了
+2026-05-11 07:27:34,010 [INFO] __main__: Step 6/6: フロントエンドアプリURL取得...
+2026-05-11 07:27:34,010 [INFO] web_app_operator: フロントエンドアプリURL取得開始...
+2026-05-11 07:27:39,737 [INFO] web_app_operator:   aタグのhref属性からURLを取得成功: https://casual-interview-dev.brainverse-ai.com/c-c-akiyama
+2026-05-11 07:27:39,741 [INFO] spreadsheet_manager: 企業リスト保存完了: 5社 → C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\data\company_list.csv
+2026-05-11 07:27:39,741 [INFO] __main__:   → フロントエンドURL: https://casual-interview-dev.brainverse-ai.com/c-c-akiyama
+2026-05-11 07:27:39,741 [INFO] __main__: [OK] 株式会社カークリニックアキヤマ: 全処理完了!
+2026-05-11 07:27:40,071 [INFO] __main__: 
+2026-05-11 07:27:40,071 [INFO] __main__: ============================================================
+2026-05-11 07:27:40,071 [INFO] __main__: DOCdemo 自動化フロー 完了サマリー
+2026-05-11 07:27:40,071 [INFO] __main__: ============================================================
+2026-05-11 07:27:40,071 [INFO] __main__:   処理対象:    1社
+2026-05-11 07:27:40,071 [INFO] __main__:   処理完了:    1社
+2026-05-11 07:27:40,071 [INFO] __main__:   [OK] 成功:    1社
+2026-05-11 07:27:40,071 [INFO] __main__:   [HOLD] 同名企業該当: 0社（手動確認待ち）
+2026-05-11 07:27:40,071 [INFO] __main__:   [SKIP] スキップ: 0社
+2026-05-11 07:27:40,071 [INFO] __main__:   [ERR] エラー:  0社
+2026-05-11 07:27:40,071 [INFO] __main__:   所要時間:    0:03:14.389302
+2026-05-11 07:27:40,071 [INFO] __main__: ============================================================
+2026-05-11 07:33:53,204 [INFO] __main__: ============================================================
+2026-05-11 07:33:53,204 [INFO] __main__: DOCdemo 自動化フロー 開始
+2026-05-11 07:33:53,204 [INFO] __main__: 開始時刻: 2026-05-11 07:33:53
+2026-05-11 07:33:53,204 [INFO] __main__: ============================================================
+2026-05-11 07:33:53,204 [INFO] spreadsheet_manager: 企業リスト読み込み完了: 5社
+2026-05-11 07:33:53,205 [INFO] spreadsheet_manager: 処理対象企業: 5社 / 全5社
+2026-05-11 07:33:53,205 [INFO] __main__: 処理対象: 1社
+2026-05-11 07:33:54,082 [INFO] web_app_operator: 管理画面にログイン中...
+2026-05-11 07:34:00,397 [INFO] web_app_operator: ログイン成功
+2026-05-11 07:34:00,397 [INFO] __main__: 
+2026-05-11 07:34:00,397 [INFO] __main__: ──────────────────────────────────────────────────
+2026-05-11 07:34:00,397 [INFO] __main__: [1/1] 株式会社カークリニックアキヤマ (ステータス: URL特定済)
+2026-05-11 07:34:00,398 [INFO] __main__: ──────────────────────────────────────────────────
+2026-05-11 07:34:00,398 [INFO] __main__: Step 2/6: 企業追加...
+2026-05-11 07:34:00,398 [INFO] web_app_operator: 企業追加開始: 株式会社カークリニックアキヤマ
+2026-05-11 07:34:14,899 [INFO] web_app_operator: 企業追加完了: 株式会社カークリニックアキヤマ (ID: c-c-akiyama)
+2026-05-11 07:34:14,901 [INFO] __main__: Step 2.5/6: 追加企業のID検証...
+2026-05-11 07:34:14,901 [INFO] web_app_operator:   企業ID検証中: 期待ID=c-c-akiyama, URL=https://www.c-c-akiyama.com
+2026-05-11 07:34:17,454 [INFO] web_app_operator:   [OK] 企業ID 'c-c-akiyama' をページ内に確認
+2026-05-11 07:34:17,454 [INFO] spreadsheet_manager: 企業リスト保存完了: 5社 → C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\data\company_list.csv
+2026-05-11 07:34:17,455 [INFO] __main__:   → 企業追加完了 (ID: c-c-akiyama)
+2026-05-11 07:34:17,455 [INFO] __main__: Step 3/6: HP画像取得...
+2026-05-11 07:34:17,455 [INFO] image_fetcher: 企業画像取得開始: 株式会社カークリニックアキヤマ (https://www.c-c-akiyama.com)
+2026-05-11 07:34:23,354 [INFO] image_fetcher:   OGP画像を発見: https://crayonimg.e-shops.jp/cms-dimg/1034395/113490/500_500.jpg
+2026-05-11 07:34:23,932 [INFO] image_fetcher:   画像保存成功 (OGP): C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\screenshots\img_www_c-c-akiyama_com_20260511_073417.jpg
+2026-05-11 07:34:28,268 [INFO] __main__:   → 画像取得: C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\screenshots\img_www_c-c-akiyama_com_20260511_073417.jpg, 抽出リンク: 7件
+2026-05-11 07:34:28,268 [INFO] __main__: Step 4/6: コンテンツ生成...
+2026-05-11 07:34:31,983 [INFO] __main__:   [検証] コンテンツ生成画面のヘッダーが対象企業に切替済か確認...
+2026-05-11 07:34:31,983 [INFO] web_app_operator: サイドバーから企業選択開始: 株式会社カークリニックアキヤマ
+2026-05-11 07:34:39,065 [INFO] web_app_operator:   ヘッダー検証中: 企業名=株式会社カークリニックアキヤマ, ID=c-c-akiyama
+2026-05-11 07:34:39,115 [INFO] web_app_operator:   [OK] ヘッダー検証成功: 「🤖 株式会社カークリニックアキヤマ コンテンツ生成」
+2026-05-11 07:34:39,115 [INFO] web_app_operator: サイドバー企業選択完了: 株式会社カークリニックアキヤマ
+2026-05-11 07:34:39,115 [INFO] web_app_operator: URL入力開始: 7件
+2026-05-11 07:34:42,801 [INFO] web_app_operator:   「全入力を処理」ボタンをクリックしました
+2026-05-11 07:34:47,348 [INFO] web_app_operator: URL入力・処理開始完了: 7件
+2026-05-11 07:34:47,348 [INFO] web_app_operator: コンテンツ生成開始...
+2026-05-11 07:34:49,915 [INFO] web_app_operator:   生成準備完了の待機中...
+2026-05-11 07:35:09,932 [WARNING] web_app_operator:   生成準備完了メッセージが特定できませんでしたが、続行を試みます
+2026-05-11 07:35:10,497 [INFO] web_app_operator: コンテンツ生成中... (最大5分待機)
+2026-05-11 07:35:50,768 [INFO] web_app_operator: 生成完了検出 (経過: 40.0秒)
+2026-05-11 07:35:50,768 [INFO] web_app_operator: コンテンツ生成完了
+2026-05-11 07:35:50,768 [INFO] __main__:   [検証] 保存後のFAQ・企業情報タブを確認...
+2026-05-11 07:35:50,768 [INFO] web_app_operator: コンテンツ保存開始...
+2026-05-11 07:35:54,963 [INFO] web_app_operator:   FAQプレビューの確認中...
+2026-05-11 07:36:10,001 [INFO] web_app_operator:   FAQプレビューはページ内に存在 (見出しセレクター不一致を許容)
+2026-05-11 07:36:10,001 [INFO] web_app_operator:   STEP1: 第1保存ボタン（FAQ保存）をクリック...
+2026-05-11 07:36:11,605 [INFO] web_app_operator:   第1保存ボタンをクリックしました
+2026-05-11 07:36:15,154 [INFO] web_app_operator:   STEP2: 企業情報を保存ボタン（赤）を探してクリック...
+2026-05-11 07:36:16,688 [INFO] web_app_operator:   「企業情報を保存」ボタンが直接見つからないため、全ボタンを確認...
+2026-05-11 07:36:16,760 [INFO] web_app_operator:     保存関連ボタン発見: [👁️ プレビュー・保存]
+2026-05-11 07:36:16,837 [INFO] web_app_operator:     保存関連ボタン発見: [💾 FAQ保存（置換）]
+2026-05-11 07:36:16,852 [INFO] web_app_operator:     保存関連ボタン発見: [💾 企業情報保存]
+2026-05-11 07:36:16,870 [INFO] web_app_operator:   赤いボタンをクリック: [💾 企業情報保存]
+2026-05-11 07:36:23,012 [INFO] web_app_operator:   企業情報を保存ボタンのクリック完了
+2026-05-11 07:36:33,032 [WARNING] web_app_operator:   明確な保存完了メッセージは確認できませんでしたが、処理を続行します
+2026-05-11 07:36:33,032 [INFO] web_app_operator:   コンテンツ管理タブで保存確認中: 株式会社カークリニックアキヤマ
+2026-05-11 07:36:46,689 [INFO] web_app_operator:   [OK] コンテンツ管理ページ: c-c-akiyama の存在を確認
+2026-05-11 07:36:46,689 [INFO] web_app_operator:   [FAQタブ] 検証開始
+2026-05-11 07:36:46,717 [WARNING] web_app_operator:   [FAQタブ] が見つかりません（タブ未表示の可能性、ページ全体で代替検証）
+2026-05-11 07:36:46,833 [INFO] web_app_operator:   [OK] [FAQタブ] 企業名/IDを確認 (スクショ: screenshots/tab_FAQ_c-c-akiyama.png)
+2026-05-11 07:36:46,833 [INFO] web_app_operator:   [企業情報タブ] 検証開始
+2026-05-11 07:36:46,852 [WARNING] web_app_operator:   [企業情報タブ] が見つかりません（タブ未表示の可能性、ページ全体で代替検証）
+2026-05-11 07:36:46,952 [INFO] web_app_operator:   [OK] [企業情報タブ] 企業名/IDを確認 (スクショ: screenshots/tab_企業情報_c-c-akiyama.png)
+2026-05-11 07:36:46,954 [INFO] web_app_operator:   [OK] FAQ・企業情報タブともに対象企業のコンテンツを確認
+2026-05-11 07:36:48,962 [INFO] web_app_operator: コンテンツ保存処理完了
+2026-05-11 07:36:48,964 [INFO] spreadsheet_manager: 企業リスト保存完了: 5社 → C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\data\company_list.csv
+2026-05-11 07:36:48,964 [INFO] __main__:   → コンテンツ生成・保存・検証完了
+2026-05-11 07:36:48,964 [INFO] __main__: Step 5/6: 背景画像アップロード...
+2026-05-11 07:36:48,964 [INFO] web_app_operator: 背景画像アップロード開始 (企業ID: c-c-akiyama): C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\screenshots\img_www_c-c-akiyama_com_20260511_073417.jpg
+2026-05-11 07:36:54,595 [INFO] web_app_operator:   設定ページで企業を選択中: c-c-akiyama
+2026-05-11 07:36:54,595 [INFO] web_app_operator: 企業選択 (ID): c-c-akiyama
+2026-05-11 07:37:01,346 [INFO] web_app_operator: 企業選択完了: c-c-akiyama
+2026-05-11 07:37:01,451 [WARNING] web_app_operator:   指定位置にアップロード欄が見つからないため、ページ全体から最適な場所を探します。
+2026-05-11 07:37:06,530 [INFO] web_app_operator: 背景画像アップロード完了: C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\screenshots\img_www_c-c-akiyama_com_20260511_073417.jpg
+2026-05-11 07:37:06,532 [INFO] spreadsheet_manager: 企業リスト保存完了: 5社 → C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\data\company_list.csv
+2026-05-11 07:37:06,532 [INFO] __main__:   → 背景画像アップロード完了
+2026-05-11 07:37:06,532 [INFO] __main__: Step 6/6: フロントエンドアプリURL取得...
+2026-05-11 07:37:06,532 [INFO] web_app_operator: フロントエンドアプリURL取得開始...
+2026-05-11 07:37:12,220 [INFO] web_app_operator:   aタグのhref属性からURLを取得成功: https://casual-interview-dev.brainverse-ai.com/c-c-akiyama
+2026-05-11 07:37:12,221 [INFO] spreadsheet_manager: 企業リスト保存完了: 5社 → C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\data\company_list.csv
+2026-05-11 07:37:12,221 [INFO] __main__:   → フロントエンドURL: https://casual-interview-dev.brainverse-ai.com/c-c-akiyama
+2026-05-11 07:37:12,221 [INFO] __main__: [OK] 株式会社カークリニックアキヤマ: 全処理完了!
+2026-05-11 07:37:12,532 [INFO] __main__: 
+2026-05-11 07:37:12,539 [INFO] __main__: ============================================================
+2026-05-11 07:37:12,539 [INFO] __main__: DOCdemo 自動化フロー 完了サマリー
+2026-05-11 07:37:12,539 [INFO] __main__: ============================================================
+2026-05-11 07:37:12,539 [INFO] __main__:   処理対象:    1社
+2026-05-11 07:37:12,539 [INFO] __main__:   処理完了:    1社
+2026-05-11 07:37:12,539 [INFO] __main__:   [OK] 成功:    1社
+2026-05-11 07:37:12,539 [INFO] __main__:   [HOLD] 同名企業該当: 0社（手動確認待ち）
+2026-05-11 07:37:12,539 [INFO] __main__:   [SKIP] スキップ: 0社
+2026-05-11 07:37:12,539 [INFO] __main__:   [ERR] エラー:  0社
+2026-05-11 07:37:12,539 [INFO] __main__:   所要時間:    0:03:19.327542
+2026-05-11 07:37:12,539 [INFO] __main__: ============================================================
