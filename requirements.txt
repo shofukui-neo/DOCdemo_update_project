@@ -4,5 +4,7 @@ openpyxl
 python-dotenv
 pytest
 pytest-asyncio
+requests
+beautifulsoup4
 google-auth
 

@@ -7,6 +7,12 @@ DOCdemo 自動化フロー — 設定管理モジュール
 import os
 from pathlib import Path
 
+try:
+    from dotenv import load_dotenv
+    load_dotenv(Path(__file__).parent / ".env")
+except ImportError:
+    pass  # python-dotenv 未インストール環境では .env を読まない
+
 # =============================================================================
 # プロジェクトパス
 # =============================================================================
@@ -41,12 +47,26 @@ COMPANY_LIST_CSV = DATA_DIR / "company_list.csv"
 CSV_COLUMNS = {
     "company_name": "企業名",
     "homepage_url": "ホームページURL",
+    "url_candidates": "URL候補",  # 同名企業検出時の候補URL（パイプ区切り）
     "enterprise_id": "企業ID",
-    "frontend_url": "フロントエンドURL",
+    "frontend_url": "納品URL",  # フロントエンド公開URL = エンドユーザに渡す納品URL
     "status": "ステータス",
     "error_message": "エラー詳細",
     "screenshot_path": "スクリーンショットパス",
 }
+
+# 旧カラム名（後方互換のため読込時に許容）
+LEGACY_COLUMN_ALIASES = {
+    "frontend_url": ["フロントエンドURL"],
+}
+
+# =============================================================================
+# 同名企業検出設定
+# =============================================================================
+# URL検索結果から取得する候補数の最大値
+URL_CANDIDATE_MAX = 5
+# 候補ドメインが何件以上あれば「同名企業該当」と判定するか
+DUPLICATE_DOMAIN_THRESHOLD = 2
 
 # =============================================================================
 # タイムアウト設定 (ミリ秒)

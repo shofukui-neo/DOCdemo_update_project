@@ -10,11 +10,17 @@ import asyncio
 import logging
 import re
 from urllib.parse import urlparse, quote
-from typing import Optional
+from typing import List, Optional
 
 from playwright.async_api import Page
 
-from config import PAGE_LOAD_TIMEOUT, RETRY_COUNT, RETRY_DELAY, EXCLUDED_DOMAINS
+from config import (
+    PAGE_LOAD_TIMEOUT,
+    RETRY_COUNT,
+    RETRY_DELAY,
+    EXCLUDED_DOMAINS,
+    URL_CANDIDATE_MAX,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -68,6 +74,125 @@ class URLFinder:
 
         logger.error(f"URL検索失敗: {company_name}")
         return ""
+
+    async def find_homepage_candidates(
+        self,
+        company_name: str,
+        max_candidates: int = URL_CANDIDATE_MAX,
+    ) -> List[str]:
+        """
+        Yahoo! Japan検索で企業名に該当する複数の候補URLを取得する。
+
+        異なるドメインを優先して最大 max_candidates 件まで返す。
+        同名企業検出（DUPLICATE_DETECTED 判定）に使用する。
+
+        Args:
+            company_name: 企業名
+            max_candidates: 返す候補の最大件数
+
+        Returns:
+            異なるドメインの候補URLリスト（先頭が最有力）。
+            検索失敗時は空リスト。
+        """
+        search_query = f"{company_name} 公式サイト"
+        logger.info(f"URL候補検索開始: {search_query} (最大 {max_candidates} 件)")
+
+        for attempt in range(RETRY_COUNT):
+            try:
+                candidates = await self._search_yahoo_candidates(
+                    search_query, company_name, max_candidates
+                )
+                if candidates:
+                    return candidates
+                if attempt == 0:
+                    search_query = f"{company_name}"
+                elif attempt == 1:
+                    search_query = f"{company_name} ホームページ"
+                logger.debug(f"クエリ変更してリトライ: {search_query}")
+            except Exception as e:
+                logger.warning(
+                    f"URL候補検索エラー (試行 {attempt + 1}/{RETRY_COUNT}): {e}"
+                )
+                if attempt < RETRY_COUNT - 1:
+                    await asyncio.sleep(RETRY_DELAY)
+
+        logger.warning(f"URL候補検索失敗: {company_name}")
+        return []
+
+    async def _search_yahoo_candidates(
+        self,
+        query: str,
+        company_name: str,
+        max_candidates: int,
+    ) -> List[str]:
+        """Yahoo! Japan検索で複数の異なるドメイン候補を取得する。"""
+        page = self._page
+        search_url = f"https://search.yahoo.co.jp/search?p={quote(query)}"
+
+        await page.goto(
+            search_url,
+            wait_until="domcontentloaded",
+            timeout=PAGE_LOAD_TIMEOUT,
+        )
+        await page.wait_for_timeout(2000)
+
+        result_links = await page.eval_on_selector_all(
+            ".sw-Card__title a, #contents .sw-Card a[href^='http']",
+            """elements => elements.map(el => ({
+                href: el.href,
+                text: el.textContent || ''
+            }))"""
+        )
+
+        if not result_links:
+            result_links = await page.eval_on_selector_all(
+                "a[href^='http']:not([href*='yahoo']):not([href*='yimg'])",
+                """elements => elements.map(el => ({
+                    href: el.href,
+                    text: el.textContent || ''
+                }))"""
+            )
+
+        seen_domains = set()
+        candidates: List[str] = []
+
+        for link_info in result_links:
+            href = link_info.get("href", "")
+            if not href or not href.startswith("http"):
+                continue
+
+            parsed = urlparse(href)
+
+            if "yahoo" in parsed.netloc or "yimg" in parsed.netloc:
+                continue
+            if self._is_excluded_domain(parsed.netloc):
+                continue
+
+            # ドメイン正規化（www除去）
+            domain_key = parsed.netloc.lower()
+            if domain_key.startswith("www."):
+                domain_key = domain_key[4:]
+
+            if domain_key in seen_domains:
+                continue
+            seen_domains.add(domain_key)
+
+            # ルートに近いパスを優先
+            clean_url = f"{parsed.scheme}://{parsed.netloc}"
+            if parsed.path and parsed.path != "/":
+                path_depth = len([p for p in parsed.path.split("/") if p])
+                if path_depth <= 1:
+                    clean_url = f"{parsed.scheme}://{parsed.netloc}{parsed.path}"
+
+            candidates.append(clean_url)
+            if len(candidates) >= max_candidates:
+                break
+
+        logger.info(
+            f"候補ドメイン抽出: {company_name} -> {len(candidates)}件 "
+            f"({[urlparse(u).netloc for u in candidates]})"
+        )
+        return candidates
 
     async def _search_yahoo(self, query: str, company_name: str) -> str:
         """
