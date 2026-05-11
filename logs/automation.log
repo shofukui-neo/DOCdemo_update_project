@@ -22959,3 +22959,766 @@ Call log:
 2026-05-12 08:07:19,514 [INFO] __main__:   [ERR] エラー:  0社
 2026-05-12 08:07:19,514 [INFO] __main__:   所要時間:    0:00:07.394978
 2026-05-12 08:07:19,514 [INFO] __main__: ============================================================
+2026-05-12 08:13:37,198 [INFO] __main__: ============================================================
+2026-05-12 08:13:37,198 [INFO] __main__: DOCdemo 自動化フロー 開始
+2026-05-12 08:13:37,198 [INFO] __main__: 開始時刻: 2026-05-12 08:13:37
+2026-05-12 08:13:37,198 [INFO] __main__: ============================================================
+2026-05-12 08:13:37,199 [INFO] spreadsheet_manager: 企業リスト読み込み完了: 30社
+2026-05-12 08:13:37,199 [INFO] spreadsheet_manager: 処理対象企業: 23社 / 全30社
+2026-05-12 08:13:37,199 [INFO] __main__: 処理対象: 23社
+2026-05-12 08:13:37,937 [INFO] web_app_operator: 管理画面にログイン中...
+2026-05-12 08:13:46,635 [INFO] web_app_operator: ログイン成功
+2026-05-12 08:13:46,635 [INFO] __main__: 
+2026-05-12 08:13:46,636 [INFO] __main__: ──────────────────────────────────────────────────
+2026-05-12 08:13:46,636 [INFO] __main__: [1/23] ハミューレ株式会社 (ステータス: 同名企業該当)
+2026-05-12 08:13:46,636 [INFO] __main__: ──────────────────────────────────────────────────
+2026-05-12 08:13:46,636 [INFO] __main__: Step 1/6: URL企業ID不一致 HOLD からの手動再開: https://www.hamure.co.jp
+2026-05-12 08:13:46,638 [INFO] spreadsheet_manager: 企業リスト保存完了: 30社 → data\new30_company_list.csv
+2026-05-12 08:13:46,638 [INFO] __main__: Step 2/6: 企業追加...
+2026-05-12 08:13:46,638 [INFO] web_app_operator: 企業追加開始: ハミューレ株式会社
+2026-05-12 08:14:01,114 [WARNING] web_app_operator:   企業追加スキップ: 'hamure' は既に管理画面に登録済み（既存企業として後続処理を継続）
+2026-05-12 08:14:01,120 [INFO] __main__: Step 2.5/6: 追加企業のID検証...
+2026-05-12 08:14:01,120 [INFO] web_app_operator:   企業ID検証中: 期待ID=hamure, URL=https://www.hamure.co.jp
+2026-05-12 08:14:03,650 [INFO] web_app_operator:   [OK] 企業ID 'hamure' をページ内に確認
+2026-05-12 08:14:03,650 [INFO] spreadsheet_manager: 企業リスト保存完了: 30社 → data\new30_company_list.csv
+2026-05-12 08:14:03,651 [INFO] __main__:   → 企業追加完了 (ID: hamure)
+2026-05-12 08:14:03,651 [INFO] __main__: 企業追加完了 → ページを閉じて再ログイン（キャッシュバグ防止）
+2026-05-12 08:14:03,651 [INFO] web_app_operator: ページを閉じて再ログインを開始...
+2026-05-12 08:14:03,666 [INFO] web_app_operator:   古いページタブを閉じました
+2026-05-12 08:14:03,730 [INFO] web_app_operator:   新しいページタブを開きました
+2026-05-12 08:14:03,730 [INFO] web_app_operator: 管理画面にログイン中...
+2026-05-12 08:14:09,600 [INFO] web_app_operator: ログイン成功
+2026-05-12 08:14:09,601 [INFO] web_app_operator: ページクローズ＆再ログイン完了
+2026-05-12 08:14:09,601 [INFO] __main__: Step 3/6: HP画像取得...
+2026-05-12 08:14:09,601 [INFO] image_fetcher: 企業画像取得開始: ハミューレ株式会社 (https://www.hamure.co.jp)
+2026-05-12 08:14:42,755 [INFO] image_fetcher:   ヒーロー画像を発見: https://www.hamure.co.jp/wordpress/wp-content/themes/HAMURE/images/ann/kv_50th_pc.jpg
+2026-05-12 08:14:44,402 [INFO] image_fetcher:   画像保存成功 (Hero): C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\screenshots\img_www_hamure_co_jp_20260512_081409.jpg
+2026-05-12 08:14:49,353 [INFO] __main__:   → 画像取得: C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\screenshots\img_www_hamure_co_jp_20260512_081409.jpg, 抽出リンク: 19件
+2026-05-12 08:14:49,353 [INFO] __main__: Step 4/6: コンテンツ生成...
+2026-05-12 08:14:52,984 [INFO] __main__:   [検証] コンテンツ生成画面のヘッダーが対象企業に切替済か確認...
+2026-05-12 08:14:52,984 [INFO] web_app_operator: サイドバーから企業選択開始: ハミューレ株式会社
+2026-05-12 08:15:00,051 [INFO] web_app_operator:   ヘッダー検証中: 企業名=ハミューレ株式会社, ID=hamure
+2026-05-12 08:15:00,067 [INFO] web_app_operator:   [OK] ヘッダー検証成功: 「🤖 ハミューレ株式会社 コンテンツ生成」
+2026-05-12 08:15:00,067 [INFO] web_app_operator: サイドバー企業選択完了: ハミューレ株式会社
+2026-05-12 08:15:00,067 [INFO] web_app_operator: URL入力開始: 19件
+2026-05-12 08:15:03,670 [INFO] web_app_operator:   「全入力を処理」ボタンをクリックしました
+2026-05-12 08:15:08,335 [INFO] web_app_operator: URL入力・処理開始完了: 19件
+2026-05-12 08:15:08,335 [INFO] web_app_operator: コンテンツ生成開始...
+2026-05-12 08:15:10,903 [INFO] web_app_operator:   生成準備完了の待機中...
+2026-05-12 08:15:30,916 [WARNING] web_app_operator:   生成準備完了メッセージが特定できませんでしたが、続行を試みます
+2026-05-12 08:15:31,461 [INFO] web_app_operator: コンテンツ生成中... (最大5分待機)
+2026-05-12 08:16:16,654 [INFO] web_app_operator: 生成完了検出 (経過: 45.0秒)
+2026-05-12 08:16:16,655 [INFO] web_app_operator: コンテンツ生成完了
+2026-05-12 08:16:16,655 [INFO] __main__:   [検証] 保存後のFAQ・企業情報タブを確認...
+2026-05-12 08:16:16,655 [INFO] web_app_operator: コンテンツ保存開始...
+2026-05-12 08:16:20,830 [INFO] web_app_operator:   FAQプレビューの確認中...
+2026-05-12 08:16:35,871 [INFO] web_app_operator:   FAQプレビューはページ内に存在 (見出しセレクター不一致を許容)
+2026-05-12 08:16:35,871 [INFO] web_app_operator:   STEP1: 第1保存ボタン（FAQ保存）をクリック...
+2026-05-12 08:16:37,510 [INFO] web_app_operator:   第1保存ボタンをクリックしました
+2026-05-12 08:16:41,040 [INFO] web_app_operator:   STEP2: 企業情報を保存ボタン（赤）を探してクリック...
+2026-05-12 08:16:42,598 [INFO] web_app_operator:   「企業情報を保存」ボタンが直接見つからないため、全ボタンを確認...
+2026-05-12 08:16:42,683 [INFO] web_app_operator:     保存関連ボタン発見: [👁️ プレビュー・保存]
+2026-05-12 08:16:42,745 [INFO] web_app_operator:     保存関連ボタン発見: [💾 FAQ保存（置換）]
+2026-05-12 08:16:42,751 [INFO] web_app_operator:     保存関連ボタン発見: [💾 企業情報保存]
+2026-05-12 08:16:42,759 [INFO] web_app_operator:   赤いボタンをクリック: [💾 企業情報保存]
+2026-05-12 08:16:48,884 [INFO] web_app_operator:   企業情報を保存ボタンのクリック完了
+2026-05-12 08:16:58,894 [WARNING] web_app_operator:   明確な保存完了メッセージは確認できませんでしたが、処理を続行します
+2026-05-12 08:16:58,894 [INFO] web_app_operator:   コンテンツ管理タブで保存確認中: ハミューレ株式会社
+2026-05-12 08:17:12,553 [INFO] web_app_operator:   [OK] コンテンツ管理ページ: hamure の存在を確認
+2026-05-12 08:17:12,553 [INFO] web_app_operator:   [FAQタブ] 検証開始
+2026-05-12 08:17:12,555 [WARNING] web_app_operator:   [FAQタブ] が見つかりません（タブ未表示の可能性、ページ全体で代替検証）
+2026-05-12 08:17:12,618 [INFO] web_app_operator:   [OK] [FAQタブ] 企業名/IDを確認 (スクショ: screenshots/tab_FAQ_hamure.png)
+2026-05-12 08:17:12,618 [INFO] web_app_operator:   [企業情報タブ] 検証開始
+2026-05-12 08:17:12,621 [WARNING] web_app_operator:   [企業情報タブ] が見つかりません（タブ未表示の可能性、ページ全体で代替検証）
+2026-05-12 08:17:12,684 [INFO] web_app_operator:   [OK] [企業情報タブ] 企業名/IDを確認 (スクショ: screenshots/tab_企業情報_hamure.png)
+2026-05-12 08:17:12,684 [INFO] web_app_operator:   [OK] FAQ・企業情報タブともに対象企業のコンテンツを確認
+2026-05-12 08:17:14,698 [INFO] web_app_operator: コンテンツ保存処理完了
+2026-05-12 08:17:14,698 [INFO] spreadsheet_manager: 企業リスト保存完了: 30社 → data\new30_company_list.csv
+2026-05-12 08:17:14,698 [INFO] __main__:   → コンテンツ生成・保存・検証完了
+2026-05-12 08:17:14,700 [INFO] __main__: Step 5/6: 背景画像アップロード...
+2026-05-12 08:17:14,700 [INFO] web_app_operator: 背景画像アップロード開始 (企業ID: hamure): C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\screenshots\img_www_hamure_co_jp_20260512_081409.jpg
+2026-05-12 08:17:20,329 [INFO] web_app_operator:   設定ページで企業を選択中: hamure
+2026-05-12 08:17:20,329 [INFO] web_app_operator: 企業選択 (ID): hamure
+2026-05-12 08:17:27,124 [INFO] web_app_operator: 企業選択完了: hamure
+2026-05-12 08:17:27,300 [INFO] web_app_operator:   「Upload」関連ボタンを検出。クリックしてファイル選択を開始します。
+2026-05-12 08:17:28,489 [INFO] web_app_operator:   UI反映確認中: img_www_hamure_co_jp_20260512_081409.jpg (最大 30秒)
+2026-05-12 08:17:29,639 [INFO] web_app_operator:   ✓ UI反映確認OK (新しい画像要素を検出: https://casual-interview-api-dev.brainverse-ai.com/media/5505fbf8e8d56d171b3b5c1...)
+2026-05-12 08:17:32,163 [INFO] web_app_operator: 背景画像アップロード完了（UI反映確認済）: C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\screenshots\img_www_hamure_co_jp_20260512_081409.jpg
+2026-05-12 08:17:32,163 [INFO] spreadsheet_manager: 企業リスト保存完了: 30社 → data\new30_company_list.csv
+2026-05-12 08:17:32,163 [INFO] __main__:   → 背景画像アップロード完了（UI反映確認済）
+2026-05-12 08:17:32,163 [INFO] __main__: Step 6/6: フロントエンドアプリURL取得...
+2026-05-12 08:17:32,163 [INFO] __main__: Step 5完了 → ページを閉じて再ログイン（Step 6 のサイドバーキャッシュ対策）
+2026-05-12 08:17:32,163 [INFO] web_app_operator: ページを閉じて再ログインを開始...
+2026-05-12 08:17:32,172 [INFO] web_app_operator:   古いページタブを閉じました
+2026-05-12 08:17:32,216 [INFO] web_app_operator:   新しいページタブを開きました
+2026-05-12 08:17:32,217 [INFO] web_app_operator: 管理画面にログイン中...
+2026-05-12 08:17:38,166 [INFO] web_app_operator: ログイン成功
+2026-05-12 08:17:38,166 [INFO] web_app_operator: ページクローズ＆再ログイン完了
+2026-05-12 08:17:38,166 [INFO] web_app_operator: フロントエンドアプリURL取得開始 (企業ID: hamure)...
+2026-05-12 08:17:43,882 [INFO] web_app_operator: 企業選択 (ID): hamure
+2026-05-12 08:17:50,708 [INFO] web_app_operator: 企業選択完了: hamure
+2026-05-12 08:17:54,273 [INFO] web_app_operator:   サイドバーのaタグからURLを取得成功: https://casual-interview-dev.brainverse-ai.com/hamure
+2026-05-12 08:17:54,274 [INFO] spreadsheet_manager: 企業リスト保存完了: 30社 → data\new30_company_list.csv
+2026-05-12 08:17:54,274 [INFO] __main__:   → フロントエンドURL: https://casual-interview-dev.brainverse-ai.com/hamure
+2026-05-12 08:17:54,274 [INFO] __main__: [OK] ハミューレ株式会社: 全処理完了!
+2026-05-12 08:17:54,274 [INFO] __main__: 
+2026-05-12 08:17:54,274 [INFO] __main__: 1件処理完了 → 再ログイン＆キャッシュクリアを実行
+2026-05-12 08:17:54,274 [INFO] web_app_operator: 再ログイン＆キャッシュクリア開始...
+2026-05-12 08:17:54,277 [INFO] web_app_operator:   LocalStorage/SessionStorageをクリアしました
+2026-05-12 08:17:54,279 [INFO] web_app_operator:   Cookieをクリアしました
+2026-05-12 08:17:56,270 [INFO] web_app_operator: 管理画面にログイン中...
+2026-05-12 08:18:02,340 [INFO] web_app_operator: ログイン成功
+2026-05-12 08:18:02,340 [INFO] web_app_operator: 再ログイン＆キャッシュクリア完了
+2026-05-12 08:18:02,340 [INFO] __main__: 
+2026-05-12 08:18:02,340 [INFO] __main__: ──────────────────────────────────────────────────
+2026-05-12 08:18:02,340 [INFO] __main__: [2/23] 宇津商事株式会社 (ステータス: 同名企業該当)
+2026-05-12 08:18:02,340 [INFO] __main__: ──────────────────────────────────────────────────
+2026-05-12 08:18:02,340 [INFO] __main__: Step 1/6: URL企業ID不一致 HOLD からの手動再開: https://www.utsu.co.jp
+2026-05-12 08:18:02,340 [INFO] spreadsheet_manager: 企業リスト保存完了: 30社 → data\new30_company_list.csv
+2026-05-12 08:18:02,340 [INFO] __main__: Step 2/6: 企業追加...
+2026-05-12 08:18:02,340 [INFO] web_app_operator: 企業追加開始: 宇津商事株式会社
+2026-05-12 08:18:16,998 [INFO] web_app_operator: 企業追加完了: 宇津商事株式会社 (ID: utsu)
+2026-05-12 08:18:16,998 [INFO] __main__: Step 2.5/6: 追加企業のID検証...
+2026-05-12 08:18:16,998 [INFO] web_app_operator:   企業ID検証中: 期待ID=utsu, URL=https://www.utsu.co.jp
+2026-05-12 08:18:19,529 [INFO] web_app_operator:   [OK] 企業ID 'utsu' をページ内に確認
+2026-05-12 08:18:19,529 [INFO] spreadsheet_manager: 企業リスト保存完了: 30社 → data\new30_company_list.csv
+2026-05-12 08:18:19,531 [INFO] __main__:   → 企業追加完了 (ID: utsu)
+2026-05-12 08:18:19,531 [INFO] __main__: 企業追加完了 → ページを閉じて再ログイン（キャッシュバグ防止）
+2026-05-12 08:18:19,531 [INFO] web_app_operator: ページを閉じて再ログインを開始...
+2026-05-12 08:18:19,554 [INFO] web_app_operator:   古いページタブを閉じました
+2026-05-12 08:18:19,606 [INFO] web_app_operator:   新しいページタブを開きました
+2026-05-12 08:18:19,607 [INFO] web_app_operator: 管理画面にログイン中...
+2026-05-12 08:18:25,427 [INFO] web_app_operator: ログイン成功
+2026-05-12 08:18:25,427 [INFO] web_app_operator: ページクローズ＆再ログイン完了
+2026-05-12 08:18:25,427 [INFO] __main__: Step 3/6: HP画像取得...
+2026-05-12 08:18:25,429 [INFO] image_fetcher: 企業画像取得開始: 宇津商事株式会社 (https://www.utsu.co.jp)
+2026-05-12 08:18:28,410 [INFO] image_fetcher:   OGP画像を発見: https://www.utsu.co.jp/ogp.jpg
+2026-05-12 08:18:29,032 [INFO] image_fetcher:   画像保存成功 (OGP): C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\screenshots\img_www_utsu_co_jp_20260512_081825.jpg
+2026-05-12 08:18:33,287 [INFO] __main__:   → 画像取得: C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\screenshots\img_www_utsu_co_jp_20260512_081825.jpg, 抽出リンク: 1件
+2026-05-12 08:18:33,287 [INFO] __main__: Step 4/6: コンテンツ生成...
+2026-05-12 08:18:36,961 [INFO] __main__:   [検証] コンテンツ生成画面のヘッダーが対象企業に切替済か確認...
+2026-05-12 08:18:36,961 [INFO] web_app_operator: サイドバーから企業選択開始: 宇津商事株式会社
+2026-05-12 08:18:44,087 [INFO] web_app_operator:   ヘッダー検証中: 企業名=宇津商事株式会社, ID=utsu
+2026-05-12 08:18:44,284 [ERROR] web_app_operator:   [ERR] ヘッダーに対象企業名/IDが見つかりません: name=宇津商事株式会社, id=utsu, スクショ: screenshots/title_warn_utsu.png
+2026-05-12 08:18:44,284 [ERROR] __main__: [ERROR] 宇津商事株式会社: 処理失敗 -- ヘッダーに対象企業名/IDが見つかりません: name=宇津商事株式会社, id=utsu, スクショ: screenshots/title_warn_utsu.png
+2026-05-12 08:18:44,285 [INFO] spreadsheet_manager: 企業リスト保存完了: 30社 → data\new30_company_list.csv
+2026-05-12 08:18:44,285 [INFO] __main__: 
+2026-05-12 08:18:44,285 [INFO] __main__: 1件処理完了 → 再ログイン＆キャッシュクリアを実行
+2026-05-12 08:18:44,285 [INFO] web_app_operator: 再ログイン＆キャッシュクリア開始...
+2026-05-12 08:18:44,290 [INFO] web_app_operator:   LocalStorage/SessionStorageをクリアしました
+2026-05-12 08:18:44,302 [INFO] web_app_operator:   Cookieをクリアしました
+2026-05-12 08:18:46,312 [INFO] web_app_operator: 管理画面にログイン中...
+2026-05-12 08:18:52,193 [INFO] web_app_operator: ログイン成功
+2026-05-12 08:18:52,193 [INFO] web_app_operator: 再ログイン＆キャッシュクリア完了
+2026-05-12 08:18:52,193 [INFO] __main__: 
+2026-05-12 08:18:52,193 [INFO] __main__: ──────────────────────────────────────────────────
+2026-05-12 08:18:52,193 [INFO] __main__: [3/23] 株式会社スイート・ピア (ステータス: 同名企業該当)
+2026-05-12 08:18:52,193 [INFO] __main__: ──────────────────────────────────────────────────
+2026-05-12 08:18:52,193 [INFO] __main__: Step 1/6: URL企業ID不一致 HOLD からの手動再開: https://www.sweetpea-net.com
+2026-05-12 08:18:52,195 [INFO] spreadsheet_manager: 企業リスト保存完了: 30社 → data\new30_company_list.csv
+2026-05-12 08:18:52,195 [INFO] __main__: Step 2/6: 企業追加...
+2026-05-12 08:18:52,195 [INFO] web_app_operator: 企業追加開始: 株式会社スイート・ピア
+2026-05-12 08:19:06,777 [INFO] web_app_operator: 企業追加完了: 株式会社スイート・ピア (ID: sweetpea-net)
+2026-05-12 08:19:06,777 [INFO] __main__: Step 2.5/6: 追加企業のID検証...
+2026-05-12 08:19:06,777 [INFO] web_app_operator:   企業ID検証中: 期待ID=sweetpea-net, URL=https://www.sweetpea-net.com
+2026-05-12 08:19:09,311 [INFO] web_app_operator:   [OK] 企業ID 'sweetpea-net' をページ内に確認
+2026-05-12 08:19:09,311 [INFO] spreadsheet_manager: 企業リスト保存完了: 30社 → data\new30_company_list.csv
+2026-05-12 08:19:09,311 [INFO] __main__:   → 企業追加完了 (ID: sweetpea-net)
+2026-05-12 08:19:09,311 [INFO] __main__: 企業追加完了 → ページを閉じて再ログイン（キャッシュバグ防止）
+2026-05-12 08:19:09,311 [INFO] web_app_operator: ページを閉じて再ログインを開始...
+2026-05-12 08:19:09,334 [INFO] web_app_operator:   古いページタブを閉じました
+2026-05-12 08:19:09,383 [INFO] web_app_operator:   新しいページタブを開きました
+2026-05-12 08:19:09,383 [INFO] web_app_operator: 管理画面にログイン中...
+2026-05-12 08:19:15,310 [INFO] web_app_operator: ログイン成功
+2026-05-12 08:19:15,310 [INFO] web_app_operator: ページクローズ＆再ログイン完了
+2026-05-12 08:19:15,310 [INFO] __main__: Step 3/6: HP画像取得...
+2026-05-12 08:19:15,310 [INFO] image_fetcher: 企業画像取得開始: 株式会社スイート・ピア (https://www.sweetpea-net.com)
+2026-05-12 08:19:48,627 [INFO] image_fetcher:   ヒーロー画像を発見: https://www.sweetpea-net.com/Portals/0/images/common/header_img.jpg
+2026-05-12 08:19:49,344 [INFO] image_fetcher:   画像保存成功 (Hero): C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\screenshots\img_www_sweetpea-net_com_20260512_081915.jpg
+2026-05-12 08:19:54,460 [INFO] __main__:   → 画像取得: C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\screenshots\img_www_sweetpea-net_com_20260512_081915.jpg, 抽出リンク: 30件
+2026-05-12 08:19:54,465 [INFO] __main__: Step 4/6: コンテンツ生成...
+2026-05-12 08:19:58,101 [INFO] __main__:   [検証] コンテンツ生成画面のヘッダーが対象企業に切替済か確認...
+2026-05-12 08:19:58,101 [INFO] web_app_operator: サイドバーから企業選択開始: 株式会社スイート・ピア
+2026-05-12 08:20:05,201 [INFO] web_app_operator:   ヘッダー検証中: 企業名=株式会社スイート・ピア, ID=sweetpea-net
+2026-05-12 08:20:05,253 [INFO] web_app_operator:   [OK] ヘッダー検証成功: 「🤖 株式会社スイート・ピア コンテンツ生成」
+2026-05-12 08:20:05,253 [INFO] web_app_operator: サイドバー企業選択完了: 株式会社スイート・ピア
+2026-05-12 08:20:05,253 [INFO] web_app_operator: URL入力開始: 30件
+2026-05-12 08:20:08,954 [INFO] web_app_operator:   「全入力を処理」ボタンをクリックしました
+2026-05-12 08:20:31,826 [INFO] web_app_operator: URL入力・処理開始完了: 30件
+2026-05-12 08:20:31,826 [INFO] web_app_operator: コンテンツ生成開始...
+2026-05-12 08:20:34,377 [INFO] web_app_operator:   生成準備完了の待機中...
+2026-05-12 08:20:54,390 [WARNING] web_app_operator:   生成準備完了メッセージが特定できませんでしたが、続行を試みます
+2026-05-12 08:20:54,958 [INFO] web_app_operator: コンテンツ生成中... (最大5分待機)
+2026-05-12 08:21:45,203 [INFO] web_app_operator: 生成完了検出 (経過: 50.0秒)
+2026-05-12 08:21:45,203 [INFO] web_app_operator: コンテンツ生成完了
+2026-05-12 08:21:45,203 [INFO] __main__:   [検証] 保存後のFAQ・企業情報タブを確認...
+2026-05-12 08:21:45,203 [INFO] web_app_operator: コンテンツ保存開始...
+2026-05-12 08:21:49,358 [INFO] web_app_operator:   FAQプレビューの確認中...
+2026-05-12 08:22:04,401 [INFO] web_app_operator:   FAQプレビューはページ内に存在 (見出しセレクター不一致を許容)
+2026-05-12 08:22:04,401 [INFO] web_app_operator:   STEP1: 第1保存ボタン（FAQ保存）をクリック...
+2026-05-12 08:22:06,012 [INFO] web_app_operator:   第1保存ボタンをクリックしました
+2026-05-12 08:22:09,544 [INFO] web_app_operator:   STEP2: 企業情報を保存ボタン（赤）を探してクリック...
+2026-05-12 08:22:11,080 [INFO] web_app_operator:   「企業情報を保存」ボタンが直接見つからないため、全ボタンを確認...
+2026-05-12 08:22:11,153 [INFO] web_app_operator:     保存関連ボタン発見: [👁️ プレビュー・保存]
+2026-05-12 08:22:11,196 [INFO] web_app_operator:     保存関連ボタン発見: [💾 FAQ保存（置換）]
+2026-05-12 08:22:11,221 [INFO] web_app_operator:     保存関連ボタン発見: [💾 企業情報保存]
+2026-05-12 08:22:11,258 [INFO] web_app_operator:   赤いボタンをクリック: [💾 企業情報保存]
+2026-05-12 08:22:17,429 [INFO] web_app_operator:   企業情報を保存ボタンのクリック完了
+2026-05-12 08:22:27,445 [WARNING] web_app_operator:   明確な保存完了メッセージは確認できませんでしたが、処理を続行します
+2026-05-12 08:22:27,445 [INFO] web_app_operator:   コンテンツ管理タブで保存確認中: 株式会社スイート・ピア
+2026-05-12 08:22:40,972 [INFO] web_app_operator:   [OK] コンテンツ管理ページ: sweetpea-net の存在を確認
+2026-05-12 08:22:40,973 [INFO] web_app_operator:   [FAQタブ] 検証開始
+2026-05-12 08:22:40,975 [WARNING] web_app_operator:   [FAQタブ] が見つかりません（タブ未表示の可能性、ページ全体で代替検証）
+2026-05-12 08:22:41,059 [INFO] web_app_operator:   [OK] [FAQタブ] 企業名/IDを確認 (スクショ: screenshots/tab_FAQ_sweetpea-net.png)
+2026-05-12 08:22:41,059 [INFO] web_app_operator:   [企業情報タブ] 検証開始
+2026-05-12 08:22:41,062 [WARNING] web_app_operator:   [企業情報タブ] が見つかりません（タブ未表示の可能性、ページ全体で代替検証）
+2026-05-12 08:22:41,126 [INFO] web_app_operator:   [OK] [企業情報タブ] 企業名/IDを確認 (スクショ: screenshots/tab_企業情報_sweetpea-net.png)
+2026-05-12 08:22:41,126 [INFO] web_app_operator:   [OK] FAQ・企業情報タブともに対象企業のコンテンツを確認
+2026-05-12 08:22:43,141 [INFO] web_app_operator: コンテンツ保存処理完了
+2026-05-12 08:22:43,142 [INFO] spreadsheet_manager: 企業リスト保存完了: 30社 → data\new30_company_list.csv
+2026-05-12 08:22:43,142 [INFO] __main__:   → コンテンツ生成・保存・検証完了
+2026-05-12 08:22:43,142 [INFO] __main__: Step 5/6: 背景画像アップロード...
+2026-05-12 08:22:43,142 [INFO] web_app_operator: 背景画像アップロード開始 (企業ID: sweetpea-net): C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\screenshots\img_www_sweetpea-net_com_20260512_081915.jpg
+2026-05-12 08:22:48,760 [INFO] web_app_operator:   設定ページで企業を選択中: sweetpea-net
+2026-05-12 08:22:48,761 [INFO] web_app_operator: 企業選択 (ID): sweetpea-net
+2026-05-12 08:22:55,479 [INFO] web_app_operator: 企業選択完了: sweetpea-net
+2026-05-12 08:22:55,550 [INFO] web_app_operator:   「Upload」関連ボタンを検出。クリックしてファイル選択を開始します。
+2026-05-12 08:22:56,636 [INFO] web_app_operator:   UI反映確認中: img_www_sweetpea-net_com_20260512_081915.jpg (最大 30秒)
+2026-05-12 08:22:57,818 [INFO] web_app_operator:   ✓ UI反映確認OK (新しい画像要素を検出: https://casual-interview-api-dev.brainverse-ai.com/media/3d71d20501954aa56d0e366...)
+2026-05-12 08:23:00,344 [INFO] web_app_operator: 背景画像アップロード完了（UI反映確認済）: C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\screenshots\img_www_sweetpea-net_com_20260512_081915.jpg
+2026-05-12 08:23:00,345 [INFO] spreadsheet_manager: 企業リスト保存完了: 30社 → data\new30_company_list.csv
+2026-05-12 08:23:00,346 [INFO] __main__:   → 背景画像アップロード完了（UI反映確認済）
+2026-05-12 08:23:00,346 [INFO] __main__: Step 6/6: フロントエンドアプリURL取得...
+2026-05-12 08:23:00,346 [INFO] __main__: Step 5完了 → ページを閉じて再ログイン（Step 6 のサイドバーキャッシュ対策）
+2026-05-12 08:23:00,346 [INFO] web_app_operator: ページを閉じて再ログインを開始...
+2026-05-12 08:23:00,354 [INFO] web_app_operator:   古いページタブを閉じました
+2026-05-12 08:23:00,415 [INFO] web_app_operator:   新しいページタブを開きました
+2026-05-12 08:23:00,415 [INFO] web_app_operator: 管理画面にログイン中...
+2026-05-12 08:23:06,327 [INFO] web_app_operator: ログイン成功
+2026-05-12 08:23:06,327 [INFO] web_app_operator: ページクローズ＆再ログイン完了
+2026-05-12 08:23:06,327 [INFO] web_app_operator: フロントエンドアプリURL取得開始 (企業ID: sweetpea-net)...
+2026-05-12 08:23:12,007 [INFO] web_app_operator: 企業選択 (ID): sweetpea-net
+2026-05-12 08:23:18,961 [INFO] web_app_operator: 企業選択完了: sweetpea-net
+2026-05-12 08:23:22,496 [INFO] web_app_operator:   サイドバーのaタグからURLを取得成功: https://casual-interview-dev.brainverse-ai.com/sweetpea-net
+2026-05-12 08:23:22,498 [INFO] spreadsheet_manager: 企業リスト保存完了: 30社 → data\new30_company_list.csv
+2026-05-12 08:23:22,498 [INFO] __main__:   → フロントエンドURL: https://casual-interview-dev.brainverse-ai.com/sweetpea-net
+2026-05-12 08:23:22,498 [INFO] __main__: [OK] 株式会社スイート・ピア: 全処理完了!
+2026-05-12 08:23:22,498 [INFO] __main__: 
+2026-05-12 08:23:22,498 [INFO] __main__: 1件処理完了 → 再ログイン＆キャッシュクリアを実行
+2026-05-12 08:23:22,498 [INFO] web_app_operator: 再ログイン＆キャッシュクリア開始...
+2026-05-12 08:23:22,500 [INFO] web_app_operator:   LocalStorage/SessionStorageをクリアしました
+2026-05-12 08:23:22,502 [INFO] web_app_operator:   Cookieをクリアしました
+2026-05-12 08:23:24,524 [INFO] web_app_operator: 管理画面にログイン中...
+2026-05-12 08:23:30,508 [INFO] web_app_operator: ログイン成功
+2026-05-12 08:23:30,508 [INFO] web_app_operator: 再ログイン＆キャッシュクリア完了
+2026-05-12 08:23:30,508 [INFO] __main__: 
+2026-05-12 08:23:30,508 [INFO] __main__: ──────────────────────────────────────────────────
+2026-05-12 08:23:30,508 [INFO] __main__: [4/23] オリジン工業株式会社 (ステータス: 同名企業該当)
+2026-05-12 08:23:30,508 [INFO] __main__: ──────────────────────────────────────────────────
+2026-05-12 08:23:30,508 [INFO] __main__: Step 1/6: URL企業ID不一致 HOLD からの手動再開: https://www.oin.co.jp
+2026-05-12 08:23:30,509 [INFO] spreadsheet_manager: 企業リスト保存完了: 30社 → data\new30_company_list.csv
+2026-05-12 08:23:30,509 [INFO] __main__: Step 2/6: 企業追加...
+2026-05-12 08:23:30,509 [INFO] web_app_operator: 企業追加開始: オリジン工業株式会社
+2026-05-12 08:23:45,015 [INFO] web_app_operator: 企業追加完了: オリジン工業株式会社 (ID: oin)
+2026-05-12 08:23:45,015 [INFO] __main__: Step 2.5/6: 追加企業のID検証...
+2026-05-12 08:23:45,015 [INFO] web_app_operator:   企業ID検証中: 期待ID=oin, URL=https://www.oin.co.jp
+2026-05-12 08:23:47,551 [INFO] web_app_operator:   [OK] 企業ID 'oin' をページ内に確認
+2026-05-12 08:23:47,553 [INFO] spreadsheet_manager: 企業リスト保存完了: 30社 → data\new30_company_list.csv
+2026-05-12 08:23:47,553 [INFO] __main__:   → 企業追加完了 (ID: oin)
+2026-05-12 08:23:47,553 [INFO] __main__: 企業追加完了 → ページを閉じて再ログイン（キャッシュバグ防止）
+2026-05-12 08:23:47,553 [INFO] web_app_operator: ページを閉じて再ログインを開始...
+2026-05-12 08:23:47,565 [INFO] web_app_operator:   古いページタブを閉じました
+2026-05-12 08:23:47,613 [INFO] web_app_operator:   新しいページタブを開きました
+2026-05-12 08:23:47,614 [INFO] web_app_operator: 管理画面にログイン中...
+2026-05-12 08:23:53,541 [INFO] web_app_operator: ログイン成功
+2026-05-12 08:23:53,541 [INFO] web_app_operator: ページクローズ＆再ログイン完了
+2026-05-12 08:23:53,541 [INFO] __main__: Step 3/6: HP画像取得...
+2026-05-12 08:23:53,541 [INFO] image_fetcher: 企業画像取得開始: オリジン工業株式会社 (https://www.oin.co.jp)
+2026-05-12 08:24:26,568 [INFO] image_fetcher:   ヒーロー画像を発見: https://www.oin.co.jp/assets/img/slide04.png
+2026-05-12 08:24:27,171 [INFO] image_fetcher:   画像保存成功 (Hero): C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\screenshots\img_www_oin_co_jp_20260512_082353.jpg
+2026-05-12 08:24:32,060 [INFO] __main__:   → 画像取得: C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\screenshots\img_www_oin_co_jp_20260512_082353.jpg, 抽出リンク: 14件
+2026-05-12 08:24:32,060 [INFO] __main__: Step 4/6: コンテンツ生成...
+2026-05-12 08:24:35,709 [INFO] __main__:   [検証] コンテンツ生成画面のヘッダーが対象企業に切替済か確認...
+2026-05-12 08:24:35,709 [INFO] web_app_operator: サイドバーから企業選択開始: オリジン工業株式会社
+2026-05-12 08:24:50,792 [INFO] web_app_operator:   ヘッダー検証中: 企業名=オリジン工業株式会社, ID=oin
+2026-05-12 08:24:50,859 [INFO] web_app_operator:   [OK] ヘッダー検証成功: 「🤖 オリジン工業株式会社 コンテンツ生成」
+2026-05-12 08:24:50,859 [INFO] web_app_operator: サイドバー企業選択完了: オリジン工業株式会社
+2026-05-12 08:24:50,859 [INFO] web_app_operator: URL入力開始: 14件
+2026-05-12 08:24:54,445 [INFO] web_app_operator:   「全入力を処理」ボタンをクリックしました
+2026-05-12 08:24:58,981 [INFO] web_app_operator: URL入力・処理開始完了: 14件
+2026-05-12 08:24:58,981 [INFO] web_app_operator: コンテンツ生成開始...
+2026-05-12 08:25:01,524 [INFO] web_app_operator:   生成準備完了の待機中...
+2026-05-12 08:25:21,527 [WARNING] web_app_operator:   生成準備完了メッセージが特定できませんでしたが、続行を試みます
+2026-05-12 08:25:22,068 [INFO] web_app_operator: コンテンツ生成中... (最大5分待機)
+2026-05-12 08:26:12,233 [INFO] web_app_operator: 生成完了検出 (経過: 50.0秒)
+2026-05-12 08:26:12,233 [INFO] web_app_operator: コンテンツ生成完了
+2026-05-12 08:26:12,233 [INFO] __main__:   [検証] 保存後のFAQ・企業情報タブを確認...
+2026-05-12 08:26:12,233 [INFO] web_app_operator: コンテンツ保存開始...
+2026-05-12 08:26:16,364 [INFO] web_app_operator:   FAQプレビューの確認中...
+2026-05-12 08:26:31,387 [INFO] web_app_operator:   FAQプレビューはページ内に存在 (見出しセレクター不一致を許容)
+2026-05-12 08:26:31,387 [INFO] web_app_operator:   STEP1: 第1保存ボタン（FAQ保存）をクリック...
+2026-05-12 08:26:32,956 [INFO] web_app_operator:   第1保存ボタンをクリックしました
+2026-05-12 08:26:36,468 [INFO] web_app_operator:   STEP2: 企業情報を保存ボタン（赤）を探してクリック...
+2026-05-12 08:26:37,985 [INFO] web_app_operator:   「企業情報を保存」ボタンが直接見つからないため、全ボタンを確認...
+2026-05-12 08:26:38,006 [INFO] web_app_operator:     保存関連ボタン発見: [👁️ プレビュー・保存]
+2026-05-12 08:26:38,024 [INFO] web_app_operator:     保存関連ボタン発見: [💾 FAQ保存（置換）]
+2026-05-12 08:26:38,029 [INFO] web_app_operator:     保存関連ボタン発見: [💾 企業情報保存]
+2026-05-12 08:26:38,036 [INFO] web_app_operator:   赤いボタンをクリック: [💾 企業情報保存]
+2026-05-12 08:26:44,180 [INFO] web_app_operator:   企業情報を保存ボタンのクリック完了
+2026-05-12 08:26:54,182 [WARNING] web_app_operator:   明確な保存完了メッセージは確認できませんでしたが、処理を続行します
+2026-05-12 08:26:54,182 [INFO] web_app_operator:   コンテンツ管理タブで保存確認中: オリジン工業株式会社
+2026-05-12 08:27:11,214 [INFO] web_app_operator:   [OK] コンテンツ管理ページ: oin の存在を確認
+2026-05-12 08:27:11,214 [INFO] web_app_operator:   [FAQタブ] 検証開始
+2026-05-12 08:27:11,217 [WARNING] web_app_operator:   [FAQタブ] が見つかりません（タブ未表示の可能性、ページ全体で代替検証）
+2026-05-12 08:27:11,292 [INFO] web_app_operator:   [OK] [FAQタブ] 企業名/IDを確認 (スクショ: screenshots/tab_FAQ_oin.png)
+2026-05-12 08:27:11,292 [INFO] web_app_operator:   [企業情報タブ] 検証開始
+2026-05-12 08:27:11,302 [WARNING] web_app_operator:   [企業情報タブ] が見つかりません（タブ未表示の可能性、ページ全体で代替検証）
+2026-05-12 08:27:11,386 [INFO] web_app_operator:   [OK] [企業情報タブ] 企業名/IDを確認 (スクショ: screenshots/tab_企業情報_oin.png)
+2026-05-12 08:27:11,418 [INFO] web_app_operator:   [OK] FAQ・企業情報タブともに対象企業のコンテンツを確認
+2026-05-12 08:27:13,423 [INFO] web_app_operator: コンテンツ保存処理完了
+2026-05-12 08:27:13,425 [INFO] spreadsheet_manager: 企業リスト保存完了: 30社 → data\new30_company_list.csv
+2026-05-12 08:27:13,427 [INFO] __main__:   → コンテンツ生成・保存・検証完了
+2026-05-12 08:27:13,427 [INFO] __main__: Step 5/6: 背景画像アップロード...
+2026-05-12 08:27:13,427 [INFO] web_app_operator: 背景画像アップロード開始 (企業ID: oin): C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\screenshots\img_www_oin_co_jp_20260512_082353.jpg
+2026-05-12 08:27:19,074 [INFO] web_app_operator:   設定ページで企業を選択中: oin
+2026-05-12 08:27:19,074 [INFO] web_app_operator: 企業選択 (ID): oin
+2026-05-12 08:27:29,306 [INFO] web_app_operator: 企業選択完了: oin
+2026-05-12 08:27:29,448 [INFO] web_app_operator:   「Upload」関連ボタンを検出。クリックしてファイル選択を開始します。
+2026-05-12 08:27:30,514 [INFO] web_app_operator:   UI反映確認中: img_www_oin_co_jp_20260512_082353.jpg (最大 30秒)
+2026-05-12 08:27:31,680 [INFO] web_app_operator:   ✓ UI反映確認OK (新しい画像要素を検出: https://casual-interview-api-dev.brainverse-ai.com/media/916f0c890889b6d784b4166...)
+2026-05-12 08:27:34,203 [INFO] web_app_operator: 背景画像アップロード完了（UI反映確認済）: C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\screenshots\img_www_oin_co_jp_20260512_082353.jpg
+2026-05-12 08:27:34,205 [INFO] spreadsheet_manager: 企業リスト保存完了: 30社 → data\new30_company_list.csv
+2026-05-12 08:27:34,205 [INFO] __main__:   → 背景画像アップロード完了（UI反映確認済）
+2026-05-12 08:27:34,205 [INFO] __main__: Step 6/6: フロントエンドアプリURL取得...
+2026-05-12 08:27:34,205 [INFO] __main__: Step 5完了 → ページを閉じて再ログイン（Step 6 のサイドバーキャッシュ対策）
+2026-05-12 08:27:34,206 [INFO] web_app_operator: ページを閉じて再ログインを開始...
+2026-05-12 08:27:34,218 [INFO] web_app_operator:   古いページタブを閉じました
+2026-05-12 08:27:34,264 [INFO] web_app_operator:   新しいページタブを開きました
+2026-05-12 08:27:34,264 [INFO] web_app_operator: 管理画面にログイン中...
+2026-05-12 08:27:40,185 [INFO] web_app_operator: ログイン成功
+2026-05-12 08:27:40,186 [INFO] web_app_operator: ページクローズ＆再ログイン完了
+2026-05-12 08:27:40,186 [INFO] web_app_operator: フロントエンドアプリURL取得開始 (企業ID: oin)...
+2026-05-12 08:27:45,887 [INFO] web_app_operator: 企業選択 (ID): oin
+2026-05-12 08:27:56,250 [INFO] web_app_operator: 企業選択完了: oin
+2026-05-12 08:27:59,832 [INFO] web_app_operator:   サイドバーのaタグからURLを取得成功: https://casual-interview-dev.brainverse-ai.com/oin
+2026-05-12 08:27:59,833 [INFO] spreadsheet_manager: 企業リスト保存完了: 30社 → data\new30_company_list.csv
+2026-05-12 08:27:59,833 [INFO] __main__:   → フロントエンドURL: https://casual-interview-dev.brainverse-ai.com/oin
+2026-05-12 08:27:59,834 [INFO] __main__: [OK] オリジン工業株式会社: 全処理完了!
+2026-05-12 08:27:59,834 [INFO] __main__: 
+2026-05-12 08:27:59,834 [INFO] __main__: 1件処理完了 → 再ログイン＆キャッシュクリアを実行
+2026-05-12 08:27:59,834 [INFO] web_app_operator: 再ログイン＆キャッシュクリア開始...
+2026-05-12 08:27:59,836 [INFO] web_app_operator:   LocalStorage/SessionStorageをクリアしました
+2026-05-12 08:27:59,839 [INFO] web_app_operator:   Cookieをクリアしました
+2026-05-12 08:28:01,818 [INFO] web_app_operator: 管理画面にログイン中...
+2026-05-12 08:28:07,888 [INFO] web_app_operator: ログイン成功
+2026-05-12 08:28:07,888 [INFO] web_app_operator: 再ログイン＆キャッシュクリア完了
+2026-05-12 08:28:07,888 [INFO] __main__: 
+2026-05-12 08:28:07,888 [INFO] __main__: ──────────────────────────────────────────────────
+2026-05-12 08:28:07,888 [INFO] __main__: [5/23] 株式会社日産サティオ富山 (ステータス: 同名企業該当)
+2026-05-12 08:28:07,888 [INFO] __main__: ──────────────────────────────────────────────────
+2026-05-12 08:28:07,888 [INFO] __main__: Step 1/6: URL企業ID不一致 HOLD からの手動再開: https://www.ns-toyama-nissan.net
+2026-05-12 08:28:07,890 [INFO] spreadsheet_manager: 企業リスト保存完了: 30社 → data\new30_company_list.csv
+2026-05-12 08:28:07,890 [INFO] __main__: Step 2/6: 企業追加...
+2026-05-12 08:28:07,890 [INFO] web_app_operator: 企業追加開始: 株式会社日産サティオ富山
+2026-05-12 08:28:22,311 [INFO] web_app_operator: 企業追加完了: 株式会社日産サティオ富山 (ID: ns-toyama-nissan)
+2026-05-12 08:28:22,311 [INFO] __main__: Step 2.5/6: 追加企業のID検証...
+2026-05-12 08:28:22,311 [INFO] web_app_operator:   企業ID検証中: 期待ID=ns-toyama-nissan, URL=https://www.ns-toyama-nissan.net
+2026-05-12 08:28:24,860 [INFO] web_app_operator:   [OK] 企業ID 'ns-toyama-nissan' をページ内に確認
+2026-05-12 08:28:24,861 [INFO] spreadsheet_manager: 企業リスト保存完了: 30社 → data\new30_company_list.csv
+2026-05-12 08:28:24,861 [INFO] __main__:   → 企業追加完了 (ID: ns-toyama-nissan)
+2026-05-12 08:28:24,861 [INFO] __main__: 企業追加完了 → ページを閉じて再ログイン（キャッシュバグ防止）
+2026-05-12 08:28:24,861 [INFO] web_app_operator: ページを閉じて再ログインを開始...
+2026-05-12 08:28:24,885 [INFO] web_app_operator:   古いページタブを閉じました
+2026-05-12 08:28:24,935 [INFO] web_app_operator:   新しいページタブを開きました
+2026-05-12 08:28:24,935 [INFO] web_app_operator: 管理画面にログイン中...
+2026-05-12 08:28:30,870 [INFO] web_app_operator: ログイン成功
+2026-05-12 08:28:30,870 [INFO] web_app_operator: ページクローズ＆再ログイン完了
+2026-05-12 08:28:30,870 [INFO] __main__: Step 3/6: HP画像取得...
+2026-05-12 08:28:30,872 [INFO] image_fetcher: 企業画像取得開始: 株式会社日産サティオ富山 (https://www.ns-toyama-nissan.net)
+2026-05-12 08:28:33,879 [INFO] image_fetcher:   OGP画像を発見: https://static.wixstatic.com/media/e27124_d0ca16c474714f9091a65004d3482fc3~mv2.jpg/v1/fill/w_1920,h_829,al_c/e27124_d0ca16c474714f9091a65004d3482fc3~mv2.jpg
+2026-05-12 08:28:34,618 [INFO] image_fetcher:   画像保存成功 (OGP): C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\screenshots\img_www_ns-toyama-nissan_net_20260512_082830.jpg
+2026-05-12 08:28:38,249 [INFO] __main__:   → 画像取得: C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\screenshots\img_www_ns-toyama-nissan_net_20260512_082830.jpg, 抽出リンク: 1件
+2026-05-12 08:28:38,249 [INFO] __main__: Step 4/6: コンテンツ生成...
+2026-05-12 08:28:41,907 [INFO] __main__:   [検証] コンテンツ生成画面のヘッダーが対象企業に切替済か確認...
+2026-05-12 08:28:41,907 [INFO] web_app_operator: サイドバーから企業選択開始: 株式会社日産サティオ富山
+2026-05-12 08:28:49,036 [INFO] web_app_operator:   ヘッダー検証中: 企業名=株式会社日産サティオ富山, ID=ns-toyama-nissan
+2026-05-12 08:28:49,054 [INFO] web_app_operator:   [OK] ヘッダー検証成功: 「🤖 株式会社日産サティオ富山 コンテンツ生成」
+2026-05-12 08:28:49,054 [INFO] web_app_operator: サイドバー企業選択完了: 株式会社日産サティオ富山
+2026-05-12 08:28:49,054 [INFO] web_app_operator: URL入力開始: 1件
+2026-05-12 08:28:52,718 [INFO] web_app_operator:   「全入力を処理」ボタンをクリックしました
+2026-05-12 08:28:57,256 [INFO] web_app_operator: URL入力・処理開始完了: 1件
+2026-05-12 08:28:57,257 [INFO] web_app_operator: コンテンツ生成開始...
+2026-05-12 08:28:59,821 [INFO] web_app_operator:   生成準備完了の待機中...
+2026-05-12 08:29:19,837 [WARNING] web_app_operator:   生成準備完了メッセージが特定できませんでしたが、続行を試みます
+2026-05-12 08:29:20,392 [INFO] web_app_operator: コンテンツ生成中... (最大5分待機)
+2026-05-12 08:29:55,579 [INFO] web_app_operator: 生成完了検出 (経過: 35.0秒)
+2026-05-12 08:29:55,579 [INFO] web_app_operator: コンテンツ生成完了
+2026-05-12 08:29:55,579 [INFO] __main__:   [検証] 保存後のFAQ・企業情報タブを確認...
+2026-05-12 08:29:55,579 [INFO] web_app_operator: コンテンツ保存開始...
+2026-05-12 08:29:59,760 [INFO] web_app_operator:   FAQプレビューの確認中...
+2026-05-12 08:30:14,785 [INFO] web_app_operator:   FAQプレビューはページ内に存在 (見出しセレクター不一致を許容)
+2026-05-12 08:30:14,785 [INFO] web_app_operator:   STEP1: 第1保存ボタン（FAQ保存）をクリック...
+2026-05-12 08:30:16,370 [INFO] web_app_operator:   第1保存ボタンをクリックしました
+2026-05-12 08:30:19,888 [INFO] web_app_operator:   STEP2: 企業情報を保存ボタン（赤）を探してクリック...
+2026-05-12 08:30:21,422 [INFO] web_app_operator:   「企業情報を保存」ボタンが直接見つからないため、全ボタンを確認...
+2026-05-12 08:30:21,502 [INFO] web_app_operator:     保存関連ボタン発見: [👁️ プレビュー・保存]
+2026-05-12 08:30:21,554 [INFO] web_app_operator:     保存関連ボタン発見: [💾 FAQ保存（置換）]
+2026-05-12 08:30:21,564 [INFO] web_app_operator:     保存関連ボタン発見: [💾 企業情報保存]
+2026-05-12 08:30:21,580 [INFO] web_app_operator:   赤いボタンをクリック: [💾 企業情報保存]
+2026-05-12 08:30:27,748 [INFO] web_app_operator:   企業情報を保存ボタンのクリック完了
+2026-05-12 08:30:37,764 [WARNING] web_app_operator:   明確な保存完了メッセージは確認できませんでしたが、処理を続行します
+2026-05-12 08:30:37,764 [INFO] web_app_operator:   コンテンツ管理タブで保存確認中: 株式会社日産サティオ富山
+2026-05-12 08:30:51,362 [INFO] web_app_operator:   [OK] コンテンツ管理ページ: ns-toyama-nissan の存在を確認
+2026-05-12 08:30:51,362 [INFO] web_app_operator:   [FAQタブ] 検証開始
+2026-05-12 08:30:51,365 [WARNING] web_app_operator:   [FAQタブ] が見つかりません（タブ未表示の可能性、ページ全体で代替検証）
+2026-05-12 08:30:51,437 [INFO] web_app_operator:   [OK] [FAQタブ] 企業名/IDを確認 (スクショ: screenshots/tab_FAQ_ns-toyama-nissan.png)
+2026-05-12 08:30:51,439 [INFO] web_app_operator:   [企業情報タブ] 検証開始
+2026-05-12 08:30:51,442 [WARNING] web_app_operator:   [企業情報タブ] が見つかりません（タブ未表示の可能性、ページ全体で代替検証）
+2026-05-12 08:30:51,508 [INFO] web_app_operator:   [OK] [企業情報タブ] 企業名/IDを確認 (スクショ: screenshots/tab_企業情報_ns-toyama-nissan.png)
+2026-05-12 08:30:51,508 [INFO] web_app_operator:   [OK] FAQ・企業情報タブともに対象企業のコンテンツを確認
+2026-05-12 08:30:53,520 [INFO] web_app_operator: コンテンツ保存処理完了
+2026-05-12 08:30:53,521 [INFO] spreadsheet_manager: 企業リスト保存完了: 30社 → data\new30_company_list.csv
+2026-05-12 08:30:53,521 [INFO] __main__:   → コンテンツ生成・保存・検証完了
+2026-05-12 08:30:53,521 [INFO] __main__: Step 5/6: 背景画像アップロード...
+2026-05-12 08:30:53,521 [INFO] web_app_operator: 背景画像アップロード開始 (企業ID: ns-toyama-nissan): C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\screenshots\img_www_ns-toyama-nissan_net_20260512_082830.jpg
+2026-05-12 08:30:59,135 [INFO] web_app_operator:   設定ページで企業を選択中: ns-toyama-nissan
+2026-05-12 08:30:59,135 [INFO] web_app_operator: 企業選択 (ID): ns-toyama-nissan
+2026-05-12 08:31:05,846 [INFO] web_app_operator: 企業選択完了: ns-toyama-nissan
+2026-05-12 08:31:05,977 [INFO] web_app_operator:   「Upload」関連ボタンを検出。クリックしてファイル選択を開始します。
+2026-05-12 08:31:07,048 [INFO] web_app_operator:   UI反映確認中: img_www_ns-toyama-nissan_net_20260512_082830.jpg (最大 30秒)
+2026-05-12 08:31:08,205 [INFO] web_app_operator:   ✓ UI反映確認OK (新しい画像要素を検出: https://casual-interview-api-dev.brainverse-ai.com/media/0d01ec0ab7a6081f255ea63...)
+2026-05-12 08:31:10,740 [INFO] web_app_operator: 背景画像アップロード完了（UI反映確認済）: C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\screenshots\img_www_ns-toyama-nissan_net_20260512_082830.jpg
+2026-05-12 08:31:10,744 [INFO] spreadsheet_manager: 企業リスト保存完了: 30社 → data\new30_company_list.csv
+2026-05-12 08:31:10,745 [INFO] __main__:   → 背景画像アップロード完了（UI反映確認済）
+2026-05-12 08:31:10,745 [INFO] __main__: Step 6/6: フロントエンドアプリURL取得...
+2026-05-12 08:31:10,745 [INFO] __main__: Step 5完了 → ページを閉じて再ログイン（Step 6 のサイドバーキャッシュ対策）
+2026-05-12 08:31:10,745 [INFO] web_app_operator: ページを閉じて再ログインを開始...
+2026-05-12 08:31:10,757 [INFO] web_app_operator:   古いページタブを閉じました
+2026-05-12 08:31:10,801 [INFO] web_app_operator:   新しいページタブを開きました
+2026-05-12 08:31:10,801 [INFO] web_app_operator: 管理画面にログイン中...
+2026-05-12 08:31:16,715 [INFO] web_app_operator: ログイン成功
+2026-05-12 08:31:16,715 [INFO] web_app_operator: ページクローズ＆再ログイン完了
+2026-05-12 08:31:16,715 [INFO] web_app_operator: フロントエンドアプリURL取得開始 (企業ID: ns-toyama-nissan)...
+2026-05-12 08:31:22,477 [INFO] web_app_operator: 企業選択 (ID): ns-toyama-nissan
+2026-05-12 08:31:29,290 [INFO] web_app_operator: 企業選択完了: ns-toyama-nissan
+2026-05-12 08:32:03,064 [WARNING] web_app_operator:   サイドバーから企業ID(ns-toyama-nissan)に一致するURLが取得できませんでした。最後に見たURL: None
+2026-05-12 08:32:03,093 [ERROR] __main__: [ERROR] 株式会社日産サティオ富山: 処理失敗 -- フロントエンドアプリのURLが取得できませんでした。ボタンまたはリンクが見つかりません。
+2026-05-12 08:32:03,094 [INFO] spreadsheet_manager: 企業リスト保存完了: 30社 → data\new30_company_list.csv
+2026-05-12 08:32:03,094 [INFO] __main__: 
+2026-05-12 08:32:03,095 [INFO] __main__: 1件処理完了 → 再ログイン＆キャッシュクリアを実行
+2026-05-12 08:32:03,095 [INFO] web_app_operator: 再ログイン＆キャッシュクリア開始...
+2026-05-12 08:32:03,097 [INFO] web_app_operator:   LocalStorage/SessionStorageをクリアしました
+2026-05-12 08:32:03,100 [INFO] web_app_operator:   Cookieをクリアしました
+2026-05-12 08:32:05,115 [INFO] web_app_operator: 管理画面にログイン中...
+2026-05-12 08:32:10,985 [INFO] web_app_operator: ログイン成功
+2026-05-12 08:32:10,985 [INFO] web_app_operator: 再ログイン＆キャッシュクリア完了
+2026-05-12 08:32:10,985 [INFO] __main__: 
+2026-05-12 08:32:10,985 [INFO] __main__: ──────────────────────────────────────────────────
+2026-05-12 08:32:10,985 [INFO] __main__: [6/23] 松文産業株式会社 (ステータス: 同名企業該当)
+2026-05-12 08:32:10,985 [INFO] __main__: ──────────────────────────────────────────────────
+2026-05-12 08:32:10,985 [INFO] __main__: Step 1/6: URL企業ID不一致 HOLD からの手動再開: https://matsubun.co.jp
+2026-05-12 08:32:10,987 [INFO] spreadsheet_manager: 企業リスト保存完了: 30社 → data\new30_company_list.csv
+2026-05-12 08:32:10,987 [INFO] __main__: Step 2/6: 企業追加...
+2026-05-12 08:32:10,987 [INFO] web_app_operator: 企業追加開始: 松文産業株式会社
+2026-05-12 08:32:25,433 [INFO] web_app_operator: 企業追加完了: 松文産業株式会社 (ID: matsubun)
+2026-05-12 08:32:25,433 [INFO] __main__: Step 2.5/6: 追加企業のID検証...
+2026-05-12 08:32:25,433 [INFO] web_app_operator:   企業ID検証中: 期待ID=matsubun, URL=https://matsubun.co.jp
+2026-05-12 08:32:27,965 [INFO] web_app_operator:   [OK] 企業ID 'matsubun' をページ内に確認
+2026-05-12 08:32:27,966 [INFO] spreadsheet_manager: 企業リスト保存完了: 30社 → data\new30_company_list.csv
+2026-05-12 08:32:27,966 [INFO] __main__:   → 企業追加完了 (ID: matsubun)
+2026-05-12 08:32:27,966 [INFO] __main__: 企業追加完了 → ページを閉じて再ログイン（キャッシュバグ防止）
+2026-05-12 08:32:27,966 [INFO] web_app_operator: ページを閉じて再ログインを開始...
+2026-05-12 08:32:27,973 [INFO] web_app_operator:   古いページタブを閉じました
+2026-05-12 08:32:28,016 [INFO] web_app_operator:   新しいページタブを開きました
+2026-05-12 08:32:28,016 [INFO] web_app_operator: 管理画面にログイン中...
+2026-05-12 08:32:33,984 [INFO] web_app_operator: ログイン成功
+2026-05-12 08:32:33,985 [INFO] web_app_operator: ページクローズ＆再ログイン完了
+2026-05-12 08:32:33,985 [INFO] __main__: Step 3/6: HP画像取得...
+2026-05-12 08:32:33,987 [INFO] image_fetcher: 企業画像取得開始: 松文産業株式会社 (https://matsubun.co.jp)
+2026-05-12 08:32:37,981 [INFO] image_fetcher:   OGP画像を発見: https://matsubun.co.jp/wp-content/uploads/2020/07/screenshot.png
+2026-05-12 08:32:38,721 [INFO] image_fetcher:   画像保存成功 (OGP): C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\screenshots\img_matsubun_co_jp_20260512_083233.jpg
+2026-05-12 08:32:44,085 [INFO] __main__:   → 画像取得: C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\screenshots\img_matsubun_co_jp_20260512_083233.jpg, 抽出リンク: 15件
+2026-05-12 08:32:44,085 [INFO] __main__: Step 4/6: コンテンツ生成...
+2026-05-12 08:32:47,709 [INFO] __main__:   [検証] コンテンツ生成画面のヘッダーが対象企業に切替済か確認...
+2026-05-12 08:32:47,709 [INFO] web_app_operator: サイドバーから企業選択開始: 松文産業株式会社
+2026-05-12 08:32:54,848 [INFO] web_app_operator:   ヘッダー検証中: 企業名=松文産業株式会社, ID=matsubun
+2026-05-12 08:32:54,885 [INFO] web_app_operator:   [OK] ヘッダー検証成功: 「🤖 松文産業株式会社 コンテンツ生成」
+2026-05-12 08:32:54,885 [INFO] web_app_operator: サイドバー企業選択完了: 松文産業株式会社
+2026-05-12 08:32:54,885 [INFO] web_app_operator: URL入力開始: 15件
+2026-05-12 08:32:58,543 [INFO] web_app_operator:   「全入力を処理」ボタンをクリックしました
+2026-05-12 08:33:33,078 [INFO] web_app_operator: URL入力・処理開始完了: 15件
+2026-05-12 08:33:33,078 [INFO] web_app_operator: コンテンツ生成開始...
+2026-05-12 08:33:35,750 [INFO] web_app_operator:   生成準備完了の待機中...
+2026-05-12 08:33:55,767 [WARNING] web_app_operator:   生成準備完了メッセージが特定できませんでしたが、続行を試みます
+2026-05-12 08:33:56,293 [INFO] web_app_operator: コンテンツ生成中... (最大5分待機)
+2026-05-12 08:34:41,500 [INFO] web_app_operator: 生成完了検出 (経過: 45.0秒)
+2026-05-12 08:34:41,500 [INFO] web_app_operator: コンテンツ生成完了
+2026-05-12 08:34:41,500 [INFO] __main__:   [検証] 保存後のFAQ・企業情報タブを確認...
+2026-05-12 08:34:41,500 [INFO] web_app_operator: コンテンツ保存開始...
+2026-05-12 08:34:45,682 [INFO] web_app_operator:   FAQプレビューの確認中...
+2026-05-12 08:35:00,721 [INFO] web_app_operator:   FAQプレビューはページ内に存在 (見出しセレクター不一致を許容)
+2026-05-12 08:35:00,721 [INFO] web_app_operator:   STEP1: 第1保存ボタン（FAQ保存）をクリック...
+2026-05-12 08:35:02,297 [INFO] web_app_operator:   第1保存ボタンをクリックしました
+2026-05-12 08:35:05,850 [INFO] web_app_operator:   STEP2: 企業情報を保存ボタン（赤）を探してクリック...
+2026-05-12 08:35:07,394 [INFO] web_app_operator:   「企業情報を保存」ボタンが直接見つからないため、全ボタンを確認...
+2026-05-12 08:35:07,473 [INFO] web_app_operator:     保存関連ボタン発見: [👁️ プレビュー・保存]
+2026-05-12 08:35:07,554 [INFO] web_app_operator:     保存関連ボタン発見: [💾 FAQ保存（置換）]
+2026-05-12 08:35:07,572 [INFO] web_app_operator:     保存関連ボタン発見: [💾 企業情報保存]
+2026-05-12 08:35:07,579 [INFO] web_app_operator:   赤いボタンをクリック: [💾 企業情報保存]
+2026-05-12 08:35:13,766 [INFO] web_app_operator:   企業情報を保存ボタンのクリック完了
+2026-05-12 08:35:23,777 [WARNING] web_app_operator:   明確な保存完了メッセージは確認できませんでしたが、処理を続行します
+2026-05-12 08:35:23,779 [INFO] web_app_operator:   コンテンツ管理タブで保存確認中: 松文産業株式会社
+2026-05-12 08:35:37,322 [INFO] web_app_operator:   [OK] コンテンツ管理ページ: matsubun の存在を確認
+2026-05-12 08:35:37,322 [INFO] web_app_operator:   [FAQタブ] 検証開始
+2026-05-12 08:35:37,324 [WARNING] web_app_operator:   [FAQタブ] が見つかりません（タブ未表示の可能性、ページ全体で代替検証）
+2026-05-12 08:35:37,410 [INFO] web_app_operator:   [OK] [FAQタブ] 企業名/IDを確認 (スクショ: screenshots/tab_FAQ_matsubun.png)
+2026-05-12 08:35:37,410 [INFO] web_app_operator:   [企業情報タブ] 検証開始
+2026-05-12 08:35:37,416 [WARNING] web_app_operator:   [企業情報タブ] が見つかりません（タブ未表示の可能性、ページ全体で代替検証）
+2026-05-12 08:35:37,520 [INFO] web_app_operator:   [OK] [企業情報タブ] 企業名/IDを確認 (スクショ: screenshots/tab_企業情報_matsubun.png)
+2026-05-12 08:35:37,520 [INFO] web_app_operator:   [OK] FAQ・企業情報タブともに対象企業のコンテンツを確認
+2026-05-12 08:35:39,535 [INFO] web_app_operator: コンテンツ保存処理完了
+2026-05-12 08:35:39,537 [INFO] spreadsheet_manager: 企業リスト保存完了: 30社 → data\new30_company_list.csv
+2026-05-12 08:35:39,537 [INFO] __main__:   → コンテンツ生成・保存・検証完了
+2026-05-12 08:35:39,537 [INFO] __main__: Step 5/6: 背景画像アップロード...
+2026-05-12 08:35:39,537 [INFO] web_app_operator: 背景画像アップロード開始 (企業ID: matsubun): C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\screenshots\img_matsubun_co_jp_20260512_083233.jpg
+2026-05-12 08:35:45,180 [INFO] web_app_operator:   設定ページで企業を選択中: matsubun
+2026-05-12 08:35:45,180 [INFO] web_app_operator: 企業選択 (ID): matsubun
+2026-05-12 08:35:51,904 [INFO] web_app_operator: 企業選択完了: matsubun
+2026-05-12 08:35:51,989 [INFO] web_app_operator:   「Upload」関連ボタンを検出。クリックしてファイル選択を開始します。
+2026-05-12 08:35:53,094 [INFO] web_app_operator:   UI反映確認中: img_matsubun_co_jp_20260512_083233.jpg (最大 30秒)
+2026-05-12 08:35:54,272 [INFO] web_app_operator:   ✓ UI反映確認OK (新しい画像要素を検出: https://casual-interview-api-dev.brainverse-ai.com/media/7ad798bcc55358fd4e857d7...)
+2026-05-12 08:35:56,798 [INFO] web_app_operator: 背景画像アップロード完了（UI反映確認済）: C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\screenshots\img_matsubun_co_jp_20260512_083233.jpg
+2026-05-12 08:35:56,802 [INFO] spreadsheet_manager: 企業リスト保存完了: 30社 → data\new30_company_list.csv
+2026-05-12 08:35:56,802 [INFO] __main__:   → 背景画像アップロード完了（UI反映確認済）
+2026-05-12 08:35:56,802 [INFO] __main__: Step 6/6: フロントエンドアプリURL取得...
+2026-05-12 08:35:56,803 [INFO] __main__: Step 5完了 → ページを閉じて再ログイン（Step 6 のサイドバーキャッシュ対策）
+2026-05-12 08:35:56,803 [INFO] web_app_operator: ページを閉じて再ログインを開始...
+2026-05-12 08:35:56,825 [INFO] web_app_operator:   古いページタブを閉じました
+2026-05-12 08:35:56,887 [INFO] web_app_operator:   新しいページタブを開きました
+2026-05-12 08:35:56,887 [INFO] web_app_operator: 管理画面にログイン中...
+2026-05-12 08:36:02,847 [INFO] web_app_operator: ログイン成功
+2026-05-12 08:36:02,847 [INFO] web_app_operator: ページクローズ＆再ログイン完了
+2026-05-12 08:36:02,848 [INFO] web_app_operator: フロントエンドアプリURL取得開始 (企業ID: matsubun)...
+2026-05-12 08:36:08,506 [INFO] web_app_operator: 企業選択 (ID): matsubun
+2026-05-12 08:36:15,314 [INFO] web_app_operator: 企業選択完了: matsubun
+2026-05-12 08:36:18,846 [INFO] web_app_operator:   サイドバーのaタグからURLを取得成功: https://casual-interview-dev.brainverse-ai.com/matsubun
+2026-05-12 08:36:18,848 [INFO] spreadsheet_manager: 企業リスト保存完了: 30社 → data\new30_company_list.csv
+2026-05-12 08:36:18,848 [INFO] __main__:   → フロントエンドURL: https://casual-interview-dev.brainverse-ai.com/matsubun
+2026-05-12 08:36:18,848 [INFO] __main__: [OK] 松文産業株式会社: 全処理完了!
+2026-05-12 08:36:18,848 [INFO] __main__: 
+2026-05-12 08:36:18,848 [INFO] __main__: 1件処理完了 → 再ログイン＆キャッシュクリアを実行
+2026-05-12 08:36:18,848 [INFO] web_app_operator: 再ログイン＆キャッシュクリア開始...
+2026-05-12 08:36:18,852 [INFO] web_app_operator:   LocalStorage/SessionStorageをクリアしました
+2026-05-12 08:36:18,856 [INFO] web_app_operator:   Cookieをクリアしました
+2026-05-12 08:36:20,858 [INFO] web_app_operator: 管理画面にログイン中...
+2026-05-12 08:36:26,881 [INFO] web_app_operator: ログイン成功
+2026-05-12 08:36:26,881 [INFO] web_app_operator: 再ログイン＆キャッシュクリア完了
+2026-05-12 08:36:26,882 [INFO] __main__: 
+2026-05-12 08:36:26,882 [INFO] __main__: ──────────────────────────────────────────────────
+2026-05-12 08:36:26,882 [INFO] __main__: [7/23] 三信住建株式会社 (ステータス: 同名企業該当)
+2026-05-12 08:36:26,882 [INFO] __main__: ──────────────────────────────────────────────────
+2026-05-12 08:36:26,882 [INFO] __main__: Step 1/6: URL企業ID不一致 HOLD からの手動再開: https://www.sanshinjyuken.com
+2026-05-12 08:36:26,886 [INFO] spreadsheet_manager: 企業リスト保存完了: 30社 → data\new30_company_list.csv
+2026-05-12 08:36:26,886 [INFO] __main__: Step 2/6: 企業追加...
+2026-05-12 08:36:26,886 [INFO] web_app_operator: 企業追加開始: 三信住建株式会社
+2026-05-12 08:36:41,424 [INFO] web_app_operator: 企業追加完了: 三信住建株式会社 (ID: sanshinjyuken)
+2026-05-12 08:36:41,424 [INFO] __main__: Step 2.5/6: 追加企業のID検証...
+2026-05-12 08:36:41,424 [INFO] web_app_operator:   企業ID検証中: 期待ID=sanshinjyuken, URL=https://www.sanshinjyuken.com
+2026-05-12 08:36:43,943 [INFO] web_app_operator:   [OK] 企業ID 'sanshinjyuken' をページ内に確認
+2026-05-12 08:36:43,944 [INFO] spreadsheet_manager: 企業リスト保存完了: 30社 → data\new30_company_list.csv
+2026-05-12 08:36:43,944 [INFO] __main__:   → 企業追加完了 (ID: sanshinjyuken)
+2026-05-12 08:36:43,944 [INFO] __main__: 企業追加完了 → ページを閉じて再ログイン（キャッシュバグ防止）
+2026-05-12 08:36:43,944 [INFO] web_app_operator: ページを閉じて再ログインを開始...
+2026-05-12 08:36:43,951 [INFO] web_app_operator:   古いページタブを閉じました
+2026-05-12 08:36:44,002 [INFO] web_app_operator:   新しいページタブを開きました
+2026-05-12 08:36:44,002 [INFO] web_app_operator: 管理画面にログイン中...
+2026-05-12 08:36:49,863 [INFO] web_app_operator: ログイン成功
+2026-05-12 08:36:49,864 [INFO] web_app_operator: ページクローズ＆再ログイン完了
+2026-05-12 08:36:49,864 [INFO] __main__: Step 3/6: HP画像取得...
+2026-05-12 08:36:49,864 [INFO] image_fetcher: 企業画像取得開始: 三信住建株式会社 (https://www.sanshinjyuken.com)
+2026-05-12 08:36:53,033 [INFO] image_fetcher:   OGP画像を発見: https://www.sanshinjyuken.com/opengraph-image.jpg?c34e9512f964e5eb
+2026-05-12 08:36:53,625 [INFO] image_fetcher:   画像保存成功 (OGP): C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\screenshots\img_www_sanshinjyuken_com_20260512_083649.jpg
+2026-05-12 08:36:57,850 [INFO] __main__:   → 画像取得: C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\screenshots\img_www_sanshinjyuken_com_20260512_083649.jpg, 抽出リンク: 25件
+2026-05-12 08:36:57,850 [INFO] __main__: Step 4/6: コンテンツ生成...
+2026-05-12 08:37:01,457 [INFO] __main__:   [検証] コンテンツ生成画面のヘッダーが対象企業に切替済か確認...
+2026-05-12 08:37:01,457 [INFO] web_app_operator: サイドバーから企業選択開始: 三信住建株式会社
+2026-05-12 08:37:08,559 [INFO] web_app_operator:   ヘッダー検証中: 企業名=三信住建株式会社, ID=sanshinjyuken
+2026-05-12 08:37:08,579 [INFO] web_app_operator:   [OK] ヘッダー検証成功: 「🤖 三信住建株式会社 コンテンツ生成」
+2026-05-12 08:37:08,579 [INFO] web_app_operator: サイドバー企業選択完了: 三信住建株式会社
+2026-05-12 08:37:08,579 [INFO] web_app_operator: URL入力開始: 25件
+2026-05-12 08:37:12,263 [INFO] web_app_operator:   「全入力を処理」ボタンをクリックしました
+2026-05-12 08:37:21,211 [INFO] web_app_operator: URL入力・処理開始完了: 25件
+2026-05-12 08:37:21,211 [INFO] web_app_operator: コンテンツ生成開始...
+2026-05-12 08:37:23,747 [INFO] web_app_operator:   生成準備完了の待機中...
+2026-05-12 08:37:43,753 [WARNING] web_app_operator:   生成準備完了メッセージが特定できませんでしたが、続行を試みます
+2026-05-12 08:37:44,318 [INFO] web_app_operator: コンテンツ生成中... (最大5分待機)
+2026-05-12 08:38:24,492 [INFO] web_app_operator: 生成完了検出 (経過: 40.0秒)
+2026-05-12 08:38:24,492 [INFO] web_app_operator: コンテンツ生成完了
+2026-05-12 08:38:24,492 [INFO] __main__:   [検証] 保存後のFAQ・企業情報タブを確認...
+2026-05-12 08:38:24,492 [INFO] web_app_operator: コンテンツ保存開始...
+2026-05-12 08:38:28,631 [INFO] web_app_operator:   FAQプレビューの確認中...
+2026-05-12 08:38:43,679 [INFO] web_app_operator:   FAQプレビューはページ内に存在 (見出しセレクター不一致を許容)
+2026-05-12 08:38:43,679 [INFO] web_app_operator:   STEP1: 第1保存ボタン（FAQ保存）をクリック...
+2026-05-12 08:38:45,267 [INFO] web_app_operator:   第1保存ボタンをクリックしました
+2026-05-12 08:38:48,809 [INFO] web_app_operator:   STEP2: 企業情報を保存ボタン（赤）を探してクリック...
+2026-05-12 08:38:50,338 [INFO] web_app_operator:   「企業情報を保存」ボタンが直接見つからないため、全ボタンを確認...
+2026-05-12 08:38:50,389 [INFO] web_app_operator:     保存関連ボタン発見: [👁️ プレビュー・保存]
+2026-05-12 08:38:50,429 [INFO] web_app_operator:     保存関連ボタン発見: [💾 FAQ保存（置換）]
+2026-05-12 08:38:50,435 [INFO] web_app_operator:     保存関連ボタン発見: [💾 企業情報保存]
+2026-05-12 08:38:50,444 [INFO] web_app_operator:   赤いボタンをクリック: [💾 企業情報保存]
+2026-05-12 08:38:56,606 [INFO] web_app_operator:   企業情報を保存ボタンのクリック完了
+2026-05-12 08:39:06,624 [WARNING] web_app_operator:   明確な保存完了メッセージは確認できませんでしたが、処理を続行します
+2026-05-12 08:39:06,624 [INFO] web_app_operator:   コンテンツ管理タブで保存確認中: 三信住建株式会社
+2026-05-12 08:39:20,238 [INFO] web_app_operator:   [OK] コンテンツ管理ページ: sanshinjyuken の存在を確認
+2026-05-12 08:39:20,238 [INFO] web_app_operator:   [FAQタブ] 検証開始
+2026-05-12 08:39:20,241 [WARNING] web_app_operator:   [FAQタブ] が見つかりません（タブ未表示の可能性、ページ全体で代替検証）
+2026-05-12 08:39:20,301 [INFO] web_app_operator:   [OK] [FAQタブ] 企業名/IDを確認 (スクショ: screenshots/tab_FAQ_sanshinjyuken.png)
+2026-05-12 08:39:20,302 [INFO] web_app_operator:   [企業情報タブ] 検証開始
+2026-05-12 08:39:20,308 [WARNING] web_app_operator:   [企業情報タブ] が見つかりません（タブ未表示の可能性、ページ全体で代替検証）
+2026-05-12 08:39:20,382 [INFO] web_app_operator:   [OK] [企業情報タブ] 企業名/IDを確認 (スクショ: screenshots/tab_企業情報_sanshinjyuken.png)
+2026-05-12 08:39:20,382 [INFO] web_app_operator:   [OK] FAQ・企業情報タブともに対象企業のコンテンツを確認
+2026-05-12 08:39:22,395 [INFO] web_app_operator: コンテンツ保存処理完了
+2026-05-12 08:39:22,395 [INFO] spreadsheet_manager: 企業リスト保存完了: 30社 → data\new30_company_list.csv
+2026-05-12 08:39:22,395 [INFO] __main__:   → コンテンツ生成・保存・検証完了
+2026-05-12 08:39:22,395 [INFO] __main__: Step 5/6: 背景画像アップロード...
+2026-05-12 08:39:22,395 [INFO] web_app_operator: 背景画像アップロード開始 (企業ID: sanshinjyuken): C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\screenshots\img_www_sanshinjyuken_com_20260512_083649.jpg
+2026-05-12 08:39:28,045 [INFO] web_app_operator:   設定ページで企業を選択中: sanshinjyuken
+2026-05-12 08:39:28,046 [INFO] web_app_operator: 企業選択 (ID): sanshinjyuken
+2026-05-12 08:39:34,828 [INFO] web_app_operator: 企業選択完了: sanshinjyuken
+2026-05-12 08:39:34,903 [INFO] web_app_operator:   「Upload」関連ボタンを検出。クリックしてファイル選択を開始します。
+2026-05-12 08:39:35,996 [INFO] web_app_operator:   UI反映確認中: img_www_sanshinjyuken_com_20260512_083649.jpg (最大 30秒)
+2026-05-12 08:39:37,236 [INFO] web_app_operator:   ✓ UI反映確認OK (新しい画像要素を検出: https://casual-interview-api-dev.brainverse-ai.com/media/4645f622146c2ea1369fe77...)
+2026-05-12 08:39:39,775 [INFO] web_app_operator: 背景画像アップロード完了（UI反映確認済）: C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\screenshots\img_www_sanshinjyuken_com_20260512_083649.jpg
+2026-05-12 08:39:39,776 [INFO] spreadsheet_manager: 企業リスト保存完了: 30社 → data\new30_company_list.csv
+2026-05-12 08:39:39,777 [INFO] __main__:   → 背景画像アップロード完了（UI反映確認済）
+2026-05-12 08:39:39,777 [INFO] __main__: Step 6/6: フロントエンドアプリURL取得...
+2026-05-12 08:39:39,777 [INFO] __main__: Step 5完了 → ページを閉じて再ログイン（Step 6 のサイドバーキャッシュ対策）
+2026-05-12 08:39:39,777 [INFO] web_app_operator: ページを閉じて再ログインを開始...
+2026-05-12 08:39:39,784 [INFO] web_app_operator:   古いページタブを閉じました
+2026-05-12 08:39:39,830 [INFO] web_app_operator:   新しいページタブを開きました
+2026-05-12 08:39:39,830 [INFO] web_app_operator: 管理画面にログイン中...
+2026-05-12 08:39:45,762 [INFO] web_app_operator: ログイン成功
+2026-05-12 08:39:45,762 [INFO] web_app_operator: ページクローズ＆再ログイン完了
+2026-05-12 08:39:45,762 [INFO] web_app_operator: フロントエンドアプリURL取得開始 (企業ID: sanshinjyuken)...
+2026-05-12 08:39:51,534 [INFO] web_app_operator: 企業選択 (ID): sanshinjyuken
+2026-05-12 08:39:58,462 [INFO] web_app_operator: 企業選択完了: sanshinjyuken
+2026-05-12 08:40:02,028 [INFO] web_app_operator:   サイドバーのaタグからURLを取得成功: https://casual-interview-dev.brainverse-ai.com/sanshinjyuken
+2026-05-12 08:40:02,028 [INFO] spreadsheet_manager: 企業リスト保存完了: 30社 → data\new30_company_list.csv
+2026-05-12 08:40:02,028 [INFO] __main__:   → フロントエンドURL: https://casual-interview-dev.brainverse-ai.com/sanshinjyuken
+2026-05-12 08:40:02,028 [INFO] __main__: [OK] 三信住建株式会社: 全処理完了!
+2026-05-12 08:40:02,028 [INFO] __main__: 
+2026-05-12 08:40:02,028 [INFO] __main__: 1件処理完了 → 再ログイン＆キャッシュクリアを実行
+2026-05-12 08:40:02,028 [INFO] web_app_operator: 再ログイン＆キャッシュクリア開始...
+2026-05-12 08:40:02,034 [INFO] web_app_operator:   LocalStorage/SessionStorageをクリアしました
+2026-05-12 08:40:02,037 [INFO] web_app_operator:   Cookieをクリアしました
+2026-05-12 08:40:04,035 [INFO] web_app_operator: 管理画面にログイン中...
+2026-05-12 08:40:10,127 [INFO] web_app_operator: ログイン成功
+2026-05-12 08:40:10,128 [INFO] web_app_operator: 再ログイン＆キャッシュクリア完了
+2026-05-12 08:40:10,128 [INFO] __main__: 
+2026-05-12 08:40:10,128 [INFO] __main__: ──────────────────────────────────────────────────
+2026-05-12 08:40:10,128 [INFO] __main__: [8/23] タカノフーズ株式会社 (ステータス: 同名企業該当)
+2026-05-12 08:40:10,128 [INFO] __main__: ──────────────────────────────────────────────────
+2026-05-12 08:40:10,128 [INFO] __main__: Step 1/6: URL企業ID不一致 HOLD からの手動再開: https://www.takanofoods.co.jp
+2026-05-12 08:40:10,129 [INFO] spreadsheet_manager: 企業リスト保存完了: 30社 → data\new30_company_list.csv
+2026-05-12 08:40:10,129 [INFO] __main__: Step 2/6: 企業追加...
+2026-05-12 08:40:10,129 [INFO] web_app_operator: 企業追加開始: タカノフーズ株式会社
+2026-05-12 08:40:24,668 [INFO] web_app_operator: 企業追加完了: タカノフーズ株式会社 (ID: takanofoods)
+2026-05-12 08:40:24,668 [INFO] __main__: Step 2.5/6: 追加企業のID検証...
+2026-05-12 08:40:24,668 [INFO] web_app_operator:   企業ID検証中: 期待ID=takanofoods, URL=https://www.takanofoods.co.jp
+2026-05-12 08:40:27,211 [INFO] web_app_operator:   [OK] 企業ID 'takanofoods' をページ内に確認
+2026-05-12 08:40:27,212 [INFO] spreadsheet_manager: 企業リスト保存完了: 30社 → data\new30_company_list.csv
+2026-05-12 08:40:27,212 [INFO] __main__:   → 企業追加完了 (ID: takanofoods)
+2026-05-12 08:40:27,212 [INFO] __main__: 企業追加完了 → ページを閉じて再ログイン（キャッシュバグ防止）
+2026-05-12 08:40:27,212 [INFO] web_app_operator: ページを閉じて再ログインを開始...
+2026-05-12 08:40:27,220 [INFO] web_app_operator:   古いページタブを閉じました
+2026-05-12 08:40:27,264 [INFO] web_app_operator:   新しいページタブを開きました
+2026-05-12 08:40:27,264 [INFO] web_app_operator: 管理画面にログイン中...
+2026-05-12 08:40:33,206 [INFO] web_app_operator: ログイン成功
+2026-05-12 08:40:33,206 [INFO] web_app_operator: ページクローズ＆再ログイン完了
+2026-05-12 08:40:33,206 [INFO] __main__: Step 3/6: HP画像取得...
+2026-05-12 08:40:33,206 [INFO] image_fetcher: 企業画像取得開始: タカノフーズ株式会社 (https://www.takanofoods.co.jp)
+2026-05-12 08:40:36,233 [INFO] image_fetcher:   OGP画像を発見: https://www.takanofoods.co.jp/img/og.jpg
+2026-05-12 08:40:36,923 [INFO] image_fetcher:   画像保存成功 (OGP): C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\screenshots\img_www_takanofoods_co_jp_20260512_084033.jpg
+2026-05-12 08:40:41,343 [INFO] __main__:   → 画像取得: C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\screenshots\img_www_takanofoods_co_jp_20260512_084033.jpg, 抽出リンク: 30件
+2026-05-12 08:40:41,343 [INFO] __main__: Step 4/6: コンテンツ生成...
+2026-05-12 08:40:44,945 [INFO] __main__:   [検証] コンテンツ生成画面のヘッダーが対象企業に切替済か確認...
+2026-05-12 08:40:44,945 [INFO] web_app_operator: サイドバーから企業選択開始: タカノフーズ株式会社
+2026-05-12 08:40:51,956 [INFO] web_app_operator:   ヘッダー検証中: 企業名=タカノフーズ株式会社, ID=takanofoods
+2026-05-12 08:40:51,977 [INFO] web_app_operator:   [OK] ヘッダー検証成功: 「🤖 タカノフーズ株式会社 コンテンツ生成」
+2026-05-12 08:40:51,977 [INFO] web_app_operator: サイドバー企業選択完了: タカノフーズ株式会社
+2026-05-12 08:40:51,977 [INFO] web_app_operator: URL入力開始: 30件
+2026-05-12 08:40:55,604 [INFO] web_app_operator:   「全入力を処理」ボタンをクリックしました
+2026-05-12 08:41:01,982 [INFO] web_app_operator: URL入力・処理開始完了: 30件
+2026-05-12 08:41:01,982 [INFO] web_app_operator: コンテンツ生成開始...
+2026-05-12 08:41:04,532 [INFO] web_app_operator:   生成準備完了の待機中...
+2026-05-12 08:41:24,540 [WARNING] web_app_operator:   生成準備完了メッセージが特定できませんでしたが、続行を試みます
+2026-05-12 08:41:25,085 [INFO] web_app_operator: コンテンツ生成中... (最大5分待機)
+2026-05-12 08:42:15,273 [INFO] web_app_operator: 生成完了検出 (経過: 50.0秒)
+2026-05-12 08:42:15,273 [INFO] web_app_operator: コンテンツ生成完了
+2026-05-12 08:42:15,273 [INFO] __main__:   [検証] 保存後のFAQ・企業情報タブを確認...
+2026-05-12 08:42:15,273 [INFO] web_app_operator: コンテンツ保存開始...
+2026-05-12 08:42:19,518 [INFO] web_app_operator:   FAQプレビューの確認中...
+2026-05-12 08:42:34,540 [INFO] web_app_operator:   FAQプレビューはページ内に存在 (見出しセレクター不一致を許容)
+2026-05-12 08:42:34,540 [INFO] web_app_operator:   STEP1: 第1保存ボタン（FAQ保存）をクリック...
+2026-05-12 08:42:36,125 [INFO] web_app_operator:   第1保存ボタンをクリックしました
+2026-05-12 08:42:39,660 [INFO] web_app_operator:   STEP2: 企業情報を保存ボタン（赤）を探してクリック...
+2026-05-12 08:42:41,186 [INFO] web_app_operator:   「企業情報を保存」ボタンが直接見つからないため、全ボタンを確認...
+2026-05-12 08:42:41,252 [INFO] web_app_operator:     保存関連ボタン発見: [👁️ プレビュー・保存]
+2026-05-12 08:42:41,283 [INFO] web_app_operator:     保存関連ボタン発見: [💾 FAQ保存（置換）]
+2026-05-12 08:42:41,287 [INFO] web_app_operator:     保存関連ボタン発見: [💾 企業情報保存]
+2026-05-12 08:42:41,296 [INFO] web_app_operator:   赤いボタンをクリック: [💾 企業情報保存]
+2026-05-12 08:42:47,404 [INFO] web_app_operator:   企業情報を保存ボタンのクリック完了
+2026-05-12 08:42:57,411 [WARNING] web_app_operator:   明確な保存完了メッセージは確認できませんでしたが、処理を続行します
+2026-05-12 08:42:57,411 [INFO] web_app_operator:   コンテンツ管理タブで保存確認中: タカノフーズ株式会社
+2026-05-12 08:43:10,820 [INFO] web_app_operator:   [OK] コンテンツ管理ページ: takanofoods の存在を確認
+2026-05-12 08:43:10,820 [INFO] web_app_operator:   [FAQタブ] 検証開始
+2026-05-12 08:43:10,823 [WARNING] web_app_operator:   [FAQタブ] が見つかりません（タブ未表示の可能性、ページ全体で代替検証）
+2026-05-12 08:43:10,884 [INFO] web_app_operator:   [OK] [FAQタブ] 企業名/IDを確認 (スクショ: screenshots/tab_FAQ_takanofoods.png)
+2026-05-12 08:43:10,884 [INFO] web_app_operator:   [企業情報タブ] 検証開始
+2026-05-12 08:43:10,887 [WARNING] web_app_operator:   [企業情報タブ] が見つかりません（タブ未表示の可能性、ページ全体で代替検証）
+2026-05-12 08:43:10,950 [INFO] web_app_operator:   [OK] [企業情報タブ] 企業名/IDを確認 (スクショ: screenshots/tab_企業情報_takanofoods.png)
+2026-05-12 08:43:10,950 [INFO] web_app_operator:   [OK] FAQ・企業情報タブともに対象企業のコンテンツを確認
+2026-05-12 08:43:12,954 [INFO] web_app_operator: コンテンツ保存処理完了
+2026-05-12 08:43:12,956 [INFO] spreadsheet_manager: 企業リスト保存完了: 30社 → data\new30_company_list.csv
+2026-05-12 08:43:12,956 [INFO] __main__:   → コンテンツ生成・保存・検証完了
+2026-05-12 08:43:12,956 [INFO] __main__: Step 5/6: 背景画像アップロード...
+2026-05-12 08:43:12,956 [INFO] web_app_operator: 背景画像アップロード開始 (企業ID: takanofoods): C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\screenshots\img_www_takanofoods_co_jp_20260512_084033.jpg
+2026-05-12 08:43:18,575 [INFO] web_app_operator:   設定ページで企業を選択中: takanofoods
+2026-05-12 08:43:18,575 [INFO] web_app_operator: 企業選択 (ID): takanofoods
+2026-05-12 08:43:25,227 [INFO] web_app_operator: 企業選択完了: takanofoods
+2026-05-12 08:43:25,294 [INFO] web_app_operator:   「Upload」関連ボタンを検出。クリックしてファイル選択を開始します。
+2026-05-12 08:43:26,370 [INFO] web_app_operator:   UI反映確認中: img_www_takanofoods_co_jp_20260512_084033.jpg (最大 30秒)
+2026-05-12 08:43:27,562 [INFO] web_app_operator:   ✓ UI反映確認OK (新しい画像要素を検出: https://casual-interview-api-dev.brainverse-ai.com/media/a1052535b9db7f4a41831c0...)
+2026-05-12 08:43:30,093 [INFO] web_app_operator: 背景画像アップロード完了（UI反映確認済）: C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\screenshots\img_www_takanofoods_co_jp_20260512_084033.jpg
+2026-05-12 08:43:30,093 [INFO] spreadsheet_manager: 企業リスト保存完了: 30社 → data\new30_company_list.csv
+2026-05-12 08:43:30,093 [INFO] __main__:   → 背景画像アップロード完了（UI反映確認済）
+2026-05-12 08:43:30,093 [INFO] __main__: Step 6/6: フロントエンドアプリURL取得...
+2026-05-12 08:43:30,093 [INFO] __main__: Step 5完了 → ページを閉じて再ログイン（Step 6 のサイドバーキャッシュ対策）
+2026-05-12 08:43:30,093 [INFO] web_app_operator: ページを閉じて再ログインを開始...
+2026-05-12 08:43:30,102 [INFO] web_app_operator:   古いページタブを閉じました
+2026-05-12 08:43:30,147 [INFO] web_app_operator:   新しいページタブを開きました
+2026-05-12 08:43:30,147 [INFO] web_app_operator: 管理画面にログイン中...
+2026-05-12 08:43:35,957 [INFO] web_app_operator: ログイン成功
+2026-05-12 08:43:35,957 [INFO] web_app_operator: ページクローズ＆再ログイン完了
+2026-05-12 08:43:35,957 [INFO] web_app_operator: フロントエンドアプリURL取得開始 (企業ID: takanofoods)...
+2026-05-12 08:43:41,609 [INFO] web_app_operator: 企業選択 (ID): takanofoods
+2026-05-12 08:43:48,429 [INFO] web_app_operator: 企業選択完了: takanofoods
+2026-05-12 08:44:22,308 [WARNING] web_app_operator:   サイドバーから企業ID(takanofoods)に一致するURLが取得できませんでした。最後に見たURL: None
+2026-05-12 08:44:22,322 [ERROR] __main__: [ERROR] タカノフーズ株式会社: 処理失敗 -- フロントエンドアプリのURLが取得できませんでした。ボタンまたはリンクが見つかりません。
+2026-05-12 08:44:22,323 [INFO] spreadsheet_manager: 企業リスト保存完了: 30社 → data\new30_company_list.csv
+2026-05-12 08:44:22,324 [INFO] __main__: 
+2026-05-12 08:44:22,324 [INFO] __main__: 1件処理完了 → 再ログイン＆キャッシュクリアを実行
+2026-05-12 08:44:22,324 [INFO] web_app_operator: 再ログイン＆キャッシュクリア開始...
+2026-05-12 08:44:22,327 [INFO] web_app_operator:   LocalStorage/SessionStorageをクリアしました
+2026-05-12 08:44:22,329 [INFO] web_app_operator:   Cookieをクリアしました
+2026-05-12 08:44:24,339 [INFO] web_app_operator: 管理画面にログイン中...
+2026-05-12 08:44:30,183 [INFO] web_app_operator: ログイン成功
+2026-05-12 08:44:30,183 [INFO] web_app_operator: 再ログイン＆キャッシュクリア完了
+2026-05-12 08:44:30,185 [INFO] __main__: 
+2026-05-12 08:44:30,185 [INFO] __main__: ──────────────────────────────────────────────────
+2026-05-12 08:44:30,185 [INFO] __main__: [9/23] 住商レジデンシャル株式会社 (ステータス: 同名企業該当)
+2026-05-12 08:44:30,185 [INFO] __main__: ──────────────────────────────────────────────────
+2026-05-12 08:44:30,185 [INFO] __main__: Step 1/6: URL企業ID不一致 HOLD からの手動再開: https://www.sumisho-resi.co.jp
+2026-05-12 08:44:30,187 [INFO] spreadsheet_manager: 企業リスト保存完了: 30社 → data\new30_company_list.csv
+2026-05-12 08:44:30,187 [INFO] __main__: Step 2/6: 企業追加...
+2026-05-12 08:44:30,187 [INFO] web_app_operator: 企業追加開始: 住商レジデンシャル株式会社
