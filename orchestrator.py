@@ -419,6 +419,15 @@ class Orchestrator:
         if company.status == ProcessStatus.IMAGE_UPLOADED:
             logger.info("Step 6/6: フロントエンドアプリURL取得...")
 
+            # Step 5 (設定ページでの画像UP) の後はサイドバー再描画状態が
+            # 候補者面談ページのリンク表示を阻害する場合がある
+            # → Step 2 後と同様にページクローズ&再ログインで状態クリーン化
+            logger.info("Step 5完了 → ページを閉じて再ログイン（Step 6 のサイドバーキャッシュ対策）")
+            try:
+                await web_operator.close_page_and_relogin()
+            except Exception as e:
+                logger.warning(f"  ページクローズ＆再ログインに失敗（続行）: {e}")
+
             frontend_url = await web_operator.get_frontend_app_url(
                 company_id=company.enterprise_id
             )
