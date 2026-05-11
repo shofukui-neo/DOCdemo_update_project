@@ -308,7 +308,57 @@ class WebAppOperator:
         await self.page.wait_for_timeout(3000)
         await self._wait_for_streamlit_load()
 
+        # 既に登録済みエラーをチェック (重複登録は正常終了として扱う)
+        if await self._is_company_already_exists():
+            logger.warning(
+                f"  企業追加スキップ: '{company.enterprise_id}' は既に管理画面に登録済み"
+                "（既存企業として後続処理を継続）"
+            )
+            return
+
         logger.info(f"企業追加完了: {company.name} (ID: {company.enterprise_id})")
+
+    async def _is_company_already_exists(self) -> bool:
+        """
+        企業追加直後のページに「既に存在」エラーが表示されているかチェックする。
+
+        Returns:
+            True なら既に登録済み（重複エラー検出）
+        """
+        # Streamlit alert / error メッセージ全体
+        alert_selectors = [
+            "[data-testid='stAlert']",
+            "[data-testid='stException']",
+            "[data-baseweb='notification']",
+            "div[role='alert']",
+        ]
+        # 既存登録のシグナル (英語・日本語両方)
+        duplicate_keywords = [
+            "already exists",
+            "already exist",
+            "duplicate",
+            "既に存在",
+            "既存",
+            "登録済み",
+            "重複",
+        ]
+
+        for sel in alert_selectors:
+            try:
+                elements = self.page.locator(sel)
+                count = await elements.count()
+                for i in range(count):
+                    text = (await elements.nth(i).text_content()) or ""
+                    text_lower = text.lower()
+                    for kw in duplicate_keywords:
+                        if kw.lower() in text_lower:
+                            logger.debug(
+                                f"  重複検出 ({sel}): '{text[:120]}'"
+                            )
+                            return True
+            except Exception:
+                continue
+        return False
 
     # =========================================================================
     # コンテンツ生成

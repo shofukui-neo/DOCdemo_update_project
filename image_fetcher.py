@@ -44,21 +44,30 @@ async def fetch_company_image(
     """
     企業ホームページから代表的な画像を取得して保存する。
 
+    優先順位:
+      1. HP内のOGP画像 (og:image)
+      2. HP内のヒーロー画像
+      3. HP内のCSS背景画像
+      4. HP内のスクリーンショット (スクショ撮影可能な場合)
+      5. Web画像検索フォールバック (HP不可用 / 上記すべて失敗時)
+
     Args:
         homepage_url: 企業のホームページURL
-        company_name: 企業名（ログ・ファイル名用）
+        company_name: 企業名（ログ・ファイル名用・画像検索クエリ用）
         save_dir: 保存先ディレクトリ。Noneの場合はconfigのデフォルト。
 
     Returns:
-        保存した画像ファイルのパス。失敗時は空文字列。
+        保存した画像ファイルのパス。完全失敗時のみ空文字列。
     """
     save_path = Path(save_dir) if save_dir else SCREENSHOTS_DIR
     save_path.mkdir(parents=True, exist_ok=True)
 
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    parsed = urlparse(homepage_url)
-    safe_domain = parsed.netloc.replace(".", "_").replace(":", "_")
-    
+    parsed = urlparse(homepage_url) if homepage_url else None
+    safe_domain = (
+        parsed.netloc.replace(".", "_").replace(":", "_") if parsed else "unknown"
+    )
+
     logger.info(f"企業画像取得開始: {company_name} ({homepage_url})")
 
     async with async_playwright() as p:
@@ -73,6 +82,7 @@ async def fetch_company_image(
         )
         page = await context.new_page()
 
+        hp_open_failed = False
         try:
             await page.goto(homepage_url, wait_until="domcontentloaded", timeout=60000)
             await page.wait_for_timeout(2000)
@@ -107,7 +117,7 @@ async def fetch_company_image(
                     await browser.close()
                     return saved
 
-            # === フォールバック: スクリーンショット ===
+            # === フォールバック1: スクリーンショット ===
             logger.warning(f"  適切な画像が見つからないため、スクリーンショットにフォールバック")
             screenshot_path = str(save_path / f"shot_{safe_domain}_{timestamp}.png")
             await page.screenshot(path=screenshot_path, full_page=False)
@@ -116,17 +126,141 @@ async def fetch_company_image(
             return screenshot_path
 
         except Exception as e:
-            logger.error(f"  画像取得エラー: {company_name} -- {e}")
+            logger.warning(f"  HP画像取得失敗 (HPが開けない可能性): {company_name} -- {e}")
+            hp_open_failed = True
+        finally:
             try:
-                # エラー時もスクリーンショットを試みる
-                screenshot_path = str(save_path / f"shot_{safe_domain}_{timestamp}.png")
-                await page.screenshot(path=screenshot_path, full_page=False)
                 await browser.close()
-                return screenshot_path
             except Exception:
                 pass
+
+    # === フォールバック2: Web画像検索でロゴを取得 ===
+    if hp_open_failed:
+        logger.info(f"  Web画像検索でロゴを取得します: {company_name}")
+        logo_path = await fetch_logo_via_web_search(
+            company_name, save_path, safe_domain, timestamp
+        )
+        if logo_path:
+            return logo_path
+
+    logger.error(f"  すべての画像取得経路が失敗: {company_name}")
+    return ""
+
+
+async def fetch_logo_via_web_search(
+    company_name: str,
+    save_path: Path,
+    safe_domain: str = "",
+    timestamp: str = "",
+) -> str:
+    """
+    Yahoo!画像検索で企業ロゴを取得して保存する。
+    HPが開けないなど通常の画像取得が失敗した場合のフォールバック。
+
+    Args:
+        company_name: 検索する企業名
+        save_path: 保存先ディレクトリ
+        safe_domain: ファイル名用のドメイン文字列 (省略時は企業名から生成)
+        timestamp: ファイル名用のタイムスタンプ
+
+    Returns:
+        保存した画像パス。失敗時は空文字列。
+    """
+    if not timestamp:
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    if not safe_domain:
+        safe_domain = re.sub(r"[^a-zA-Z0-9]", "_", company_name)[:50] or "logo"
+
+    query = f"{company_name} ロゴ"
+    search_url = f"https://search.yahoo.co.jp/image/search?p={urllib.request.quote(query)}"
+
+    logger.info(f"  画像検索URL: {search_url}")
+
+    async with async_playwright() as p:
+        browser = await p.chromium.launch(headless=True)
+        context = await browser.new_context(
+            viewport={"width": 1280, "height": 800},
+            user_agent=(
+                "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+                "AppleWebKit/537.36 (KHTML, like Gecko) "
+                "Chrome/120.0.0.0 Safari/537.36"
+            ),
+        )
+        page = await context.new_page()
+
+        try:
+            await page.goto(search_url, wait_until="domcontentloaded", timeout=60000)
+            await page.wait_for_timeout(2500)
+
+            # Yahoo!画像検索結果の img タグから src を抽出
+            # data-iurl は元画像URL、src はサムネイル
+            images = await page.evaluate("""
+                () => {
+                    const results = [];
+                    // Yahoo!画像検索: 結果リンクは data-iurl 属性に元URLを持つことが多い
+                    const anchors = Array.from(document.querySelectorAll('a[data-iurl], a[href*="iurl="]'));
+                    for (const a of anchors) {
+                        const iurl = a.getAttribute('data-iurl');
+                        if (iurl) results.push(iurl);
+                        else {
+                            const m = a.href.match(/[?&]iurl=([^&]+)/);
+                            if (m) results.push(decodeURIComponent(m[1]));
+                        }
+                    }
+                    // フォールバック: img タグの src
+                    if (results.length === 0) {
+                        const imgs = Array.from(document.querySelectorAll('img'));
+                        for (const img of imgs) {
+                            const src = img.src || img.getAttribute('data-src') || '';
+                            if (src && src.startsWith('http') &&
+                                !src.includes('yahoo') && !src.includes('yimg')) {
+                                results.push(src);
+                            }
+                        }
+                    }
+                    return results.slice(0, 20);
+                }
+            """)
+
             await browser.close()
+        except Exception as e:
+            logger.warning(f"  Web画像検索の取得に失敗: {e}")
+            try:
+                await browser.close()
+            except Exception:
+                pass
             return ""
+
+    if not images:
+        logger.warning(f"  Web画像検索結果が空でした: {company_name}")
+        return ""
+
+    logger.info(f"  Web画像検索: {len(images)}件の候補を取得 (上位5件を順に試行)")
+    filename = f"logo_{safe_domain}_{timestamp}.jpg"
+
+    # Web画像検索は「ロゴ」を意図的に探しているため、_is_good_imageの
+    # "logo"除外パターンはここでは適用しない。アイコン等のみ除外する。
+    web_search_exclude = [
+        p for p in EXCLUDE_PATTERNS
+        if p not in ("logo",)  # ロゴはむしろ取りたい
+    ]
+
+    for idx, image_url in enumerate(images[:5], start=1):
+        if not _is_valid_image_url(image_url):
+            logger.debug(f"    [{idx}] スキップ (拡張子): {image_url}")
+            continue
+        lower = image_url.lower()
+        if any(p in lower for p in web_search_exclude):
+            logger.debug(f"    [{idx}] スキップ (除外パターン): {image_url}")
+            continue
+        logger.debug(f"    [{idx}] 試行: {image_url}")
+        saved = await _download_image(image_url, save_path, filename)
+        if saved:
+            logger.info(f"  画像保存成功 (Web検索 #{idx}): {saved}")
+            return saved
+
+    logger.warning(f"  Web画像検索の全候補ダウンロードに失敗: {company_name}")
+    return ""
 
 
 async def _get_ogp_image(page, base_url: str) -> str:
