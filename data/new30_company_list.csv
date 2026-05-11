@@ -1,12 +1,12 @@
 ﻿企業名,ホームページURL,URL候補,企業ID,納品URL,ステータス,エラー詳細,スクリーンショットパス
-ハミューレ株式会社,https://www.hamure.co.jp,https://www.hamure.co.jp|https://recruit.hamure.co.jp|https://saiyo.page/557197|https://prono.jp,ハミューレ,,同名企業該当,,
-宇津商事株式会社,https://www.utsu.co.jp,https://www.utsu.co.jp|https://www.utsu-corp.com|https://www.utsu-saiyou.jp|https://www.utsu-saiyou.com/recruit,宇津商事,,同名企業該当,,
-株式会社スイート・ピア,https://www.sweetpea-net.com,https://www.sweetpea-net.com|https://sp.sweetpea-net.com,スイート・ピア,,同名企業該当,,
-オリジン工業株式会社,https://www.oin.co.jp,https://www.oin.co.jp|http://orijin-id.jp|https://shukatsu-line.pref.toyama.lg.jp,オリジン工業,,同名企業該当,,
-株式会社日産サティオ富山,https://www.ns-toyama-nissan.net,https://ns-toyama.nissan-dealer.jp|https://www.ns-toyama-nissan.net|https://u-car.nissan.co.jp|https://www.nissan-st-tn.jp,日産サティオ富山,,同名企業該当,,
-松文産業株式会社,https://matsubun.co.jp,https://matsubun.co.jp|http://recruit.matsubun.co.jp,松文産業,,同名企業該当,,
-三信住建株式会社,https://www.sanshinjyuken.com,https://www.sanshinjyuken.com|https://recruit.sanshinjyuken.com,三信住建,,同名企業該当,,
-タカノフーズ株式会社,https://www.takanofoods.co.jp,https://www.takanofoods.co.jp|https://takanofoods-mileagecp.com,タカノフーズ,,同名企業該当,,
+ハミューレ株式会社,https://www.hamure.co.jp,https://www.hamure.co.jp|https://recruit.hamure.co.jp|https://saiyo.page/557197|https://prono.jp,hamure,https://casual-interview-dev.brainverse-ai.com/hamure,完了,,C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\screenshots\img_www_hamure_co_jp_20260512_081409.jpg
+宇津商事株式会社,https://www.utsu.co.jp,https://www.utsu.co.jp|https://www.utsu-corp.com|https://www.utsu-saiyou.jp|https://www.utsu-saiyou.com/recruit,utsu,,エラー,"ヘッダーに対象企業名/IDが見つかりません: name=宇津商事株式会社, id=utsu, スクショ: screenshots/title_warn_utsu.png",C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\screenshots\img_www_utsu_co_jp_20260512_081825.jpg
+株式会社スイート・ピア,https://www.sweetpea-net.com,https://www.sweetpea-net.com|https://sp.sweetpea-net.com,sweetpea-net,https://casual-interview-dev.brainverse-ai.com/sweetpea-net,完了,,C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\screenshots\img_www_sweetpea-net_com_20260512_081915.jpg
+オリジン工業株式会社,https://www.oin.co.jp,https://www.oin.co.jp|http://orijin-id.jp|https://shukatsu-line.pref.toyama.lg.jp,oin,https://casual-interview-dev.brainverse-ai.com/oin,完了,,C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\screenshots\img_www_oin_co_jp_20260512_082353.jpg
+株式会社日産サティオ富山,https://www.ns-toyama-nissan.net,https://ns-toyama.nissan-dealer.jp|https://www.ns-toyama-nissan.net|https://u-car.nissan.co.jp|https://www.nissan-st-tn.jp,ns-toyama-nissan,,エラー,フロントエンドアプリのURLが取得できませんでした。ボタンまたはリンクが見つかりません。,C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\screenshots\img_www_ns-toyama-nissan_net_20260512_082830.jpg
+松文産業株式会社,https://matsubun.co.jp,https://matsubun.co.jp|http://recruit.matsubun.co.jp,matsubun,https://casual-interview-dev.brainverse-ai.com/matsubun,完了,,C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\screenshots\img_matsubun_co_jp_20260512_083233.jpg
+三信住建株式会社,https://www.sanshinjyuken.com,https://www.sanshinjyuken.com|https://recruit.sanshinjyuken.com,sanshinjyuken,https://casual-interview-dev.brainverse-ai.com/sanshinjyuken,完了,,C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\screenshots\img_www_sanshinjyuken_com_20260512_083649.jpg
+タカノフーズ株式会社,https://www.takanofoods.co.jp,https://www.takanofoods.co.jp|https://takanofoods-mileagecp.com,takanofoods,,コンテンツ生成済,,C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\screenshots\img_www_takanofoods_co_jp_20260512_084033.jpg
 住商レジデンシャル株式会社,https://www.sumisho-resi.co.jp,https://www.sumisho-resi.co.jp|https://www.sumisho-tatemono.co.jp,住商レジデンシャル,,同名企業該当,,
 プライムナンバーズ株式会社,https://primenumbers.co.jp,https://primenumbers.co.jp|http://www.prime-numbers.co.jp|https://primenumber.com,プライムナンバーズ,,同名企業該当,,
 株式会社日本デリカサービス,https://www.nippon-delica.co.jp,https://www.nippon-delica.co.jp,nippon-delica,,エラー,フロントエンドアプリのURLが取得できませんでした。ボタンまたはリンクが見つかりません。,C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\screenshots\img_www_nippon-delica_co_jp_20260512_074039.jpg
