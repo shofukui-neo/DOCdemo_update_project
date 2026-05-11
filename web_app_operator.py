@@ -484,54 +484,121 @@ class WebAppOperator:
     # =========================================================================
     # フロントエンドアプリURL取得
     # =========================================================================
-    async def get_frontend_app_url(self) -> str:
-        """候補者面談ページから「フロントエンドアプリを開く」ボタンをクリックしてURLを取得する。"""
-        logger.info("フロントエンドアプリURL取得開始...")
+    async def get_frontend_app_url(self, company_id: str = "") -> str:
+        """
+        候補者面談ページから「フロントエンドアプリを開く」リンクのURLを取得する。
+
+        Args:
+            company_id: 取得対象の企業ID。指定すると候補者面談ページで先に企業を選択する。
+                        フロントエンドURLは企業ごとに異なる(/<enterprise_id>)ため、
+                        正しいURLを得るには企業選択が必要。
+        """
+        logger.info(f"フロントエンドアプリURL取得開始 (企業ID: {company_id or '未指定'})...")
 
         await self.navigate_to_candidate_interview()
         await self.page.wait_for_timeout(2000)
         await self._wait_for_streamlit_load()
 
-        # 1. メインコンテンツ内の「フロントエンドアプリを開く」ボタンを優先
-        # ユーザー提示の「タブの下」という場所を意識して locator を構成
+        # 企業選択 (company_idが指定されていれば先に選択する)
+        if company_id:
+            try:
+                await self.select_company(company_id)
+                # 候補者面談ページではStreamlit再描画 + FastAPI同期に時間がかかる
+                await self.page.wait_for_timeout(2000)
+                await self._wait_for_streamlit_load()
+            except Exception as e:
+                logger.warning(f"  候補者面談ページでの企業選択に失敗: {e} — そのまま続行")
+
+        # 1. サイドバー内の「フロントエンドアプリを開く」aタグを探す
+        # Streamlitの再描画 + FastAPI同期遅延に対応するため最大30秒リトライ
+        sidebar = self.page.locator("[data-testid='stSidebar']")
+        sidebar_link = sidebar.locator('a:has-text("フロントエンド")')
+
+        last_seen_url = None
+        max_attempts = 15  # 15 * 2s = 最大30秒
+        for attempt in range(max_attempts):
+            try:
+                count = await sidebar_link.count()
+                if count > 0:
+                    url = await sidebar_link.first.get_attribute("href")
+                    if url:
+                        last_seen_url = url
+                        if self._is_url_for_company(url, company_id):
+                            logger.info(f"  サイドバーのaタグからURLを取得成功: {url}")
+                            return url
+                        logger.debug(
+                            f"  試行 {attempt+1}/{max_attempts}: URLが企業ID未一致 ({url}) — 再試行"
+                        )
+                    else:
+                        logger.debug(f"  試行 {attempt+1}/{max_attempts}: href未設定")
+                else:
+                    logger.debug(f"  試行 {attempt+1}/{max_attempts}: サイドバーリンク未検出")
+            except Exception as e:
+                logger.debug(f"  試行 {attempt+1}/{max_attempts} エラー: {e}")
+
+            await self.page.wait_for_timeout(2000)
+
+        # 30秒経過しても企業ID一致URLが取れない: 他の取得方法を試みる
+        logger.warning(
+            f"  サイドバーから企業ID({company_id})に一致するURLが取得できませんでした。"
+            f"最後に見たURL: {last_seen_url}"
+        )
+
+        # 2. ページ全体からaタグを探す（フォールバック）
+        logger.debug("  ページ全体から検索...")
+        link = self.page.locator('a:has-text("フロントエンド"), a:has-text("アプリを開く")')
+        if await link.count() > 0:
+            url = await link.first.get_attribute("href")
+            if url and self._is_url_for_company(url, company_id):
+                logger.info(f"  aタグのhref属性からURLを取得成功: {url}")
+                return url
+            elif url:
+                last_seen_url = url
+                logger.warning(
+                    f"  ページ全体から取得したURLが企業ID({company_id})と一致しません: {url}"
+                )
+
+        # 3. メインコンテンツ内のボタンを探す（フォールバック）
         main_content = self.page.locator("section.main")
         btn = main_content.locator('button:has-text("フロントエンド"), button:has-text("アプリを開く")')
-        
-        # もし見つからない場合はページ全体からボタンを探す
         if await btn.count() == 0:
             btn = self.page.locator('button:has-text("フロントエンド"), button:has-text("アプリを開く")')
 
         if await btn.count() > 0:
-            logger.info("  「フロントエンドアプリを開く」ボタンを検出しました。クリックしてページを開きます。")
+            logger.info("  「フロントエンドアプリを開く」ボタンを検出。クリックしてURLを取得します。")
             try:
-                # ボタンクリック時に新しいタブが開くのを捕捉
                 async with self.page.context.expect_page(timeout=10000) as new_page_info:
                     await btn.first.click()
                 new_page = await new_page_info.value
-                
-                # 新しいページの読み込みを少し待機
                 await new_page.wait_for_load_state("domcontentloaded")
                 await new_page.wait_for_timeout(3000)
-                
                 url = new_page.url
                 logger.info(f"  新規タブからURLを取得成功: {url}")
-                
                 await new_page.close()
                 return url
             except Exception as e:
                 logger.warning(f"  新規タブの捕捉またはURL取得に失敗しました: {e}")
-                # 失敗した場合はフォールバックへ進む
 
-        # 2. フォールバック: aタグのhref属性を探す
-        logger.debug("  フォールバック: リンク(aタグ)の属性確認を試みます")
-        link = self.page.locator('a:has-text("フロントエンド"), a:has-text("アプリを開く")')
-        if await link.count() > 0:
-            url = await link.first.get_attribute("href")
-            if url:
-                logger.info(f"  aタグのhref属性からURLを取得成功: {url}")
-                return url
+        # 4. 最終フォールバック: 最後に見たURLを返す (企業ID検証なし)
+        if last_seen_url:
+            logger.warning(f"  企業ID検証なしのフォールバック: {last_seen_url}")
+            return last_seen_url
 
         raise RuntimeError("フロントエンドアプリのURLが取得できませんでした。ボタンまたはリンクが見つかりません。")
+
+    @staticmethod
+    def _is_url_for_company(url: str, company_id: str) -> bool:
+        """取得したURLが指定企業IDに対応しているかチェック (企業ID未指定時は常にTrue)"""
+        if not company_id:
+            return True
+        # URLの末尾が /<company_id> または /<company_id>/ かを確認
+        from urllib.parse import urlparse, unquote
+        try:
+            parsed = urlparse(url)
+            path = unquote(parsed.path).rstrip("/")
+            return path.endswith(f"/{company_id}") or path == f"/{company_id}"
+        except Exception:
+            return False
 
     # =========================================================================
     # ヘルパーメソッド

@@ -310,7 +310,9 @@ class Orchestrator:
         if company.status == ProcessStatus.IMAGE_UPLOADED:
             logger.info("Step 6/6: フロントエンドアプリURL取得...")
 
-            frontend_url = await web_operator.get_frontend_app_url()
+            frontend_url = await web_operator.get_frontend_app_url(
+                company_id=company.enterprise_id
+            )
             company.frontend_app_url = frontend_url
 
             company.status = ProcessStatus.COMPLETED
