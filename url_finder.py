@@ -84,7 +84,7 @@ class URLFinder:
         Yahoo! Japan検索で企業名に該当する複数の候補URLを取得する。
 
         異なるドメインを優先して最大 max_candidates 件まで返す。
-        同名企業検出（DUPLICATE_DETECTED 判定）に使用する。
+        URL企業ID不一致検出（DUPLICATE_DETECTED 判定）に使用する。
 
         Args:
             company_name: 企業名

@@ -13,7 +13,7 @@ class ProcessStatus(Enum):
     """企業ごとの処理進捗ステータス"""
     PENDING = "未処理"
     URL_FOUND = "URL特定済"
-    DUPLICATE_DETECTED = "同名企業該当"  # 検索結果に複数候補ドメインあり、人間の手動確認待ち
+    DUPLICATE_DETECTED = "同名企業該当"  # URL内の企業IDが完全一致しない候補が複数、手動確認待ち（CSV互換のためラベル名は据置）
     COMPANY_ADDED = "企業追加済"
     CONTENT_GENERATED = "コンテンツ生成済"
     IMAGE_UPLOADED = "画像UP済"
@@ -138,7 +138,7 @@ class CompanyInfo:
 
     def mark_duplicate(self, candidates: list, reason: str = ""):
         """
-        同名企業の候補が複数あり、人間の手動確認待ちの状態にする。
+        URL内の企業IDが完全一致しない候補が複数あり、人間の手動確認待ちの状態にする。
 
         Args:
             candidates: 候補URLのリスト
@@ -147,7 +147,7 @@ class CompanyInfo:
         self.status = ProcessStatus.DUPLICATE_DETECTED
         self.url_candidates = list(candidates)
         self.error_message = reason or (
-            f"同名候補ドメインが {len(candidates)} 件検出されました。"
+            f"URL内の企業IDが完全一致しない候補が {len(candidates)} 件検出されました。"
             "「ホームページURL」列に正しいURLを入力して再実行してください。"
         )
 

@@ -11,7 +11,8 @@ DOCdemo 自動化フロー — メインオーケストレーター
 - 2026-04-22: 画像取得をHP実際の画像に変更（スクショ非推奨）
 - 2026-04-22: 企業選択をサイドバーから行うよう変更
 - 2026-05-11: 自動化フロー内に4つの検証ポイントを追加
-    - Step 1.5: 同名企業検証（複数候補ドメイン検出時に手動確認待ちで中断）
+    - Step 1.5: URL企業ID不一致検証（候補URLから抽出した企業IDが
+      完全一致しない種類が複数あれば手動確認待ちで中断）
     - Step 2.5: 企業追加直後のID検証（URLベースのIDが正しく反映されているか）
     - Step 4-pre: コンテンツ生成画面のヘッダー切替検証（厳格化）
     - Step 4-post: 保存後にFAQ・企業情報両タブの内容検証
@@ -41,7 +42,6 @@ from config import (
     RETRY_COUNT,
     RETRY_DELAY,
     URL_CANDIDATE_MAX,
-    DUPLICATE_DOMAIN_THRESHOLD,
 )
 from models import CompanyInfo, ProcessStatus
 from spreadsheet_manager import SpreadsheetManager
@@ -118,7 +118,7 @@ class Orchestrator:
             "processed": 0,
             "success": 0,
             "skipped": 0,
-            "duplicate": 0,  # 同名企業該当（手動確認待ち）
+            "duplicate": 0,  # URL企業ID不一致候補複数のため手動確認待ち
             "error": 0,
         }
 
@@ -218,7 +218,9 @@ class Orchestrator:
         """
 
         # ===== Step 1: ホームページURL検索 =====
-        # ===== Step 1.5: 同名企業検証（候補ドメイン数による自動判定） =====
+        # ===== Step 1.5: URL企業ID重複検証 =====
+        #   候補URLから抽出した企業ID（URL内で企業を表すスラッグ）が
+        #   完全一致しない種類が複数あれば手動確認待ちで中断する。
         if company.status == ProcessStatus.PENDING:
             logger.info("Step 1/6: ホームページURL候補検索...")
 
@@ -237,24 +239,42 @@ class Orchestrator:
                 logger.warning(f"[SKIP] {company.name}: URL不明のためスキップ")
                 return
 
-            # === 同名企業検証 ===
-            if len(candidates) >= DUPLICATE_DOMAIN_THRESHOLD:
+            # === URL企業ID重複検証 ===
+            # 各候補URLから企業IDを抽出し、ユニークなIDが複数あれば
+            # 「URL内の企業IDが完全一致しない候補が複数」=手動確認待ち。
+            candidate_ids = [
+                extract_enterprise_id_from_url(c) for c in candidates
+            ]
+            unique_ids = {eid for eid in candidate_ids if eid and eid != "unknown"}
+
+            if len(unique_ids) >= 2:
                 logger.warning(
-                    f"  [PAUSE] 同名企業候補が {len(candidates)} 件検出されました "
-                    f"→ 手動確認待ちにします"
+                    f"  [PAUSE] URL内の企業IDが完全一致しない候補が "
+                    f"{len(unique_ids)} 種類 (候補URL {len(candidates)}件) "
+                    f"検出されました → 手動確認待ちにします"
                 )
-                for idx_c, cand in enumerate(candidates, start=1):
-                    logger.warning(f"    候補 {idx_c}: {cand}")
-                company.mark_duplicate(candidates)
+                for idx_c, (cand, eid) in enumerate(
+                    zip(candidates, candidate_ids), start=1
+                ):
+                    logger.warning(f"    候補 {idx_c}: {cand} (企業ID: {eid})")
+                company.mark_duplicate(
+                    candidates,
+                    reason=(
+                        f"URL内の企業IDが完全一致しない候補が "
+                        f"{len(unique_ids)} 種類検出されました。"
+                        "「ホームページURL」列に正しいURLを入力して再実行してください。"
+                    ),
+                )
                 self.sheet_manager.update_company(company, companies)
                 self.stats["duplicate"] += 1
                 logger.warning(
-                    f"[HOLD] {company.name}: ステータス=同名企業該当 "
+                    f"[HOLD] {company.name}: URL企業ID不一致候補複数 "
                     f"(CSVの「ホームページURL」列に正解URLを記入して再実行してください)"
                 )
                 return
 
-            # 候補が1件のみ → 通常フロー
+            # 候補のURL企業IDが1種類のみ (TLD違い・サブドメイン正規化後に同一)
+            # → 先頭の候補URLを採用して通常フロー
             homepage_url = candidates[0]
             company.homepage_url = homepage_url
             company.url_candidates = candidates  # 履歴として保持
@@ -273,14 +293,15 @@ class Orchestrator:
             self.sheet_manager.update_company(company, companies)
             logger.info(f"  → URL: {homepage_url}, ID: {company.enterprise_id}")
 
-        # 「同名企業該当」状態で再実行されたケース（人間が CSV の homepage_url 列に
-        #  正しいURLを記入した想定）→ URL_FOUND として扱い後続処理に進める
+        # URL企業ID不一致で HOLD された状態から再実行されたケース
+        # （人間が CSV の homepage_url 列に正しいURLを記入した想定）
+        # → URL_FOUND として扱い後続処理に進める
         elif (
             company.status == ProcessStatus.DUPLICATE_DETECTED
             and company.homepage_url
         ):
             logger.info(
-                f"Step 1/6: 同名企業該当からの手動再開: {company.homepage_url}"
+                f"Step 1/6: URL企業ID不一致 HOLD からの手動再開: {company.homepage_url}"
             )
             url_based_id = extract_enterprise_id_from_url(company.homepage_url)
             if url_based_id and url_based_id != "unknown":
@@ -403,13 +424,18 @@ class Orchestrator:
                         company.enterprise_id,
                         company.screenshot_path
                     )
+                    # UI反映確認まで完了した場合のみ画像UP済へ進める
                     company.status = ProcessStatus.IMAGE_UPLOADED
                     self.sheet_manager.update_company(company, companies)
-                    logger.info("  → 背景画像アップロード完了")
+                    logger.info("  → 背景画像アップロード完了（UI反映確認済）")
                 except Exception as e:
-                    logger.warning(f"  [WARN] 画像アップロード失敗: {e} (続行)")
-                    company.status = ProcessStatus.IMAGE_UPLOADED
+                    # UI反映が確認できなかった場合は ERROR にして次回再実行で
+                    # 同じ社をリトライできるようにする（過去のように
+                    # IMAGE_UPLOADED で先に進めると未反映のまま完了扱いになる）
+                    logger.error(f"  [ERROR] 画像アップロード/UI反映確認に失敗: {e}")
+                    company.mark_error(f"画像アップロードのUI反映確認失敗: {e}")
                     self.sheet_manager.update_company(company, companies)
+                    return
             else:
                 logger.warning("  画像なし: スキップ")
                 company.status = ProcessStatus.IMAGE_UPLOADED
@@ -495,15 +521,16 @@ class Orchestrator:
         logger.info(f"  処理対象:    {self.stats['total']}社")
         logger.info(f"  処理完了:    {self.stats['processed']}社")
         logger.info(f"  [OK] 成功:    {self.stats['success']}社")
-        logger.info(f"  [HOLD] 同名企業該当: {self.stats['duplicate']}社（手動確認待ち）")
+        logger.info(f"  [HOLD] URL企業ID不一致候補複数: {self.stats['duplicate']}社（手動確認待ち）")
         logger.info(f"  [SKIP] スキップ: {self.stats['skipped']}社")
         logger.info(f"  [ERR] エラー:  {self.stats['error']}社")
         logger.info(f"  所要時間:    {elapsed}")
         logger.info("=" * 60)
         if self.stats['duplicate'] > 0:
             logger.info(
-                "  ※ 同名企業該当の企業は CSV の「ホームページURL」列に "
-                "「URL候補」列の中から正しいURLを記入して再実行してください。"
+                "  ※ URL企業ID不一致候補複数で HOLD された企業は CSV の "
+                "「ホームページURL」列に「URL候補」列の中から正しいURLを記入して "
+                "再実行してください。"
             )
             logger.info("=" * 60)
 

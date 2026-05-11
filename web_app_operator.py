@@ -205,13 +205,39 @@ class WebAppOperator:
     # ナビゲーション
     # =========================================================================
     async def _navigate_sidebar(self, link_text: str):
-        """サイドバーのリンクをクリックしてページ遷移する。"""
+        """サイドバーのリンクをクリックしてページ遷移する。
+
+        セクションヘッダー (stNavSectionHeader) が折りたたまれていて配下のナビ
+        リンクが非表示の場合、ヘッダーをクリックして展開してから再試行する。
+        例: 「システム設定」は「⚙️ システム設定」セクション配下にあるが、
+        デフォルトで折りたたまれているケースがある。
+        """
         await self.ensure_logged_in()
         logger.debug(f"ナビゲーション: {link_text}")
 
         sidebar = self.page.locator("[data-testid='stSidebar']")
-        link = sidebar.get_by_text(link_text, exact=False).first
-        await link.click()
+        nav_link = sidebar.locator(
+            f'[data-testid="stSidebarNavLink"]:has-text("{link_text}")'
+        ).first
+
+        if await nav_link.count() == 0:
+            section_header = sidebar.locator(
+                f'[data-testid="stNavSectionHeader"]:has-text("{link_text}")'
+            ).first
+            if await section_header.count() > 0:
+                logger.debug(f"  セクション '{link_text}' が折りたたまれているため展開")
+                await section_header.click()
+                await self.page.wait_for_timeout(800)
+                nav_link = sidebar.locator(
+                    f'[data-testid="stSidebarNavLink"]:has-text("{link_text}")'
+                ).first
+
+        if await nav_link.count() == 0:
+            # フォールバック: 旧挙動 (任意テキスト要素)
+            logger.debug(f"  '{link_text}' ナビリンクが見つからないためテキスト一致でフォールバック")
+            nav_link = sidebar.get_by_text(link_text, exact=False).first
+
+        await nav_link.click()
         await self._wait_for_streamlit_load()
 
     async def navigate_to_company_setup(self):
@@ -1014,6 +1040,7 @@ class WebAppOperator:
         システム設定ページで背景画像をアップロードする。
         1. 設定ページでまず「対象企業」を選択する。
         2. 「企業アセット管理」セクション内の「背景画像」セクションを特定して画像を登録する。
+        3. アップロード後、UI画面が新しい画像に切り替わったことを検証してから完了とする。
         """
         logger.info(f"背景画像アップロード開始 (企業ID: {company_id}): {image_path}")
 
@@ -1029,17 +1056,22 @@ class WebAppOperator:
         await self.select_company(company_id)
 
         # 2. 「背景画像」アップロード欄の特定
-        section_heading = self.page.locator('h1, h2, h3, h4, [data-testid="stHeader"] p').filter(has_text="背景画像").first
-        
-        if await section_heading.count() == 0:
-             section_heading = self.page.get_by_text("背景画像", exact=False).first
+        target_container, file_input = await self._locate_background_image_uploader()
 
-        target_container = self.page.locator('div, section, [data-testid="stVerticalBlock"]').filter(
-            has=section_heading
-        ).last
+        # 3. アップロード前のUI状態を取得（後で反映確認に使う）
+        pre_state = await self._capture_image_section_state(target_container)
+        logger.debug(
+            f"  アップロード前のUI状態: imgs={len(pre_state['img_srcs'])}件, "
+            f"files={pre_state['uploader_files']}"
+        )
 
-        upload_btn = target_container.locator('button:has-text("Upload"), button:has-text("アップロード"), button:has-text("Browse")')
-        file_input = target_container.locator('input[type="file"]')
+        # 4. ファイルをセット
+        file_name = Path(image_path).name
+        upload_btn = target_container.locator(
+            'button:has-text("Upload"), '
+            'button:has-text("アップロード"), '
+            'button:has-text("Browse")'
+        )
 
         if await upload_btn.count() > 0:
             logger.info("  「Upload」関連ボタンを検出。クリックしてファイル選択を開始します。")
@@ -1050,22 +1082,209 @@ class WebAppOperator:
                 await file_chooser.set_files(image_path)
             except Exception as e:
                 logger.debug(f"    ボタンクリック失敗、直接セットを試みます: {e}")
-                if await file_input.count() > 0:
-                    await file_input.first.set_input_files(image_path)
-        elif await file_input.count() > 0:
+                await file_input.first.set_input_files(image_path)
+        else:
             logger.info("  ファイル入力欄を直接操作します。")
             await file_input.first.set_input_files(image_path)
-        else:
-            logger.warning("  指定位置にアップロード欄が見つからないため、ページ全体から最適な場所を探します。")
-            fallback_input = self.page.locator('input[type="file"]')
-            if await fallback_input.count() > 0:
-                await fallback_input.first.set_input_files(image_path)
-            else:
-                raise RuntimeError("背景画像のアップロード欄が見つかりませんでした。")
 
-        await self.page.wait_for_timeout(3000)
-        await self._wait_for_streamlit_load()
-        logger.info(f"背景画像アップロード完了: {image_path}")
+        # 5. UI画面が新しい画像に切り替わったことを確認
+        await self._verify_image_upload_reflected(
+            target_container, file_name, pre_state
+        )
+
+        logger.info(f"背景画像アップロード完了（UI反映確認済）: {image_path}")
+
+    async def _locate_background_image_uploader(
+        self,
+        timeout_seconds: float = 30.0,
+        poll_interval_ms: int = 1500,
+    ):
+        """
+        「背景画像」セクション内のアップローダーコンテナと file input を特定する。
+
+        Streamlit は企業選択直後にDOMを再描画するため、見出しや入力欄は数秒〜十数秒
+        遅れて現れる。タイミング次第で 0 件になるのを防ぐため、見出し検出と入力欄
+        検出をまとめてポーリングする（最大 timeout_seconds 秒）。
+
+        以前の実装ではコンテナ内に入力欄が見つからないとき、ページ全体から最初の
+        input[type=file] を選んでしまい、別セクションの入力欄に誤投入する事故が
+        起きていた。本メソッドではセクション特定に失敗したら例外を送出する。
+
+        Returns:
+            (target_container locator, file_input locator)
+        """
+        elapsed_ms = 0
+        last_failure = "未試行"
+
+        while elapsed_ms < timeout_seconds * 1000:
+            heading_candidates = [
+                self.page.locator('h1, h2, h3, h4, h5, h6').filter(has_text="背景画像"),
+                self.page.locator(
+                    '[data-testid="stHeader"], [data-testid="stSubheader"], [data-testid="stMarkdown"]'
+                ).filter(has_text="背景画像"),
+                self.page.get_by_text("背景画像", exact=False),
+            ]
+
+            section_heading = None
+            for candidate in heading_candidates:
+                try:
+                    if await candidate.count() > 0:
+                        section_heading = candidate.first
+                        break
+                except Exception as e:
+                    logger.debug(f"    見出し候補確認エラー: {e}")
+
+            if section_heading is None:
+                last_failure = "「背景画像」見出しが未出現"
+                logger.debug(
+                    f"  アップローダー検出リトライ ({elapsed_ms/1000:.1f}s): {last_failure}"
+                )
+                await self.page.wait_for_timeout(poll_interval_ms)
+                elapsed_ms += poll_interval_ms
+                continue
+
+            target_container = self.page.locator(
+                '[data-testid="stVerticalBlock"]'
+            ).filter(has=section_heading).last
+
+            if await target_container.count() == 0:
+                target_container = section_heading.locator(
+                    'xpath=ancestor::*[self::section or self::div][1]'
+                )
+
+            # stFileUploader 内の input[type=file] を最優先で探す
+            file_input = target_container.locator(
+                '[data-testid="stFileUploader"] input[type="file"]'
+            )
+            if await file_input.count() == 0:
+                file_input = target_container.locator('input[type="file"]')
+
+            if await file_input.count() > 0:
+                logger.debug(
+                    f"  アップローダー検出成功 ({elapsed_ms/1000:.1f}s)"
+                )
+                return target_container, file_input
+
+            last_failure = "見出しは出現済だが input[type=file] 未出現"
+            logger.debug(
+                f"  アップローダー検出リトライ ({elapsed_ms/1000:.1f}s): {last_failure}"
+            )
+            await self.page.wait_for_timeout(poll_interval_ms)
+            elapsed_ms += poll_interval_ms
+
+        raise RuntimeError(
+            f"「背景画像」セクションのアップローダーを {timeout_seconds:.0f}秒以内に"
+            f"特定できませんでした。最終理由: {last_failure}。"
+            "DOM構造が変更された可能性があります。"
+        )
+
+    async def _capture_image_section_state(self, target_container) -> dict:
+        """アップロード前の画像セクションのUI状態を取得する。
+
+        - 表示中の <img> 要素の src 一覧
+        - アップローダーに表示中のファイル名一覧
+        """
+        state = {"img_srcs": [], "uploader_files": []}
+        try:
+            imgs = target_container.locator('img')
+            count = await imgs.count()
+            for i in range(count):
+                src = await imgs.nth(i).get_attribute("src")
+                if src:
+                    state["img_srcs"].append(src)
+        except Exception as e:
+            logger.debug(f"    img src取得エラー: {e}")
+
+        try:
+            uploader_files = target_container.locator(
+                '[data-testid="stFileUploaderFile"], '
+                '[data-testid="stFileUploaderFileName"], '
+                '[data-testid="stFileUploaderFileData"]'
+            )
+            count = await uploader_files.count()
+            for i in range(count):
+                text = await uploader_files.nth(i).text_content()
+                if text:
+                    state["uploader_files"].append(text.strip())
+        except Exception as e:
+            logger.debug(f"    アップローダーファイル名取得エラー: {e}")
+
+        return state
+
+    async def _verify_image_upload_reflected(
+        self,
+        target_container,
+        file_name: str,
+        pre_state: dict,
+        timeout_seconds: float = 30.0,
+        poll_interval_ms: int = 1000,
+    ) -> None:
+        """
+        アップロード後にUI画面が新しい画像に切り替わったことを検証する。
+
+        以下のいずれかが確認できれば反映成功とみなす:
+          1. Streamlit ファイルアップローダーにアップロードしたファイル名が表示されている
+          2. セクション内の <img> 要素の src がアップロード前から変化／追加されている
+
+        タイムアウト時は RuntimeError を送出する。
+        """
+        logger.info(f"  UI反映確認中: {file_name} (最大 {timeout_seconds:.0f}秒)")
+        elapsed_ms = 0
+        last_observation = "なし"
+        pre_img_srcs = set(pre_state.get("img_srcs", []))
+
+        while elapsed_ms < timeout_seconds * 1000:
+            # 条件1: アップローダーに対象ファイル名が表示されているか
+            try:
+                uploader_files = target_container.locator(
+                    '[data-testid="stFileUploaderFile"], '
+                    '[data-testid="stFileUploaderFileName"], '
+                    '[data-testid="stFileUploaderFileData"]'
+                )
+                u_count = await uploader_files.count()
+                for i in range(u_count):
+                    text = await uploader_files.nth(i).text_content()
+                    if text and file_name in text:
+                        last_observation = (
+                            f"アップローダーにファイル名表示を確認: {text.strip()}"
+                        )
+                        logger.info(f"  ✓ UI反映確認OK ({last_observation})")
+                        # 反映後の追加レンダリング待機
+                        await self.page.wait_for_timeout(1500)
+                        await self._wait_for_streamlit_load()
+                        return
+            except Exception as e:
+                logger.debug(f"    アップローダー判定エラー: {e}")
+
+            # 条件2: <img> 要素の src が変化／追加されているか
+            try:
+                imgs = target_container.locator('img')
+                count = await imgs.count()
+                current_srcs = []
+                for i in range(count):
+                    src = await imgs.nth(i).get_attribute("src")
+                    if src:
+                        current_srcs.append(src)
+                new_srcs = [s for s in current_srcs if s not in pre_img_srcs]
+                if new_srcs:
+                    last_observation = (
+                        f"新しい画像要素を検出: {new_srcs[0][:80]}..."
+                        if len(new_srcs[0]) > 80 else f"新しい画像要素を検出: {new_srcs[0]}"
+                    )
+                    logger.info(f"  ✓ UI反映確認OK ({last_observation})")
+                    await self.page.wait_for_timeout(1000)
+                    await self._wait_for_streamlit_load()
+                    return
+            except Exception as e:
+                logger.debug(f"    img要素判定エラー: {e}")
+
+            await self.page.wait_for_timeout(poll_interval_ms)
+            elapsed_ms += poll_interval_ms
+
+        raise RuntimeError(
+            f"画像アップロード後のUI反映を {timeout_seconds:.0f}秒以内に確認できませんでした。"
+            f" 最終観測: {last_observation}"
+        )
 
     # =========================================================================
     # フロントエンドアプリURL取得

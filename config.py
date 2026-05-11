@@ -47,7 +47,7 @@ COMPANY_LIST_CSV = DATA_DIR / "company_list.csv"
 CSV_COLUMNS = {
     "company_name": "企業名",
     "homepage_url": "ホームページURL",
-    "url_candidates": "URL候補",  # 同名企業検出時の候補URL（パイプ区切り）
+    "url_candidates": "URL候補",  # URL企業ID不一致検出時の候補URL（パイプ区切り）
     "enterprise_id": "企業ID",
     "frontend_url": "納品URL",  # フロントエンド公開URL = エンドユーザに渡す納品URL
     "status": "ステータス",
@@ -61,12 +61,10 @@ LEGACY_COLUMN_ALIASES = {
 }
 
 # =============================================================================
-# 同名企業検出設定
+# URL企業ID不一致検出設定
 # =============================================================================
 # URL検索結果から取得する候補数の最大値
 URL_CANDIDATE_MAX = 5
-# 候補ドメインが何件以上あれば「同名企業該当」と判定するか
-DUPLICATE_DOMAIN_THRESHOLD = 2
 
 # =============================================================================
 # タイムアウト設定 (ミリ秒)
