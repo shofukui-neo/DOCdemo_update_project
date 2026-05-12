@@ -89,19 +89,23 @@ GitHub の `shofukui-neo/DOCdemo_update_project` をクローン (2 回目以降
 private リポジトリの場合は Colab Secret `GITHUB_TOKEN` を使用。""")
 
 code("""import os, subprocess
-from google.colab import userdata
 
 REPO_DIR  = '/content/DOCdemo_update_project'
 REPO_HOST = 'github.com'
 REPO_PATH = 'shofukui-neo/DOCdemo_update_project.git'
 
+token = None
 try:
+    from google.colab import userdata
     token = userdata.get('GITHUB_TOKEN')
+except Exception as e:
+    print(f'⚠️ GITHUB_TOKEN Secret 未取得 ({type(e).__name__}) — public リポジトリ想定で続行')
+
+if token:
     repo_url = f'https://{token}@{REPO_HOST}/{REPO_PATH}'
     print('🔑 GITHUB_TOKEN を使用してアクセス')
-except Exception:
+else:
     repo_url = f'https://{REPO_HOST}/{REPO_PATH}'
-    print('⚠️ GITHUB_TOKEN Secret が未設定 — public リポジトリ想定で続行')
 
 if os.path.isdir(os.path.join(REPO_DIR, '.git')):
     print('既存リポジトリを更新 (git pull)...')
@@ -127,14 +131,36 @@ print('✅ Playwright + 依存パッケージ準備完了')""".replace("{REPO_DI
 # ===== 5. 認証情報 & パス設定 =====
 md("""## 4. 認証情報・環境変数のセット
 
-Colab Secrets から `DOCDEMO_LOGIN_EMAIL` / `DOCDEMO_LOGIN_PASSWORD` を取得し、
-プロジェクトを Python パスに追加する。""")
+**Colab Secrets** (左サイドバーの 🔑 アイコン) に以下を登録しておくこと (各項目「ノートブックのアクセス」を必ず ON):
 
-code("""import os, sys
-from google.colab import userdata
+| Secret 名 | 値 |
+|---|---|
+| `DOCDEMO_LOGIN_EMAIL` | Brainverse のログインメール |
+| `DOCDEMO_LOGIN_PASSWORD` | 同パスワード |
 
-os.environ['DOCDEMO_LOGIN_EMAIL']    = userdata.get('DOCDEMO_LOGIN_EMAIL')
-os.environ['DOCDEMO_LOGIN_PASSWORD'] = userdata.get('DOCDEMO_LOGIN_PASSWORD')
+Secrets が未登録の場合は、その場で手入力するフォールバックに切り替わります (一時的な実行のみ・コミット禁止)。""")
+
+code("""import os, sys, getpass
+
+def _get_secret(name: str, prompt: str, secret_input: bool = False) -> str:
+    \"\"\"Colab Secrets から取得、未登録/未認可なら getpass で手入力にフォールバック。\"\"\"
+    try:
+        from google.colab import userdata
+        value = userdata.get(name)
+        if value:
+            print(f'  🔑 {name}: Colab Secrets から取得')
+            return value
+    except Exception as e:
+        # SecretNotFoundError / NotebookAccessError / その他
+        print(f'  ⚠️ {name}: Colab Secrets 未登録 ({type(e).__name__}) → 手入力にフォールバック')
+        print(f'     恒久対応は左サイドバー 🔑 で {name} を登録し「ノートブックのアクセス」を ON にしてください')
+    # フォールバック
+    if secret_input:
+        return getpass.getpass(f'{prompt}: ')
+    return input(f'{prompt}: ').strip()
+
+os.environ['DOCDEMO_LOGIN_EMAIL']    = _get_secret('DOCDEMO_LOGIN_EMAIL',    'Brainverse メール')
+os.environ['DOCDEMO_LOGIN_PASSWORD'] = _get_secret('DOCDEMO_LOGIN_PASSWORD', 'Brainverse パスワード', secret_input=True)
 os.environ['DOCDEMO_HEADLESS']       = 'true'     # Colab はヘッドレス必須
 os.environ['DOCDEMO_LOG_LEVEL']      = 'INFO'
 
@@ -143,6 +169,7 @@ if REPO_DIR not in sys.path:
     sys.path.insert(0, REPO_DIR)
 os.chdir(REPO_DIR)
 
+print()
 print('✅ 認証情報セット完了')
 print('   cwd     :', os.getcwd())
 print('   email   :', os.environ['DOCDEMO_LOGIN_EMAIL'])
