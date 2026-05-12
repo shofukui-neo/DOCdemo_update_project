@@ -46,7 +46,7 @@ from config import (
 from models import CompanyInfo, ProcessStatus
 from spreadsheet_manager import SpreadsheetManager
 from url_finder import URLFinder
-from image_fetcher import fetch_company_image, extract_enterprise_id_from_url
+from image_fetcher import extract_enterprise_id_from_url
 from recruit_url_finder import find_recruit_site_urls
 from web_app_operator import WebAppOperator
 
@@ -205,6 +205,9 @@ class Orchestrator:
         elapsed = datetime.now() - start_time
         self._print_summary(elapsed)
 
+        # 納品URLのみのCSVを自動生成 (クライアント納品用)
+        self._write_delivery_urls_csv()
+
     async def _process_single_company(
         self,
         company: CompanyInfo,
@@ -360,24 +363,17 @@ class Orchestrator:
             except Exception as e:
                 logger.warning(f"  ページクローズ＆再ログインに失敗（続行）: {e}")
 
-        # ===== Step 3: HP画像取得 + 内部リンク + 求人サイトURL収集 =====
+        # ===== Step 3: 内部リンク + 求人サイトURL収集 =====
         if company.status == ProcessStatus.COMPANY_ADDED:
-            logger.info("Step 3/6: HP画像取得 + URL収集...")
+            logger.info("Step 3/5: URL収集...")
 
             try:
-                image_path = await fetch_company_image(
-                    company.homepage_url,
-                    company.name,
-                )
-                company.screenshot_path = image_path
-
                 # 内部リンク取得（HP内のサブページ）
                 internal_links = await self._extract_links_only(
                     company.homepage_url
                 )
 
                 # 求人サイトURL取得（マイナビ・リクナビ等の該当企業ページ）
-                # url_finder のページを共用 (既にYahoo!検索済の状態)
                 recruit_links: list = []
                 try:
                     recruit_links = await find_recruit_site_urls(
@@ -391,18 +387,17 @@ class Orchestrator:
                 company.extracted_links = merged
 
                 logger.info(
-                    f"  → 画像取得: {image_path}, "
-                    f"内部リンク:{len(internal_links)}件, "
+                    f"  → 内部リンク:{len(internal_links)}件, "
                     f"求人サイト:{len(recruit_links)}件, "
                     f"合計:{len(merged)}件"
                 )
             except Exception as e:
-                logger.warning(f"  [WARN] 画像/リンク取得失敗: {e} (続行)")
+                logger.warning(f"  [WARN] リンク取得失敗: {e} (続行)")
                 company.extracted_links = [company.homepage_url]
 
         # ===== Step 4: コンテンツ生成 =====
         if company.status in (ProcessStatus.COMPANY_ADDED,):
-            logger.info("Step 4/6: コンテンツ生成...")
+            logger.info("Step 4/5: コンテンツ生成...")
 
             # コンテンツ生成ページへ遷移
             await web_operator.navigate_to_content_generator()
@@ -432,41 +427,18 @@ class Orchestrator:
             self.sheet_manager.update_company(company, companies)
             logger.info("  → コンテンツ生成・保存・検証完了")
 
-        # ===== Step 5: 背景画像アップロード =====
+        # 背景画像アップロード機能はオミット
+        # CONTENT_GENERATED から直接 IMAGE_UPLOADED に遷移して Step 5 (旧Step 6) へ進む
         if company.status == ProcessStatus.CONTENT_GENERATED:
-            logger.info("Step 5/6: 背景画像アップロード...")
+            company.status = ProcessStatus.IMAGE_UPLOADED
+            self.sheet_manager.update_company(company, companies)
 
-            if company.screenshot_path:
-                try:
-                    await web_operator.upload_background_image(
-                        company.enterprise_id,
-                        company.screenshot_path
-                    )
-                    # UI反映確認まで完了した場合のみ画像UP済へ進める
-                    company.status = ProcessStatus.IMAGE_UPLOADED
-                    self.sheet_manager.update_company(company, companies)
-                    logger.info("  → 背景画像アップロード完了（UI反映確認済）")
-                except Exception as e:
-                    # UI反映が確認できなかった場合は ERROR にして次回再実行で
-                    # 同じ社をリトライできるようにする（過去のように
-                    # IMAGE_UPLOADED で先に進めると未反映のまま完了扱いになる）
-                    logger.error(f"  [ERROR] 画像アップロード/UI反映確認に失敗: {e}")
-                    company.mark_error(f"画像アップロードのUI反映確認失敗: {e}")
-                    self.sheet_manager.update_company(company, companies)
-                    return
-            else:
-                logger.warning("  画像なし: スキップ")
-                company.status = ProcessStatus.IMAGE_UPLOADED
-                self.sheet_manager.update_company(company, companies)
-
-        # ===== Step 6: フロントエンドアプリURL取得 =====
+        # ===== Step 5: フロントエンドアプリURL取得 =====
         if company.status == ProcessStatus.IMAGE_UPLOADED:
-            logger.info("Step 6/6: フロントエンドアプリURL取得...")
+            logger.info("Step 5/5: フロントエンドアプリURL取得...")
 
-            # Step 5 (設定ページでの画像UP) の後はサイドバー再描画状態が
-            # 候補者面談ページのリンク表示を阻害する場合がある
-            # → Step 2 後と同様にページクローズ&再ログインで状態クリーン化
-            logger.info("Step 5完了 → ページを閉じて再ログイン（Step 6 のサイドバーキャッシュ対策）")
+            # サイドバーキャッシュ対策のためページクローズ&再ログインで状態クリーン化
+            logger.info("Step 4完了 → ページを閉じて再ログイン（Step 5 のサイドバーキャッシュ対策）")
             try:
                 await web_operator.close_page_and_relogin()
             except Exception as e:
@@ -529,6 +501,34 @@ class Orchestrator:
         except Exception as e:
             logger.warning(f"リンク抽出エラー: {e}")
             return [homepage_url]
+
+    def _write_delivery_urls_csv(self):
+        """
+        企業リストCSV から「企業名」「納品URL」のみを抜き出した簡易CSVを生成する。
+        ファイル名は元CSVから派生 (例: new30_company_list.csv → new30_delivery_urls.csv)。
+        """
+        import csv as csvmod
+
+        src_path = self.sheet_manager.csv_path
+        stem = src_path.stem
+        if stem.endswith("_company_list"):
+            out_stem = stem[: -len("_company_list")] + "_delivery_urls"
+        else:
+            out_stem = stem + "_delivery_urls"
+        out_path = src_path.parent / f"{out_stem}.csv"
+
+        companies = self.sheet_manager.read_company_list()
+        with open(out_path, "w", encoding="utf-8-sig", newline="") as f:
+            w = csvmod.writer(f)
+            w.writerow(["企業名", "納品URL"])
+            for c in companies:
+                w.writerow([c.name, c.frontend_app_url])
+
+        delivered = sum(1 for c in companies if c.frontend_app_url)
+        logger.info(
+            f"納品URL一覧を生成: {out_path} "
+            f"({len(companies)}社中、納品URLあり {delivered}社)"
+        )
 
     def _print_summary(self, elapsed):
         """処理完了後のサマリーを出力"""

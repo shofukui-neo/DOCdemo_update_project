@@ -699,7 +699,8 @@ class WebAppOperator:
             await self._click_generation_tab()
 
             # Streamlit描画待ち + 少し長めの待機
-            await self.page.wait_for_timeout(3000)
+            # タブ切替が反映されない場合に備えて長めに取る (旧: 3000ms)
+            await self.page.wait_for_timeout(7000)
             await self._wait_for_streamlit_load()
 
             # 「生成準備完了」メッセージを待機 (出なくても続行)
@@ -716,10 +717,10 @@ class WebAppOperator:
                         "  生成準備完了メッセージが特定できませんでしたが、続行を試みます"
                     )
 
-            # 「コンテンツ生成」ボタンが visible になるまで待機
+            # 「コンテンツ生成」ボタンが visible になるまで待機 (旧: 10000ms)
             candidate_button = self.page.locator(gen_button_selector)
             try:
-                await candidate_button.first.wait_for(state="visible", timeout=10000)
+                await candidate_button.first.wait_for(state="visible", timeout=20000)
                 if await candidate_button.count() > 0:
                     gen_button = candidate_button
                     logger.info(f"  コンテンツ生成ボタン検出 (試行 {attempt+1}/3)")
@@ -757,6 +758,7 @@ class WebAppOperator:
         gen_tab = self.page.locator('[id*="tab-1"]:has-text("生成")')
         if await gen_tab.count() > 0:
             await gen_tab.first.click()
+            await self.page.wait_for_timeout(1500)
             return
         # フォールバック: テキスト検索
         tabs = self.page.locator("[data-baseweb='tab'], [role='tab']")
@@ -765,6 +767,7 @@ class WebAppOperator:
             text = await tabs.nth(i).text_content()
             if "生成" in (text or "") and "コンテンツ" not in (text or ""):
                 await tabs.nth(i).click()
+                await self.page.wait_for_timeout(1500)
                 return
 
     async def save_content(self, company: CompanyInfo):
