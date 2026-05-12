@@ -47,6 +47,7 @@ from models import CompanyInfo, ProcessStatus
 from spreadsheet_manager import SpreadsheetManager
 from url_finder import URLFinder
 from image_fetcher import fetch_company_image, extract_enterprise_id_from_url
+from recruit_url_finder import find_recruit_site_urls
 from web_app_operator import WebAppOperator
 
 logger = logging.getLogger(__name__)
@@ -359,9 +360,9 @@ class Orchestrator:
             except Exception as e:
                 logger.warning(f"  ページクローズ＆再ログインに失敗（続行）: {e}")
 
-        # ===== Step 3: HP画像取得（スクショではなく実際のHP画像） =====
+        # ===== Step 3: HP画像取得 + 内部リンク + 求人サイトURL収集 =====
         if company.status == ProcessStatus.COMPANY_ADDED:
-            logger.info("Step 3/6: HP画像取得...")
+            logger.info("Step 3/6: HP画像取得 + URL収集...")
 
             try:
                 image_path = await fetch_company_image(
@@ -370,13 +371,30 @@ class Orchestrator:
                 )
                 company.screenshot_path = image_path
 
-                # 内部リンクも並行取得（URLの収集のみ、スクリーンショットなし）
-                extracted_links = await self._extract_links_only(company.homepage_url)
-                company.extracted_links = extracted_links
+                # 内部リンク取得（HP内のサブページ）
+                internal_links = await self._extract_links_only(
+                    company.homepage_url
+                )
+
+                # 求人サイトURL取得（マイナビ・リクナビ等の該当企業ページ）
+                # url_finder のページを共用 (既にYahoo!検索済の状態)
+                recruit_links: list = []
+                try:
+                    recruit_links = await find_recruit_site_urls(
+                        company.name, url_finder._page
+                    )
+                except Exception as e:
+                    logger.warning(f"  [WARN] 求人サイトURL収集失敗: {e} (続行)")
+
+                # マージ + 重複排除 (順序保持)
+                merged = list(dict.fromkeys(internal_links + recruit_links))
+                company.extracted_links = merged
 
                 logger.info(
                     f"  → 画像取得: {image_path}, "
-                    f"抽出リンク: {len(extracted_links)}件"
+                    f"内部リンク:{len(internal_links)}件, "
+                    f"求人サイト:{len(recruit_links)}件, "
+                    f"合計:{len(merged)}件"
                 )
             except Exception as e:
                 logger.warning(f"  [WARN] 画像/リンク取得失敗: {e} (続行)")

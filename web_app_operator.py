@@ -683,50 +683,89 @@ class WebAppOperator:
         logger.info(f"URL入力・処理開始完了: {len(urls)}件")
 
     async def generate_content(self):
-        """コンテンツを生成する。"""
+        """コンテンツを生成する。ボタン未検出時はリトライ + デバッグスクショを撮ってエラー。"""
         logger.info("コンテンツ生成開始...")
 
-        # 「生成」タブをクリック（tab-1）
-        gen_tab = self.page.locator('[id*="tab-1"]:has-text("生成")')
-        if await gen_tab.count() > 0:
-            await gen_tab.first.click()
-        else:
-            tabs = self.page.locator("[data-baseweb='tab'], [role='tab']")
-            tab_count = await tabs.count()
-            for i in range(tab_count):
-                text = await tabs.nth(i).text_content()
-                if "生成" in (text or "") and "コンテンツ" not in (text or ""):
-                    await tabs.nth(i).click()
-                    break
-
-        await self.page.wait_for_timeout(2000)
-
-        # 「生成準備完了」のメッセージを待機
-        logger.info("  生成準備完了の待機中...")
-        ready_msg = self.page.locator('div, p, span').filter(has_text=re.compile(r"✅.*準備完了"))
-        try:
-            await ready_msg.first.wait_for(state="visible", timeout=20000)
-            logger.info("  生成準備完了を確認しました")
-        except Exception:
-            logger.warning("  生成準備完了メッセージが特定できませんでしたが、続行を試みます")
-
-        # 赤い「コンテンツ生成」ボタンをクリック
-        gen_button = self.page.locator(
+        gen_button_selector = (
             'button[data-testid="stBaseButton-primary"]:has-text("コンテンツ生成"), '
             'button[data-testid="stBaseButton-primary"]:has-text("生成"), '
             'button:has-text("コンテンツ生成")'
         )
-        if await gen_button.count() > 0:
-            await gen_button.first.click()
-        else:
-            logger.warning("生成ボタンが見つかりません")
-            return
+
+        # 「生成」タブをクリック + 「コンテンツ生成」ボタンが現れるまで最大3回リトライ
+        gen_button = None
+        for attempt in range(3):
+            # 「生成」タブをクリック
+            await self._click_generation_tab()
+
+            # Streamlit描画待ち + 少し長めの待機
+            await self.page.wait_for_timeout(3000)
+            await self._wait_for_streamlit_load()
+
+            # 「生成準備完了」メッセージを待機 (出なくても続行)
+            if attempt == 0:
+                logger.info("  生成準備完了の待機中...")
+                ready_msg = self.page.locator('div, p, span').filter(
+                    has_text=re.compile(r"✅.*準備完了")
+                )
+                try:
+                    await ready_msg.first.wait_for(state="visible", timeout=20000)
+                    logger.info("  生成準備完了を確認しました")
+                except Exception:
+                    logger.warning(
+                        "  生成準備完了メッセージが特定できませんでしたが、続行を試みます"
+                    )
+
+            # 「コンテンツ生成」ボタンが visible になるまで待機
+            candidate_button = self.page.locator(gen_button_selector)
+            try:
+                await candidate_button.first.wait_for(state="visible", timeout=10000)
+                if await candidate_button.count() > 0:
+                    gen_button = candidate_button
+                    logger.info(f"  コンテンツ生成ボタン検出 (試行 {attempt+1}/3)")
+                    break
+            except Exception:
+                logger.warning(
+                    f"  コンテンツ生成ボタン未検出 (試行 {attempt+1}/3) — 生成タブを再クリック"
+                )
+
+        if not gen_button or await gen_button.count() == 0:
+            # デバッグスクショを保存して例外で抜ける (save_content が誤動作するのを防ぐ)
+            try:
+                from datetime import datetime
+                ts = datetime.now().strftime("%Y%m%d_%H%M%S")
+                debug_path = f"screenshots/no_gen_button_{ts}.png"
+                await self.page.screenshot(path=debug_path, full_page=True)
+                logger.error(f"  デバッグスクショ保存: {debug_path}")
+            except Exception:
+                pass
+            raise RuntimeError(
+                "コンテンツ生成ボタンが見つかりませんでした (3回試行)。"
+                "「生成」タブのクリックが反映されていない可能性があります。"
+            )
+
+        await gen_button.first.click()
 
         # 生成完了を待機（最大5分）
         logger.info("コンテンツ生成中... (最大5分待機)")
         await self._wait_for_generation_complete()
 
         logger.info("コンテンツ生成完了")
+
+    async def _click_generation_tab(self):
+        """コンテンツ生成画面の「生成」タブをクリックする。"""
+        gen_tab = self.page.locator('[id*="tab-1"]:has-text("生成")')
+        if await gen_tab.count() > 0:
+            await gen_tab.first.click()
+            return
+        # フォールバック: テキスト検索
+        tabs = self.page.locator("[data-baseweb='tab'], [role='tab']")
+        tab_count = await tabs.count()
+        for i in range(tab_count):
+            text = await tabs.nth(i).text_content()
+            if "生成" in (text or "") and "コンテンツ" not in (text or ""):
+                await tabs.nth(i).click()
+                return
 
     async def save_content(self, company: CompanyInfo):
         """

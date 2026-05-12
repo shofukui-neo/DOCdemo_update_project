@@ -114,6 +114,27 @@ EXCLUDED_DOMAINS = [
 LINK_CHECK_CONCURRENCY = 10
 
 # =============================================================================
+# 求人サイト検索設定 (Step 3 でコンテンツ生成入力に追加するURL収集用)
+# =============================================================================
+# 検索対象の求人サイト (Yahoo!検索で `site:<domain> <企業名>` 形式で検索)
+# Step 1 の EXCLUDED_DOMAINS とは独立。公式サイト特定では除外、採用情報収集では積極使用。
+RECRUIT_SITES = [
+    {"name": "マイナビ転職",   "domain": "tenshoku.mynavi.jp"},
+    {"name": "マイナビ新卒",   "domain": "job.mynavi.jp"},
+    {"name": "リクナビ",       "domain": "rikunabi.com"},
+    {"name": "DODA",          "domain": "doda.jp"},
+    {"name": "エン転職",       "domain": "employment.en-japan.com"},
+    {"name": "Wantedly",      "domain": "wantedly.com"},
+    {"name": "Green",         "domain": "green-japan.com"},
+    {"name": "Indeed",        "domain": "indeed.com"},
+]
+
+# 求人サイトから取り込むURLの合計上限 (コンテンツ生成のノイズ防止)
+RECRUIT_URL_MAX_TOTAL = 10
+# 1つの求人サイトから取り込むURLの上限
+RECRUIT_URL_MAX_PER_SITE = 2
+
+# =============================================================================
 # ログ設定
 # =============================================================================
 LOG_FORMAT = "%(asctime)s [%(levelname)s] %(name)s: %(message)s"
