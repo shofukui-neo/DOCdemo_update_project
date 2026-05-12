@@ -1357,12 +1357,13 @@ class WebAppOperator:
                 logger.warning(f"  候補者面談ページでの企業選択に失敗: {e} — そのまま続行")
 
         # 1. サイドバー内の「フロントエンドアプリを開く」aタグを探す
-        # Streamlitの再描画 + FastAPI同期遅延に対応するため最大30秒リトライ
+        # Streamlitの再描画 + FastAPI同期遅延に対応するため最大60秒リトライ
+        # （前社のURLからの切替・初回ロード遅延を含めて吸収する）
         sidebar = self.page.locator("[data-testid='stSidebar']")
         sidebar_link = sidebar.locator('a:has-text("フロントエンド")')
 
         last_seen_url = None
-        max_attempts = 15  # 15 * 2s = 最大30秒
+        max_attempts = 30  # 30 * 2s = 最大60秒
         for attempt in range(max_attempts):
             try:
                 count = await sidebar_link.count()
@@ -1432,6 +1433,25 @@ class WebAppOperator:
         if last_seen_url:
             logger.warning(f"  企業ID検証なしのフォールバック: {last_seen_url}")
             return last_seen_url
+
+        # 5. URL構造からの推定フォールバック（Brainverse URL は規則的）
+        # サイドバー/ページ内に該当リンクが一切無くても、Brainverse側に企業登録が
+        # 済んでいれば https://casual-interview-dev.brainverse-ai.com/<id> でアクセス可能。
+        # ただし「目視確認していない推定値」であることを明示し、納品URL列に **「[推定] 」**
+        # プレフィックスを付けて返す。
+        if company_id:
+            from urllib.parse import urlparse
+            try:
+                base = urlparse(WEB_APP_BASE_URL)
+                # WEB_APP_BASE_URL: casual-interview-api-dev → casual-interview-dev に変換
+                host = base.netloc.replace("-api-", "-")
+                estimated = f"{base.scheme}://{host}/{company_id}"
+                logger.warning(
+                    f"  URL構造から推定（要目視確認）: {estimated}"
+                )
+                return f"[推定] {estimated}"
+            except Exception as e:
+                logger.debug(f"  推定URL生成エラー: {e}")
 
         raise RuntimeError("フロントエンドアプリのURLが取得できませんでした。ボタンまたはリンクが見つかりません。")
 
