@@ -38,7 +38,7 @@ def code(text: str):
 # ===== 1. タイトル & 概要 =====
 md("""# DOCdemo 自動化フロー — Google Colab 版
 
-**最終更新**: 2026-05-12
+**最終更新**: 2026-05-13
 **目的**: Brainverse 管理画面への企業登録 → コンテンツ生成 → 納品URL取得を **クラウド (Google Colab) 上で実行** し、チームメンバー全員が同じ環境で再現できるようにする。
 
 ---
@@ -57,14 +57,22 @@ md("""# DOCdemo 自動化フロー — Google Colab 版
 
 ---
 
-## 何が実行されるか (ローカル版 README と同じ動作)
+## 何が実行されるか (6ステップ自動化フロー)
 
-1. CSV に並べた企業名を 1 社ずつ Brainverse 管理画面に登録
-2. 企業 HP を Yahoo! 検索で自動特定 (URL内の企業ID候補が複数あれば「同名企業該当」で人間判断に委ねる)
-3. HP 内部リンク + 求人サイトURL (マイナビ等) を収集してコンテンツ生成 (FAQ + 企業情報) に渡す
-4. 生成内容を 2 段階保存し、対象企業のデータか自動検証 (Step 4-pre / 4-post)
-5. 完成したフロントエンド公開URL (= **納品URL**) を CSV に書き戻し
-6. 「企業名 + 納品URL」の 2 列簡易 CSV をクライアント納品用として自動生成
+1. **Step 1: ホームページURL検索** — Yahoo! 検索で公式サイトを特定
+   - **Step 1.5 URL企業ID不一致検証**: 候補URLから抽出した「企業ID」(URL内のドメインスラッグ) が
+     完全一致しない種類が複数あれば自動判定不能 → 「同名企業該当」で人間判断に委ねる
+2. **Step 2: 企業追加** — Brainverse 管理画面で「企業の追加」を実行
+   - **Step 2.5 ID検証**: 企業IDがURLベースで正しく登録されているか確認
+3. **Step 3: HP画像取得** — OGP画像/HPスクショで背景画像候補を取得 + 求人サイトURL収集
+4. **Step 4: コンテンツ生成** — FAQ + 企業情報を AI 生成、2段階保存
+   - **Step 4-pre/post**: ヘッダー検証 + FAQ・企業情報タブの内容確認
+5. **Step 5: 背景画像アップロード** — システム設定ページで画像を登録
+   - **UI反映確認**: アップロード後、画面に新しい画像要素が出現するまでポーリング (誤投入防止)
+6. **Step 6: 納品URL取得** — 候補者面談ページから「フロントエンドアプリを開く」URLを取得
+   - リトライ 60秒、最終フォールバックで URL構造から推定
+
+最後に「企業名 + 納品URL」の 2 列の納品用CSVを自動生成。
 """)
 
 # ===== 2. Drive マウント =====
@@ -156,6 +164,7 @@ md("""## 5. 企業リストCSVを準備
 
 code("""from pathlib import Path
 from spreadsheet_manager import SpreadsheetManager
+from config import CSV_COLUMNS, LEGACY_COLUMN_ALIASES
 
 CSV_PATH = Path(f'{DRIVE_BASE}/data/company_list.csv')
 
@@ -180,10 +189,35 @@ else:
 import pandas as pd
 df = pd.read_csv(CSV_PATH, encoding='utf-8-sig')
 print(f'\\n登録企業数: {len(df)}社')
-print('ステータス別:')
-for s, c in df['ステータス'].value_counts().items():
-    print(f'  {s}: {c}社')
-df[['企業名', 'ホームページURL', 'ステータス', '納品URL']].head(20)""")
+print(f'カラム: {list(df.columns)}')
+
+# 古い形式のCSV (「ステータス」列がない等) でも落ちないようガード
+status_col_name = CSV_COLUMNS['status']   # 期待値: "ステータス"
+if status_col_name not in df.columns:
+    # LEGACY エイリアスをチェック (現状はstatusに別名なしだが将来対応のため)
+    legacy_alts = LEGACY_COLUMN_ALIASES.get('status', [])
+    found = next((a for a in legacy_alts if a in df.columns), None)
+    if found:
+        print(f'⚠️ 旧カラム名 "{found}" を検出 → "{status_col_name}" として読み込みます')
+        df = df.rename(columns={found: status_col_name})
+    else:
+        print(f'⚠️ "{status_col_name}" 列が見つかりません。CSV を一度 read_company_list 経由で'
+              ' 再保存して最新フォーマットに揃えることを推奨します。')
+        print('   → 次セル「6. 自動化フロー実行」を実行すれば、自動的に最新形式へ書き戻されます。')
+
+if status_col_name in df.columns:
+    print('\\nステータス別:')
+    for s, c in df[status_col_name].value_counts().items():
+        print(f'  {s}: {c}社')
+
+# 表示用カラム — 存在する列のみ
+display_cols = [c for c in [
+    CSV_COLUMNS['company_name'],
+    CSV_COLUMNS['homepage_url'],
+    CSV_COLUMNS['status'],
+    CSV_COLUMNS['frontend_url'],
+] if c in df.columns]
+df[display_cols].head(20) if display_cols else df.head(20)""")
 
 # ===== 7. オーケストレータ実行 =====
 md("""## 6. 自動化フロー実行
@@ -315,30 +349,114 @@ for p in new_files:
     shutil.copy(p, dst_ss / p.name)
 print(f'✅ 直近24hのスクショ {len(new_files)} 件を Drive に保存: {dst_ss}')""")
 
-# ===== 12. 同名企業該当への対応 =====
+# ===== 12. 同名企業該当 (URL企業ID不一致) の対応 =====
 md("""---
-## 11. 「同名企業該当」(URL企業ID不一致) になった企業への対応
+## 11. 「同名企業該当」(URL企業ID不一致) になった企業の対応
 
-検索結果に複数のドメインがあり、URL内の企業IDが一致しない候補が複数検出された場合、ステータスは `同名企業該当` になる。
+検索結果のURL候補から抽出した企業IDが完全一致しないものが複数あった場合、
+自動採用できないため `同名企業該当` ステータスで一時停止する。
+**下の ipywidgets UI** でボタンを押すだけで候補から正しいURLを採用できる。
 
-**対応手順:**
+> Step 5 の背景画像 UI反映確認、Step 6 の納品URL取得もこの新ロジックが前提。
+> サイドバー「⚙️ システム設定」が折りたたみ済みでも自動で展開する対応済み。""")
 
-1. Drive 上の `MyDrive/DOCdemo_Colab/data/company_list.csv` を **Google スプレッドシート** で開く (右クリック → アプリで開く → Google スプレッドシート)
-2. ステータス列が `同名企業該当` の行を見つける
-3. `URL候補` 列を確認 — パイプ `|` 区切りで最大 5 件のURLが入っている
+code("""# 同名企業該当の社をボタンで対話的に解消する Colab UI
+# tkinter は Colab で動かないため ipywidgets を使用
+import csv as _csv
+import ipywidgets as widgets
+from IPython.display import display, clear_output
+from pathlib import Path
+from config import CSV_COLUMNS
+from models import ProcessStatus
 
-   例:
-   ```
-   https://akiyama-group.com|https://kei-ichiman.com|https://www.c-c-akiyama.com
-   ```
+_csv_path = Path(CSV_PATH)
+_col = CSV_COLUMNS
 
-4. 各候補を実際にブラウザで開き、対象企業の公式サイトを判別
-5. 正しい URL を `ホームページURL` 列に貼り付け
-6. ファイル → ダウンロード → カンマ区切り形式 で保存し、Drive の同じ場所に `company_list.csv` として上書き
-   - または Google スプレッドシートで保存 → 「6. 自動化フロー実行」セルを再実行
-7. 該当企業のみ続きから処理される (他の `完了` 企業は自動スキップ)
+def _load_rows():
+    with open(_csv_path, 'r', encoding='utf-8-sig', newline='') as f:
+        return list(_csv.DictReader(f))
 
-> Google スプレッドシートで開いた CSV を直接編集する場合、ファイル形式が変わらないよう注意 (必ずカンマ区切り CSV で書き出し)。
+def _save_rows(rows):
+    fieldnames = list(rows[0].keys()) if rows else list(_col.values())
+    with open(_csv_path, 'w', encoding='utf-8-sig', newline='') as f:
+        writer = _csv.DictWriter(f, fieldnames=fieldnames)
+        writer.writeheader()
+        writer.writerows(rows)
+
+_all_rows = _load_rows()
+_hold_indices = [
+    i for i, r in enumerate(_all_rows)
+    if r[_col['status']] == ProcessStatus.DUPLICATE_DETECTED.value
+    and not r[_col['homepage_url']].strip()
+]
+_state = {'pos': 0, 'resolved': 0, 'skipped': 0}
+_out = widgets.Output()
+
+def _render():
+    with _out:
+        clear_output()
+        if _state['pos'] >= len(_hold_indices):
+            print(f'✅ 解消完了: 採用 {_state["resolved"]}社 / スキップ {_state["skipped"]}社')
+            print(f'CSV: {_csv_path}')
+            print('続きを処理するには上の「6. 自動化フロー実行」セルを再実行してください。')
+            return
+
+        row_idx = _hold_indices[_state['pos']]
+        row = _all_rows[row_idx]
+        name = row[_col['company_name']]
+        candidates = [c.strip() for c in row[_col['url_candidates']].split('|') if c.strip()]
+
+        display(widgets.HTML(
+            f'<h3>[{_state["pos"]+1}/{len(_hold_indices)}] {name}</h3>'
+            f'<p>候補ドメイン: {len(candidates)}件 — 採用するURLのボタンを押してください</p>'
+        ))
+
+        def _adopt(url):
+            _all_rows[row_idx][_col['homepage_url']] = url
+            _all_rows[row_idx][_col['error_message']] = ''
+            _save_rows(_all_rows)
+            _state['resolved'] += 1
+            _state['pos'] += 1
+            _render()
+
+        for cand in candidates:
+            btn = widgets.Button(
+                description=f'採用: {cand[:55]}',
+                tooltip=cand,
+                layout=widgets.Layout(width='95%'),
+            )
+            btn.on_click(lambda b, u=cand: _adopt(u))
+            display(btn)
+
+        custom = widgets.Text(
+            placeholder='候補にない正解URLを入力 (https://...)',
+            layout=widgets.Layout(width='75%'),
+        )
+        custom_btn = widgets.Button(description='このURLを採用', button_style='primary')
+        custom_btn.on_click(lambda b: _adopt(custom.value.strip()) if custom.value.strip() else None)
+        display(widgets.HBox([custom, custom_btn]))
+
+        skip_btn = widgets.Button(description='スキップ →', button_style='warning')
+        def _on_skip(b):
+            _state['skipped'] += 1
+            _state['pos'] += 1
+            _render()
+        skip_btn.on_click(_on_skip)
+        display(skip_btn)
+
+display(_out)
+if _hold_indices:
+    _render()
+else:
+    with _out:
+        print('✅ 同名企業該当 (URL企業ID不一致) の社はありません。')""")
+
+md("""**選択完了後**:
+1. すぐ上の「6. 自動化フロー実行」セルを **再実行** すると、URLを採用した社だけ Step 2 から続きが処理される
+2. CSV は採用するたびに即時保存されるので、Colab セッションが切れても作業内容は保たれる
+3. ステータス列で `完了` になっている企業は再実行時に自動スキップされる
+
+> CSVを Google スプレッドシートで直接編集することも可能。ただし保存時に必ず **カンマ区切り CSV** で出力すること。
 
 ---""")
 
