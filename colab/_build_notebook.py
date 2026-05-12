@@ -178,10 +178,18 @@ print('   headless:', os.environ['DOCDEMO_HEADLESS'])""")
 # ===== 6. CSV 準備 =====
 md("""## 5. 企業リストCSVを準備
 
-**ケースA: 新規作成** — 下のセルの `COMPANY_NAMES` に企業名を並べて実行 → Drive に初期CSVが生成される
-**ケースB: 既存CSVを使う** — `MyDrive/DOCdemo_Colab/data/company_list.csv` に CSV が既にあれば、それを引き続き使う (途中再開可能)""")
+下の優先順位で CSV を確保する:
+
+| 優先 | 条件 | 動作 |
+|---|---|---|
+| 1 | Drive 上に既に CSV がある | そのまま使う (途中再開可能) |
+| 2 | `COMPANY_NAMES` に企業名が並んでいる | 新規 CSV を Drive に作成 |
+| 3 | `SEED_FROM_REPO = True` | リポジトリ同梱の `data/company_list.csv` を Drive にコピーしてシード |
+| 4 | `UPLOAD_IF_MISSING = True` | ローカルファイルピッカーを開いてアップロード |
+| 5 | いずれも該当しない | エラー (どれかを選んで再実行するよう促す) |""")
 
 code("""from pathlib import Path
+import shutil
 from spreadsheet_manager import SpreadsheetManager
 
 CSV_PATH = Path(f'{DRIVE_BASE}/data/company_list.csv')
@@ -192,17 +200,42 @@ COMPANY_NAMES = [
     # "テスト株式会社",
 ]
 
-if not CSV_PATH.exists():
-    if not COMPANY_NAMES:
-        raise RuntimeError(
-            f'CSV がありません: {CSV_PATH}\\n'
-            f'COMPANY_NAMES に企業名を記入して再実行するか、'
-            f'Drive 上の {CSV_PATH} に既存CSVを配置してください。'
-        )
+# === 初回フォールバック: リポジトリ同梱の data/company_list.csv をシードとして使う ===
+SEED_FROM_REPO = False         # True にすると repo の CSV を Drive にコピー
+# === 初回フォールバック: ローカルからアップロード ===
+UPLOAD_IF_MISSING = False      # True にすると files.upload() のファイルピッカーが開く
+
+if CSV_PATH.exists():
+    print(f'📂 既存のCSVを使用: {CSV_PATH}')
+elif COMPANY_NAMES:
     SpreadsheetManager.create_initial_csv(COMPANY_NAMES, csv_path=CSV_PATH)
     print(f'✅ 初期CSV作成: {CSV_PATH} ({len(COMPANY_NAMES)}社)')
+elif SEED_FROM_REPO:
+    repo_csv = Path(REPO_DIR) / 'data' / 'company_list.csv'
+    if not repo_csv.exists():
+        raise RuntimeError(f'リポジトリにシードCSVがありません: {repo_csv}')
+    CSV_PATH.parent.mkdir(parents=True, exist_ok=True)
+    shutil.copy(repo_csv, CSV_PATH)
+    print(f'✅ リポジトリの CSV をシードとして配置: {CSV_PATH}')
+elif UPLOAD_IF_MISSING:
+    from google.colab import files
+    print('CSV をローカルから選択してください...')
+    uploaded = files.upload()
+    if not uploaded:
+        raise RuntimeError('アップロードがキャンセルされました')
+    fname, content = next(iter(uploaded.items()))
+    CSV_PATH.parent.mkdir(parents=True, exist_ok=True)
+    CSV_PATH.write_bytes(content)
+    print(f'✅ アップロードCSV配置: {CSV_PATH} (元ファイル: {fname})')
 else:
-    print(f'📂 既存のCSVを使用: {CSV_PATH}')
+    raise RuntimeError(
+        f'CSV がありません: {CSV_PATH}\\n'
+        f'以下のいずれかを行って再実行してください:\\n'
+        f'  (A) COMPANY_NAMES に企業名を記入\\n'
+        f'  (B) SEED_FROM_REPO = True (リポジトリ同梱のCSVをシードとして使用)\\n'
+        f'  (C) UPLOAD_IF_MISSING = True (ローカルファイルをアップロード)\\n'
+        f'  (D) Drive 上の {CSV_PATH} に既存CSVを直接配置'
+    )
 
 import pandas as pd
 df = pd.read_csv(CSV_PATH, encoding='utf-8-sig')
