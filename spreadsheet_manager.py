@@ -84,23 +84,24 @@ class SpreadsheetManager:
                     if alias in row and row[alias]:
                         value = row[alias]
                         break
-            return value.strip()
+            return (value or "").strip()
 
         with open(self.csv_path, "r", encoding="utf-8-sig", newline="") as f:
             reader = csv.DictReader(f)
             for i, row in enumerate(reader):
-                company_name = row.get(col["company_name"], "").strip()
+                company_name = (row.get(col["company_name"]) or "").strip()
                 if not company_name:
                     continue
 
-                status_str = row.get(col["status"], "未処理").strip()
+                # or "未処理" を挟むことで、左側が None や空文字だった場合に右側が採用されます
+                status_str = (row.get(col["status"]) or "未処理").strip()
                 try:
                     status = ProcessStatus(status_str)
                 except ValueError:
                     status = ProcessStatus.PENDING
 
-                # URL候補列をパイプ区切りで読み込み
-                candidates_raw = row.get(col["url_candidates"], "").strip()
+                # or "" を挟むことで、None だった場合に空文字として処理されます
+                candidates_raw = (row.get(col["url_candidates"]) or "").strip()
                 url_candidates = [
                     u.strip() for u in candidates_raw.split("|") if u.strip()
                 ] if candidates_raw else []
@@ -108,13 +109,13 @@ class SpreadsheetManager:
                 company = CompanyInfo(
                     row_index=i,
                     name=company_name,
-                    enterprise_id=row.get(col["enterprise_id"], "").strip(),
-                    homepage_url=row.get(col["homepage_url"], "").strip(),
+                    enterprise_id=(row.get(col["enterprise_id"]) or "").strip(),
+                    homepage_url=(row.get(col["homepage_url"]) or "").strip(),
                     url_candidates=url_candidates,
                     frontend_app_url=_get_with_legacy(row, "frontend_url"),
                     status=status,
-                    error_message=row.get(col["error_message"], "").strip(),
-                    screenshot_path=row.get(col["screenshot_path"], "").strip(),
+                    error_message=(row.get(col["error_message"]) or "").strip(),
+                    screenshot_path=(row.get(col["screenshot_path"]) or "").strip(),
                 )
                 companies.append(company)
 
