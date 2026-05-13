@@ -76,31 +76,41 @@ class SpreadsheetManager:
         companies = []
         col = CSV_COLUMNS
 
+        def _cell(row: dict, key: str, default: str = "") -> str:
+            """カラム値を None セーフに取得。
+            csv.DictReader は行のカラム数が見出しより少ない場合 None を返すため、
+            row.get(..., default) だけでは .strip() が落ちる。"""
+            value = row.get(col[key])
+            if value is None or value == "":
+                return default
+            return value.strip()
+
         def _get_with_legacy(row: dict, key: str) -> str:
             """現在のカラム名で取得し、見つからない場合は旧名にフォールバック"""
-            value = row.get(col[key], "")
+            value = _cell(row, key)
             if not value:
                 for alias in LEGACY_COLUMN_ALIASES.get(key, []):
-                    if alias in row and row[alias]:
-                        value = row[alias]
+                    alias_val = row.get(alias)
+                    if alias_val:
+                        value = alias_val.strip()
                         break
-            return value.strip()
+            return value
 
         with open(self.csv_path, "r", encoding="utf-8-sig", newline="") as f:
             reader = csv.DictReader(f)
             for i, row in enumerate(reader):
-                company_name = row.get(col["company_name"], "").strip()
+                company_name = _cell(row, "company_name")
                 if not company_name:
                     continue
 
-                status_str = row.get(col["status"], "未処理").strip()
+                status_str = _cell(row, "status", "未処理")
                 try:
                     status = ProcessStatus(status_str)
                 except ValueError:
                     status = ProcessStatus.PENDING
 
                 # URL候補列をパイプ区切りで読み込み
-                candidates_raw = row.get(col["url_candidates"], "").strip()
+                candidates_raw = _cell(row, "url_candidates")
                 url_candidates = [
                     u.strip() for u in candidates_raw.split("|") if u.strip()
                 ] if candidates_raw else []
@@ -108,13 +118,13 @@ class SpreadsheetManager:
                 company = CompanyInfo(
                     row_index=i,
                     name=company_name,
-                    enterprise_id=row.get(col["enterprise_id"], "").strip(),
-                    homepage_url=row.get(col["homepage_url"], "").strip(),
+                    enterprise_id=_cell(row, "enterprise_id"),
+                    homepage_url=_cell(row, "homepage_url"),
                     url_candidates=url_candidates,
                     frontend_app_url=_get_with_legacy(row, "frontend_url"),
                     status=status,
-                    error_message=row.get(col["error_message"], "").strip(),
-                    screenshot_path=row.get(col["screenshot_path"], "").strip(),
+                    error_message=_cell(row, "error_message"),
+                    screenshot_path=_cell(row, "screenshot_path"),
                 )
                 companies.append(company)
 

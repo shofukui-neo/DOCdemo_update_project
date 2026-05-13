@@ -24724,3 +24724,1051 @@ Call log:
 2026-05-14 01:30:13,229 [INFO] __main__: DOCdemo 自動化フロー 開始
 2026-05-14 01:30:13,229 [INFO] __main__: 開始時刻: 2026-05-14 01:30:13
 2026-05-14 01:30:13,229 [INFO] __main__: ============================================================
+2026-05-14 01:32:29,428 [INFO] __main__: ============================================================
+2026-05-14 01:32:29,455 [INFO] __main__: DOCdemo 自動化フロー 開始
+2026-05-14 01:32:29,455 [INFO] __main__: 開始時刻: 2026-05-14 01:32:29
+2026-05-14 01:32:29,455 [INFO] __main__: ============================================================
+2026-05-14 01:32:29,458 [INFO] spreadsheet_manager: 企業リスト読み込み完了: 29社
+2026-05-14 01:32:29,458 [INFO] spreadsheet_manager: 処理対象企業: 29社 / 全29社
+2026-05-14 01:32:29,458 [INFO] __main__: 処理対象: 29社
+2026-05-14 01:33:12,299 [INFO] web_app_operator: 管理画面にログイン中...
+2026-05-14 01:33:44,659 [INFO] web_app_operator: ログイン成功
+2026-05-14 01:33:44,661 [INFO] __main__: 
+2026-05-14 01:33:44,661 [INFO] __main__: ──────────────────────────────────────────────────
+2026-05-14 01:33:44,661 [INFO] __main__: [1/29] 株式会社すかいらーくホールディングス (ステータス: 未処理)
+2026-05-14 01:33:44,661 [INFO] __main__: ──────────────────────────────────────────────────
+2026-05-14 01:33:44,661 [INFO] __main__: Step 1/6: ホームページURL候補検索...
+2026-05-14 01:33:44,661 [INFO] url_finder: URL候補検索開始: 株式会社すかいらーくホールディングス 公式サイト (最大 5 件)
+2026-05-14 01:33:48,385 [INFO] url_finder: 候補ドメイン抽出: 株式会社すかいらーくホールディングス -> 5件 (['www.skylark.co.jp', 'corp.skylark.co.jp', 'store-info.skylark.co.jp', 'www.skylarkyutaiken.com', 'cms-recruit.skylark.co.jp'])
+2026-05-14 01:33:48,388 [WARNING] __main__:   [PAUSE] URL内の企業IDが完全一致しない候補が 5 種類 (候補URL 5件) 検出されました → 手動確認待ちにします
+2026-05-14 01:33:48,388 [WARNING] __main__:     候補 1: https://www.skylark.co.jp (企業ID: skylark)
+2026-05-14 01:33:48,389 [WARNING] __main__:     候補 2: https://corp.skylark.co.jp (企業ID: corp-skylark)
+2026-05-14 01:33:48,390 [WARNING] __main__:     候補 3: https://store-info.skylark.co.jp (企業ID: store-info-skylark)
+2026-05-14 01:33:48,391 [WARNING] __main__:     候補 4: https://www.skylarkyutaiken.com (企業ID: skylarkyutaiken)
+2026-05-14 01:33:48,391 [WARNING] __main__:     候補 5: https://cms-recruit.skylark.co.jp/recruitingcenter/ (企業ID: cms-recruit-skylark)
+2026-05-14 01:33:48,397 [INFO] spreadsheet_manager: 企業リスト保存完了: 29社 → C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\data\company_list.csv
+2026-05-14 01:33:48,397 [WARNING] __main__: [HOLD] 株式会社すかいらーくホールディングス: URL企業ID不一致候補複数 (CSVの「ホームページURL」列に正解URLを記入して再実行してください)
+2026-05-14 01:33:48,399 [INFO] __main__: 
+2026-05-14 01:33:48,399 [INFO] __main__: 1件処理完了 → 再ログイン＆キャッシュクリアを実行
+2026-05-14 01:33:48,400 [INFO] web_app_operator: 再ログイン＆キャッシュクリア開始...
+2026-05-14 01:33:48,415 [INFO] web_app_operator:   LocalStorage/SessionStorageをクリアしました
+2026-05-14 01:33:48,428 [INFO] web_app_operator:   Cookieをクリアしました
+2026-05-14 01:33:50,438 [INFO] web_app_operator: 管理画面にログイン中...
+2026-05-14 01:33:59,895 [INFO] web_app_operator: ログイン成功
+2026-05-14 01:33:59,896 [INFO] web_app_operator: 再ログイン＆キャッシュクリア完了
+2026-05-14 01:33:59,897 [INFO] __main__: 
+2026-05-14 01:33:59,897 [INFO] __main__: ──────────────────────────────────────────────────
+2026-05-14 01:33:59,898 [INFO] __main__: [2/29] 柏印柏崎青果株式会社 (ステータス: 未処理)
+2026-05-14 01:33:59,899 [INFO] __main__: ──────────────────────────────────────────────────
+2026-05-14 01:33:59,899 [INFO] __main__: Step 1/6: ホームページURL候補検索...
+2026-05-14 01:33:59,901 [INFO] url_finder: URL候補検索開始: 柏印柏崎青果株式会社 公式サイト (最大 5 件)
+2026-05-14 01:34:03,603 [INFO] url_finder: 候補ドメイン抽出: 柏印柏崎青果株式会社 -> 5件 (['k-kashiwazakiseika.com', 'kashiwazakiseika.com', 'jimokura.com', 'job.axol.jp', 'www.hello-k-work.com'])
+2026-05-14 01:34:03,604 [WARNING] __main__:   [PAUSE] URL内の企業IDが完全一致しない候補が 5 種類 (候補URL 5件) 検出されました → 手動確認待ちにします
+2026-05-14 01:34:03,604 [WARNING] __main__:     候補 1: https://k-kashiwazakiseika.com (企業ID: k-kashiwazakiseika)
+2026-05-14 01:34:03,604 [WARNING] __main__:     候補 2: https://kashiwazakiseika.com (企業ID: kashiwazakiseika)
+2026-05-14 01:34:03,605 [WARNING] __main__:     候補 3: https://jimokura.com (企業ID: jimokura)
+2026-05-14 01:34:03,605 [WARNING] __main__:     候補 4: https://job.axol.jp (企業ID: job-axol)
+2026-05-14 01:34:03,606 [WARNING] __main__:     候補 5: https://www.hello-k-work.com (企業ID: hello-k-work)
+2026-05-14 01:34:03,606 [INFO] spreadsheet_manager: 企業リスト保存完了: 29社 → C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\data\company_list.csv
+2026-05-14 01:34:03,606 [WARNING] __main__: [HOLD] 柏印柏崎青果株式会社: URL企業ID不一致候補複数 (CSVの「ホームページURL」列に正解URLを記入して再実行してください)
+2026-05-14 01:34:03,606 [INFO] __main__: 
+2026-05-14 01:34:03,607 [INFO] __main__: 1件処理完了 → 再ログイン＆キャッシュクリアを実行
+2026-05-14 01:34:03,607 [INFO] web_app_operator: 再ログイン＆キャッシュクリア開始...
+2026-05-14 01:34:03,611 [INFO] web_app_operator:   LocalStorage/SessionStorageをクリアしました
+2026-05-14 01:34:03,614 [INFO] web_app_operator:   Cookieをクリアしました
+2026-05-14 01:34:05,615 [INFO] web_app_operator: 管理画面にログイン中...
+2026-05-14 01:34:11,428 [INFO] web_app_operator: ログイン成功
+2026-05-14 01:34:11,428 [INFO] web_app_operator: 再ログイン＆キャッシュクリア完了
+2026-05-14 01:34:11,429 [INFO] __main__: 
+2026-05-14 01:34:11,429 [INFO] __main__: ──────────────────────────────────────────────────
+2026-05-14 01:34:11,429 [INFO] __main__: [3/29] グランディハウス株式会社 (ステータス: 未処理)
+2026-05-14 01:34:11,429 [INFO] __main__: ──────────────────────────────────────────────────
+2026-05-14 01:34:11,430 [INFO] __main__: Step 1/6: ホームページURL候補検索...
+2026-05-14 01:34:11,430 [INFO] url_finder: URL候補検索開始: グランディハウス株式会社 公式サイト (最大 5 件)
+2026-05-14 01:34:14,627 [INFO] url_finder: 候補ドメイン抽出: グランディハウス株式会社 -> 3件 (['www.grandy.co.jp', 'www.grandy.jp', 'www.grandy-reform.jp'])
+2026-05-14 01:34:15,253 [WARNING] __main__:   [PAUSE] URL内の企業IDが完全一致しない候補が 2 種類 (候補URL 3件) 検出されました → 手動確認待ちにします
+2026-05-14 01:34:15,253 [WARNING] __main__:     候補 1: https://www.grandy.co.jp (企業ID: grandy)
+2026-05-14 01:34:15,253 [WARNING] __main__:     候補 2: https://www.grandy.jp (企業ID: grandy)
+2026-05-14 01:34:15,253 [WARNING] __main__:     候補 3: https://www.grandy-reform.jp (企業ID: grandy-reform)
+2026-05-14 01:34:15,255 [INFO] spreadsheet_manager: 企業リスト保存完了: 29社 → C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\data\company_list.csv
+2026-05-14 01:34:15,255 [WARNING] __main__: [HOLD] グランディハウス株式会社: URL企業ID不一致候補複数 (CSVの「ホームページURL」列に正解URLを記入して再実行してください)
+2026-05-14 01:34:15,255 [INFO] __main__: 
+2026-05-14 01:34:15,255 [INFO] __main__: 1件処理完了 → 再ログイン＆キャッシュクリアを実行
+2026-05-14 01:34:15,255 [INFO] web_app_operator: 再ログイン＆キャッシュクリア開始...
+2026-05-14 01:34:15,258 [INFO] web_app_operator:   LocalStorage/SessionStorageをクリアしました
+2026-05-14 01:34:15,260 [INFO] web_app_operator:   Cookieをクリアしました
+2026-05-14 01:34:17,261 [INFO] web_app_operator: 管理画面にログイン中...
+2026-05-14 01:34:23,240 [INFO] web_app_operator: ログイン成功
+2026-05-14 01:34:23,241 [INFO] web_app_operator: 再ログイン＆キャッシュクリア完了
+2026-05-14 01:34:23,242 [INFO] __main__: 
+2026-05-14 01:34:23,242 [INFO] __main__: ──────────────────────────────────────────────────
+2026-05-14 01:34:23,243 [INFO] __main__: [4/29] 理化工業株式会社 (ステータス: 未処理)
+2026-05-14 01:34:23,244 [INFO] __main__: ──────────────────────────────────────────────────
+2026-05-14 01:34:23,245 [INFO] __main__: Step 1/6: ホームページURL候補検索...
+2026-05-14 01:34:23,246 [INFO] url_finder: URL候補検索開始: 理化工業株式会社 公式サイト (最大 5 件)
+2026-05-14 01:34:30,053 [INFO] url_finder: 候補ドメイン抽出: 理化工業株式会社 -> 5件 (['www.rkcinst.co.jp', 'www.rk-k.jp', 'www.shoprkc.jp', 'www.rkc.aeha.or.jp', 'www.nrika.co.jp'])
+2026-05-14 01:34:30,053 [WARNING] __main__:   [PAUSE] URL内の企業IDが完全一致しない候補が 5 種類 (候補URL 5件) 検出されました → 手動確認待ちにします
+2026-05-14 01:34:30,053 [WARNING] __main__:     候補 1: https://www.rkcinst.co.jp (企業ID: rkcinst)
+2026-05-14 01:34:30,053 [WARNING] __main__:     候補 2: https://www.rk-k.jp (企業ID: rk-k)
+2026-05-14 01:34:30,054 [WARNING] __main__:     候補 3: https://www.shoprkc.jp (企業ID: shoprkc)
+2026-05-14 01:34:30,054 [WARNING] __main__:     候補 4: https://www.rkc.aeha.or.jp (企業ID: rkc-aeha)
+2026-05-14 01:34:30,054 [WARNING] __main__:     候補 5: https://www.nrika.co.jp/category02/ (企業ID: nrika)
+2026-05-14 01:34:30,057 [INFO] spreadsheet_manager: 企業リスト保存完了: 29社 → C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\data\company_list.csv
+2026-05-14 01:34:30,058 [WARNING] __main__: [HOLD] 理化工業株式会社: URL企業ID不一致候補複数 (CSVの「ホームページURL」列に正解URLを記入して再実行してください)
+2026-05-14 01:34:30,058 [INFO] __main__: 
+2026-05-14 01:34:30,058 [INFO] __main__: 1件処理完了 → 再ログイン＆キャッシュクリアを実行
+2026-05-14 01:34:30,058 [INFO] web_app_operator: 再ログイン＆キャッシュクリア開始...
+2026-05-14 01:34:30,061 [INFO] web_app_operator:   LocalStorage/SessionStorageをクリアしました
+2026-05-14 01:34:30,065 [INFO] web_app_operator:   Cookieをクリアしました
+2026-05-14 01:34:32,074 [INFO] web_app_operator: 管理画面にログイン中...
+2026-05-14 01:34:38,282 [INFO] web_app_operator: ログイン成功
+2026-05-14 01:34:38,284 [INFO] web_app_operator: 再ログイン＆キャッシュクリア完了
+2026-05-14 01:34:38,284 [INFO] __main__: 
+2026-05-14 01:34:38,285 [INFO] __main__: ──────────────────────────────────────────────────
+2026-05-14 01:34:38,285 [INFO] __main__: [5/29] 株式会社テンダーラビングケアサービス (ステータス: 未処理)
+2026-05-14 01:34:38,287 [INFO] __main__: ──────────────────────────────────────────────────
+2026-05-14 01:34:38,288 [INFO] __main__: Step 1/6: ホームページURL候補検索...
+2026-05-14 01:34:38,289 [INFO] url_finder: URL候補検索開始: 株式会社テンダーラビングケアサービス 公式サイト (最大 5 件)
+2026-05-14 01:34:41,756 [INFO] url_finder: 候補ドメイン抽出: 株式会社テンダーラビングケアサービス -> 3件 (['www.tenderlove.co.jp', 'tlcs-ns.jp', 'tlcs-recruit.jp'])
+2026-05-14 01:34:41,757 [WARNING] __main__:   [PAUSE] URL内の企業IDが完全一致しない候補が 3 種類 (候補URL 3件) 検出されました → 手動確認待ちにします
+2026-05-14 01:34:41,758 [WARNING] __main__:     候補 1: https://www.tenderlove.co.jp (企業ID: tenderlove)
+2026-05-14 01:34:41,758 [WARNING] __main__:     候補 2: https://tlcs-ns.jp (企業ID: tlcs-ns)
+2026-05-14 01:34:41,758 [WARNING] __main__:     候補 3: https://tlcs-recruit.jp (企業ID: tlcs-recruit)
+2026-05-14 01:34:41,758 [INFO] spreadsheet_manager: 企業リスト保存完了: 29社 → C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\data\company_list.csv
+2026-05-14 01:34:41,758 [WARNING] __main__: [HOLD] 株式会社テンダーラビングケアサービス: URL企業ID不一致候補複数 (CSVの「ホームページURL」列に正解URLを記入して再実行してください)
+2026-05-14 01:34:41,760 [INFO] __main__: 
+2026-05-14 01:34:41,760 [INFO] __main__: 1件処理完了 → 再ログイン＆キャッシュクリアを実行
+2026-05-14 01:34:41,760 [INFO] web_app_operator: 再ログイン＆キャッシュクリア開始...
+2026-05-14 01:34:41,762 [INFO] web_app_operator:   LocalStorage/SessionStorageをクリアしました
+2026-05-14 01:34:41,764 [INFO] web_app_operator:   Cookieをクリアしました
+2026-05-14 01:34:43,768 [INFO] web_app_operator: 管理画面にログイン中...
+2026-05-14 01:34:49,563 [INFO] web_app_operator: ログイン成功
+2026-05-14 01:34:49,663 [INFO] web_app_operator: 再ログイン＆キャッシュクリア完了
+2026-05-14 01:34:49,664 [INFO] __main__: 
+2026-05-14 01:34:49,664 [INFO] __main__: ──────────────────────────────────────────────────
+2026-05-14 01:34:49,664 [INFO] __main__: [6/29] 信州航空電子株式会社 (ステータス: 未処理)
+2026-05-14 01:34:49,664 [INFO] __main__: ──────────────────────────────────────────────────
+2026-05-14 01:34:49,664 [INFO] __main__: Step 1/6: ホームページURL候補検索...
+2026-05-14 01:34:49,664 [INFO] url_finder: URL候補検索開始: 信州航空電子株式会社 公式サイト (最大 5 件)
+2026-05-14 01:34:52,878 [INFO] url_finder: 候補ドメイン抽出: 信州航空電子株式会社 -> 4件 (['www.jae.com', 'minamishinshu.jp', 'companydata.tsujigawa.com', 'www.hotel-emion.jp'])
+2026-05-14 01:34:53,606 [WARNING] __main__:   [PAUSE] URL内の企業IDが完全一致しない候補が 4 種類 (候補URL 4件) 検出されました → 手動確認待ちにします
+2026-05-14 01:34:53,607 [WARNING] __main__:     候補 1: https://www.jae.com/shinshu/ (企業ID: jae)
+2026-05-14 01:34:54,105 [WARNING] __main__:     候補 2: https://minamishinshu.jp (企業ID: minamishinshu)
+2026-05-14 01:34:54,106 [WARNING] __main__:     候補 3: https://companydata.tsujigawa.com (企業ID: companydata-tsujigawa)
+2026-05-14 01:34:54,106 [WARNING] __main__:     候補 4: https://www.hotel-emion.jp (企業ID: hotel-emion)
+2026-05-14 01:34:54,156 [INFO] spreadsheet_manager: 企業リスト保存完了: 29社 → C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\data\company_list.csv
+2026-05-14 01:34:54,156 [WARNING] __main__: [HOLD] 信州航空電子株式会社: URL企業ID不一致候補複数 (CSVの「ホームページURL」列に正解URLを記入して再実行してください)
+2026-05-14 01:34:54,181 [INFO] __main__: 
+2026-05-14 01:34:54,181 [INFO] __main__: 1件処理完了 → 再ログイン＆キャッシュクリアを実行
+2026-05-14 01:34:54,182 [INFO] web_app_operator: 再ログイン＆キャッシュクリア開始...
+2026-05-14 01:34:54,185 [INFO] web_app_operator:   LocalStorage/SessionStorageをクリアしました
+2026-05-14 01:34:54,188 [INFO] web_app_operator:   Cookieをクリアしました
+2026-05-14 01:34:56,193 [INFO] web_app_operator: 管理画面にログイン中...
+2026-05-14 01:35:02,285 [INFO] web_app_operator: ログイン成功
+2026-05-14 01:35:02,286 [INFO] web_app_operator: 再ログイン＆キャッシュクリア完了
+2026-05-14 01:35:02,286 [INFO] __main__: 
+2026-05-14 01:35:04,023 [INFO] __main__: ──────────────────────────────────────────────────
+2026-05-14 01:35:04,023 [INFO] __main__: [7/29] 関口工業株式会社 (ステータス: 未処理)
+2026-05-14 01:35:04,023 [INFO] __main__: ──────────────────────────────────────────────────
+2026-05-14 01:35:04,024 [INFO] __main__: Step 1/6: ホームページURL候補検索...
+2026-05-14 01:35:04,024 [INFO] url_finder: URL候補検索開始: 関口工業株式会社 公式サイト (最大 5 件)
+2026-05-14 01:35:07,213 [INFO] url_finder: 候補ドメイン抽出: 関口工業株式会社 -> 3件 (['pipe-sekiguchi.co.jp', 'www.sekiguchi-nt.co.jp', 'www.sekiguti-kogyo.co.jp'])
+2026-05-14 01:35:07,214 [WARNING] __main__:   [PAUSE] URL内の企業IDが完全一致しない候補が 3 種類 (候補URL 3件) 検出されました → 手動確認待ちにします
+2026-05-14 01:35:07,215 [WARNING] __main__:     候補 1: https://pipe-sekiguchi.co.jp (企業ID: pipe-sekiguchi)
+2026-05-14 01:35:07,215 [WARNING] __main__:     候補 2: https://www.sekiguchi-nt.co.jp (企業ID: sekiguchi-nt)
+2026-05-14 01:35:07,216 [WARNING] __main__:     候補 3: http://www.sekiguti-kogyo.co.jp (企業ID: sekiguti-kogyo)
+2026-05-14 01:35:07,217 [INFO] spreadsheet_manager: 企業リスト保存完了: 29社 → C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\data\company_list.csv
+2026-05-14 01:35:07,218 [WARNING] __main__: [HOLD] 関口工業株式会社: URL企業ID不一致候補複数 (CSVの「ホームページURL」列に正解URLを記入して再実行してください)
+2026-05-14 01:35:07,218 [INFO] __main__: 
+2026-05-14 01:35:07,218 [INFO] __main__: 1件処理完了 → 再ログイン＆キャッシュクリアを実行
+2026-05-14 01:35:07,218 [INFO] web_app_operator: 再ログイン＆キャッシュクリア開始...
+2026-05-14 01:35:07,221 [INFO] web_app_operator:   LocalStorage/SessionStorageをクリアしました
+2026-05-14 01:35:07,223 [INFO] web_app_operator:   Cookieをクリアしました
+2026-05-14 01:35:09,227 [INFO] web_app_operator: 管理画面にログイン中...
+2026-05-14 01:35:14,985 [INFO] web_app_operator: ログイン成功
+2026-05-14 01:35:14,985 [INFO] web_app_operator: 再ログイン＆キャッシュクリア完了
+2026-05-14 01:35:14,985 [INFO] __main__: 
+2026-05-14 01:35:14,985 [INFO] __main__: ──────────────────────────────────────────────────
+2026-05-14 01:35:14,986 [INFO] __main__: [8/29] トヨタ紡織東北株式会社 (ステータス: 未処理)
+2026-05-14 01:35:14,986 [INFO] __main__: ──────────────────────────────────────────────────
+2026-05-14 01:35:14,986 [INFO] __main__: Step 1/6: ホームページURL候補検索...
+2026-05-14 01:35:14,986 [INFO] url_finder: URL候補検索開始: トヨタ紡織東北株式会社 公式サイト (最大 5 件)
+2026-05-14 01:35:18,255 [INFO] url_finder: 候補ドメイン抽出: トヨタ紡織東北株式会社 -> 2件 (['www.tb-tohoku.co.jp', 'www.toyota-boshoku.com'])
+2026-05-14 01:35:18,255 [WARNING] __main__:   [PAUSE] URL内の企業IDが完全一致しない候補が 2 種類 (候補URL 2件) 検出されました → 手動確認待ちにします
+2026-05-14 01:35:18,255 [WARNING] __main__:     候補 1: https://www.tb-tohoku.co.jp (企業ID: tb-tohoku)
+2026-05-14 01:35:18,255 [WARNING] __main__:     候補 2: https://www.toyota-boshoku.com (企業ID: toyota-boshoku)
+2026-05-14 01:35:18,256 [INFO] spreadsheet_manager: 企業リスト保存完了: 29社 → C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\data\company_list.csv
+2026-05-14 01:35:18,256 [WARNING] __main__: [HOLD] トヨタ紡織東北株式会社: URL企業ID不一致候補複数 (CSVの「ホームページURL」列に正解URLを記入して再実行してください)
+2026-05-14 01:35:18,256 [INFO] __main__: 
+2026-05-14 01:35:18,256 [INFO] __main__: 1件処理完了 → 再ログイン＆キャッシュクリアを実行
+2026-05-14 01:35:18,257 [INFO] web_app_operator: 再ログイン＆キャッシュクリア開始...
+2026-05-14 01:35:18,260 [INFO] web_app_operator:   LocalStorage/SessionStorageをクリアしました
+2026-05-14 01:35:18,265 [INFO] web_app_operator:   Cookieをクリアしました
+2026-05-14 01:35:20,273 [INFO] web_app_operator: 管理画面にログイン中...
+2026-05-14 01:35:27,236 [INFO] web_app_operator: ログイン成功
+2026-05-14 01:35:27,237 [INFO] web_app_operator: 再ログイン＆キャッシュクリア完了
+2026-05-14 01:35:27,237 [INFO] __main__: 
+2026-05-14 01:35:27,237 [INFO] __main__: ──────────────────────────────────────────────────
+2026-05-14 01:35:27,237 [INFO] __main__: [9/29] 日本重化学工業株式会社 (ステータス: 未処理)
+2026-05-14 01:35:27,237 [INFO] __main__: ──────────────────────────────────────────────────
+2026-05-14 01:35:27,237 [INFO] __main__: Step 1/6: ホームページURL候補検索...
+2026-05-14 01:35:27,238 [INFO] url_finder: URL候補検索開始: 日本重化学工業株式会社 公式サイト (最大 5 件)
+2026-05-14 01:35:30,490 [INFO] url_finder: 候補ドメイン抽出: 日本重化学工業株式会社 -> 1件 (['www.jmc.co.jp'])
+2026-05-14 01:35:30,491 [INFO] __main__:   企業ID (URLから抽出): jmc
+2026-05-14 01:35:30,491 [INFO] spreadsheet_manager: 企業リスト保存完了: 29社 → C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\data\company_list.csv
+2026-05-14 01:35:30,491 [INFO] __main__:   → URL: https://www.jmc.co.jp, ID: jmc
+2026-05-14 01:35:30,492 [INFO] __main__: Step 2/6: 企業追加...
+2026-05-14 01:35:30,492 [INFO] web_app_operator: 企業追加開始: 日本重化学工業株式会社
+2026-05-14 01:35:45,044 [INFO] web_app_operator: 企業追加完了: 日本重化学工業株式会社 (ID: jmc)
+2026-05-14 01:35:45,044 [INFO] __main__: Step 2.5/6: 追加企業のID検証...
+2026-05-14 01:35:45,044 [INFO] web_app_operator:   企業ID検証中: 期待ID=jmc, URL=https://www.jmc.co.jp
+2026-05-14 01:35:47,602 [INFO] web_app_operator:   [OK] 企業ID 'jmc' をページ内に確認
+2026-05-14 01:35:47,604 [INFO] spreadsheet_manager: 企業リスト保存完了: 29社 → C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\data\company_list.csv
+2026-05-14 01:35:47,605 [INFO] __main__:   → 企業追加完了 (ID: jmc)
+2026-05-14 01:35:47,606 [INFO] __main__: 企業追加完了 → ページを閉じて再ログイン（キャッシュバグ防止）
+2026-05-14 01:35:47,606 [INFO] web_app_operator: ページを閉じて再ログインを開始...
+2026-05-14 01:35:47,643 [INFO] web_app_operator:   古いページタブを閉じました
+2026-05-14 01:35:47,680 [INFO] web_app_operator:   新しいページタブを開きました
+2026-05-14 01:35:47,680 [INFO] web_app_operator: 管理画面にログイン中...
+2026-05-14 01:35:53,524 [INFO] web_app_operator: ログイン成功
+2026-05-14 01:35:53,525 [INFO] web_app_operator: ページクローズ＆再ログイン完了
+2026-05-14 01:35:53,526 [INFO] __main__: Step 3/5: URL収集...
+2026-05-14 01:36:02,897 [INFO] recruit_url_finder: 求人サイトURL収集開始: 日本重化学工業株式会社 (正規化: '日本重化学工業')
+2026-05-14 01:36:05,591 [INFO] recruit_url_finder:   [マイナビ転職] 2件取り込み (累計 2件)
+2026-05-14 01:36:08,188 [INFO] recruit_url_finder:   [マイナビ新卒] 2件取り込み (累計 4件)
+2026-05-14 01:36:10,824 [INFO] recruit_url_finder:   [リクナビ] 2件取り込み (累計 6件)
+2026-05-14 01:36:13,577 [INFO] recruit_url_finder:   [DODA] 2件取り込み (累計 8件)
+2026-05-14 01:36:16,322 [INFO] recruit_url_finder:   [エン転職] 2件取り込み (累計 10件)
+2026-05-14 01:36:16,323 [INFO] recruit_url_finder: 求人サイトURL収集完了: 日本重化学工業株式会社 → 合計 10 件
+2026-05-14 01:36:16,323 [INFO] __main__:   → 内部リンク:30件, 求人サイト:10件, 合計:40件
+2026-05-14 01:36:16,323 [INFO] __main__: Step 4/5: コンテンツ生成...
+2026-05-14 01:36:19,970 [INFO] __main__:   [検証] コンテンツ生成画面のヘッダーが対象企業に切替済か確認...
+2026-05-14 01:36:19,970 [INFO] web_app_operator: サイドバーから企業選択開始: 日本重化学工業株式会社
+2026-05-14 01:36:26,989 [INFO] web_app_operator:   ヘッダー検証中: 企業名=日本重化学工業株式会社, ID=jmc
+2026-05-14 01:36:27,020 [INFO] web_app_operator:   [OK] ヘッダー検証成功: 「🤖 日本重化学工業株式会社 コンテンツ生成」
+2026-05-14 01:36:27,021 [INFO] web_app_operator: サイドバー企業選択完了: 日本重化学工業株式会社
+2026-05-14 01:36:27,022 [INFO] web_app_operator: URL入力開始: 40件
+2026-05-14 01:36:30,663 [INFO] web_app_operator:   「全入力を処理」ボタンをクリックしました
+2026-05-14 01:37:05,205 [INFO] web_app_operator: URL入力・処理開始完了: 40件
+2026-05-14 01:37:05,205 [INFO] web_app_operator: コンテンツ生成開始...
+2026-05-14 01:37:15,815 [INFO] web_app_operator:   生成準備完了の待機中...
+2026-05-14 01:37:35,827 [WARNING] web_app_operator:   生成準備完了メッセージが特定できませんでしたが、続行を試みます
+2026-05-14 01:37:55,837 [WARNING] web_app_operator:   コンテンツ生成ボタン未検出 (試行 1/3) — 生成タブを再クリック
+2026-05-14 01:38:26,446 [WARNING] web_app_operator:   コンテンツ生成ボタン未検出 (試行 2/3) — 生成タブを再クリック
+2026-05-14 01:38:37,078 [INFO] web_app_operator:   コンテンツ生成ボタン検出 (試行 3/3)
+2026-05-14 01:38:37,623 [INFO] web_app_operator: コンテンツ生成中... (最大5分待機)
+2026-05-14 01:39:37,928 [INFO] web_app_operator: 生成完了検出 (経過: 60.0秒)
+2026-05-14 01:39:37,928 [INFO] web_app_operator: コンテンツ生成完了
+2026-05-14 01:39:37,930 [INFO] __main__:   [検証] 保存後のFAQ・企業情報タブを確認...
+2026-05-14 01:39:37,930 [INFO] web_app_operator: コンテンツ保存開始...
+2026-05-14 01:39:42,106 [INFO] web_app_operator:   FAQ保存ボタンの表示を確認中...
+2026-05-14 01:39:42,129 [INFO] web_app_operator:   FAQ保存ボタンの表示を確認（=FAQプレビュー描画完了）
+2026-05-14 01:39:42,130 [INFO] web_app_operator:   STEP1: FAQ保存ボタンを即クリック...
+2026-05-14 01:39:43,266 [INFO] web_app_operator:   FAQ保存ボタンをクリックしました
+2026-05-14 01:39:48,287 [WARNING] web_app_operator:   FAQ保存完了メッセージが出なかったため、もう一度クリックします
+2026-05-14 01:39:49,396 [INFO] web_app_operator:   FAQ保存ボタンを再クリックしました
+2026-05-14 01:39:52,937 [INFO] web_app_operator:   STEP2: 企業情報を保存ボタン（赤）を探してクリック...
+2026-05-14 01:39:54,470 [INFO] web_app_operator:   「企業情報を保存」ボタンが直接見つからないため、全ボタンを確認...
+2026-05-14 01:39:54,504 [INFO] web_app_operator:     保存関連ボタン発見: [👁️ プレビュー・保存]
+2026-05-14 01:39:54,544 [INFO] web_app_operator:     保存関連ボタン発見: [💾 FAQ保存（置換）]
+2026-05-14 01:39:54,555 [INFO] web_app_operator:     保存関連ボタン発見: [💾 企業情報保存]
+2026-05-14 01:39:54,570 [INFO] web_app_operator:   赤いボタンをクリック: [💾 企業情報保存]
+2026-05-14 01:40:00,732 [INFO] web_app_operator:   企業情報を保存ボタンのクリック完了
+2026-05-14 01:40:10,750 [WARNING] web_app_operator:   明確な保存完了メッセージは確認できませんでしたが、処理を続行します
+2026-05-14 01:40:10,751 [INFO] web_app_operator:   コンテンツ管理タブで保存確認中: 日本重化学工業株式会社
+2026-05-14 01:40:24,468 [INFO] web_app_operator:   [OK] コンテンツ管理ページ: jmc の存在を確認
+2026-05-14 01:40:24,469 [INFO] web_app_operator:   [FAQタブ] 検証開始
+2026-05-14 01:40:24,476 [WARNING] web_app_operator:   [FAQタブ] が見つかりません（タブ未表示の可能性、ページ全体で代替検証）
+2026-05-14 01:40:24,583 [INFO] web_app_operator:   [OK] [FAQタブ] 企業名/IDを確認 (スクショ: screenshots/tab_FAQ_jmc.png)
+2026-05-14 01:40:24,583 [INFO] web_app_operator:   [企業情報タブ] 検証開始
+2026-05-14 01:40:24,591 [WARNING] web_app_operator:   [企業情報タブ] が見つかりません（タブ未表示の可能性、ページ全体で代替検証）
+2026-05-14 01:40:24,695 [INFO] web_app_operator:   [OK] [企業情報タブ] 企業名/IDを確認 (スクショ: screenshots/tab_企業情報_jmc.png)
+2026-05-14 01:40:24,696 [INFO] web_app_operator:   [OK] FAQ・企業情報タブともに対象企業のコンテンツを確認
+2026-05-14 01:40:26,708 [INFO] web_app_operator: コンテンツ保存処理完了
+2026-05-14 01:40:26,712 [INFO] spreadsheet_manager: 企業リスト保存完了: 29社 → C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\data\company_list.csv
+2026-05-14 01:40:26,713 [INFO] __main__:   → コンテンツ生成・保存・検証完了
+2026-05-14 01:40:26,717 [INFO] spreadsheet_manager: 企業リスト保存完了: 29社 → C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\data\company_list.csv
+2026-05-14 01:40:26,718 [INFO] __main__: Step 5/5: フロントエンドアプリURL取得...
+2026-05-14 01:40:26,718 [INFO] __main__: Step 4完了 → ページを閉じて再ログイン（Step 5 のサイドバーキャッシュ対策）
+2026-05-14 01:40:26,719 [INFO] web_app_operator: ページを閉じて再ログインを開始...
+2026-05-14 01:40:26,763 [INFO] web_app_operator:   古いページタブを閉じました
+2026-05-14 01:40:26,792 [INFO] web_app_operator:   新しいページタブを開きました
+2026-05-14 01:40:26,792 [INFO] web_app_operator: 管理画面にログイン中...
+2026-05-14 01:40:32,661 [INFO] web_app_operator: ログイン成功
+2026-05-14 01:40:32,661 [INFO] web_app_operator: ページクローズ＆再ログイン完了
+2026-05-14 01:40:32,662 [INFO] web_app_operator: フロントエンドアプリURL取得開始 (企業ID: jmc)...
+2026-05-14 01:40:38,326 [INFO] web_app_operator: 企業選択 (ID): jmc
+2026-05-14 01:40:45,206 [INFO] web_app_operator: 企業選択完了: jmc
+2026-05-14 01:40:48,767 [INFO] web_app_operator:   サイドバーのaタグからURLを取得成功: https://casual-interview-dev.brainverse-ai.com/jmc
+2026-05-14 01:40:48,771 [INFO] spreadsheet_manager: 企業リスト保存完了: 29社 → C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\data\company_list.csv
+2026-05-14 01:40:48,772 [INFO] __main__:   → フロントエンドURL: https://casual-interview-dev.brainverse-ai.com/jmc
+2026-05-14 01:40:48,772 [INFO] __main__: [OK] 日本重化学工業株式会社: 全処理完了!
+2026-05-14 01:40:48,773 [INFO] __main__: 
+2026-05-14 01:40:48,773 [INFO] __main__: 1件処理完了 → 再ログイン＆キャッシュクリアを実行
+2026-05-14 01:40:48,774 [INFO] web_app_operator: 再ログイン＆キャッシュクリア開始...
+2026-05-14 01:40:48,777 [INFO] web_app_operator:   LocalStorage/SessionStorageをクリアしました
+2026-05-14 01:40:48,783 [INFO] web_app_operator:   Cookieをクリアしました
+2026-05-14 01:40:50,796 [INFO] web_app_operator: 管理画面にログイン中...
+2026-05-14 01:40:56,802 [INFO] web_app_operator: ログイン成功
+2026-05-14 01:40:56,804 [INFO] web_app_operator: 再ログイン＆キャッシュクリア完了
+2026-05-14 01:40:56,804 [INFO] __main__: 
+2026-05-14 01:40:56,805 [INFO] __main__: ──────────────────────────────────────────────────
+2026-05-14 01:40:56,806 [INFO] __main__: [10/29] 横浜ゴム株式会社 (ステータス: 未処理)
+2026-05-14 01:40:56,806 [INFO] __main__: ──────────────────────────────────────────────────
+2026-05-14 01:40:56,807 [INFO] __main__: Step 1/6: ホームページURL候補検索...
+2026-05-14 01:40:56,808 [INFO] url_finder: URL候補検索開始: 横浜ゴム株式会社 公式サイト (最大 5 件)
+2026-05-14 01:41:00,125 [INFO] url_finder: 候補ドメイン抽出: 横浜ゴム株式会社 -> 3件 (['www.y-yokohama.com', 'www.yrc-yours.com', 'www.yokohamagomu-kenpo.or.jp'])
+2026-05-14 01:41:00,126 [WARNING] __main__:   [PAUSE] URL内の企業IDが完全一致しない候補が 3 種類 (候補URL 3件) 検出されました → 手動確認待ちにします
+2026-05-14 01:41:00,126 [WARNING] __main__:     候補 1: https://www.y-yokohama.com (企業ID: y-yokohama)
+2026-05-14 01:41:00,127 [WARNING] __main__:     候補 2: https://www.yrc-yours.com (企業ID: yrc-yours)
+2026-05-14 01:41:00,127 [WARNING] __main__:     候補 3: https://www.yokohamagomu-kenpo.or.jp (企業ID: yokohamagomu-kenpo)
+2026-05-14 01:41:00,128 [INFO] spreadsheet_manager: 企業リスト保存完了: 29社 → C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\data\company_list.csv
+2026-05-14 01:41:00,128 [WARNING] __main__: [HOLD] 横浜ゴム株式会社: URL企業ID不一致候補複数 (CSVの「ホームページURL」列に正解URLを記入して再実行してください)
+2026-05-14 01:41:00,128 [INFO] __main__: 
+2026-05-14 01:41:00,128 [INFO] __main__: 1件処理完了 → 再ログイン＆キャッシュクリアを実行
+2026-05-14 01:41:00,128 [INFO] web_app_operator: 再ログイン＆キャッシュクリア開始...
+2026-05-14 01:41:00,132 [INFO] web_app_operator:   LocalStorage/SessionStorageをクリアしました
+2026-05-14 01:41:00,138 [INFO] web_app_operator:   Cookieをクリアしました
+2026-05-14 01:41:02,151 [INFO] web_app_operator: 管理画面にログイン中...
+2026-05-14 01:41:07,945 [INFO] web_app_operator: ログイン成功
+2026-05-14 01:41:07,946 [INFO] web_app_operator: 再ログイン＆キャッシュクリア完了
+2026-05-14 01:41:07,946 [INFO] __main__: 
+2026-05-14 01:41:07,947 [INFO] __main__: ──────────────────────────────────────────────────
+2026-05-14 01:41:07,947 [INFO] __main__: [11/29] マキノジェイ株式会社 (ステータス: 未処理)
+2026-05-14 01:41:07,948 [INFO] __main__: ──────────────────────────────────────────────────
+2026-05-14 01:41:07,948 [INFO] __main__: Step 1/6: ホームページURL候補検索...
+2026-05-14 01:41:07,949 [INFO] url_finder: URL候補検索開始: マキノジェイ株式会社 公式サイト (最大 5 件)
+2026-05-14 01:41:11,221 [INFO] url_finder: 候補ドメイン抽出: マキノジェイ株式会社 -> 2件 (['www.makinoj.co.jp', 'www.makino.co.jp'])
+2026-05-14 01:41:11,222 [WARNING] __main__:   [PAUSE] URL内の企業IDが完全一致しない候補が 2 種類 (候補URL 2件) 検出されました → 手動確認待ちにします
+2026-05-14 01:41:11,222 [WARNING] __main__:     候補 1: https://www.makinoj.co.jp (企業ID: makinoj)
+2026-05-14 01:41:11,222 [WARNING] __main__:     候補 2: https://www.makino.co.jp (企業ID: makino)
+2026-05-14 01:41:11,223 [INFO] spreadsheet_manager: 企業リスト保存完了: 29社 → C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\data\company_list.csv
+2026-05-14 01:41:11,224 [WARNING] __main__: [HOLD] マキノジェイ株式会社: URL企業ID不一致候補複数 (CSVの「ホームページURL」列に正解URLを記入して再実行してください)
+2026-05-14 01:41:11,224 [INFO] __main__: 
+2026-05-14 01:41:11,224 [INFO] __main__: 1件処理完了 → 再ログイン＆キャッシュクリアを実行
+2026-05-14 01:41:11,224 [INFO] web_app_operator: 再ログイン＆キャッシュクリア開始...
+2026-05-14 01:41:11,228 [INFO] web_app_operator:   LocalStorage/SessionStorageをクリアしました
+2026-05-14 01:41:11,235 [INFO] web_app_operator:   Cookieをクリアしました
+2026-05-14 01:41:13,238 [INFO] web_app_operator: 管理画面にログイン中...
+2026-05-14 01:41:18,968 [INFO] web_app_operator: ログイン成功
+2026-05-14 01:41:18,968 [INFO] web_app_operator: 再ログイン＆キャッシュクリア完了
+2026-05-14 01:41:18,969 [INFO] __main__: 
+2026-05-14 01:41:18,969 [INFO] __main__: ──────────────────────────────────────────────────
+2026-05-14 01:41:18,969 [INFO] __main__: [12/29] 株式会社牧野フライス製作所 (ステータス: 未処理)
+2026-05-14 01:41:18,970 [INFO] __main__: ──────────────────────────────────────────────────
+2026-05-14 01:41:18,970 [INFO] __main__: Step 1/6: ホームページURL候補検索...
+2026-05-14 01:41:18,970 [INFO] url_finder: URL候補検索開始: 株式会社牧野フライス製作所 公式サイト (最大 5 件)
+2026-05-14 01:41:22,110 [INFO] url_finder: 候補ドメイン抽出: 株式会社牧野フライス製作所 -> 5件 (['www.makino.co.jp', 'ir.makino.co.jp', 'www.makinoseiki.co.jp', 'kosen-plus.com', 'monoque.jp'])
+2026-05-14 01:41:22,111 [WARNING] __main__:   [PAUSE] URL内の企業IDが完全一致しない候補が 5 種類 (候補URL 5件) 検出されました → 手動確認待ちにします
+2026-05-14 01:41:22,112 [WARNING] __main__:     候補 1: https://www.makino.co.jp/ja-jp/ (企業ID: makino)
+2026-05-14 01:41:22,112 [WARNING] __main__:     候補 2: https://ir.makino.co.jp (企業ID: ir-makino)
+2026-05-14 01:41:22,112 [WARNING] __main__:     候補 3: https://www.makinoseiki.co.jp (企業ID: makinoseiki)
+2026-05-14 01:41:22,112 [WARNING] __main__:     候補 4: https://kosen-plus.com (企業ID: kosen-plus)
+2026-05-14 01:41:22,113 [WARNING] __main__:     候補 5: https://monoque.jp (企業ID: monoque)
+2026-05-14 01:41:22,114 [INFO] spreadsheet_manager: 企業リスト保存完了: 29社 → C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\data\company_list.csv
+2026-05-14 01:41:22,114 [WARNING] __main__: [HOLD] 株式会社牧野フライス製作所: URL企業ID不一致候補複数 (CSVの「ホームページURL」列に正解URLを記入して再実行してください)
+2026-05-14 01:41:22,114 [INFO] __main__: 
+2026-05-14 01:41:22,115 [INFO] __main__: 1件処理完了 → 再ログイン＆キャッシュクリアを実行
+2026-05-14 01:41:22,116 [INFO] web_app_operator: 再ログイン＆キャッシュクリア開始...
+2026-05-14 01:41:22,119 [INFO] web_app_operator:   LocalStorage/SessionStorageをクリアしました
+2026-05-14 01:41:22,121 [INFO] web_app_operator:   Cookieをクリアしました
+2026-05-14 01:41:24,133 [INFO] web_app_operator: 管理画面にログイン中...
+2026-05-14 01:41:29,904 [INFO] web_app_operator: ログイン成功
+2026-05-14 01:41:29,906 [INFO] web_app_operator: 再ログイン＆キャッシュクリア完了
+2026-05-14 01:41:29,906 [INFO] __main__: 
+2026-05-14 01:41:29,907 [INFO] __main__: ──────────────────────────────────────────────────
+2026-05-14 01:41:29,908 [INFO] __main__: [13/29] 学校法人獨協学園 (ステータス: 未処理)
+2026-05-14 01:41:29,909 [INFO] __main__: ──────────────────────────────────────────────────
+2026-05-14 01:41:29,911 [INFO] __main__: Step 1/6: ホームページURL候補検索...
+2026-05-14 01:41:29,911 [INFO] url_finder: URL候補検索開始: 学校法人獨協学園 公式サイト (最大 5 件)
+2026-05-14 01:41:33,095 [INFO] url_finder: 候補ドメイン抽出: 学校法人獨協学園 -> 5件 (['www.dac.ac.jp', 'www.dokkyo.ac.jp', 'www.dokkyo.ed.jp', 'www.dokkyomed.ac.jp', 'www.dokkyo-saitama.ed.jp'])
+2026-05-14 01:41:33,095 [WARNING] __main__:   [PAUSE] URL内の企業IDが完全一致しない候補が 4 種類 (候補URL 5件) 検出されました → 手動確認待ちにします
+2026-05-14 01:41:33,095 [WARNING] __main__:     候補 1: https://www.dac.ac.jp (企業ID: dac)
+2026-05-14 01:41:33,096 [WARNING] __main__:     候補 2: https://www.dokkyo.ac.jp (企業ID: dokkyo)
+2026-05-14 01:41:33,096 [WARNING] __main__:     候補 3: https://www.dokkyo.ed.jp (企業ID: dokkyo)
+2026-05-14 01:41:33,096 [WARNING] __main__:     候補 4: https://www.dokkyomed.ac.jp (企業ID: dokkyomed)
+2026-05-14 01:41:33,096 [WARNING] __main__:     候補 5: https://www.dokkyo-saitama.ed.jp (企業ID: dokkyo-saitama)
+2026-05-14 01:41:33,097 [INFO] spreadsheet_manager: 企業リスト保存完了: 29社 → C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\data\company_list.csv
+2026-05-14 01:41:33,098 [WARNING] __main__: [HOLD] 学校法人獨協学園: URL企業ID不一致候補複数 (CSVの「ホームページURL」列に正解URLを記入して再実行してください)
+2026-05-14 01:41:33,098 [INFO] __main__: 
+2026-05-14 01:41:33,098 [INFO] __main__: 1件処理完了 → 再ログイン＆キャッシュクリアを実行
+2026-05-14 01:41:33,099 [INFO] web_app_operator: 再ログイン＆キャッシュクリア開始...
+2026-05-14 01:41:33,103 [INFO] web_app_operator:   LocalStorage/SessionStorageをクリアしました
+2026-05-14 01:41:33,106 [INFO] web_app_operator:   Cookieをクリアしました
+2026-05-14 01:41:35,114 [INFO] web_app_operator: 管理画面にログイン中...
+2026-05-14 01:41:40,934 [INFO] web_app_operator: ログイン成功
+2026-05-14 01:41:40,935 [INFO] web_app_operator: 再ログイン＆キャッシュクリア完了
+2026-05-14 01:41:40,936 [INFO] __main__: 
+2026-05-14 01:41:40,936 [INFO] __main__: ──────────────────────────────────────────────────
+2026-05-14 01:41:40,936 [INFO] __main__: [14/29] オックスフォード・インストゥルメンツ株式会社 (ステータス: 未処理)
+2026-05-14 01:41:40,936 [INFO] __main__: ──────────────────────────────────────────────────
+2026-05-14 01:41:40,938 [INFO] __main__: Step 1/6: ホームページURL候補検索...
+2026-05-14 01:41:40,939 [INFO] url_finder: URL候補検索開始: オックスフォード・インストゥルメンツ株式会社 公式サイト (最大 5 件)
+2026-05-14 01:41:44,151 [INFO] url_finder: 候補ドメイン抽出: オックスフォード・インストゥルメンツ株式会社 -> 4件 (['www.oxinst.jp', 'estore.oxinst.com', 'plasma.oxinst.jp', 'nano.oxinst.jp'])
+2026-05-14 01:41:44,151 [WARNING] __main__:   [PAUSE] URL内の企業IDが完全一致しない候補が 4 種類 (候補URL 4件) 検出されました → 手動確認待ちにします
+2026-05-14 01:41:44,153 [WARNING] __main__:     候補 1: https://www.oxinst.jp (企業ID: oxinst)
+2026-05-14 01:41:44,153 [WARNING] __main__:     候補 2: https://estore.oxinst.com/jp/ (企業ID: estore-oxinst)
+2026-05-14 01:41:44,153 [WARNING] __main__:     候補 3: https://plasma.oxinst.jp (企業ID: plasma-oxinst)
+2026-05-14 01:41:44,153 [WARNING] __main__:     候補 4: https://nano.oxinst.jp (企業ID: nano-oxinst)
+2026-05-14 01:41:44,153 [INFO] spreadsheet_manager: 企業リスト保存完了: 29社 → C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\data\company_list.csv
+2026-05-14 01:41:44,154 [WARNING] __main__: [HOLD] オックスフォード・インストゥルメンツ株式会社: URL企業ID不一致候補複数 (CSVの「ホームページURL」列に正解URLを記入して再実行してください)
+2026-05-14 01:41:44,154 [INFO] __main__: 
+2026-05-14 01:41:44,154 [INFO] __main__: 1件処理完了 → 再ログイン＆キャッシュクリアを実行
+2026-05-14 01:41:44,155 [INFO] web_app_operator: 再ログイン＆キャッシュクリア開始...
+2026-05-14 01:41:44,158 [INFO] web_app_operator:   LocalStorage/SessionStorageをクリアしました
+2026-05-14 01:41:44,165 [INFO] web_app_operator:   Cookieをクリアしました
+2026-05-14 01:41:46,173 [INFO] web_app_operator: 管理画面にログイン中...
+2026-05-14 01:41:51,978 [INFO] web_app_operator: ログイン成功
+2026-05-14 01:41:51,979 [INFO] web_app_operator: 再ログイン＆キャッシュクリア完了
+2026-05-14 01:41:51,979 [INFO] __main__: 
+2026-05-14 01:41:51,979 [INFO] __main__: ──────────────────────────────────────────────────
+2026-05-14 01:41:51,979 [INFO] __main__: [15/29] 株式会社環境技術研究所 (ステータス: 未処理)
+2026-05-14 01:41:51,979 [INFO] __main__: ──────────────────────────────────────────────────
+2026-05-14 01:41:51,979 [INFO] __main__: Step 1/6: ホームページURL候補検索...
+2026-05-14 01:41:51,979 [INFO] url_finder: URL候補検索開始: 株式会社環境技術研究所 公式サイト (最大 5 件)
+2026-05-14 01:41:55,167 [INFO] url_finder: 候補ドメイン抽出: 株式会社環境技術研究所 -> 5件 (['www.etlabo.co.jp', 'www.kangiken.com', 'www.nanoclean.co.jp', 'kankyogijutsu.com', 'etl2.jp'])
+2026-05-14 01:41:55,168 [WARNING] __main__:   [PAUSE] URL内の企業IDが完全一致しない候補が 5 種類 (候補URL 5件) 検出されました → 手動確認待ちにします
+2026-05-14 01:41:55,168 [WARNING] __main__:     候補 1: https://www.etlabo.co.jp (企業ID: etlabo)
+2026-05-14 01:41:55,168 [WARNING] __main__:     候補 2: http://www.kangiken.com (企業ID: kangiken)
+2026-05-14 01:41:55,169 [WARNING] __main__:     候補 3: https://www.nanoclean.co.jp (企業ID: nanoclean)
+2026-05-14 01:41:55,169 [WARNING] __main__:     候補 4: http://kankyogijutsu.com (企業ID: kankyogijutsu)
+2026-05-14 01:41:55,169 [WARNING] __main__:     候補 5: https://etl2.jp (企業ID: etl2)
+2026-05-14 01:41:55,172 [INFO] spreadsheet_manager: 企業リスト保存完了: 29社 → C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\data\company_list.csv
+2026-05-14 01:41:55,173 [WARNING] __main__: [HOLD] 株式会社環境技術研究所: URL企業ID不一致候補複数 (CSVの「ホームページURL」列に正解URLを記入して再実行してください)
+2026-05-14 01:41:55,173 [INFO] __main__: 
+2026-05-14 01:41:55,174 [INFO] __main__: 1件処理完了 → 再ログイン＆キャッシュクリアを実行
+2026-05-14 01:41:55,175 [INFO] web_app_operator: 再ログイン＆キャッシュクリア開始...
+2026-05-14 01:41:55,180 [INFO] web_app_operator:   LocalStorage/SessionStorageをクリアしました
+2026-05-14 01:41:55,185 [INFO] web_app_operator:   Cookieをクリアしました
+2026-05-14 01:41:57,194 [INFO] web_app_operator: 管理画面にログイン中...
+2026-05-14 01:42:02,986 [INFO] web_app_operator: ログイン成功
+2026-05-14 01:42:02,986 [INFO] web_app_operator: 再ログイン＆キャッシュクリア完了
+2026-05-14 01:42:02,988 [INFO] __main__: 
+2026-05-14 01:42:02,988 [INFO] __main__: ──────────────────────────────────────────────────
+2026-05-14 01:42:02,989 [INFO] __main__: [16/29] ヤマハサウンドシステム株式会社 (ステータス: 未処理)
+2026-05-14 01:42:02,991 [INFO] __main__: ──────────────────────────────────────────────────
+2026-05-14 01:42:02,991 [INFO] __main__: Step 1/6: ホームページURL候補検索...
+2026-05-14 01:42:02,991 [INFO] url_finder: URL候補検索開始: ヤマハサウンドシステム株式会社 公式サイト (最大 5 件)
+2026-05-14 01:42:06,234 [INFO] url_finder: 候補ドメイン抽出: ヤマハサウンドシステム株式会社 -> 3件 (['www.yamaha-ss.co.jp', 'www.miyuki.jp', 'sound-festa.com'])
+2026-05-14 01:42:06,235 [WARNING] __main__:   [PAUSE] URL内の企業IDが完全一致しない候補が 3 種類 (候補URL 3件) 検出されました → 手動確認待ちにします
+2026-05-14 01:42:06,235 [WARNING] __main__:     候補 1: https://www.yamaha-ss.co.jp (企業ID: yamaha-ss)
+2026-05-14 01:42:06,235 [WARNING] __main__:     候補 2: https://www.miyuki.jp (企業ID: miyuki)
+2026-05-14 01:42:06,235 [WARNING] __main__:     候補 3: https://sound-festa.com/yamaha_ss (企業ID: sound-festa)
+2026-05-14 01:42:06,236 [INFO] spreadsheet_manager: 企業リスト保存完了: 29社 → C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\data\company_list.csv
+2026-05-14 01:42:06,236 [WARNING] __main__: [HOLD] ヤマハサウンドシステム株式会社: URL企業ID不一致候補複数 (CSVの「ホームページURL」列に正解URLを記入して再実行してください)
+2026-05-14 01:42:06,238 [INFO] __main__: 
+2026-05-14 01:42:06,238 [INFO] __main__: 1件処理完了 → 再ログイン＆キャッシュクリアを実行
+2026-05-14 01:42:06,238 [INFO] web_app_operator: 再ログイン＆キャッシュクリア開始...
+2026-05-14 01:42:06,242 [INFO] web_app_operator:   LocalStorage/SessionStorageをクリアしました
+2026-05-14 01:42:06,249 [INFO] web_app_operator:   Cookieをクリアしました
+2026-05-14 01:42:08,264 [INFO] web_app_operator: 管理画面にログイン中...
+2026-05-14 01:42:14,047 [INFO] web_app_operator: ログイン成功
+2026-05-14 01:42:14,048 [INFO] web_app_operator: 再ログイン＆キャッシュクリア完了
+2026-05-14 01:42:14,049 [INFO] __main__: 
+2026-05-14 01:42:14,049 [INFO] __main__: ──────────────────────────────────────────────────
+2026-05-14 01:42:14,050 [INFO] __main__: [17/29] 株式会社プライム1スタジオ (ステータス: 未処理)
+2026-05-14 01:42:14,051 [INFO] __main__: ──────────────────────────────────────────────────
+2026-05-14 01:42:14,052 [INFO] __main__: Step 1/6: ホームページURL候補検索...
+2026-05-14 01:42:14,053 [INFO] url_finder: URL候補検索開始: 株式会社プライム1スタジオ 公式サイト (最大 5 件)
+2026-05-14 01:42:17,216 [INFO] url_finder: 候補ドメイン抽出: 株式会社プライム1スタジオ -> 5件 (['www.prime1studio.co.jp', 'statue.prime1studio.co.jp', 'www.prime1studio.com', 'cgworld.jp', 'hobbyshow.co.jp'])
+2026-05-14 01:42:17,217 [WARNING] __main__:   [PAUSE] URL内の企業IDが完全一致しない候補が 4 種類 (候補URL 5件) 検出されました → 手動確認待ちにします
+2026-05-14 01:42:17,218 [WARNING] __main__:     候補 1: https://www.prime1studio.co.jp (企業ID: prime1studio)
+2026-05-14 01:42:17,219 [WARNING] __main__:     候補 2: https://statue.prime1studio.co.jp (企業ID: statue-prime1studio)
+2026-05-14 01:42:17,220 [WARNING] __main__:     候補 3: https://www.prime1studio.com (企業ID: prime1studio)
+2026-05-14 01:42:17,221 [WARNING] __main__:     候補 4: https://cgworld.jp (企業ID: cgworld)
+2026-05-14 01:42:17,221 [WARNING] __main__:     候補 5: https://hobbyshow.co.jp (企業ID: hobbyshow)
+2026-05-14 01:42:17,223 [INFO] spreadsheet_manager: 企業リスト保存完了: 29社 → C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\data\company_list.csv
+2026-05-14 01:42:17,224 [WARNING] __main__: [HOLD] 株式会社プライム1スタジオ: URL企業ID不一致候補複数 (CSVの「ホームページURL」列に正解URLを記入して再実行してください)
+2026-05-14 01:42:17,225 [INFO] __main__: 
+2026-05-14 01:42:17,225 [INFO] __main__: 1件処理完了 → 再ログイン＆キャッシュクリアを実行
+2026-05-14 01:42:17,226 [INFO] web_app_operator: 再ログイン＆キャッシュクリア開始...
+2026-05-14 01:42:17,234 [INFO] web_app_operator:   LocalStorage/SessionStorageをクリアしました
+2026-05-14 01:42:17,238 [INFO] web_app_operator:   Cookieをクリアしました
+2026-05-14 01:42:19,243 [INFO] web_app_operator: 管理画面にログイン中...
+2026-05-14 01:42:25,025 [INFO] web_app_operator: ログイン成功
+2026-05-14 01:42:25,026 [INFO] web_app_operator: 再ログイン＆キャッシュクリア完了
+2026-05-14 01:42:25,026 [INFO] __main__: 
+2026-05-14 01:42:25,027 [INFO] __main__: ──────────────────────────────────────────────────
+2026-05-14 01:42:25,027 [INFO] __main__: [18/29] 株式会社ピーアンドアイ (ステータス: 未処理)
+2026-05-14 01:42:25,029 [INFO] __main__: ──────────────────────────────────────────────────
+2026-05-14 01:42:25,029 [INFO] __main__: Step 1/6: ホームページURL候補検索...
+2026-05-14 01:42:25,030 [INFO] url_finder: URL候補検索開始: 株式会社ピーアンドアイ 公式サイト (最大 5 件)
+2026-05-14 01:42:28,172 [INFO] url_finder: 候補ドメイン抽出: 株式会社ピーアンドアイ -> 5件 (['www.pandi.co.jp', 'www.p-a-i.co.jp', 'www.prinfo.co.jp', 'pandi-ltd.co.jp', 'mid-tenshoku.com'])
+2026-05-14 01:42:28,172 [WARNING] __main__:   [PAUSE] URL内の企業IDが完全一致しない候補が 5 種類 (候補URL 5件) 検出されました → 手動確認待ちにします
+2026-05-14 01:42:28,173 [WARNING] __main__:     候補 1: https://www.pandi.co.jp (企業ID: pandi)
+2026-05-14 01:42:28,173 [WARNING] __main__:     候補 2: https://www.p-a-i.co.jp (企業ID: p-a-i)
+2026-05-14 01:42:28,173 [WARNING] __main__:     候補 3: https://www.prinfo.co.jp/company.html (企業ID: prinfo)
+2026-05-14 01:42:28,173 [WARNING] __main__:     候補 4: http://pandi-ltd.co.jp/index.html (企業ID: pandi-ltd)
+2026-05-14 01:42:28,173 [WARNING] __main__:     候補 5: https://mid-tenshoku.com (企業ID: mid-tenshoku)
+2026-05-14 01:42:28,174 [INFO] spreadsheet_manager: 企業リスト保存完了: 29社 → C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\data\company_list.csv
+2026-05-14 01:42:28,174 [WARNING] __main__: [HOLD] 株式会社ピーアンドアイ: URL企業ID不一致候補複数 (CSVの「ホームページURL」列に正解URLを記入して再実行してください)
+2026-05-14 01:42:28,175 [INFO] __main__: 
+2026-05-14 01:42:28,175 [INFO] __main__: 1件処理完了 → 再ログイン＆キャッシュクリアを実行
+2026-05-14 01:42:28,175 [INFO] web_app_operator: 再ログイン＆キャッシュクリア開始...
+2026-05-14 01:42:28,178 [INFO] web_app_operator:   LocalStorage/SessionStorageをクリアしました
+2026-05-14 01:42:28,183 [INFO] web_app_operator:   Cookieをクリアしました
+2026-05-14 01:42:30,194 [INFO] web_app_operator: 管理画面にログイン中...
+2026-05-14 01:42:35,944 [INFO] web_app_operator: ログイン成功
+2026-05-14 01:42:35,944 [INFO] web_app_operator: 再ログイン＆キャッシュクリア完了
+2026-05-14 01:42:35,945 [INFO] __main__: 
+2026-05-14 01:42:35,945 [INFO] __main__: ──────────────────────────────────────────────────
+2026-05-14 01:42:35,945 [INFO] __main__: [19/29] 株式会社日本ヒュウマップ (ステータス: 未処理)
+2026-05-14 01:42:35,945 [INFO] __main__: ──────────────────────────────────────────────────
+2026-05-14 01:42:35,945 [INFO] __main__: Step 1/6: ホームページURL候補検索...
+2026-05-14 01:42:35,945 [INFO] url_finder: URL候補検索開始: 株式会社日本ヒュウマップ 公式サイト (最大 5 件)
+2026-05-14 01:42:39,094 [INFO] url_finder: 候補ドメイン抽出: 株式会社日本ヒュウマップ -> 2件 (['www.humap.jp', 'job-gear.net'])
+2026-05-14 01:42:39,094 [WARNING] __main__:   [PAUSE] URL内の企業IDが完全一致しない候補が 2 種類 (候補URL 2件) 検出されました → 手動確認待ちにします
+2026-05-14 01:42:39,095 [WARNING] __main__:     候補 1: https://www.humap.jp (企業ID: humap)
+2026-05-14 01:42:39,095 [WARNING] __main__:     候補 2: https://job-gear.net/humap/ (企業ID: job-gear)
+2026-05-14 01:42:39,098 [INFO] spreadsheet_manager: 企業リスト保存完了: 29社 → C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\data\company_list.csv
+2026-05-14 01:42:39,099 [WARNING] __main__: [HOLD] 株式会社日本ヒュウマップ: URL企業ID不一致候補複数 (CSVの「ホームページURL」列に正解URLを記入して再実行してください)
+2026-05-14 01:42:39,099 [INFO] __main__: 
+2026-05-14 01:42:39,099 [INFO] __main__: 1件処理完了 → 再ログイン＆キャッシュクリアを実行
+2026-05-14 01:42:39,101 [INFO] web_app_operator: 再ログイン＆キャッシュクリア開始...
+2026-05-14 01:42:39,106 [INFO] web_app_operator:   LocalStorage/SessionStorageをクリアしました
+2026-05-14 01:42:39,113 [INFO] web_app_operator:   Cookieをクリアしました
+2026-05-14 01:42:41,115 [INFO] web_app_operator: 管理画面にログイン中...
+2026-05-14 01:42:46,938 [INFO] web_app_operator: ログイン成功
+2026-05-14 01:42:46,940 [INFO] web_app_operator: 再ログイン＆キャッシュクリア完了
+2026-05-14 01:42:46,940 [INFO] __main__: 
+2026-05-14 01:42:46,940 [INFO] __main__: ──────────────────────────────────────────────────
+2026-05-14 01:42:46,940 [INFO] __main__: [20/29] 株式会社インフォレント (ステータス: 未処理)
+2026-05-14 01:42:46,940 [INFO] __main__: ──────────────────────────────────────────────────
+2026-05-14 01:42:46,940 [INFO] __main__: Step 1/6: ホームページURL候補検索...
+2026-05-14 01:42:46,940 [INFO] url_finder: URL候補検索開始: 株式会社インフォレント 公式サイト (最大 5 件)
+2026-05-14 01:42:50,081 [INFO] url_finder: 候補ドメイン抽出: 株式会社インフォレント -> 5件 (['www.inforent.co.jp', 'www.inforent.org', 'studiosquare.jp', 'www.otoheya.com', 'construction.inforent.jp'])
+2026-05-14 01:42:50,081 [WARNING] __main__:   [PAUSE] URL内の企業IDが完全一致しない候補が 4 種類 (候補URL 5件) 検出されました → 手動確認待ちにします
+2026-05-14 01:42:50,081 [WARNING] __main__:     候補 1: https://www.inforent.co.jp (企業ID: inforent)
+2026-05-14 01:42:50,081 [WARNING] __main__:     候補 2: https://www.inforent.org (企業ID: inforent)
+2026-05-14 01:42:50,082 [WARNING] __main__:     候補 3: https://studiosquare.jp/company-html.html (企業ID: studiosquare)
+2026-05-14 01:42:50,082 [WARNING] __main__:     候補 4: https://www.otoheya.com (企業ID: otoheya)
+2026-05-14 01:42:50,082 [WARNING] __main__:     候補 5: https://construction.inforent.jp/inforent.html (企業ID: construction-inforent)
+2026-05-14 01:42:50,085 [INFO] spreadsheet_manager: 企業リスト保存完了: 29社 → C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\data\company_list.csv
+2026-05-14 01:42:50,086 [WARNING] __main__: [HOLD] 株式会社インフォレント: URL企業ID不一致候補複数 (CSVの「ホームページURL」列に正解URLを記入して再実行してください)
+2026-05-14 01:42:50,086 [INFO] __main__: 
+2026-05-14 01:42:50,086 [INFO] __main__: 1件処理完了 → 再ログイン＆キャッシュクリアを実行
+2026-05-14 01:42:50,087 [INFO] web_app_operator: 再ログイン＆キャッシュクリア開始...
+2026-05-14 01:42:50,091 [INFO] web_app_operator:   LocalStorage/SessionStorageをクリアしました
+2026-05-14 01:42:50,096 [INFO] web_app_operator:   Cookieをクリアしました
+2026-05-14 01:42:52,108 [INFO] web_app_operator: 管理画面にログイン中...
+2026-05-14 01:42:57,878 [INFO] web_app_operator: ログイン成功
+2026-05-14 01:42:57,880 [INFO] web_app_operator: 再ログイン＆キャッシュクリア完了
+2026-05-14 01:42:57,880 [INFO] __main__: 
+2026-05-14 01:42:57,881 [INFO] __main__: ──────────────────────────────────────────────────
+2026-05-14 01:42:57,881 [INFO] __main__: [21/29] 株式会社みやちゅう (ステータス: 未処理)
+2026-05-14 01:42:57,882 [INFO] __main__: ──────────────────────────────────────────────────
+2026-05-14 01:42:57,882 [INFO] __main__: Step 1/6: ホームページURL候補検索...
+2026-05-14 01:42:57,883 [INFO] url_finder: URL候補検索開始: 株式会社みやちゅう 公式サイト (最大 5 件)
+2026-05-14 01:43:01,083 [INFO] url_finder: 候補ドメイン抽出: 株式会社みやちゅう -> 5件 (['miya-chu.co.jp', 'miya-chu.shop', 'ise-miyachu.jp', 'www.miyachu.com', 'wakamono-koyou-sokushin.mhlw.go.jp'])
+2026-05-14 01:43:01,084 [WARNING] __main__:   [PAUSE] URL内の企業IDが完全一致しない候補が 5 種類 (候補URL 5件) 検出されました → 手動確認待ちにします
+2026-05-14 01:43:01,085 [WARNING] __main__:     候補 1: https://miya-chu.co.jp (企業ID: miya-chu)
+2026-05-14 01:43:01,086 [WARNING] __main__:     候補 2: https://miya-chu.shop (企業ID: miya-chu-shop)
+2026-05-14 01:43:01,087 [WARNING] __main__:     候補 3: https://ise-miyachu.jp (企業ID: ise-miyachu)
+2026-05-14 01:43:01,088 [WARNING] __main__:     候補 4: https://www.miyachu.com (企業ID: miyachu)
+2026-05-14 01:43:01,088 [WARNING] __main__:     候補 5: https://wakamono-koyou-sokushin.mhlw.go.jp (企業ID: wakamono-koyou-sokushin-mhlw)
+2026-05-14 01:43:01,102 [INFO] spreadsheet_manager: 企業リスト保存完了: 29社 → C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\data\company_list.csv
+2026-05-14 01:43:01,102 [WARNING] __main__: [HOLD] 株式会社みやちゅう: URL企業ID不一致候補複数 (CSVの「ホームページURL」列に正解URLを記入して再実行してください)
+2026-05-14 01:43:01,102 [INFO] __main__: 
+2026-05-14 01:43:01,102 [INFO] __main__: 1件処理完了 → 再ログイン＆キャッシュクリアを実行
+2026-05-14 01:43:01,102 [INFO] web_app_operator: 再ログイン＆キャッシュクリア開始...
+2026-05-14 01:43:01,106 [INFO] web_app_operator:   LocalStorage/SessionStorageをクリアしました
+2026-05-14 01:43:01,110 [INFO] web_app_operator:   Cookieをクリアしました
+2026-05-14 01:43:03,114 [INFO] web_app_operator: 管理画面にログイン中...
+2026-05-14 01:43:08,830 [INFO] web_app_operator: ログイン成功
+2026-05-14 01:43:08,830 [INFO] web_app_operator: 再ログイン＆キャッシュクリア完了
+2026-05-14 01:43:08,830 [INFO] __main__: 
+2026-05-14 01:43:08,830 [INFO] __main__: ──────────────────────────────────────────────────
+2026-05-14 01:43:08,830 [INFO] __main__: [22/29] 株式会社W-ing (ステータス: 未処理)
+2026-05-14 01:43:08,831 [INFO] __main__: ──────────────────────────────────────────────────
+2026-05-14 01:43:08,831 [INFO] __main__: Step 1/6: ホームページURL候補検索...
+2026-05-14 01:43:08,831 [INFO] url_finder: URL候補検索開始: 株式会社W-ing 公式サイト (最大 5 件)
+2026-05-14 01:43:11,969 [INFO] url_finder: 候補ドメイン抽出: 株式会社W-ing -> 5件 (['w-ing-mos.jp', 'www.will-ing.jp', 'www.wing-inc.com', 'w-ing.info', 'www.swing-w.com'])
+2026-05-14 01:43:11,970 [WARNING] __main__:   [PAUSE] URL内の企業IDが完全一致しない候補が 5 種類 (候補URL 5件) 検出されました → 手動確認待ちにします
+2026-05-14 01:43:11,970 [WARNING] __main__:     候補 1: https://w-ing-mos.jp (企業ID: w-ing-mos)
+2026-05-14 01:43:11,970 [WARNING] __main__:     候補 2: https://www.will-ing.jp (企業ID: will-ing)
+2026-05-14 01:43:11,970 [WARNING] __main__:     候補 3: https://www.wing-inc.com (企業ID: wing-inc)
+2026-05-14 01:43:11,971 [WARNING] __main__:     候補 4: https://w-ing.info/news (企業ID: w-ing)
+2026-05-14 01:43:11,971 [WARNING] __main__:     候補 5: https://www.swing-w.com (企業ID: swing-w)
+2026-05-14 01:43:11,972 [INFO] spreadsheet_manager: 企業リスト保存完了: 29社 → C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\data\company_list.csv
+2026-05-14 01:43:11,972 [WARNING] __main__: [HOLD] 株式会社W-ing: URL企業ID不一致候補複数 (CSVの「ホームページURL」列に正解URLを記入して再実行してください)
+2026-05-14 01:43:11,972 [INFO] __main__: 
+2026-05-14 01:43:11,972 [INFO] __main__: 1件処理完了 → 再ログイン＆キャッシュクリアを実行
+2026-05-14 01:43:11,973 [INFO] web_app_operator: 再ログイン＆キャッシュクリア開始...
+2026-05-14 01:43:11,975 [INFO] web_app_operator:   LocalStorage/SessionStorageをクリアしました
+2026-05-14 01:43:11,978 [INFO] web_app_operator:   Cookieをクリアしました
+2026-05-14 01:43:13,986 [INFO] web_app_operator: 管理画面にログイン中...
+2026-05-14 01:43:19,706 [INFO] web_app_operator: ログイン成功
+2026-05-14 01:43:19,706 [INFO] web_app_operator: 再ログイン＆キャッシュクリア完了
+2026-05-14 01:43:19,706 [INFO] __main__: 
+2026-05-14 01:43:19,707 [INFO] __main__: ──────────────────────────────────────────────────
+2026-05-14 01:43:19,707 [INFO] __main__: [23/29] 医療法人徳洲会日高徳洲会病院 (ステータス: 未処理)
+2026-05-14 01:43:19,707 [INFO] __main__: ──────────────────────────────────────────────────
+2026-05-14 01:43:19,707 [INFO] __main__: Step 1/6: ホームページURL候補検索...
+2026-05-14 01:43:19,707 [INFO] url_finder: URL候補検索開始: 医療法人徳洲会日高徳洲会病院 公式サイト (最大 5 件)
+2026-05-14 01:43:22,904 [INFO] url_finder: 候補ドメイン抽出: 医療法人徳洲会日高徳洲会病院 -> 3件 (['hidakatokushukai.com', 'www.tokushukai.or.jp', 'www.iryou.teikyouseido.mhlw.go.jp'])
+2026-05-14 01:43:22,904 [WARNING] __main__:   [PAUSE] URL内の企業IDが完全一致しない候補が 3 種類 (候補URL 3件) 検出されました → 手動確認待ちにします
+2026-05-14 01:43:22,904 [WARNING] __main__:     候補 1: https://hidakatokushukai.com (企業ID: hidakatokushukai)
+2026-05-14 01:43:22,905 [WARNING] __main__:     候補 2: https://www.tokushukai.or.jp (企業ID: tokushukai)
+2026-05-14 01:43:22,905 [WARNING] __main__:     候補 3: https://www.iryou.teikyouseido.mhlw.go.jp (企業ID: iryou-teikyouseido-mhlw)
+2026-05-14 01:43:22,906 [INFO] spreadsheet_manager: 企業リスト保存完了: 29社 → C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\data\company_list.csv
+2026-05-14 01:43:22,906 [WARNING] __main__: [HOLD] 医療法人徳洲会日高徳洲会病院: URL企業ID不一致候補複数 (CSVの「ホームページURL」列に正解URLを記入して再実行してください)
+2026-05-14 01:43:22,906 [INFO] __main__: 
+2026-05-14 01:43:22,906 [INFO] __main__: 1件処理完了 → 再ログイン＆キャッシュクリアを実行
+2026-05-14 01:43:22,906 [INFO] web_app_operator: 再ログイン＆キャッシュクリア開始...
+2026-05-14 01:43:22,910 [INFO] web_app_operator:   LocalStorage/SessionStorageをクリアしました
+2026-05-14 01:43:22,912 [INFO] web_app_operator:   Cookieをクリアしました
+2026-05-14 01:43:24,926 [INFO] web_app_operator: 管理画面にログイン中...
+2026-05-14 01:43:30,659 [INFO] web_app_operator: ログイン成功
+2026-05-14 01:43:30,659 [INFO] web_app_operator: 再ログイン＆キャッシュクリア完了
+2026-05-14 01:43:30,660 [INFO] __main__: 
+2026-05-14 01:43:30,660 [INFO] __main__: ──────────────────────────────────────────────────
+2026-05-14 01:43:30,660 [INFO] __main__: [24/29] エヌシーオートメーション株式会社 (ステータス: 未処理)
+2026-05-14 01:43:30,660 [INFO] __main__: ──────────────────────────────────────────────────
+2026-05-14 01:43:30,660 [INFO] __main__: Step 1/6: ホームページURL候補検索...
+2026-05-14 01:43:30,660 [INFO] url_finder: URL候補検索開始: エヌシーオートメーション株式会社 公式サイト (最大 5 件)
+2026-05-14 01:43:33,767 [INFO] url_finder: 候補ドメイン抽出: エヌシーオートメーション株式会社 -> 1件 (['www.ncauto.co.jp'])
+2026-05-14 01:43:33,768 [INFO] __main__:   企業ID (URLから抽出): ncauto
+2026-05-14 01:43:33,768 [INFO] spreadsheet_manager: 企業リスト保存完了: 29社 → C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\data\company_list.csv
+2026-05-14 01:43:33,768 [INFO] __main__:   → URL: https://www.ncauto.co.jp, ID: ncauto
+2026-05-14 01:43:33,768 [INFO] __main__: Step 2/6: 企業追加...
+2026-05-14 01:43:33,769 [INFO] web_app_operator: 企業追加開始: エヌシーオートメーション株式会社
+2026-05-14 01:43:48,183 [INFO] web_app_operator: 企業追加完了: エヌシーオートメーション株式会社 (ID: ncauto)
+2026-05-14 01:43:48,184 [INFO] __main__: Step 2.5/6: 追加企業のID検証...
+2026-05-14 01:43:48,184 [INFO] web_app_operator:   企業ID検証中: 期待ID=ncauto, URL=https://www.ncauto.co.jp
+2026-05-14 01:43:50,736 [INFO] web_app_operator:   [OK] 企業ID 'ncauto' をページ内に確認
+2026-05-14 01:43:50,740 [INFO] spreadsheet_manager: 企業リスト保存完了: 29社 → C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\data\company_list.csv
+2026-05-14 01:43:50,740 [INFO] __main__:   → 企業追加完了 (ID: ncauto)
+2026-05-14 01:43:50,741 [INFO] __main__: 企業追加完了 → ページを閉じて再ログイン（キャッシュバグ防止）
+2026-05-14 01:43:50,741 [INFO] web_app_operator: ページを閉じて再ログインを開始...
+2026-05-14 01:43:50,767 [INFO] web_app_operator:   古いページタブを閉じました
+2026-05-14 01:43:50,795 [INFO] web_app_operator:   新しいページタブを開きました
+2026-05-14 01:43:50,795 [INFO] web_app_operator: 管理画面にログイン中...
+2026-05-14 01:43:56,664 [INFO] web_app_operator: ログイン成功
+2026-05-14 01:43:56,666 [INFO] web_app_operator: ページクローズ＆再ログイン完了
+2026-05-14 01:43:56,667 [INFO] __main__: Step 3/5: URL収集...
+2026-05-14 01:44:01,028 [INFO] recruit_url_finder: 求人サイトURL収集開始: エヌシーオートメーション株式会社 (正規化: 'エヌシーオートメーション')
+2026-05-14 01:44:03,700 [INFO] recruit_url_finder:   [マイナビ転職] 2件取り込み (累計 2件)
+2026-05-14 01:44:06,356 [INFO] recruit_url_finder:   [マイナビ新卒] 0件取り込み (累計 2件)
+2026-05-14 01:44:09,002 [INFO] recruit_url_finder:   [リクナビ] 2件取り込み (累計 4件)
+2026-05-14 01:44:11,605 [INFO] recruit_url_finder:   [DODA] 2件取り込み (累計 6件)
+2026-05-14 01:44:14,212 [INFO] recruit_url_finder:   [エン転職] 2件取り込み (累計 8件)
+2026-05-14 01:44:16,688 [INFO] recruit_url_finder:   [Wantedly] 1件取り込み (累計 9件)
+2026-05-14 01:44:19,229 [INFO] recruit_url_finder:   [Green] 0件取り込み (累計 9件)
+2026-05-14 01:44:21,877 [INFO] recruit_url_finder:   [Indeed] 1件取り込み (累計 10件)
+2026-05-14 01:44:21,877 [INFO] recruit_url_finder: 求人サイトURL収集完了: エヌシーオートメーション株式会社 → 合計 10 件
+2026-05-14 01:44:21,877 [INFO] __main__:   → 内部リンク:30件, 求人サイト:10件, 合計:40件
+2026-05-14 01:44:21,877 [INFO] __main__: Step 4/5: コンテンツ生成...
+2026-05-14 01:44:25,523 [INFO] __main__:   [検証] コンテンツ生成画面のヘッダーが対象企業に切替済か確認...
+2026-05-14 01:44:25,524 [INFO] web_app_operator: サイドバーから企業選択開始: エヌシーオートメーション株式会社
+2026-05-14 01:44:32,637 [INFO] web_app_operator:   ヘッダー検証中: 企業名=エヌシーオートメーション株式会社, ID=ncauto
+2026-05-14 01:44:32,676 [INFO] web_app_operator:   [OK] ヘッダー検証成功: 「🤖 エヌシーオートメーション株式会社 コンテンツ生成」
+2026-05-14 01:44:32,677 [INFO] web_app_operator: サイドバー企業選択完了: エヌシーオートメーション株式会社
+2026-05-14 01:44:32,677 [INFO] web_app_operator: URL入力開始: 40件
+2026-05-14 01:44:36,358 [INFO] web_app_operator:   「全入力を処理」ボタンをクリックしました
+2026-05-14 01:45:10,911 [INFO] web_app_operator: URL入力・処理開始完了: 40件
+2026-05-14 01:45:10,911 [INFO] web_app_operator: コンテンツ生成開始...
+2026-05-14 01:45:21,523 [INFO] web_app_operator:   生成準備完了の待機中...
+2026-05-14 01:45:41,541 [WARNING] web_app_operator:   生成準備完了メッセージが特定できませんでしたが、続行を試みます
+2026-05-14 01:46:01,555 [WARNING] web_app_operator:   コンテンツ生成ボタン未検出 (試行 1/3) — 生成タブを再クリック
+2026-05-14 01:46:12,187 [INFO] web_app_operator:   コンテンツ生成ボタン検出 (試行 2/3)
+2026-05-14 01:46:12,727 [INFO] web_app_operator: コンテンツ生成中... (最大5分待機)
+2026-05-14 01:47:18,038 [INFO] web_app_operator: 生成完了検出 (経過: 65.0秒)
+2026-05-14 01:47:18,038 [INFO] web_app_operator: コンテンツ生成完了
+2026-05-14 01:47:18,038 [INFO] __main__:   [検証] 保存後のFAQ・企業情報タブを確認...
+2026-05-14 01:47:18,038 [INFO] web_app_operator: コンテンツ保存開始...
+2026-05-14 01:47:22,166 [INFO] web_app_operator:   FAQ保存ボタンの表示を確認中...
+2026-05-14 01:47:22,175 [INFO] web_app_operator:   FAQ保存ボタンの表示を確認（=FAQプレビュー描画完了）
+2026-05-14 01:47:22,175 [INFO] web_app_operator:   STEP1: FAQ保存ボタンを即クリック...
+2026-05-14 01:47:23,242 [INFO] web_app_operator:   FAQ保存ボタンをクリックしました
+2026-05-14 01:47:28,248 [WARNING] web_app_operator:   FAQ保存完了メッセージが出なかったため、もう一度クリックします
+2026-05-14 01:47:29,322 [INFO] web_app_operator:   FAQ保存ボタンを再クリックしました
+2026-05-14 01:47:32,851 [INFO] web_app_operator:   STEP2: 企業情報を保存ボタン（赤）を探してクリック...
+2026-05-14 01:47:34,373 [INFO] web_app_operator:   「企業情報を保存」ボタンが直接見つからないため、全ボタンを確認...
+2026-05-14 01:47:34,402 [INFO] web_app_operator:     保存関連ボタン発見: [👁️ プレビュー・保存]
+2026-05-14 01:47:34,423 [INFO] web_app_operator:     保存関連ボタン発見: [💾 FAQ保存（置換）]
+2026-05-14 01:47:34,428 [INFO] web_app_operator:     保存関連ボタン発見: [💾 企業情報保存]
+2026-05-14 01:47:34,437 [INFO] web_app_operator:   赤いボタンをクリック: [💾 企業情報保存]
+2026-05-14 01:47:40,558 [INFO] web_app_operator:   企業情報を保存ボタンのクリック完了
+2026-05-14 01:47:50,569 [WARNING] web_app_operator:   明確な保存完了メッセージは確認できませんでしたが、処理を続行します
+2026-05-14 01:47:50,569 [INFO] web_app_operator:   コンテンツ管理タブで保存確認中: エヌシーオートメーション株式会社
+2026-05-14 01:48:04,133 [INFO] web_app_operator:   [OK] コンテンツ管理ページ: ncauto の存在を確認
+2026-05-14 01:48:04,133 [INFO] web_app_operator:   [FAQタブ] 検証開始
+2026-05-14 01:48:04,141 [WARNING] web_app_operator:   [FAQタブ] が見つかりません（タブ未表示の可能性、ページ全体で代替検証）
+2026-05-14 01:48:04,250 [INFO] web_app_operator:   [OK] [FAQタブ] 企業名/IDを確認 (スクショ: screenshots/tab_FAQ_ncauto.png)
+2026-05-14 01:48:04,251 [INFO] web_app_operator:   [企業情報タブ] 検証開始
+2026-05-14 01:48:04,258 [WARNING] web_app_operator:   [企業情報タブ] が見つかりません（タブ未表示の可能性、ページ全体で代替検証）
+2026-05-14 01:48:04,371 [INFO] web_app_operator:   [OK] [企業情報タブ] 企業名/IDを確認 (スクショ: screenshots/tab_企業情報_ncauto.png)
+2026-05-14 01:48:04,372 [INFO] web_app_operator:   [OK] FAQ・企業情報タブともに対象企業のコンテンツを確認
+2026-05-14 01:48:06,388 [INFO] web_app_operator: コンテンツ保存処理完了
+2026-05-14 01:48:06,389 [INFO] spreadsheet_manager: 企業リスト保存完了: 29社 → C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\data\company_list.csv
+2026-05-14 01:48:06,389 [INFO] __main__:   → コンテンツ生成・保存・検証完了
+2026-05-14 01:48:06,390 [INFO] spreadsheet_manager: 企業リスト保存完了: 29社 → C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\data\company_list.csv
+2026-05-14 01:48:06,390 [INFO] __main__: Step 5/5: フロントエンドアプリURL取得...
+2026-05-14 01:48:06,390 [INFO] __main__: Step 4完了 → ページを閉じて再ログイン（Step 5 のサイドバーキャッシュ対策）
+2026-05-14 01:48:06,390 [INFO] web_app_operator: ページを閉じて再ログインを開始...
+2026-05-14 01:48:06,411 [INFO] web_app_operator:   古いページタブを閉じました
+2026-05-14 01:48:06,444 [INFO] web_app_operator:   新しいページタブを開きました
+2026-05-14 01:48:06,445 [INFO] web_app_operator: 管理画面にログイン中...
+2026-05-14 01:48:12,294 [INFO] web_app_operator: ログイン成功
+2026-05-14 01:48:12,295 [INFO] web_app_operator: ページクローズ＆再ログイン完了
+2026-05-14 01:48:12,295 [INFO] web_app_operator: フロントエンドアプリURL取得開始 (企業ID: ncauto)...
+2026-05-14 01:48:17,920 [INFO] web_app_operator: 企業選択 (ID): ncauto
+2026-05-14 01:48:24,765 [INFO] web_app_operator: 企業選択完了: ncauto
+2026-05-14 01:48:28,303 [INFO] web_app_operator:   サイドバーのaタグからURLを取得成功: https://casual-interview-dev.brainverse-ai.com/ncauto
+2026-05-14 01:48:28,306 [INFO] spreadsheet_manager: 企業リスト保存完了: 29社 → C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\data\company_list.csv
+2026-05-14 01:48:28,306 [INFO] __main__:   → フロントエンドURL: https://casual-interview-dev.brainverse-ai.com/ncauto
+2026-05-14 01:48:28,306 [INFO] __main__: [OK] エヌシーオートメーション株式会社: 全処理完了!
+2026-05-14 01:48:28,306 [INFO] __main__: 
+2026-05-14 01:48:28,306 [INFO] __main__: 1件処理完了 → 再ログイン＆キャッシュクリアを実行
+2026-05-14 01:48:28,307 [INFO] web_app_operator: 再ログイン＆キャッシュクリア開始...
+2026-05-14 01:48:28,311 [INFO] web_app_operator:   LocalStorage/SessionStorageをクリアしました
+2026-05-14 01:48:28,313 [INFO] web_app_operator:   Cookieをクリアしました
+2026-05-14 01:48:30,322 [INFO] web_app_operator: 管理画面にログイン中...
+2026-05-14 01:48:36,295 [INFO] web_app_operator: ログイン成功
+2026-05-14 01:48:36,295 [INFO] web_app_operator: 再ログイン＆キャッシュクリア完了
+2026-05-14 01:48:36,296 [INFO] __main__: 
+2026-05-14 01:48:36,296 [INFO] __main__: ──────────────────────────────────────────────────
+2026-05-14 01:48:36,296 [INFO] __main__: [25/29] とぴあ浜松農業協同組合 (ステータス: 未処理)
+2026-05-14 01:48:36,297 [INFO] __main__: ──────────────────────────────────────────────────
+2026-05-14 01:48:36,297 [INFO] __main__: Step 1/6: ホームページURL候補検索...
+2026-05-14 01:48:36,298 [INFO] url_finder: URL候補検索開始: とぴあ浜松農業協同組合 公式サイト (最大 5 件)
+2026-05-14 01:48:39,819 [INFO] url_finder: 候補ドメイン抽出: とぴあ浜松農業協同組合 -> 2件 (['jatopia.ja-shizuoka.or.jp', 'map.jabank.org'])
+2026-05-14 01:48:39,820 [WARNING] __main__:   [PAUSE] URL内の企業IDが完全一致しない候補が 2 種類 (候補URL 2件) 検出されました → 手動確認待ちにします
+2026-05-14 01:48:39,820 [WARNING] __main__:     候補 1: https://jatopia.ja-shizuoka.or.jp (企業ID: jatopia-ja-shizuoka)
+2026-05-14 01:48:39,820 [WARNING] __main__:     候補 2: https://map.jabank.org (企業ID: map-jabank)
+2026-05-14 01:48:39,821 [INFO] spreadsheet_manager: 企業リスト保存完了: 29社 → C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\data\company_list.csv
+2026-05-14 01:48:39,822 [WARNING] __main__: [HOLD] とぴあ浜松農業協同組合: URL企業ID不一致候補複数 (CSVの「ホームページURL」列に正解URLを記入して再実行してください)
+2026-05-14 01:48:39,822 [INFO] __main__: 
+2026-05-14 01:48:39,822 [INFO] __main__: 1件処理完了 → 再ログイン＆キャッシュクリアを実行
+2026-05-14 01:48:39,822 [INFO] web_app_operator: 再ログイン＆キャッシュクリア開始...
+2026-05-14 01:48:39,826 [INFO] web_app_operator:   LocalStorage/SessionStorageをクリアしました
+2026-05-14 01:48:39,828 [INFO] web_app_operator:   Cookieをクリアしました
+2026-05-14 01:48:41,835 [INFO] web_app_operator: 管理画面にログイン中...
+2026-05-14 01:48:47,617 [INFO] web_app_operator: ログイン成功
+2026-05-14 01:48:47,618 [INFO] web_app_operator: 再ログイン＆キャッシュクリア完了
+2026-05-14 01:48:47,620 [INFO] __main__: 
+2026-05-14 01:48:47,620 [INFO] __main__: ──────────────────────────────────────────────────
+2026-05-14 01:48:47,621 [INFO] __main__: [26/29] 株式会社メイホーエンジニアリング (ステータス: 未処理)
+2026-05-14 01:48:47,622 [INFO] __main__: ──────────────────────────────────────────────────
+2026-05-14 01:48:47,622 [INFO] __main__: Step 1/6: ホームページURL候補検索...
+2026-05-14 01:48:47,623 [INFO] url_finder: URL候補検索開始: 株式会社メイホーエンジニアリング 公式サイト (最大 5 件)
+2026-05-14 01:48:50,836 [INFO] url_finder: 候補ドメイン抽出: 株式会社メイホーエンジニアリング -> 5件 (['www.meihoeng.co.jp', 'www.meihoattivo.co.jp', 'www.meihogroup.com', 'kk-meiho.com', 'www.nikkei.com'])
+2026-05-14 01:48:50,838 [WARNING] __main__:   [PAUSE] URL内の企業IDが完全一致しない候補が 5 種類 (候補URL 5件) 検出されました → 手動確認待ちにします
+2026-05-14 01:48:50,838 [WARNING] __main__:     候補 1: https://www.meihoeng.co.jp (企業ID: meihoeng)
+2026-05-14 01:48:50,838 [WARNING] __main__:     候補 2: https://www.meihoattivo.co.jp (企業ID: meihoattivo)
+2026-05-14 01:48:50,838 [WARNING] __main__:     候補 3: https://www.meihogroup.com/company/ (企業ID: meihogroup)
+2026-05-14 01:48:50,838 [WARNING] __main__:     候補 4: https://kk-meiho.com (企業ID: kk-meiho)
+2026-05-14 01:48:50,839 [WARNING] __main__:     候補 5: https://www.nikkei.com (企業ID: nikkei)
+2026-05-14 01:48:50,840 [INFO] spreadsheet_manager: 企業リスト保存完了: 29社 → C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\data\company_list.csv
+2026-05-14 01:48:50,840 [WARNING] __main__: [HOLD] 株式会社メイホーエンジニアリング: URL企業ID不一致候補複数 (CSVの「ホームページURL」列に正解URLを記入して再実行してください)
+2026-05-14 01:48:50,840 [INFO] __main__: 
+2026-05-14 01:48:50,841 [INFO] __main__: 1件処理完了 → 再ログイン＆キャッシュクリアを実行
+2026-05-14 01:48:50,841 [INFO] web_app_operator: 再ログイン＆キャッシュクリア開始...
+2026-05-14 01:48:50,842 [INFO] web_app_operator:   LocalStorage/SessionStorageをクリアしました
+2026-05-14 01:48:50,845 [INFO] web_app_operator:   Cookieをクリアしました
+2026-05-14 01:48:52,855 [INFO] web_app_operator: 管理画面にログイン中...
+2026-05-14 01:48:58,677 [INFO] web_app_operator: ログイン成功
+2026-05-14 01:48:58,677 [INFO] web_app_operator: 再ログイン＆キャッシュクリア完了
+2026-05-14 01:48:58,678 [INFO] __main__: 
+2026-05-14 01:48:58,678 [INFO] __main__: ──────────────────────────────────────────────────
+2026-05-14 01:48:58,680 [INFO] __main__: [27/29] 三菱マテリアルハードメタル株式会社 (ステータス: 未処理)
+2026-05-14 01:48:58,681 [INFO] __main__: ──────────────────────────────────────────────────
+2026-05-14 01:48:58,682 [INFO] __main__: Step 1/6: ホームページURL候補検索...
+2026-05-14 01:48:58,683 [INFO] url_finder: URL候補検索開始: 三菱マテリアルハードメタル株式会社 公式サイト (最大 5 件)
+2026-05-14 01:49:01,876 [INFO] url_finder: 候補ドメイン抽出: 三菱マテリアルハードメタル株式会社 -> 3件 (['www.mmhm.co.jp', 'topics.smt.docomo.ne.jp', 'app.techoffer.jp'])
+2026-05-14 01:49:01,877 [WARNING] __main__:   [PAUSE] URL内の企業IDが完全一致しない候補が 3 種類 (候補URL 3件) 検出されました → 手動確認待ちにします
+2026-05-14 01:49:01,877 [WARNING] __main__:     候補 1: https://www.mmhm.co.jp (企業ID: mmhm)
+2026-05-14 01:49:01,878 [WARNING] __main__:     候補 2: https://topics.smt.docomo.ne.jp (企業ID: topics-smt-docomo)
+2026-05-14 01:49:01,878 [WARNING] __main__:     候補 3: https://app.techoffer.jp (企業ID: app-techoffer)
+2026-05-14 01:49:01,879 [INFO] spreadsheet_manager: 企業リスト保存完了: 29社 → C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\data\company_list.csv
+2026-05-14 01:49:01,879 [WARNING] __main__: [HOLD] 三菱マテリアルハードメタル株式会社: URL企業ID不一致候補複数 (CSVの「ホームページURL」列に正解URLを記入して再実行してください)
+2026-05-14 01:49:01,879 [INFO] __main__: 
+2026-05-14 01:49:01,880 [INFO] __main__: 1件処理完了 → 再ログイン＆キャッシュクリアを実行
+2026-05-14 01:49:01,881 [INFO] web_app_operator: 再ログイン＆キャッシュクリア開始...
+2026-05-14 01:49:01,888 [INFO] web_app_operator:   LocalStorage/SessionStorageをクリアしました
+2026-05-14 01:49:01,895 [INFO] web_app_operator:   Cookieをクリアしました
+2026-05-14 01:49:03,908 [INFO] web_app_operator: 管理画面にログイン中...
+2026-05-14 01:49:09,689 [INFO] web_app_operator: ログイン成功
+2026-05-14 01:49:09,689 [INFO] web_app_operator: 再ログイン＆キャッシュクリア完了
+2026-05-14 01:49:09,690 [INFO] __main__: 
+2026-05-14 01:49:09,691 [INFO] __main__: ──────────────────────────────────────────────────
+2026-05-14 01:49:09,692 [INFO] __main__: [28/29] 豊橋ヤナセ株式会社 (ステータス: 未処理)
+2026-05-14 01:49:09,694 [INFO] __main__: ──────────────────────────────────────────────────
+2026-05-14 01:49:09,694 [INFO] __main__: Step 1/6: ホームページURL候補検索...
+2026-05-14 01:49:09,695 [INFO] url_finder: URL候補検索開始: 豊橋ヤナセ株式会社 公式サイト (最大 5 件)
+2026-05-14 01:49:12,855 [INFO] url_finder: 候補ドメイン抽出: 豊橋ヤナセ株式会社 -> 5件 (['www.toyohashi-yanase.com', 'www.yanase.co.jp', 'www.mercedes-benz-toyohashi.jp', 'yanase.jp', 'media.mercedes-benz.jp'])
+2026-05-14 01:49:12,855 [WARNING] __main__:   [PAUSE] URL内の企業IDが完全一致しない候補が 4 種類 (候補URL 5件) 検出されました → 手動確認待ちにします
+2026-05-14 01:49:12,855 [WARNING] __main__:     候補 1: https://www.toyohashi-yanase.com (企業ID: toyohashi-yanase)
+2026-05-14 01:49:12,856 [WARNING] __main__:     候補 2: https://www.yanase.co.jp (企業ID: yanase)
+2026-05-14 01:49:12,856 [WARNING] __main__:     候補 3: https://www.mercedes-benz-toyohashi.jp (企業ID: mercedes-benz-toyohashi)
+2026-05-14 01:49:12,857 [WARNING] __main__:     候補 4: https://yanase.jp (企業ID: yanase)
+2026-05-14 01:49:12,858 [WARNING] __main__:     候補 5: https://media.mercedes-benz.jp/%E3%83%A1%E3%83%AB%E3%82%BB%E3%83%87%E3%82%B9%E3%83%BB%E3%83%99%E3%83%B3%E3%83%84%E6%AD%A3%E8%A6%8F%E8%B2%A9%E5%A3%B2%E5%BA%97%E3%80%8C%E3%83%A1%E3%83%AB%E3%82%BB%E3%83%87%E3%82%B9%E3%83%BB%E3%83%99%E3%83%B3%E3%83%84%E8%B1%8A%E6%A9%8B%E3%80%8D%E7%A7%BB%E8%BB%A2%E3%83%BB%E6%96%B0%E8%A3%85%E3%82%AA%E3%83%BC%E3%83%97%E3%83%B3/ (企業ID: media-mercedes-benz)
+2026-05-14 01:49:12,860 [INFO] spreadsheet_manager: 企業リスト保存完了: 29社 → C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\data\company_list.csv
+2026-05-14 01:49:12,861 [WARNING] __main__: [HOLD] 豊橋ヤナセ株式会社: URL企業ID不一致候補複数 (CSVの「ホームページURL」列に正解URLを記入して再実行してください)
+2026-05-14 01:49:12,861 [INFO] __main__: 
+2026-05-14 01:49:12,861 [INFO] __main__: 1件処理完了 → 再ログイン＆キャッシュクリアを実行
+2026-05-14 01:49:12,862 [INFO] web_app_operator: 再ログイン＆キャッシュクリア開始...
+2026-05-14 01:49:12,868 [INFO] web_app_operator:   LocalStorage/SessionStorageをクリアしました
+2026-05-14 01:49:12,872 [INFO] web_app_operator:   Cookieをクリアしました
+2026-05-14 01:49:14,875 [INFO] web_app_operator: 管理画面にログイン中...
+2026-05-14 01:49:20,665 [INFO] web_app_operator: ログイン成功
+2026-05-14 01:49:20,666 [INFO] web_app_operator: 再ログイン＆キャッシュクリア完了
+2026-05-14 01:49:20,667 [INFO] __main__: 
+2026-05-14 01:49:20,668 [INFO] __main__: ──────────────────────────────────────────────────
+2026-05-14 01:49:20,669 [INFO] __main__: [29/29] 株式会社i-plug (ステータス: 未処理)
+2026-05-14 01:49:20,670 [INFO] __main__: ──────────────────────────────────────────────────
+2026-05-14 01:49:20,672 [INFO] __main__: Step 1/6: ホームページURL候補検索...
+2026-05-14 01:49:20,672 [INFO] url_finder: URL候補検索開始: 株式会社i-plug 公式サイト (最大 5 件)
+2026-05-14 01:49:23,868 [INFO] url_finder: 候補ドメイン抽出: 株式会社i-plug -> 5件 (['i-plug.co.jp', 'macloud.jp', 'www.innovation-osaka.jp', 'www.kansai-ap.biz', 'coursevalu.com'])
+2026-05-14 01:49:23,870 [WARNING] __main__:   [PAUSE] URL内の企業IDが完全一致しない候補が 5 種類 (候補URL 5件) 検出されました → 手動確認待ちにします
+2026-05-14 01:49:23,870 [WARNING] __main__:     候補 1: https://i-plug.co.jp (企業ID: i-plug)
+2026-05-14 01:49:23,871 [WARNING] __main__:     候補 2: https://macloud.jp (企業ID: macloud)
+2026-05-14 01:49:23,871 [WARNING] __main__:     候補 3: https://www.innovation-osaka.jp (企業ID: innovation-osaka)
+2026-05-14 01:49:23,871 [WARNING] __main__:     候補 4: https://www.kansai-ap.biz (企業ID: kansai-ap)
+2026-05-14 01:49:23,872 [WARNING] __main__:     候補 5: https://coursevalu.com (企業ID: coursevalu)
+2026-05-14 01:49:23,873 [INFO] spreadsheet_manager: 企業リスト保存完了: 29社 → C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\data\company_list.csv
+2026-05-14 01:49:23,873 [WARNING] __main__: [HOLD] 株式会社i-plug: URL企業ID不一致候補複数 (CSVの「ホームページURL」列に正解URLを記入して再実行してください)
+2026-05-14 01:49:24,290 [INFO] __main__: 
+2026-05-14 01:49:24,290 [INFO] __main__: ============================================================
+2026-05-14 01:49:24,290 [INFO] __main__: DOCdemo 自動化フロー 完了サマリー
+2026-05-14 01:49:24,290 [INFO] __main__: ============================================================
+2026-05-14 01:49:24,290 [INFO] __main__:   処理対象:    29社
+2026-05-14 01:49:24,290 [INFO] __main__:   処理完了:    29社
+2026-05-14 01:49:24,292 [INFO] __main__:   [OK] 成功:    2社
+2026-05-14 01:49:24,292 [INFO] __main__:   [HOLD] URL企業ID不一致候補複数: 27社（手動確認待ち）
+2026-05-14 01:49:24,292 [INFO] __main__:   [SKIP] スキップ: 0社
+2026-05-14 01:49:24,292 [INFO] __main__:   [ERR] エラー:  0社
+2026-05-14 01:49:24,292 [INFO] __main__:   所要時間:    0:16:54.862101
+2026-05-14 01:49:24,292 [INFO] __main__: ============================================================
+2026-05-14 01:49:24,293 [INFO] __main__:   ※ URL企業ID不一致候補複数で HOLD された企業は CSV の 「ホームページURL」列に「URL候補」列の中から正しいURLを記入して 再実行してください。
+2026-05-14 01:49:24,293 [INFO] __main__: ============================================================
+2026-05-14 01:49:24,317 [INFO] spreadsheet_manager: 企業リスト読み込み完了: 29社
+2026-05-14 01:49:24,317 [INFO] __main__: 納品URL一覧を生成: C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\data\company_list_delivery_urls.csv (29社中、納品URLあり 2社)
+2026-05-14 02:01:12,970 [INFO] __main__: ============================================================
+2026-05-14 02:01:12,971 [INFO] __main__: DOCdemo 自動化フロー 開始
+2026-05-14 02:01:12,971 [INFO] __main__: 開始時刻: 2026-05-14 02:01:12
+2026-05-14 02:01:12,971 [INFO] __main__: ============================================================
+2026-05-14 02:01:13,033 [INFO] spreadsheet_manager: 企業リスト読み込み完了: 29社
+2026-05-14 02:01:13,033 [INFO] spreadsheet_manager: 処理対象企業: 27社 / 全29社
+2026-05-14 02:01:13,034 [INFO] __main__: 処理対象: 27社
+2026-05-14 02:01:14,125 [INFO] web_app_operator: 管理画面にログイン中...
+2026-05-14 02:01:20,091 [INFO] web_app_operator: ログイン成功
+2026-05-14 02:01:20,091 [INFO] __main__: 
+2026-05-14 02:01:20,091 [INFO] __main__: ──────────────────────────────────────────────────
+2026-05-14 02:01:20,092 [INFO] __main__: [1/27] 株式会社すかいらーくホールディングス (ステータス: 同名企業該当)
+2026-05-14 02:01:20,092 [INFO] __main__: ──────────────────────────────────────────────────
+2026-05-14 02:01:20,092 [INFO] __main__: Step 1/6: URL企業ID不一致 HOLD からの手動再開: https://corp.skylark.co.jp
+2026-05-14 02:01:20,094 [INFO] spreadsheet_manager: 企業リスト保存完了: 29社 → C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\data\company_list.csv
+2026-05-14 02:01:20,094 [INFO] __main__: Step 2/6: 企業追加...
+2026-05-14 02:01:20,094 [INFO] web_app_operator: 企業追加開始: 株式会社すかいらーくホールディングス
+2026-05-14 02:01:34,670 [INFO] web_app_operator: 企業追加完了: 株式会社すかいらーくホールディングス (ID: corp-skylark)
+2026-05-14 02:01:34,671 [INFO] __main__: Step 2.5/6: 追加企業のID検証...
+2026-05-14 02:01:34,672 [INFO] web_app_operator:   企業ID検証中: 期待ID=corp-skylark, URL=https://corp.skylark.co.jp
+2026-05-14 02:01:37,227 [INFO] web_app_operator:   [OK] 企業ID 'corp-skylark' をページ内に確認
+2026-05-14 02:01:37,232 [INFO] spreadsheet_manager: 企業リスト保存完了: 29社 → C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\data\company_list.csv
+2026-05-14 02:01:37,233 [INFO] __main__:   → 企業追加完了 (ID: corp-skylark)
+2026-05-14 02:01:37,233 [INFO] __main__: 企業追加完了 → ページを閉じて再ログイン（キャッシュバグ防止）
+2026-05-14 02:01:37,233 [INFO] web_app_operator: ページを閉じて再ログインを開始...
+2026-05-14 02:01:37,266 [INFO] web_app_operator:   古いページタブを閉じました
+2026-05-14 02:01:37,300 [INFO] web_app_operator:   新しいページタブを開きました
+2026-05-14 02:01:37,301 [INFO] web_app_operator: 管理画面にログイン中...
+2026-05-14 02:01:43,168 [INFO] web_app_operator: ログイン成功
+2026-05-14 02:01:43,168 [INFO] web_app_operator: ページクローズ＆再ログイン完了
+2026-05-14 02:01:43,168 [INFO] __main__: Step 3/5: URL収集...
+2026-05-14 02:01:51,331 [INFO] recruit_url_finder: 求人サイトURL収集開始: 株式会社すかいらーくホールディングス (正規化: 'すかいらーくホールディングス')
+2026-05-14 02:01:54,069 [INFO] recruit_url_finder:   [マイナビ転職] 2件取り込み (累計 2件)
+2026-05-14 02:01:56,722 [INFO] recruit_url_finder:   [マイナビ新卒] 2件取り込み (累計 4件)
+2026-05-14 02:01:59,432 [INFO] recruit_url_finder:   [リクナビ] 2件取り込み (累計 6件)
+2026-05-14 02:02:02,002 [INFO] recruit_url_finder:   [DODA] 2件取り込み (累計 8件)
+2026-05-14 02:02:04,669 [INFO] recruit_url_finder:   [エン転職] 2件取り込み (累計 10件)
+2026-05-14 02:02:04,672 [INFO] recruit_url_finder: 求人サイトURL収集完了: 株式会社すかいらーくホールディングス → 合計 10 件
+2026-05-14 02:02:04,672 [INFO] __main__:   → 内部リンク:30件, 求人サイト:10件, 合計:40件
+2026-05-14 02:02:04,672 [INFO] __main__: Step 4/5: コンテンツ生成...
+2026-05-14 02:02:08,308 [INFO] __main__:   [検証] コンテンツ生成画面のヘッダーが対象企業に切替済か確認...
+2026-05-14 02:02:08,308 [INFO] web_app_operator: サイドバーから企業選択開始: 株式会社すかいらーくホールディングス
+2026-05-14 02:02:15,488 [INFO] web_app_operator:   ヘッダー検証中: 企業名=株式会社すかいらーくホールディングス, ID=corp-skylark
+2026-05-14 02:02:15,514 [INFO] web_app_operator:   [OK] ヘッダー検証成功: 「🤖 株式会社すかいらーくホールディングス コンテンツ生成」
+2026-05-14 02:02:15,515 [INFO] web_app_operator: サイドバー企業選択完了: 株式会社すかいらーくホールディングス
+2026-05-14 02:02:15,515 [INFO] web_app_operator: URL入力開始: 40件
+2026-05-14 02:02:19,188 [INFO] web_app_operator:   「全入力を処理」ボタンをクリックしました
+2026-05-14 02:02:53,722 [INFO] web_app_operator: URL入力・処理開始完了: 40件
+2026-05-14 02:02:53,722 [INFO] web_app_operator: コンテンツ生成開始...
+2026-05-14 02:03:04,322 [INFO] web_app_operator:   生成準備完了の待機中...
+2026-05-14 02:03:24,336 [WARNING] web_app_operator:   生成準備完了メッセージが特定できませんでしたが、続行を試みます
+2026-05-14 02:03:44,340 [WARNING] web_app_operator:   コンテンツ生成ボタン未検出 (試行 1/3) — 生成タブを再クリック
+2026-05-14 02:03:54,900 [INFO] web_app_operator:   コンテンツ生成ボタン検出 (試行 2/3)
+2026-05-14 02:03:55,435 [INFO] web_app_operator: コンテンツ生成中... (最大5分待機)
+2026-05-14 02:05:00,769 [INFO] web_app_operator: 生成完了検出 (経過: 65.0秒)
+2026-05-14 02:05:00,769 [INFO] web_app_operator: コンテンツ生成完了
+2026-05-14 02:05:00,769 [INFO] __main__:   [検証] 保存後のFAQ・企業情報タブを確認...
+2026-05-14 02:05:00,769 [INFO] web_app_operator: コンテンツ保存開始...
+2026-05-14 02:05:04,968 [INFO] web_app_operator:   FAQ保存ボタンの表示を確認中...
+2026-05-14 02:05:04,992 [INFO] web_app_operator:   FAQ保存ボタンの表示を確認（=FAQプレビュー描画完了）
+2026-05-14 02:05:04,992 [INFO] web_app_operator:   STEP1: FAQ保存ボタンを即クリック...
+2026-05-14 02:05:06,063 [INFO] web_app_operator:   FAQ保存ボタンをクリックしました
+2026-05-14 02:05:11,080 [WARNING] web_app_operator:   FAQ保存完了メッセージが出なかったため、もう一度クリックします
+2026-05-14 02:05:12,292 [INFO] web_app_operator:   FAQ保存ボタンを再クリックしました
+2026-05-14 02:05:15,821 [INFO] web_app_operator:   STEP2: 企業情報を保存ボタン（赤）を探してクリック...
+2026-05-14 02:05:17,358 [INFO] web_app_operator:   「企業情報を保存」ボタンが直接見つからないため、全ボタンを確認...
+2026-05-14 02:05:17,411 [INFO] web_app_operator:     保存関連ボタン発見: [👁️ プレビュー・保存]
+2026-05-14 02:05:17,440 [INFO] web_app_operator:     保存関連ボタン発見: [💾 FAQ保存（置換）]
+2026-05-14 02:05:17,446 [INFO] web_app_operator:     保存関連ボタン発見: [💾 企業情報保存]
+2026-05-14 02:05:17,459 [INFO] web_app_operator:   赤いボタンをクリック: [💾 企業情報保存]
+2026-05-14 02:05:23,649 [INFO] web_app_operator:   企業情報を保存ボタンのクリック完了
+2026-05-14 02:05:33,669 [WARNING] web_app_operator:   明確な保存完了メッセージは確認できませんでしたが、処理を続行します
+2026-05-14 02:05:33,670 [INFO] web_app_operator:   コンテンツ管理タブで保存確認中: 株式会社すかいらーくホールディングス
+2026-05-14 02:05:47,499 [INFO] web_app_operator:   [OK] コンテンツ管理ページ: corp-skylark の存在を確認
+2026-05-14 02:05:47,499 [INFO] web_app_operator:   [FAQタブ] 検証開始
+2026-05-14 02:05:47,511 [WARNING] web_app_operator:   [FAQタブ] が見つかりません（タブ未表示の可能性、ページ全体で代替検証）
+2026-05-14 02:05:47,624 [INFO] web_app_operator:   [OK] [FAQタブ] 企業名/IDを確認 (スクショ: screenshots/tab_FAQ_corp-skylark.png)
+2026-05-14 02:05:47,625 [INFO] web_app_operator:   [企業情報タブ] 検証開始
+2026-05-14 02:05:47,633 [WARNING] web_app_operator:   [企業情報タブ] が見つかりません（タブ未表示の可能性、ページ全体で代替検証）
+2026-05-14 02:05:47,745 [INFO] web_app_operator:   [OK] [企業情報タブ] 企業名/IDを確認 (スクショ: screenshots/tab_企業情報_corp-skylark.png)
+2026-05-14 02:05:47,745 [INFO] web_app_operator:   [OK] FAQ・企業情報タブともに対象企業のコンテンツを確認
+2026-05-14 02:05:49,764 [INFO] web_app_operator: コンテンツ保存処理完了
+2026-05-14 02:05:49,780 [INFO] spreadsheet_manager: 企業リスト保存完了: 29社 → C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\data\company_list.csv
+2026-05-14 02:05:49,780 [INFO] __main__:   → コンテンツ生成・保存・検証完了
+2026-05-14 02:05:49,780 [INFO] spreadsheet_manager: 企業リスト保存完了: 29社 → C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\data\company_list.csv
+2026-05-14 02:05:49,780 [INFO] __main__: Step 5/5: フロントエンドアプリURL取得...
+2026-05-14 02:05:49,780 [INFO] __main__: Step 4完了 → ページを閉じて再ログイン（Step 5 のサイドバーキャッシュ対策）
+2026-05-14 02:05:49,780 [INFO] web_app_operator: ページを閉じて再ログインを開始...
+2026-05-14 02:05:49,819 [INFO] web_app_operator:   古いページタブを閉じました
+2026-05-14 02:05:49,866 [INFO] web_app_operator:   新しいページタブを開きました
+2026-05-14 02:05:49,866 [INFO] web_app_operator: 管理画面にログイン中...
+2026-05-14 02:05:55,710 [INFO] web_app_operator: ログイン成功
+2026-05-14 02:05:55,710 [INFO] web_app_operator: ページクローズ＆再ログイン完了
+2026-05-14 02:05:55,710 [INFO] web_app_operator: フロントエンドアプリURL取得開始 (企業ID: corp-skylark)...
+2026-05-14 02:06:01,437 [INFO] web_app_operator: 企業選択 (ID): corp-skylark
+2026-05-14 02:06:08,313 [INFO] web_app_operator: 企業選択完了: corp-skylark
+2026-05-14 02:06:11,862 [INFO] web_app_operator:   サイドバーのaタグからURLを取得成功: https://casual-interview-dev.brainverse-ai.com/corp-skylark
+2026-05-14 02:06:11,865 [INFO] spreadsheet_manager: 企業リスト保存完了: 29社 → C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\data\company_list.csv
+2026-05-14 02:06:11,865 [INFO] __main__:   → フロントエンドURL: https://casual-interview-dev.brainverse-ai.com/corp-skylark
+2026-05-14 02:06:11,865 [INFO] __main__: [OK] 株式会社すかいらーくホールディングス: 全処理完了!
+2026-05-14 02:06:11,865 [INFO] __main__: 
+2026-05-14 02:06:11,865 [INFO] __main__: 1件処理完了 → 再ログイン＆キャッシュクリアを実行
+2026-05-14 02:06:11,865 [INFO] web_app_operator: 再ログイン＆キャッシュクリア開始...
+2026-05-14 02:06:11,873 [INFO] web_app_operator:   LocalStorage/SessionStorageをクリアしました
+2026-05-14 02:06:11,877 [INFO] web_app_operator:   Cookieをクリアしました
+2026-05-14 02:06:13,899 [INFO] web_app_operator: 管理画面にログイン中...
+2026-05-14 02:06:19,915 [INFO] web_app_operator: ログイン成功
+2026-05-14 02:06:19,915 [INFO] web_app_operator: 再ログイン＆キャッシュクリア完了
+2026-05-14 02:06:19,919 [INFO] __main__: 
+2026-05-14 02:06:19,919 [INFO] __main__: ──────────────────────────────────────────────────
+2026-05-14 02:06:19,920 [INFO] __main__: [2/27] 柏印柏崎青果株式会社 (ステータス: 同名企業該当)
+2026-05-14 02:06:19,920 [INFO] __main__: ──────────────────────────────────────────────────
+2026-05-14 02:06:19,922 [INFO] __main__: Step 1/6: URL企業ID不一致 HOLD からの手動再開: https://k-kashiwazakiseika.com
+2026-05-14 02:06:19,926 [INFO] spreadsheet_manager: 企業リスト保存完了: 29社 → C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\data\company_list.csv
+2026-05-14 02:06:19,926 [INFO] __main__: Step 2/6: 企業追加...
+2026-05-14 02:06:19,928 [INFO] web_app_operator: 企業追加開始: 柏印柏崎青果株式会社
+2026-05-14 02:06:34,488 [INFO] web_app_operator: 企業追加完了: 柏印柏崎青果株式会社 (ID: k-kashiwazakiseika)
+2026-05-14 02:06:34,488 [INFO] __main__: Step 2.5/6: 追加企業のID検証...
+2026-05-14 02:06:34,488 [INFO] web_app_operator:   企業ID検証中: 期待ID=k-kashiwazakiseika, URL=https://k-kashiwazakiseika.com
+2026-05-14 02:06:37,038 [INFO] web_app_operator:   [OK] 企業ID 'k-kashiwazakiseika' をページ内に確認
+2026-05-14 02:06:37,045 [INFO] spreadsheet_manager: 企業リスト保存完了: 29社 → C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\data\company_list.csv
+2026-05-14 02:06:37,045 [INFO] __main__:   → 企業追加完了 (ID: k-kashiwazakiseika)
+2026-05-14 02:06:37,047 [INFO] __main__: 企業追加完了 → ページを閉じて再ログイン（キャッシュバグ防止）
+2026-05-14 02:06:37,047 [INFO] web_app_operator: ページを閉じて再ログインを開始...
+2026-05-14 02:06:37,069 [INFO] web_app_operator:   古いページタブを閉じました
+2026-05-14 02:06:37,096 [INFO] web_app_operator:   新しいページタブを開きました
+2026-05-14 02:06:37,097 [INFO] web_app_operator: 管理画面にログイン中...
+2026-05-14 02:06:43,484 [INFO] web_app_operator: ログイン成功
+2026-05-14 02:06:43,485 [INFO] web_app_operator: ページクローズ＆再ログイン完了
+2026-05-14 02:06:43,485 [INFO] __main__: Step 3/5: URL収集...
+2026-05-14 02:06:49,430 [INFO] recruit_url_finder: 求人サイトURL収集開始: 柏印柏崎青果株式会社 (正規化: '柏印柏崎青果')
+2026-05-14 02:06:52,187 [INFO] recruit_url_finder:   [マイナビ転職] 2件取り込み (累計 2件)
+2026-05-14 02:06:54,822 [INFO] recruit_url_finder:   [マイナビ新卒] 0件取り込み (累計 2件)
+2026-05-14 02:06:57,503 [INFO] recruit_url_finder:   [リクナビ] 2件取り込み (累計 4件)
+2026-05-14 02:07:00,058 [INFO] recruit_url_finder:   [DODA] 2件取り込み (累計 6件)
+2026-05-14 02:07:02,722 [INFO] recruit_url_finder:   [エン転職] 0件取り込み (累計 6件)
+2026-05-14 02:07:05,307 [INFO] recruit_url_finder:   [Wantedly] 0件取り込み (累計 6件)
+2026-05-14 02:07:07,863 [INFO] recruit_url_finder:   [Green] 0件取り込み (累計 6件)
+2026-05-14 02:07:10,522 [INFO] recruit_url_finder:   [Indeed] 2件取り込み (累計 8件)
+2026-05-14 02:07:10,522 [INFO] recruit_url_finder: 求人サイトURL収集完了: 柏印柏崎青果株式会社 → 合計 8 件
+2026-05-14 02:07:10,522 [INFO] __main__:   → 内部リンク:6件, 求人サイト:8件, 合計:14件
+2026-05-14 02:07:10,522 [INFO] __main__: Step 4/5: コンテンツ生成...
+2026-05-14 02:07:14,238 [INFO] __main__:   [検証] コンテンツ生成画面のヘッダーが対象企業に切替済か確認...
+2026-05-14 02:07:14,238 [INFO] web_app_operator: サイドバーから企業選択開始: 柏印柏崎青果株式会社
+2026-05-14 02:07:21,350 [INFO] web_app_operator:   ヘッダー検証中: 企業名=柏印柏崎青果株式会社, ID=k-kashiwazakiseika
+2026-05-14 02:07:21,374 [INFO] web_app_operator:   [OK] ヘッダー検証成功: 「🤖 柏印柏崎青果株式会社 コンテンツ生成」
+2026-05-14 02:07:21,374 [INFO] web_app_operator: サイドバー企業選択完了: 柏印柏崎青果株式会社
+2026-05-14 02:07:21,374 [INFO] web_app_operator: URL入力開始: 14件
+2026-05-14 02:07:24,998 [INFO] web_app_operator:   「全入力を処理」ボタンをクリックしました
+2026-05-14 02:07:59,515 [INFO] web_app_operator: URL入力・処理開始完了: 14件
+2026-05-14 02:07:59,516 [INFO] web_app_operator: コンテンツ生成開始...
+2026-05-14 02:08:10,173 [INFO] web_app_operator:   生成準備完了の待機中...
+2026-05-14 02:08:30,183 [WARNING] web_app_operator:   生成準備完了メッセージが特定できませんでしたが、続行を試みます
+2026-05-14 02:08:30,219 [INFO] web_app_operator:   コンテンツ生成ボタン検出 (試行 1/3)
+2026-05-14 02:08:30,765 [INFO] web_app_operator: コンテンツ生成中... (最大5分待機)
+2026-05-14 02:09:15,978 [INFO] web_app_operator: 生成完了検出 (経過: 45.0秒)
+2026-05-14 02:09:15,978 [INFO] web_app_operator: コンテンツ生成完了
+2026-05-14 02:09:15,980 [INFO] __main__:   [検証] 保存後のFAQ・企業情報タブを確認...
+2026-05-14 02:09:15,980 [INFO] web_app_operator: コンテンツ保存開始...
+2026-05-14 02:09:20,162 [INFO] web_app_operator:   FAQ保存ボタンの表示を確認中...
+2026-05-14 02:09:20,173 [INFO] web_app_operator:   FAQ保存ボタンの表示を確認（=FAQプレビュー描画完了）
+2026-05-14 02:09:20,173 [INFO] web_app_operator:   STEP1: FAQ保存ボタンを即クリック...
+2026-05-14 02:09:22,734 [INFO] web_app_operator:   FAQ保存ボタンをクリックしました
+2026-05-14 02:09:27,736 [WARNING] web_app_operator:   FAQ保存完了メッセージが出なかったため、もう一度クリックします
+2026-05-14 02:09:28,814 [INFO] web_app_operator:   FAQ保存ボタンを再クリックしました
+2026-05-14 02:09:32,346 [INFO] web_app_operator:   STEP2: 企業情報を保存ボタン（赤）を探してクリック...
+2026-05-14 02:09:33,880 [INFO] web_app_operator:   「企業情報を保存」ボタンが直接見つからないため、全ボタンを確認...
+2026-05-14 02:09:33,932 [INFO] web_app_operator:     保存関連ボタン発見: [👁️ プレビュー・保存]
+2026-05-14 02:09:33,972 [INFO] web_app_operator:     保存関連ボタン発見: [💾 FAQ保存（置換）]
+2026-05-14 02:09:33,978 [INFO] web_app_operator:     保存関連ボタン発見: [💾 企業情報保存]
+2026-05-14 02:09:33,988 [INFO] web_app_operator:   赤いボタンをクリック: [💾 企業情報保存]
+2026-05-14 02:09:40,114 [INFO] web_app_operator:   企業情報を保存ボタンのクリック完了
+2026-05-14 02:09:50,116 [WARNING] web_app_operator:   明確な保存完了メッセージは確認できませんでしたが、処理を続行します
+2026-05-14 02:09:50,117 [INFO] web_app_operator:   コンテンツ管理タブで保存確認中: 柏印柏崎青果株式会社
+2026-05-14 02:10:03,729 [INFO] web_app_operator:   [OK] コンテンツ管理ページ: k-kashiwazakiseika の存在を確認
+2026-05-14 02:10:03,729 [INFO] web_app_operator:   [FAQタブ] 検証開始
+2026-05-14 02:10:03,742 [WARNING] web_app_operator:   [FAQタブ] が見つかりません（タブ未表示の可能性、ページ全体で代替検証）
+2026-05-14 02:10:03,871 [INFO] web_app_operator:   [OK] [FAQタブ] 企業名/IDを確認 (スクショ: screenshots/tab_FAQ_k-kashiwazakiseika.png)
+2026-05-14 02:10:03,871 [INFO] web_app_operator:   [企業情報タブ] 検証開始
+2026-05-14 02:10:03,877 [WARNING] web_app_operator:   [企業情報タブ] が見つかりません（タブ未表示の可能性、ページ全体で代替検証）
+2026-05-14 02:10:03,990 [INFO] web_app_operator:   [OK] [企業情報タブ] 企業名/IDを確認 (スクショ: screenshots/tab_企業情報_k-kashiwazakiseika.png)
+2026-05-14 02:10:03,990 [INFO] web_app_operator:   [OK] FAQ・企業情報タブともに対象企業のコンテンツを確認
+2026-05-14 02:10:05,993 [INFO] web_app_operator: コンテンツ保存処理完了
+2026-05-14 02:10:05,993 [INFO] spreadsheet_manager: 企業リスト保存完了: 29社 → C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\data\company_list.csv
+2026-05-14 02:10:05,994 [INFO] __main__:   → コンテンツ生成・保存・検証完了
+2026-05-14 02:10:05,994 [INFO] spreadsheet_manager: 企業リスト保存完了: 29社 → C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\data\company_list.csv
+2026-05-14 02:10:05,994 [INFO] __main__: Step 5/5: フロントエンドアプリURL取得...
+2026-05-14 02:10:05,994 [INFO] __main__: Step 4完了 → ページを閉じて再ログイン（Step 5 のサイドバーキャッシュ対策）
+2026-05-14 02:10:05,994 [INFO] web_app_operator: ページを閉じて再ログインを開始...
+2026-05-14 02:10:06,030 [INFO] web_app_operator:   古いページタブを閉じました
+2026-05-14 02:10:06,064 [INFO] web_app_operator:   新しいページタブを開きました
+2026-05-14 02:10:06,065 [INFO] web_app_operator: 管理画面にログイン中...
+2026-05-14 02:10:11,986 [INFO] web_app_operator: ログイン成功
+2026-05-14 02:10:11,988 [INFO] web_app_operator: ページクローズ＆再ログイン完了
+2026-05-14 02:10:11,988 [INFO] web_app_operator: フロントエンドアプリURL取得開始 (企業ID: k-kashiwazakiseika)...
+2026-05-14 02:10:17,668 [INFO] web_app_operator: 企業選択 (ID): k-kashiwazakiseika
+2026-05-14 02:10:24,546 [INFO] web_app_operator: 企業選択完了: k-kashiwazakiseika
+2026-05-14 02:10:28,088 [INFO] web_app_operator:   サイドバーのaタグからURLを取得成功: https://casual-interview-dev.brainverse-ai.com/k-kashiwazakiseika
+2026-05-14 02:10:28,089 [INFO] spreadsheet_manager: 企業リスト保存完了: 29社 → C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\data\company_list.csv
+2026-05-14 02:10:28,089 [INFO] __main__:   → フロントエンドURL: https://casual-interview-dev.brainverse-ai.com/k-kashiwazakiseika
+2026-05-14 02:10:28,089 [INFO] __main__: [OK] 柏印柏崎青果株式会社: 全処理完了!
+2026-05-14 02:10:28,089 [INFO] __main__: 
+2026-05-14 02:10:28,089 [INFO] __main__: 1件処理完了 → 再ログイン＆キャッシュクリアを実行
+2026-05-14 02:10:28,090 [INFO] web_app_operator: 再ログイン＆キャッシュクリア開始...
+2026-05-14 02:10:28,092 [INFO] web_app_operator:   LocalStorage/SessionStorageをクリアしました
+2026-05-14 02:10:28,094 [INFO] web_app_operator:   Cookieをクリアしました
+2026-05-14 02:10:30,113 [INFO] web_app_operator: 管理画面にログイン中...
+2026-05-14 02:10:36,081 [INFO] web_app_operator: ログイン成功
+2026-05-14 02:10:36,082 [INFO] web_app_operator: 再ログイン＆キャッシュクリア完了
+2026-05-14 02:10:36,082 [INFO] __main__: 
+2026-05-14 02:10:36,082 [INFO] __main__: ──────────────────────────────────────────────────
+2026-05-14 02:10:36,082 [INFO] __main__: [3/27] グランディハウス株式会社 (ステータス: 同名企業該当)
+2026-05-14 02:10:36,082 [INFO] __main__: ──────────────────────────────────────────────────
+2026-05-14 02:10:36,082 [INFO] __main__: Step 1/6: URL企業ID不一致 HOLD からの手動再開: https://www.grandy.co.jp
+2026-05-14 02:10:36,082 [INFO] spreadsheet_manager: 企業リスト保存完了: 29社 → C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\data\company_list.csv
+2026-05-14 02:10:36,082 [INFO] __main__: Step 2/6: 企業追加...
+2026-05-14 02:10:36,082 [INFO] web_app_operator: 企業追加開始: グランディハウス株式会社
+2026-05-14 02:10:50,493 [INFO] web_app_operator: 企業追加完了: グランディハウス株式会社 (ID: grandy)
+2026-05-14 02:10:50,493 [INFO] __main__: Step 2.5/6: 追加企業のID検証...
+2026-05-14 02:10:50,493 [INFO] web_app_operator:   企業ID検証中: 期待ID=grandy, URL=https://www.grandy.co.jp
+2026-05-14 02:10:53,055 [INFO] web_app_operator:   [OK] 企業ID 'grandy' をページ内に確認
+2026-05-14 02:10:53,058 [INFO] spreadsheet_manager: 企業リスト保存完了: 29社 → C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\data\company_list.csv
+2026-05-14 02:10:53,058 [INFO] __main__:   → 企業追加完了 (ID: grandy)
+2026-05-14 02:10:53,060 [INFO] __main__: 企業追加完了 → ページを閉じて再ログイン（キャッシュバグ防止）
+2026-05-14 02:10:53,060 [INFO] web_app_operator: ページを閉じて再ログインを開始...
+2026-05-14 02:10:53,085 [INFO] web_app_operator:   古いページタブを閉じました
+2026-05-14 02:10:53,118 [INFO] web_app_operator:   新しいページタブを開きました
+2026-05-14 02:10:53,118 [INFO] web_app_operator: 管理画面にログイン中...
