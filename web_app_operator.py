@@ -38,6 +38,18 @@ from models import CompanyInfo
 logger = logging.getLogger(__name__)
 
 
+class ContentSaveVerificationError(Exception):
+    """
+    FAQ/企業情報の保存後検証に失敗したことを示す例外。
+
+    orchestrator はこれを捕捉して Step 4 (コンテンツ生成) から再試行する。
+    発生条件:
+        - コンテンツ管理タブの FAQ/企業情報 が空 (未保存)
+        - コンテンツ管理タブに対象企業以外のデータが表示されている (混入)
+    """
+    pass
+
+
 class WebAppOperator:
     """
     Webアプリ管理画面を自動操作するクラス。
@@ -523,6 +535,35 @@ class WebAppOperator:
                 pass
 
         if title_found:
+            # === サニティチェック ===
+            # 通常のタイトルは `🤖 {企業名} コンテンツ生成` の形式（最長 ~80字）。
+            # Streamlit セッション state の破損で、タイトル要素に全企業名が混入する
+            # ケースがあった（2026-05-13 YKT 株式会社）。
+            # その場合タイトル長が 150 字超 + 「株式会社」が複数回出現する。
+            # 検出時は strict モードで例外を投げ、誤った企業に対する後続処理を防ぐ。
+            corp_marker_count = (
+                matched_text.count("株式会社")
+                + matched_text.count("有限会社")
+                + matched_text.count("合同会社")
+                + matched_text.count("法人")
+            )
+            if len(matched_text) > 150 and corp_marker_count >= 3:
+                screenshot_path = (
+                    f"screenshots/title_corrupt_{company.enterprise_id}.png"
+                )
+                await self.page.screenshot(path=screenshot_path)
+                msg = (
+                    f"タイトル要素に複数企業名が混入している可能性: "
+                    f"len={len(matched_text)}, 法人語×{corp_marker_count}回, "
+                    f"スクショ: {screenshot_path}"
+                )
+                if strict:
+                    logger.error(f"  [ERR] {msg}")
+                    raise RuntimeError(msg)
+                else:
+                    logger.warning(f"  [WARN] {msg}")
+                    return
+
             logger.info(f"  [OK] ヘッダー検証成功: 「{matched_text}」")
             return
 
@@ -554,13 +595,22 @@ class WebAppOperator:
         else:
             logger.warning(f"  [WARN] {msg}")
 
-    async def verify_enterprise_id_in_added_company(self, company: CompanyInfo):
+    async def verify_enterprise_id_in_added_company(
+        self,
+        company: CompanyInfo,
+        poll_timeout_seconds: float = 25.0,
+        poll_interval_ms: int = 1500,
+    ):
         """
         Step 2 と Step 3 の間で呼ばれる検証。
 
         企業追加直後、追加した企業のデータ（URL/カード/詳細表示）の中に
         homepage_url から抽出した enterprise_id が含まれているかを確認する。
         企業追加時に意図しないIDが採用されていた場合に検出できる。
+
+        Streamlit の再描画は企業追加直後に数秒〜十数秒遅れて反映されることがあるため、
+        単発チェックではなく poll_timeout_seconds 秒までポーリングする。
+        ページ上で確認できない場合は「企業管理」タブに切り替えて再検証する。
 
         Raises:
             RuntimeError: 追加された企業情報内に enterprise_id が見つからない場合
@@ -575,13 +625,53 @@ class WebAppOperator:
         await self._wait_for_streamlit_load()
         await self.page.wait_for_timeout(1000)
 
-        page_text = await self.page.content()
+        # === 第1段階: 現在のページ上で poll_timeout_seconds 秒までポーリング ===
+        elapsed_ms = 0
+        while elapsed_ms < poll_timeout_seconds * 1000:
+            page_text = await self.page.content()
+            if company.enterprise_id in page_text:
+                logger.info(
+                    f"  [OK] 企業ID '{company.enterprise_id}' をページ内に確認 "
+                    f"({elapsed_ms/1000:.1f}s)"
+                )
+                return
+            await self.page.wait_for_timeout(poll_interval_ms)
+            elapsed_ms += poll_interval_ms
 
-        # 期待されるIDがページ内に出現しているか
-        if company.enterprise_id in page_text:
-            logger.info(f"  [OK] 企業ID '{company.enterprise_id}' をページ内に確認")
-            return
+        # === 第2段階: 「企業管理」タブをクリックして再検証 ===
+        # 企業作成直後に新規企業作成フォームに戻ったまま再描画されない場合の
+        # フォールバック。企業管理タブには登録済み一覧が表示される。
+        logger.info(
+            f"  ID未検出 ({poll_timeout_seconds:.0f}s 経過) → 「企業管理」タブで再確認"
+        )
+        try:
+            mgmt_tab = self.page.locator(
+                '[role="tab"]:has-text("企業管理"), '
+                '[data-baseweb="tab"]:has-text("企業管理"), '
+                'button:has-text("企業管理")'
+            )
+            if await mgmt_tab.count() > 0:
+                await mgmt_tab.first.click()
+                await self.page.wait_for_timeout(2000)
+                await self._wait_for_streamlit_load()
 
+                # タブ切替後にも 15 秒までポーリング
+                fallback_elapsed = 0
+                while fallback_elapsed < 15000:
+                    page_text = await self.page.content()
+                    if company.enterprise_id in page_text:
+                        logger.info(
+                            f"  [OK] 企業ID '{company.enterprise_id}' を「企業管理」タブ内に確認"
+                        )
+                        return
+                    await self.page.wait_for_timeout(poll_interval_ms)
+                    fallback_elapsed += poll_interval_ms
+            else:
+                logger.warning("  「企業管理」タブが見つかりません")
+        except Exception as e:
+            logger.warning(f"  「企業管理」タブでの再確認失敗: {e}")
+
+        # === 失敗時のエラー詳細生成 ===
         # ページ内のURL要素から実際に登録されたIDを推測
         try:
             anchor_hrefs = await self.page.eval_on_selector_all(
@@ -616,7 +706,7 @@ class WebAppOperator:
         logger.info(f"企業選択 (ID): {company_id}")
 
         combobox = self.page.locator('input[aria-label*="企業を選択"], input[aria-label*="選択"]')
-        
+
         if await combobox.count() > 0:
             await combobox.first.click()
             await self.page.wait_for_timeout(500)
@@ -626,7 +716,7 @@ class WebAppOperator:
             option = self.page.locator(
                 f'li[role="option"]:has-text("{company_id}")'
             ).first
-            
+
             try:
                 await option.click(timeout=3000)
             except Exception:
@@ -642,6 +732,144 @@ class WebAppOperator:
         await self.page.wait_for_timeout(2000)
         await self._wait_for_streamlit_load()
         logger.info(f"企業選択完了: {company_id}")
+
+    async def select_company_robust(
+        self,
+        company_id: str,
+        max_retries: int = 3,
+    ) -> bool:
+        """
+        サイドバーから企業をロバストに選択する（select_company の改良版）。
+
+        旧 select_company は、Streamlit baseweb selectbox に対して
+        `input.fill()` を直接呼ぶため、ドロップダウンが開かないままになり
+        選択が反映されないケースがあった（特に候補者面談ページの Step 5 で
+        フロントエンドアプリURLが取得できない 13 社の主要原因）。
+
+        本メソッドは:
+        1. baseweb select ラッパーをクリックしてドロップダウンを確実に開く
+        2. 内側 input に企業IDを入力してオプションをフィルタ
+        3. オプションをクリック or Enter で選択
+        4. **選択結果を検証** — サイドバー内に company_id が表示されているか確認
+        5. 失敗時は最大 max_retries 回まで再試行
+
+        Returns:
+            選択が成功し検証も通れば True、最終的に失敗なら False
+        """
+        sidebar = self.page.locator("[data-testid='stSidebar']")
+
+        for attempt in range(max_retries):
+            logger.info(
+                f"  ロバスト企業選択 試行 {attempt + 1}/{max_retries}: {company_id}"
+            )
+
+            # 1. baseweb select ラッパーまたは aria-label 付き input でドロップダウンを開く
+            select_container = sidebar.locator(
+                'input[aria-label*="企業を選択"], '
+                'input[aria-label*="選択"], '
+                '[data-baseweb="select"]'
+            )
+            if await select_container.count() == 0:
+                logger.warning("  サイドバーに企業選択ボックスが見つかりません")
+                return False
+
+            try:
+                await select_container.first.click()
+                await self.page.wait_for_timeout(800)
+            except Exception as e:
+                logger.warning(f"  ドロップダウンクリック失敗: {e}")
+                continue
+
+            # 2. 内側 input に企業IDを入力
+            actual_input = sidebar.locator(
+                'input[aria-label*="企業を選択"], '
+                'input[aria-label*="選択"], '
+                '[data-baseweb="select"] input, '
+                'input[role="combobox"]'
+            )
+            input_filled = False
+            if await actual_input.count() > 0:
+                try:
+                    await actual_input.first.fill(company_id)
+                    input_filled = True
+                except Exception:
+                    try:
+                        await actual_input.first.type(company_id, delay=30)
+                        input_filled = True
+                    except Exception as e:
+                        logger.warning(f"  入力フィールド書き込み失敗: {e}")
+
+            if input_filled:
+                await self.page.wait_for_timeout(1000)
+
+            # 3. オプションクリック or Enter で確定
+            option = self.page.locator(
+                f'li[role="option"]:has-text("{company_id}")'
+            ).first
+            try:
+                await option.click(timeout=4000)
+                logger.debug(f"    プルダウンから選択: {company_id}")
+            except Exception:
+                try:
+                    if input_filled and await actual_input.count() > 0:
+                        await actual_input.first.press("Enter")
+                        logger.debug("    Enterキーで確定")
+                    else:
+                        await select_container.first.press("Enter")
+                        logger.debug("    Enterキーで確定 (container)")
+                except Exception as e:
+                    logger.warning(f"    確定操作も失敗: {e}")
+
+            await self.page.wait_for_timeout(2000)
+            await self._wait_for_streamlit_load()
+
+            # 4. 選択結果を検証
+            if await self._verify_company_selected_in_sidebar(company_id):
+                logger.info(f"  [OK] 企業選択成功: {company_id}")
+                return True
+
+            logger.warning(
+                f"  企業選択が反映されていません (試行 {attempt + 1}/{max_retries})"
+            )
+            # 失敗時は短く待機してから再試行
+            await self.page.wait_for_timeout(1500)
+
+        logger.error(f"  ロバスト企業選択 失敗: {company_id} ({max_retries} 回試行)")
+        return False
+
+    async def _verify_company_selected_in_sidebar(self, company_id: str) -> bool:
+        """
+        サイドバー上で対象企業が実際に選択されたかを検証する。
+
+        baseweb select の表示値、または「現在選択中」を示すサイドバー上の
+        テキスト要素に company_id が含まれていれば成功とみなす。
+        """
+        sidebar = self.page.locator("[data-testid='stSidebar']")
+
+        # 1. baseweb select 内の選択値表示エリアを確認
+        try:
+            value_locators = sidebar.locator(
+                '[data-baseweb="select"] [class*="ValueContainer"], '
+                '[data-baseweb="select"] [class*="value"], '
+                '[data-baseweb="select"] div'
+            )
+            count = await value_locators.count()
+            for i in range(min(count, 10)):
+                text = (await value_locators.nth(i).text_content()) or ""
+                if company_id in text:
+                    return True
+        except Exception:
+            pass
+
+        # 2. サイドバー全体のテキストに company_id が含まれるか（緩い確認）
+        try:
+            sidebar_text = (await sidebar.text_content()) or ""
+            if company_id in sidebar_text:
+                return True
+        except Exception:
+            pass
+
+        return False
 
     async def input_urls_for_content(self, urls: list):
         """コンテンツ生成ページのURL欄にURLリストを入力する。"""
@@ -919,18 +1147,21 @@ class WebAppOperator:
     async def _verify_content_saved(self, company: CompanyInfo):
         """
         コンテンツ管理タブで FAQ と 企業情報 の両タブを開き、
-        対象企業のコンテンツが正しく保存されているかを検証する。
+        対象企業のコンテンツが正しく保存されているかを厳格検証する。
 
         検証項目:
         1. コンテンツ管理ページに対象企業が選択できること
-        2. FAQタブ内に企業名 or 企業IDの出現
-        3. 企業情報タブ内に企業名 or 企業IDの出現
+        2. FAQタブ内に企業名 or 企業IDの出現 + 実FAQ項目の存在 (未保存検出)
+        3. 企業情報タブ内に企業名 or 企業IDの出現 + 実テキストの存在 (未保存検出)
+        4. 表示中のヘッダー/タイトルに別企業の名前が混入していないこと (誤保存検出)
 
-        いずれの検証も失敗した場合は RuntimeError を送出して
-        誤った企業のコンテンツが保存された状態を検出する。
+        失敗時は ContentSaveVerificationError を送出し、orchestrator が
+        Step 4 (コンテンツ生成) から再試行できるようにする。
 
         Raises:
-            RuntimeError: FAQ/企業情報の両方で対象企業を確認できなかった場合
+            ContentSaveVerificationError:
+                - 未保存検出 (FAQ/企業情報タブが空)
+                - 対象企業以外のデータの混入検出
         """
         logger.info(f"  コンテンツ管理タブで保存確認中: {company.name}")
 
@@ -953,20 +1184,21 @@ class WebAppOperator:
                 and company.name not in page_content):
             msg = (
                 f"コンテンツ管理ページに対象企業 ({company.enterprise_id} / "
-                f"{company.name}) の情報が見つかりません。スクショ: {screenshot_path}"
+                f"{company.name}) の情報が見つかりません (未保存疑い)。"
+                f"スクショ: {screenshot_path}"
             )
             logger.error(f"  [ERR] {msg}")
-            raise RuntimeError(msg)
+            raise ContentSaveVerificationError(msg)
 
         logger.info(
             f"  [OK] コンテンツ管理ページ: {company.enterprise_id} の存在を確認"
         )
 
         # FAQタブ・企業情報タブをそれぞれ開いて検証
-        faq_ok = await self._verify_tab_content(
+        faq_ok, faq_reason = await self._verify_tab_content(
             company, tab_keywords=["FAQ", "よくある質問", "Q&A"], tab_label="FAQ"
         )
-        info_ok = await self._verify_tab_content(
+        info_ok, info_reason = await self._verify_tab_content(
             company,
             tab_keywords=["企業情報", "会社情報", "企業詳細", "プロフィール"],
             tab_label="企業情報",
@@ -975,11 +1207,12 @@ class WebAppOperator:
         if not (faq_ok and info_ok):
             msg = (
                 f"FAQ/企業情報タブのコンテンツ検証に失敗 "
-                f"(faq_ok={faq_ok}, info_ok={info_ok}, "
+                f"(faq_ok={faq_ok}: {faq_reason} / "
+                f"info_ok={info_ok}: {info_reason}, "
                 f"id={company.enterprise_id}, スクショ: {screenshot_path})"
             )
             logger.error(f"  [ERR] {msg}")
-            raise RuntimeError(msg)
+            raise ContentSaveVerificationError(msg)
 
         logger.info("  [OK] FAQ・企業情報タブともに対象企業のコンテンツを確認")
 
@@ -988,10 +1221,17 @@ class WebAppOperator:
         company: CompanyInfo,
         tab_keywords: list,
         tab_label: str,
-    ) -> bool:
+    ) -> tuple:
         """
         指定キーワードを持つタブを開き、そのタブ内に対象企業の
         企業名 or 企業IDが出現するかを検証する。
+
+        厳格化:
+            - 対象企業の名前/IDが本文(タブパネル)に出現するか
+            - タブパネル内に「実体のあるコンテンツ」(FAQ項目や企業情報本文)が
+              存在するか — 空なら未保存と判断
+            - 検査対象は タブパネル (role=tabpanel) に限定し、サイドバー等の
+              無関係要素を除外
 
         Args:
             company: 検証対象の企業
@@ -999,11 +1239,14 @@ class WebAppOperator:
             tab_label: ログ用のタブ名
 
         Returns:
-            タブ内に企業情報が確認できれば True
+            (ok: bool, reason: str)
+              ok=False の場合、reason に未保存/混入などの理由を入れる
         """
         logger.info(f"  [{tab_label}タブ] 検証開始")
 
-        tab_locators = self.page.locator("[data-baseweb='tab'], [role='tab'], button[role='tab']")
+        tab_locators = self.page.locator(
+            "[data-baseweb='tab'], [role='tab'], button[role='tab']"
+        )
         tab_count = await tab_locators.count()
         clicked = False
 
@@ -1022,34 +1265,103 @@ class WebAppOperator:
 
         if not clicked:
             logger.warning(
-                f"  [{tab_label}タブ] が見つかりません（タブ未表示の可能性、"
-                f"ページ全体で代替検証）"
+                f"  [{tab_label}タブ] が見つかりません（タブ未表示の可能性）"
             )
+            return False, "タブが見つからない"
 
-        # タブ表示後のページコンテンツで企業が確認できるか
-        body_text = await self.page.content()
-        # FAQ的な要素を探す（FAQタブの場合）/企業情報的な要素を探す
-        in_company = (
-            (company.enterprise_id and company.enterprise_id in body_text)
-            or (company.name and company.name in body_text)
-        )
+        # タブパネル本文を取得 (サイドバー等の無関係領域を除外)
+        panel_text = await self._get_active_tab_panel_text()
 
         screenshot_path = (
             f"screenshots/tab_{tab_label}_{company.enterprise_id}.png"
         )
         await self.page.screenshot(path=screenshot_path)
 
-        if in_company:
-            logger.info(
-                f"  [OK] [{tab_label}タブ] 企業名/IDを確認 (スクショ: {screenshot_path})"
-            )
-            return True
-        else:
+        # 1. 対象企業の名前/IDが本文に出現するか
+        in_company = (
+            (company.enterprise_id and company.enterprise_id in panel_text)
+            or (company.name and company.name in panel_text)
+        )
+        if not in_company:
             logger.warning(
                 f"  [WARN] [{tab_label}タブ] 企業名/IDを確認できませんでした "
                 f"(スクショ: {screenshot_path})"
             )
+            return False, "対象企業の名前/IDがタブ本文に見つからない"
+
+        # 2. タブパネル内にコンテンツの実体があるか (未保存検出)
+        if not self._tab_has_substantive_content(panel_text, tab_label):
+            logger.warning(
+                f"  [WARN] [{tab_label}タブ] 本文の実体コンテンツが確認できません "
+                f"(未保存疑い、スクショ: {screenshot_path})"
+            )
+            return False, "タブ本文に実体コンテンツがない (未保存疑い)"
+
+        logger.info(
+            f"  [OK] [{tab_label}タブ] 企業名/ID + 実体コンテンツを確認 "
+            f"(スクショ: {screenshot_path})"
+        )
+        return True, ""
+
+    async def _get_active_tab_panel_text(self) -> str:
+        """
+        アクティブなタブパネル (role='tabpanel') の本文テキストを取得する。
+        取れない場合はメインエリア全体にフォールバック。
+        """
+        # 表示中のタブパネル
+        try:
+            panel = self.page.locator(
+                "[role='tabpanel']:visible, [data-baseweb='tab-panel']:visible"
+            )
+            if await panel.count() > 0:
+                txt = await panel.first.inner_text(timeout=3000)
+                if txt and txt.strip():
+                    return txt
+        except Exception:
+            pass
+
+        # フォールバック: メイン領域
+        try:
+            main = self.page.locator(
+                "main, [data-testid='stMain'], section[role='main']"
+            )
+            if await main.count() > 0:
+                return await main.first.inner_text(timeout=3000)
+        except Exception:
+            pass
+
+        # 最終フォールバック: body 全体
+        return await self.page.locator("body").inner_text(timeout=3000)
+
+    def _tab_has_substantive_content(self, text: str, tab_label: str) -> bool:
+        """
+        タブパネル本文に「実体のあるコンテンツ」が存在するかを判定。
+        未保存だと FAQ/企業情報が空のヘッダーのみになるのを検出するため。
+        """
+        if not text:
             return False
+        # 空白除去後の文字数で大まかにフィルタ
+        compact = re.sub(r"\s+", "", text)
+        if len(compact) < 30:
+            return False
+
+        if tab_label == "FAQ":
+            # FAQ項目らしきパターン: 「FAQ 1」「Q1:」「質問1」「Q:」「A:」
+            faq_patterns = [
+                r"FAQ\s*\d+",
+                r"Q\s*\d+",
+                r"質問\s*\d+",
+                r"^\s*Q\s*[:：]",
+                r"^\s*A\s*[:：]",
+            ]
+            for p in faq_patterns:
+                if re.search(p, text, re.MULTILINE):
+                    return True
+            # パターンに一致しなくても、十分な本文があれば許容
+            return len(compact) >= 100
+
+        # 企業情報タブ: 一定量のテキストがあれば実体ありとみなす
+        return len(compact) >= 50
 
     async def _try_select_company_in_page(self, company_id: str):
         """ページ内に企業選択UIがあれば選択を試みる"""
@@ -1347,22 +1659,43 @@ class WebAppOperator:
         await self._wait_for_streamlit_load()
 
         # 企業選択 (company_idが指定されていれば先に選択する)
+        # 旧 select_company は fill+Enter のみで選択検証なし、結果として
+        # Step 5 で 13 社の URL 取得失敗が発生していた。
+        # ロバスト版で選択結果を検証し、失敗時は旧版でフォールバック。
         if company_id:
+            selected_ok = False
             try:
-                await self.select_company(company_id)
-                # 候補者面談ページではStreamlit再描画 + FastAPI同期に時間がかかる
-                await self.page.wait_for_timeout(2000)
-                await self._wait_for_streamlit_load()
+                selected_ok = await self.select_company_robust(
+                    company_id, max_retries=3
+                )
             except Exception as e:
-                logger.warning(f"  候補者面談ページでの企業選択に失敗: {e} — そのまま続行")
+                logger.warning(f"  ロバスト企業選択で例外: {e}")
+
+            if not selected_ok:
+                logger.warning(
+                    "  ロバスト選択が失敗 → 旧 select_company でフォールバック"
+                )
+                try:
+                    await self.select_company(company_id)
+                except Exception as e:
+                    logger.warning(
+                        f"  候補者面談ページでの企業選択に失敗: {e} — そのまま続行"
+                    )
+
+            await self.page.wait_for_timeout(2000)
+            await self._wait_for_streamlit_load()
 
         # 1. サイドバー内の「フロントエンドアプリを開く」aタグを探す
-        # Streamlitの再描画 + FastAPI同期遅延に対応するため最大30秒リトライ
+        # Streamlitの再描画 + FastAPI同期遅延に対応するため最大60秒リトライ
+        # 途中で 15 回未検出 = 30秒経過しても見つからない場合、企業選択を
+        # 再試行してから残りの時間ポーリングを続ける（選択が反映されていない
+        # ケースのリカバリー）。
         sidebar = self.page.locator("[data-testid='stSidebar']")
         sidebar_link = sidebar.locator('a:has-text("フロントエンド")')
 
         last_seen_url = None
-        max_attempts = 15  # 15 * 2s = 最大30秒
+        max_attempts = 30  # 30 * 2s = 最大60秒
+        reselect_at = 15  # 15 回 (30秒) 未検出で再選択を試みる
         for attempt in range(max_attempts):
             try:
                 count = await sidebar_link.count()
@@ -1383,9 +1716,21 @@ class WebAppOperator:
             except Exception as e:
                 logger.debug(f"  試行 {attempt+1}/{max_attempts} エラー: {e}")
 
+            # 30秒経過しても何も検出できていない場合、企業選択を再試行
+            if attempt == reselect_at and company_id and last_seen_url is None:
+                logger.warning(
+                    f"  {reselect_at*2}秒経過でリンク未検出 → 企業を再選択して残り {max_attempts-reselect_at} 回継続"
+                )
+                try:
+                    await self.select_company_robust(company_id, max_retries=2)
+                except Exception as e:
+                    logger.warning(f"  再選択失敗: {e}")
+                await self.page.wait_for_timeout(2000)
+                await self._wait_for_streamlit_load()
+
             await self.page.wait_for_timeout(2000)
 
-        # 30秒経過しても企業ID一致URLが取れない: 他の取得方法を試みる
+        # 60秒経過しても企業ID一致URLが取れない: 他の取得方法を試みる
         logger.warning(
             f"  サイドバーから企業ID({company_id})に一致するURLが取得できませんでした。"
             f"最後に見たURL: {last_seen_url}"

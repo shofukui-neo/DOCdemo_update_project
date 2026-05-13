@@ -1,0 +1,49 @@
+
+    You need to enable JavaScript to run this app.
+    🏢 企業設定・管理企業の作成・管理🆕 新規企業作成📋 企業管理📋 サブスクリプション管理🌐 S3同期📄 テンプレート🆕 Create New CompanySet up a new company with complete directory structure and default content.📋 基本情報企業ID（半角英数字） *表示名 / 音声読み上げ名(日本語推奨) *企業説明🔗 連絡先情報WebサイトURL連絡先メールアドレス企業タイプテンプレートdefaultopenkeyboard_arrow_right⚙️ Advanced OptionsCopy structure from existing company (optional)NoneopenGenerate sample candidate logs🏢 Create Company📋 Manage Existing CompaniesSelect Company to Manage:yktopenLocal Status✅ LocalS3 Status✅ S3FastAPI Status✅ SyncedTotal Files14FAQs0📊 View Details🔧 Validate Structure✅Company structure is valid📤 Backup to S3🗑️ Delete Company📊 ykt DetailsLocal Information:
+Path: data/ykt
+
+Files: 14
+
+Size: 34.41 MB
+
+FAQs: 0
+
+Sessions: 0
+
+Modified: 2026-05-13T00:07:13.222333
+S3 Information:
+Upload time: 2026-05-13T00:07:13.222333
+
+Version: 1.0
+Files:
+admin_config.json
+
+assets/background.webp
+
+assets/icon.webp
+
+assets/喜び.gif
+
+assets/思考.gif
+
+assets/感謝.gif
+
+assets/挨拶1.gif
+
+assets/挨拶2.gif
+
+company_config.json
+
+company_info.md
+
+faqs.json
+
+hr_notification/notification_config.json
+
+questionnaire_config.json
+
+tts_config.json
+📋 サブスクリプション管理企業のサービス利用状況を管理します。開発環境: 180日（約6ヶ月）以上未更新の企業は自動削除されます。🏢 企業ステータス一覧
+  
+

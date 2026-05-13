@@ -1,0 +1,5 @@
+
+    You need to enable JavaScript to run this app.
+    🏢 企業設定・管理企業の作成・管理🆕 新規企業作成📋 企業管理📋 サブスクリプション管理🌐 S3同期📄 テンプレート🆕 Create New CompanySet up a new company with complete directory structure and default content.📋 基本情報企業ID（半角英数字） *表示名 / 音声読み上げ名(日本語推奨) *企業説明🔗 連絡先情報WebサイトURL連絡先メールアドレス企業タイプテンプレートdefaultopenkeyboard_arrow_right⚙️ Advanced OptionsCopy structure from existing company (optional)NoneopenGenerate sample candidate logs🏢 Create Company📋 Manage Existing CompaniesSelect Company to Manage:yktopenLocal Status✅ LocalS3 Status✅ S3FastAPI Status✅ SyncedTotal Files14FAQs0📊 View Details🔧 Validate Structure📤 Backup to S3🗑️ Delete Company📋 サブスクリプション管理企業のサービス利用状況を管理します。開発環境: 180日（約6ヶ月）以上未更新の企業は自動削除されます。🏢 企業ステータス一覧
+  
+

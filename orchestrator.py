@@ -24,6 +24,7 @@ DOCdemo 自動化フロー — メインオーケストレーター
 import asyncio
 import argparse
 import logging
+import subprocess
 import sys
 from datetime import datetime
 from pathlib import Path
@@ -42,13 +43,15 @@ from config import (
     RETRY_COUNT,
     RETRY_DELAY,
     URL_CANDIDATE_MAX,
+    FAQ_SAVE_MAX_RETRIES,
+    PROJECT_ROOT,
 )
 from models import CompanyInfo, ProcessStatus
-from spreadsheet_manager import SpreadsheetManager
+from spreadsheet_manager import SpreadsheetManager, write_url_candidates
 from url_finder import URLFinder
 from image_fetcher import extract_enterprise_id_from_url
 from recruit_url_finder import find_recruit_site_urls
-from web_app_operator import WebAppOperator
+from web_app_operator import WebAppOperator, ContentSaveVerificationError
 
 logger = logging.getLogger(__name__)
 
@@ -255,27 +258,58 @@ class Orchestrator:
                 logger.warning(
                     f"  [PAUSE] URL内の企業IDが完全一致しない候補が "
                     f"{len(unique_ids)} 種類 (候補URL {len(candidates)}件) "
-                    f"検出されました → 手動確認待ちにします"
+                    f"検出されました → HOLD UI ポップアップを起動します"
                 )
                 for idx_c, (cand, eid) in enumerate(
                     zip(candidates, candidate_ids), start=1
                 ):
                     logger.warning(f"    候補 {idx_c}: {cand} (企業ID: {eid})")
+
+                # HOLD状態として一旦記録 (URL候補はサイドカーJSONに自動保存)
                 company.mark_duplicate(
                     candidates,
                     reason=(
                         f"URL内の企業IDが完全一致しない候補が "
                         f"{len(unique_ids)} 種類検出されました。"
-                        "「ホームページURL」列に正しいURLを入力して再実行してください。"
+                        "ポップアップでURLを選択してください。"
                     ),
                 )
+                # CompanyInfo にURL候補を反映してから保存 (サイドカーJSONに書き出される)
+                company.url_candidates = candidates
                 self.sheet_manager.update_company(company, companies)
-                self.stats["duplicate"] += 1
-                logger.warning(
-                    f"[HOLD] {company.name}: URL企業ID不一致候補複数 "
-                    f"(CSVの「ホームページURL」列に正解URLを記入して再実行してください)"
-                )
-                return
+
+                # === HOLD UI を同期起動 (subprocess.run でブロッキング) ===
+                self._launch_hold_ui_for_company(company)
+
+                # UI終了後、CSV を再読込してこの企業の最新状態を取得
+                refreshed = self._reload_company(company, companies)
+                if refreshed is None:
+                    logger.error(f"  [ERR] {company.name}: 再読込失敗")
+                    self.stats["duplicate"] += 1
+                    return
+
+                # ユーザがURLを採用してくれた → URL_FOUND として続行
+                if refreshed.homepage_url:
+                    logger.info(
+                        f"  HOLD UI で URL 採用: {refreshed.homepage_url} → "
+                        f"Step 2 へ続行"
+                    )
+                    company.homepage_url = refreshed.homepage_url
+                    company.url_candidates = refreshed.url_candidates or candidates
+                    url_based_id = extract_enterprise_id_from_url(company.homepage_url)
+                    if url_based_id and url_based_id != "unknown":
+                        company.enterprise_id = url_based_id
+                    company.status = ProcessStatus.URL_FOUND
+                    company.error_message = ""
+                    self.sheet_manager.update_company(company, companies)
+                else:
+                    # ユーザがスキップ or UIを閉じた → HOLDのまま次へ
+                    self.stats["duplicate"] += 1
+                    logger.warning(
+                        f"[HOLD] {company.name}: URLが選択されませんでした "
+                        f"(後で resolve_hold_ui.py を再実行してください)"
+                    )
+                    return
 
             # 候補のURL企業IDが1種類のみ (TLD違い・サブドメイン正規化後に同一)
             # → 先頭の候補URLを採用して通常フロー
@@ -395,37 +429,64 @@ class Orchestrator:
                 logger.warning(f"  [WARN] リンク取得失敗: {e} (続行)")
                 company.extracted_links = [company.homepage_url]
 
-        # ===== Step 4: コンテンツ生成 =====
+        # ===== Step 4: コンテンツ生成 (検証失敗時は最大 FAQ_SAVE_MAX_RETRIES 回再生成) =====
         if company.status in (ProcessStatus.COMPANY_ADDED,):
-            logger.info("Step 4/5: コンテンツ生成...")
+            max_attempts = 1 + FAQ_SAVE_MAX_RETRIES
+            for attempt in range(1, max_attempts + 1):
+                logger.info(
+                    f"Step 4/5: コンテンツ生成... "
+                    f"(試行 {attempt}/{max_attempts})"
+                )
 
-            # コンテンツ生成ページへ遷移
-            await web_operator.navigate_to_content_generator()
-            await web_operator._wait_for_streamlit_load()
+                # コンテンツ生成ページへ遷移
+                await web_operator.navigate_to_content_generator()
+                await web_operator._wait_for_streamlit_load()
 
-            # === Step 4-pre: サイドバーで企業を選択し、ヘッダーが対象企業に
-            #     切り替わっているかを検証（失敗時は例外）===
-            logger.info("  [検証] コンテンツ生成画面のヘッダーが対象企業に切替済か確認...")
-            await web_operator.select_company_from_sidebar(company)
+                # === Step 4-pre: サイドバーで企業を選択し、ヘッダーが対象企業に
+                #     切り替わっているかを検証（失敗時は例外）===
+                logger.info(
+                    "  [検証] コンテンツ生成画面のヘッダーが対象企業に切替済か確認..."
+                )
+                await web_operator.select_company_from_sidebar(company)
 
-            # URL入力
-            if company.extracted_links:
-                await web_operator.input_urls_for_content(company.extracted_links)
-            else:
-                logger.warning("  抽出リンクがありません。ホームページURLのみ入力...")
-                await web_operator.input_urls_for_content([company.homepage_url])
+                # URL入力
+                if company.extracted_links:
+                    await web_operator.input_urls_for_content(company.extracted_links)
+                else:
+                    logger.warning("  抽出リンクがありません。ホームページURLのみ入力...")
+                    await web_operator.input_urls_for_content([company.homepage_url])
 
-            # 生成実行
-            await web_operator.generate_content()
+                # 生成実行
+                await web_operator.generate_content()
 
-            # === Step 4-post: 保存（2段階）+ コンテンツ管理タブで
-            #     FAQ・企業情報の両タブに対象企業のコンテンツが反映されたかを検証 ===
-            logger.info("  [検証] 保存後のFAQ・企業情報タブを確認...")
-            await web_operator.save_content(company)
-
-            company.status = ProcessStatus.CONTENT_GENERATED
-            self.sheet_manager.update_company(company, companies)
-            logger.info("  → コンテンツ生成・保存・検証完了")
+                # === Step 4-post: 保存（2段階）+ コンテンツ管理タブで
+                #     FAQ・企業情報の両タブに対象企業のコンテンツが反映されたかを検証 ===
+                logger.info("  [検証] 保存後のFAQ・企業情報タブを確認...")
+                try:
+                    await web_operator.save_content(company)
+                    company.status = ProcessStatus.CONTENT_GENERATED
+                    self.sheet_manager.update_company(company, companies)
+                    logger.info("  → コンテンツ生成・保存・検証完了")
+                    break
+                except ContentSaveVerificationError as e:
+                    if attempt >= max_attempts:
+                        logger.error(
+                            f"  [ERR] FAQ/企業情報の保存検証に "
+                            f"{max_attempts}回失敗。最終的に失敗とします: {e}"
+                        )
+                        raise
+                    logger.warning(
+                        f"  [RETRY] 保存検証失敗 ({e}) "
+                        f"→ Step 4 (コンテンツ生成) から再試行します "
+                        f"(次回試行 {attempt + 1}/{max_attempts})"
+                    )
+                    # ページ状態をクリーンにしてから次の試行へ
+                    try:
+                        await web_operator.close_page_and_relogin()
+                    except Exception as relogin_err:
+                        logger.warning(
+                            f"  再ログイン失敗（続行）: {relogin_err}"
+                        )
 
         # 背景画像アップロード機能はオミット
         # CONTENT_GENERATED から直接 IMAGE_UPLOADED に遷移して Step 5 (旧Step 6) へ進む
@@ -454,6 +515,60 @@ class Orchestrator:
             logger.info(f"  → フロントエンドURL: {frontend_url}")
 
         logger.info(f"[OK] {company.name}: 全処理完了!")
+
+    def _launch_hold_ui_for_company(self, company: CompanyInfo):
+        """
+        HOLD UI (resolve_hold_ui.py) を subprocess で同期起動する。
+        ユーザがUIを閉じるまでブロッキングし、結果はCSVに書き戻される。
+
+        Args:
+            company: HOLD対象の企業 (--company-id で UI 側にフィルタを渡す)
+        """
+        script_path = PROJECT_ROOT / "resolve_hold_ui.py"
+        cmd = [
+            sys.executable,
+            str(script_path),
+            "--csv", str(self.sheet_manager.csv_path),
+            "--company-id", company.enterprise_id,
+        ]
+        logger.info(
+            f"  HOLD UI ポップアップを起動: {company.name} "
+            f"(企業ID: {company.enterprise_id})"
+        )
+        try:
+            # tkinter UI は親プロセスとは独立したウィンドウなので
+            # subprocess.run で起動 (UIが閉じられるまでブロック)
+            result = subprocess.run(cmd, check=False)
+            logger.info(f"  HOLD UI 終了 (rc={result.returncode})")
+        except Exception as e:
+            logger.error(f"  HOLD UI 起動失敗: {e}")
+
+    def _reload_company(
+        self,
+        company: CompanyInfo,
+        companies: list,
+    ):
+        """
+        CSV を再読込し、指定企業の最新状態を返す。
+        in-place で companies リストも更新する。
+        """
+        try:
+            refreshed_list = self.sheet_manager.read_company_list()
+        except Exception as e:
+            logger.error(f"  CSV 再読込失敗: {e}")
+            return None
+
+        for r in refreshed_list:
+            if r.enterprise_id == company.enterprise_id or r.name == company.name:
+                # in-place で companies リストも更新
+                for i, c in enumerate(companies):
+                    if c.row_index == company.row_index:
+                        # url_candidates は新CSVスキーマでサイドカーJSONから
+                        # 読込済みなので r の値を採用
+                        companies[i] = r
+                        break
+                return r
+        return None
 
     async def _extract_links_only(self, homepage_url: str) -> list:
         """

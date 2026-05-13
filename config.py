@@ -20,6 +20,9 @@ PROJECT_ROOT = Path(__file__).parent
 DATA_DIR = PROJECT_ROOT / "data"
 SCREENSHOTS_DIR = PROJECT_ROOT / "screenshots"
 LOGS_DIR = PROJECT_ROOT / "logs"
+# URL候補をCSVから分離して格納するサイドカーディレクトリ
+# (data/url_candidates/<企業ID>.json に保存)
+URL_CANDIDATES_DIR = DATA_DIR / "url_candidates"
 
 # =============================================================================
 # Webアプリ設定
@@ -43,22 +46,25 @@ PAGES = {
 # 企業リストCSVファイル名
 COMPANY_LIST_CSV = DATA_DIR / "company_list.csv"
 
-# CSVカラム名
+# CSVカラム名 (2026-05-13: URL候補・スクリーンショットパス列を削除)
+# - URL候補: data/url_candidates/<企業ID>.json に分離 (パイプ区切りで列幅広がる問題を解消)
+# - スクリーンショットパス: logs/automation.log に記録するのみで CSV からは削除
 CSV_COLUMNS = {
     "company_name": "企業名",
     "homepage_url": "ホームページURL",
-    "url_candidates": "URL候補",  # URL企業ID不一致検出時の候補URL（パイプ区切り）
     "enterprise_id": "企業ID",
     "frontend_url": "納品URL",  # フロントエンド公開URL = エンドユーザに渡す納品URL
     "status": "ステータス",
     "error_message": "エラー詳細",
-    "screenshot_path": "スクリーンショットパス",
 }
 
 # 旧カラム名（後方互換のため読込時に許容）
 LEGACY_COLUMN_ALIASES = {
     "frontend_url": ["フロントエンドURL"],
 }
+
+# 旧スキーマからの移行用 (読込時のみ参照、書込時は除外)
+LEGACY_COLUMNS_DROPPED = ["URL候補", "スクリーンショットパス"]
 
 # =============================================================================
 # URL企業ID不一致検出設定
@@ -80,6 +86,10 @@ UPLOAD_TIMEOUT = 30000               # ファイルアップロード: 30秒
 # =============================================================================
 RETRY_COUNT = 3        # 最大リトライ回数
 RETRY_DELAY = 5        # リトライ間隔 (秒)
+
+# FAQ/企業情報 保存検証失敗時、Step 4 (コンテンツ生成) から再試行する最大回数
+# (1回目失敗 → +FAQ_SAVE_MAX_RETRIES 回まで再生成、合計試行回数 = 1 + FAQ_SAVE_MAX_RETRIES)
+FAQ_SAVE_MAX_RETRIES = 2
 
 # =============================================================================
 # ブラウザ設定
