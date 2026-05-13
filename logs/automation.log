@@ -28731,3 +28731,152 @@ Call log:
 2026-05-13 17:15:09,301 [INFO] __main__:   → URL: https://www.exsa.jp/index.html, ID: exsa
 2026-05-13 17:15:09,301 [INFO] __main__: Step 2/6: 企業追加...
 2026-05-13 17:15:09,301 [INFO] web_app_operator: 企業追加開始: exsa株式会社
+2026-05-13 17:15:24,212 [INFO] web_app_operator: 企業追加完了: exsa株式会社 (ID: exsa)
+2026-05-13 17:15:24,212 [INFO] __main__: Step 2.5/6: 追加企業のID検証...
+2026-05-13 17:15:24,212 [INFO] web_app_operator:   企業ID検証中: 期待ID=exsa, URL=https://www.exsa.jp/index.html
+2026-05-13 17:15:26,778 [INFO] web_app_operator:   [OK] 企業ID 'exsa' をページ内に確認 (0.0s)
+2026-05-13 17:15:26,831 [INFO] spreadsheet_manager: 企業リスト保存完了: 31社 → data\company_list.csv
+2026-05-13 17:15:26,831 [INFO] __main__:   → 企業追加完了 (ID: exsa)
+2026-05-13 17:15:26,831 [INFO] __main__: 企業追加完了 → ページを閉じて再ログイン（キャッシュバグ防止）
+2026-05-13 17:15:26,831 [INFO] web_app_operator: ページを閉じて再ログインを開始...
+2026-05-13 17:15:26,881 [INFO] web_app_operator:   古いページタブを閉じました
+2026-05-13 17:15:26,948 [INFO] web_app_operator:   新しいページタブを開きました
+2026-05-13 17:15:26,948 [INFO] web_app_operator: 管理画面にログイン中...
+2026-05-13 17:15:33,853 [INFO] web_app_operator: ログイン成功
+2026-05-13 17:15:33,854 [INFO] web_app_operator: ページクローズ＆再ログイン完了
+2026-05-13 17:15:33,854 [INFO] __main__: Step 3/5: URL収集...
+2026-05-13 17:15:41,084 [INFO] recruit_url_finder: 求人サイトURL収集開始: exsa株式会社 (正規化: 'exsa')
+2026-05-13 17:15:43,883 [INFO] recruit_url_finder:   [マイナビ転職] 0件取り込み (累計 0件)
+2026-05-13 17:15:46,580 [INFO] recruit_url_finder:   [マイナビ新卒] 2件取り込み (累計 2件)
+2026-05-13 17:15:49,239 [INFO] recruit_url_finder:   [リクナビ] 0件取り込み (累計 2件)
+2026-05-13 17:15:52,090 [INFO] recruit_url_finder:   [DODA] 2件取り込み (累計 4件)
+2026-05-13 17:15:54,840 [INFO] recruit_url_finder:   [エン転職] 2件取り込み (累計 6件)
+2026-05-13 17:15:57,704 [INFO] recruit_url_finder:   [Wantedly] 2件取り込み (累計 8件)
+2026-05-13 17:16:00,462 [INFO] recruit_url_finder:   [Green] 0件取り込み (累計 8件)
+2026-05-13 17:16:03,360 [INFO] recruit_url_finder:   [Indeed] 2件取り込み (累計 10件)
+2026-05-13 17:16:03,361 [INFO] recruit_url_finder: 求人サイトURL収集完了: exsa株式会社 → 合計 10 件
+2026-05-13 17:16:03,362 [INFO] __main__:   → 内部リンク:27件, 求人サイト:10件, 合計:37件
+2026-05-13 17:16:03,362 [INFO] __main__: Step 4/5: コンテンツ生成... (試行 1/3)
+2026-05-13 17:16:07,070 [INFO] __main__:   [検証] コンテンツ生成画面のヘッダーが対象企業に切替済か確認...
+2026-05-13 17:16:07,070 [INFO] web_app_operator: サイドバーから企業選択開始: exsa株式会社
+2026-05-13 17:16:14,402 [INFO] web_app_operator:   ヘッダー検証中: 企業名=exsa株式会社, ID=exsa
+2026-05-13 17:16:14,527 [INFO] web_app_operator:   [OK] ヘッダー検証成功: 「🤖 exsa株式会社 コンテンツ生成」
+2026-05-13 17:16:14,527 [INFO] web_app_operator: サイドバー企業選択完了: exsa株式会社
+2026-05-13 17:16:14,528 [INFO] web_app_operator: URL入力開始: 37件
+2026-05-13 17:16:18,406 [INFO] web_app_operator:   「全入力を処理」ボタンをクリックしました
+2026-05-13 17:16:52,985 [INFO] web_app_operator: URL入力・処理開始完了: 37件
+2026-05-13 17:16:52,988 [INFO] web_app_operator: コンテンツ生成開始...
+2026-05-13 17:17:03,733 [INFO] web_app_operator:   生成準備完了の待機中...
+2026-05-13 17:17:23,754 [WARNING] web_app_operator:   生成準備完了メッセージが特定できませんでしたが、続行を試みます
+2026-05-13 17:17:26,540 [INFO] web_app_operator:   コンテンツ生成ボタン検出 (試行 1/3)
+2026-05-13 17:17:27,131 [INFO] web_app_operator: コンテンツ生成中... (最大5分待機)
+2026-05-13 17:18:42,887 [INFO] web_app_operator: 生成完了検出 (経過: 75.0秒)
+2026-05-13 17:18:42,887 [INFO] web_app_operator: コンテンツ生成完了
+2026-05-13 17:18:42,887 [INFO] __main__:   [検証] 保存後のFAQ・企業情報タブを確認...
+2026-05-13 17:18:42,887 [INFO] web_app_operator: コンテンツ保存開始...
+2026-05-13 17:18:47,294 [INFO] web_app_operator:   FAQプレビューの確認中...
+2026-05-13 17:19:02,380 [INFO] web_app_operator:   FAQプレビューはページ内に存在 (見出しセレクター不一致を許容)
+2026-05-13 17:19:02,381 [INFO] web_app_operator:   STEP1: 第1保存ボタン（FAQ保存）をクリック...
+2026-05-13 17:19:04,102 [INFO] web_app_operator:   第1保存ボタンをクリックしました
+2026-05-13 17:19:07,678 [INFO] web_app_operator:   STEP2: 企業情報を保存ボタン（赤）を探してクリック...
+2026-05-13 17:19:09,262 [INFO] web_app_operator:   「企業情報を保存」ボタンが直接見つからないため、全ボタンを確認...
+2026-05-13 17:19:09,451 [INFO] web_app_operator:     保存関連ボタン発見: [👁️ プレビュー・保存]
+2026-05-13 17:19:09,622 [INFO] web_app_operator:     保存関連ボタン発見: [💾 FAQ保存（置換）]
+2026-05-13 17:19:09,670 [INFO] web_app_operator:     保存関連ボタン発見: [💾 企業情報保存]
+2026-05-13 17:19:09,734 [INFO] web_app_operator:   赤いボタンをクリック: [💾 企業情報保存]
+2026-05-13 17:19:16,052 [INFO] web_app_operator:   企業情報を保存ボタンのクリック完了
+2026-05-13 17:19:26,067 [WARNING] web_app_operator:   明確な保存完了メッセージは確認できませんでしたが、処理を続行します
+2026-05-13 17:19:26,070 [INFO] web_app_operator:   コンテンツ管理タブで保存確認中: exsa株式会社
+2026-05-13 17:19:40,513 [INFO] web_app_operator:   [OK] コンテンツ管理ページ: exsa の存在を確認
+2026-05-13 17:19:40,513 [INFO] web_app_operator:   [FAQタブ] 検証開始
+2026-05-13 17:19:40,537 [WARNING] web_app_operator:   [FAQタブ] が見つかりません（タブ未表示の可能性）
+2026-05-13 17:19:40,538 [INFO] web_app_operator:   [企業情報タブ] 検証開始
+2026-05-13 17:19:40,561 [WARNING] web_app_operator:   [企業情報タブ] が見つかりません（タブ未表示の可能性）
+2026-05-13 17:19:40,562 [ERROR] web_app_operator:   [ERR] FAQ/企業情報タブのコンテンツ検証に失敗 (faq_ok=False: タブが見つからない / info_ok=False: タブが見つからない, id=exsa, スクショ: screenshots/content_mgmt_exsa.png)
+2026-05-13 17:19:40,564 [WARNING] __main__:   [RETRY] 保存検証失敗 (FAQ/企業情報タブのコンテンツ検証に失敗 (faq_ok=False: タブが見つからない / info_ok=False: タブが見つからない, id=exsa, スクショ: screenshots/content_mgmt_exsa.png)) → Step 4 (コンテンツ生成) から再試行します (次回試行 2/3)
+2026-05-13 17:19:40,564 [INFO] web_app_operator: ページを閉じて再ログインを開始...
+2026-05-13 17:19:40,673 [INFO] web_app_operator:   古いページタブを閉じました
+2026-05-13 17:19:40,771 [INFO] web_app_operator:   新しいページタブを開きました
+2026-05-13 17:19:40,774 [INFO] web_app_operator: 管理画面にログイン中...
+2026-05-13 17:19:56,097 [INFO] web_app_operator: ログイン成功
+2026-05-13 17:19:56,098 [INFO] web_app_operator: ページクローズ＆再ログイン完了
+2026-05-13 17:19:56,098 [INFO] __main__: Step 4/5: コンテンツ生成... (試行 2/3)
+2026-05-13 17:20:00,069 [INFO] __main__:   [検証] コンテンツ生成画面のヘッダーが対象企業に切替済か確認...
+2026-05-13 17:20:00,070 [INFO] web_app_operator: サイドバーから企業選択開始: exsa株式会社
+2026-05-13 17:20:07,422 [INFO] web_app_operator:   ヘッダー検証中: 企業名=exsa株式会社, ID=exsa
+2026-05-13 17:20:07,560 [INFO] web_app_operator:   [OK] ヘッダー検証成功: 「🤖 exsa株式会社 コンテンツ生成」
+2026-05-13 17:20:07,562 [INFO] web_app_operator: サイドバー企業選択完了: exsa株式会社
+2026-05-13 17:20:07,562 [INFO] web_app_operator: URL入力開始: 37件
+2026-05-13 17:20:11,481 [INFO] web_app_operator:   「全入力を処理」ボタンをクリックしました
+2026-05-13 17:20:46,053 [INFO] web_app_operator: URL入力・処理開始完了: 37件
+2026-05-13 17:20:46,054 [INFO] web_app_operator: コンテンツ生成開始...
+2026-05-13 17:20:56,777 [INFO] web_app_operator:   生成準備完了の待機中...
+2026-05-13 17:21:16,808 [WARNING] web_app_operator:   生成準備完了メッセージが特定できませんでしたが、続行を試みます
+2026-05-13 17:21:17,761 [INFO] web_app_operator:   コンテンツ生成ボタン検出 (試行 1/3)
+2026-05-13 17:21:18,365 [INFO] web_app_operator: コンテンツ生成中... (最大5分待機)
+2026-05-13 17:21:59,379 [INFO] web_app_operator: 生成完了検出 (経過: 40.0秒)
+2026-05-13 17:21:59,379 [INFO] web_app_operator: コンテンツ生成完了
+2026-05-13 17:21:59,379 [INFO] __main__:   [検証] 保存後のFAQ・企業情報タブを確認...
+2026-05-13 17:21:59,379 [INFO] web_app_operator: コンテンツ保存開始...
+2026-05-13 17:22:03,841 [INFO] web_app_operator:   FAQプレビューの確認中...
+2026-05-13 17:22:18,918 [INFO] web_app_operator:   FAQプレビューはページ内に存在 (見出しセレクター不一致を許容)
+2026-05-13 17:22:18,918 [INFO] web_app_operator:   STEP1: 第1保存ボタン（FAQ保存）をクリック...
+2026-05-13 17:22:20,653 [INFO] web_app_operator:   第1保存ボタンをクリックしました
+2026-05-13 17:22:24,217 [INFO] web_app_operator:   STEP2: 企業情報を保存ボタン（赤）を探してクリック...
+2026-05-13 17:22:25,774 [INFO] web_app_operator:   「企業情報を保存」ボタンが直接見つからないため、全ボタンを確認...
+2026-05-13 17:22:25,880 [INFO] web_app_operator:     保存関連ボタン発見: [👁️ プレビュー・保存]
+2026-05-13 17:22:25,973 [INFO] web_app_operator:     保存関連ボタン発見: [💾 FAQ保存（置換）]
+2026-05-13 17:22:25,994 [INFO] web_app_operator:     保存関連ボタン発見: [💾 企業情報保存]
+2026-05-13 17:22:26,028 [INFO] web_app_operator:   赤いボタンをクリック: [💾 企業情報保存]
+2026-05-13 17:22:32,229 [INFO] web_app_operator:   企業情報を保存ボタンのクリック完了
+2026-05-13 17:22:42,258 [WARNING] web_app_operator:   明確な保存完了メッセージは確認できませんでしたが、処理を続行します
+2026-05-13 17:22:42,258 [INFO] web_app_operator:   コンテンツ管理タブで保存確認中: exsa株式会社
+2026-05-13 17:22:56,340 [INFO] web_app_operator:   [OK] コンテンツ管理ページ: exsa の存在を確認
+2026-05-13 17:22:56,340 [INFO] web_app_operator:   [FAQタブ] 検証開始
+2026-05-13 17:22:56,362 [WARNING] web_app_operator:   [FAQタブ] が見つかりません（タブ未表示の可能性）
+2026-05-13 17:22:56,362 [INFO] web_app_operator:   [企業情報タブ] 検証開始
+2026-05-13 17:22:56,382 [WARNING] web_app_operator:   [企業情報タブ] が見つかりません（タブ未表示の可能性）
+2026-05-13 17:22:56,384 [ERROR] web_app_operator:   [ERR] FAQ/企業情報タブのコンテンツ検証に失敗 (faq_ok=False: タブが見つからない / info_ok=False: タブが見つからない, id=exsa, スクショ: screenshots/content_mgmt_exsa.png)
+2026-05-13 17:22:56,384 [WARNING] __main__:   [RETRY] 保存検証失敗 (FAQ/企業情報タブのコンテンツ検証に失敗 (faq_ok=False: タブが見つからない / info_ok=False: タブが見つからない, id=exsa, スクショ: screenshots/content_mgmt_exsa.png)) → Step 4 (コンテンツ生成) から再試行します (次回試行 3/3)
+2026-05-13 17:22:56,384 [INFO] web_app_operator: ページを閉じて再ログインを開始...
+2026-05-13 17:22:56,466 [INFO] web_app_operator:   古いページタブを閉じました
+2026-05-13 17:22:56,524 [INFO] web_app_operator:   新しいページタブを開きました
+2026-05-13 17:22:56,524 [INFO] web_app_operator: 管理画面にログイン中...
+2026-05-13 17:23:10,817 [INFO] web_app_operator: ログイン成功
+2026-05-13 17:23:10,817 [INFO] web_app_operator: ページクローズ＆再ログイン完了
+2026-05-13 17:23:10,817 [INFO] __main__: Step 4/5: コンテンツ生成... (試行 3/3)
+2026-05-13 17:23:16,321 [INFO] __main__:   [検証] コンテンツ生成画面のヘッダーが対象企業に切替済か確認...
+2026-05-13 17:23:16,321 [INFO] web_app_operator: サイドバーから企業選択開始: exsa株式会社
+2026-05-13 17:23:26,933 [INFO] web_app_operator:   ヘッダー検証中: 企業名=exsa株式会社, ID=exsa
+2026-05-13 17:23:27,028 [INFO] web_app_operator:   [OK] ヘッダー検証成功: 「🤖 exsa株式会社 コンテンツ生成」
+2026-05-13 17:23:27,028 [INFO] web_app_operator: サイドバー企業選択完了: exsa株式会社
+2026-05-13 17:23:27,028 [INFO] web_app_operator: URL入力開始: 37件
+2026-05-13 17:23:34,377 [INFO] web_app_operator:   「全入力を処理」ボタンをクリックしました
+2026-05-13 17:24:08,957 [INFO] web_app_operator: URL入力・処理開始完了: 37件
+2026-05-13 17:24:08,958 [INFO] web_app_operator: コンテンツ生成開始...
+2026-05-13 17:24:19,682 [INFO] web_app_operator:   生成準備完了の待機中...
+2026-05-13 17:24:39,733 [WARNING] web_app_operator:   生成準備完了メッセージが特定できませんでしたが、続行を試みます
+2026-05-13 17:24:58,935 [INFO] web_app_operator:   コンテンツ生成ボタン検出 (試行 1/3)
+2026-05-13 17:24:59,515 [INFO] web_app_operator: コンテンツ生成中... (最大5分待機)
+2026-05-13 17:25:04,615 [INFO] web_app_operator: 生成完了検出 (経過: 5.0秒)
+2026-05-13 17:25:04,615 [INFO] web_app_operator: コンテンツ生成完了
+2026-05-13 17:25:04,621 [INFO] __main__:   [検証] 保存後のFAQ・企業情報タブを確認...
+2026-05-13 17:25:04,621 [INFO] web_app_operator: コンテンツ保存開始...
+2026-05-13 17:25:08,817 [INFO] web_app_operator:   FAQプレビューの確認中...
+2026-05-13 17:25:23,874 [ERROR] web_app_operator:   FAQプレビューが確認できません。コンテンツ生成に失敗している可能性があります。
+2026-05-13 17:25:24,176 [ERROR] __main__: [ERROR] exsa株式会社: 処理失敗 -- FAQプレビューが確認できませんでした。詳細は screenshots/faq_not_found_exsa.png を確認してください。
+2026-05-13 17:25:24,208 [INFO] spreadsheet_manager: 企業リスト保存完了: 31社 → data\company_list.csv
+2026-05-13 17:25:24,537 [INFO] __main__: 
+2026-05-13 17:25:24,537 [INFO] __main__: ============================================================
+2026-05-13 17:25:24,537 [INFO] __main__: DOCdemo 自動化フロー 完了サマリー
+2026-05-13 17:25:24,537 [INFO] __main__: ============================================================
+2026-05-13 17:25:24,537 [INFO] __main__:   処理対象:    1社
+2026-05-13 17:25:24,539 [INFO] __main__:   処理完了:    1社
+2026-05-13 17:25:24,539 [INFO] __main__:   [OK] 成功:    0社
+2026-05-13 17:25:24,539 [INFO] __main__:   [HOLD] URL企業ID不一致候補複数: 0社（手動確認待ち）
+2026-05-13 17:25:24,539 [INFO] __main__:   [SKIP] スキップ: 0社
+2026-05-13 17:25:24,539 [INFO] __main__:   [ERR] エラー:  1社
+2026-05-13 17:25:24,539 [INFO] __main__:   所要時間:    0:10:27.025320
+2026-05-13 17:25:24,539 [INFO] __main__: ============================================================
+2026-05-13 17:25:24,551 [INFO] spreadsheet_manager: 企業リスト読み込み完了: 31社
+2026-05-13 17:25:24,551 [INFO] __main__: 納品URL一覧を生成: data\company_list_delivery_urls.csv (31社中、納品URLあり 29社)

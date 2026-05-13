@@ -456,8 +456,10 @@ class Orchestrator:
                     logger.warning("  抽出リンクがありません。ホームページURLのみ入力...")
                     await web_operator.input_urls_for_content([company.homepage_url])
 
-                # 生成実行
-                await web_operator.generate_content()
+                # 生成実行 (内部で完了待機 + FAQ実体検証まで行う。
+                # 検証失敗時は ContentSaveVerificationError が送出され、
+                # 下の except でリトライ対象になる)
+                await web_operator.generate_content(company)
 
                 # === Step 4-post: 保存（2段階）+ コンテンツ管理タブで
                 #     FAQ・企業情報の両タブに対象企業のコンテンツが反映されたかを検証 ===
