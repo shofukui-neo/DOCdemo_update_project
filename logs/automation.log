@@ -25772,3 +25772,1134 @@ Call log:
 2026-05-14 02:10:53,085 [INFO] web_app_operator:   古いページタブを閉じました
 2026-05-14 02:10:53,118 [INFO] web_app_operator:   新しいページタブを開きました
 2026-05-14 02:10:53,118 [INFO] web_app_operator: 管理画面にログイン中...
+2026-05-14 02:10:58,948 [INFO] web_app_operator: ログイン成功
+2026-05-14 02:10:58,949 [INFO] web_app_operator: ページクローズ＆再ログイン完了
+2026-05-14 02:10:58,949 [INFO] __main__: Step 3/5: URL収集...
+2026-05-14 02:11:03,448 [INFO] recruit_url_finder: 求人サイトURL収集開始: グランディハウス株式会社 (正規化: 'グランディハウス')
+2026-05-14 02:11:06,230 [INFO] recruit_url_finder:   [マイナビ転職] 2件取り込み (累計 2件)
+2026-05-14 02:11:08,872 [INFO] recruit_url_finder:   [マイナビ新卒] 2件取り込み (累計 4件)
+2026-05-14 02:11:11,425 [INFO] recruit_url_finder:   [リクナビ] 2件取り込み (累計 6件)
+2026-05-14 02:11:14,015 [INFO] recruit_url_finder:   [DODA] 2件取り込み (累計 8件)
+2026-05-14 02:11:16,647 [INFO] recruit_url_finder:   [エン転職] 2件取り込み (累計 10件)
+2026-05-14 02:11:16,647 [INFO] recruit_url_finder: 求人サイトURL収集完了: グランディハウス株式会社 → 合計 10 件
+2026-05-14 02:11:16,647 [INFO] __main__:   → 内部リンク:30件, 求人サイト:10件, 合計:40件
+2026-05-14 02:11:16,647 [INFO] __main__: Step 4/5: コンテンツ生成...
+2026-05-14 02:11:20,280 [INFO] __main__:   [検証] コンテンツ生成画面のヘッダーが対象企業に切替済か確認...
+2026-05-14 02:11:20,280 [INFO] web_app_operator: サイドバーから企業選択開始: グランディハウス株式会社
+2026-05-14 02:11:27,335 [INFO] web_app_operator:   ヘッダー検証中: 企業名=グランディハウス株式会社, ID=grandy
+2026-05-14 02:11:27,364 [INFO] web_app_operator:   [OK] ヘッダー検証成功: 「🤖 グランディハウス株式会社 コンテンツ生成」
+2026-05-14 02:11:27,365 [INFO] web_app_operator: サイドバー企業選択完了: グランディハウス株式会社
+2026-05-14 02:11:27,365 [INFO] web_app_operator: URL入力開始: 40件
+2026-05-14 02:11:31,005 [INFO] web_app_operator:   「全入力を処理」ボタンをクリックしました
+2026-05-14 02:12:05,548 [INFO] web_app_operator: URL入力・処理開始完了: 40件
+2026-05-14 02:12:05,549 [INFO] web_app_operator: コンテンツ生成開始...
+2026-05-14 02:12:16,131 [INFO] web_app_operator:   生成準備完了の待機中...
+2026-05-14 02:12:36,142 [WARNING] web_app_operator:   生成準備完了メッセージが特定できませんでしたが、続行を試みます
+2026-05-14 02:12:42,215 [INFO] web_app_operator:   コンテンツ生成ボタン検出 (試行 1/3)
+2026-05-14 02:12:42,746 [INFO] web_app_operator: コンテンツ生成中... (最大5分待機)
+2026-05-14 02:13:42,956 [INFO] web_app_operator: 生成完了検出 (経過: 60.0秒)
+2026-05-14 02:13:42,956 [INFO] web_app_operator: コンテンツ生成完了
+2026-05-14 02:13:42,956 [INFO] __main__:   [検証] 保存後のFAQ・企業情報タブを確認...
+2026-05-14 02:13:42,956 [INFO] web_app_operator: コンテンツ保存開始...
+2026-05-14 02:13:47,125 [INFO] web_app_operator:   FAQ保存ボタンの表示を確認中...
+2026-05-14 02:13:47,130 [INFO] web_app_operator:   FAQ保存ボタンの表示を確認（=FAQプレビュー描画完了）
+2026-05-14 02:13:47,130 [INFO] web_app_operator:   STEP1: FAQ保存ボタンを即クリック...
+2026-05-14 02:13:48,192 [INFO] web_app_operator:   FAQ保存ボタンをクリックしました
+2026-05-14 02:13:53,208 [WARNING] web_app_operator:   FAQ保存完了メッセージが出なかったため、もう一度クリックします
+2026-05-14 02:13:54,273 [INFO] web_app_operator:   FAQ保存ボタンを再クリックしました
+2026-05-14 02:13:57,791 [INFO] web_app_operator:   STEP2: 企業情報を保存ボタン（赤）を探してクリック...
+2026-05-14 02:13:59,315 [INFO] web_app_operator:   「企業情報を保存」ボタンが直接見つからないため、全ボタンを確認...
+2026-05-14 02:13:59,348 [INFO] web_app_operator:     保存関連ボタン発見: [👁️ プレビュー・保存]
+2026-05-14 02:13:59,376 [INFO] web_app_operator:     保存関連ボタン発見: [💾 FAQ保存（置換）]
+2026-05-14 02:13:59,380 [INFO] web_app_operator:     保存関連ボタン発見: [💾 企業情報保存]
+2026-05-14 02:13:59,394 [INFO] web_app_operator:   赤いボタンをクリック: [💾 企業情報保存]
+2026-05-14 02:14:05,503 [INFO] web_app_operator:   企業情報を保存ボタンのクリック完了
+2026-05-14 02:14:15,508 [WARNING] web_app_operator:   明確な保存完了メッセージは確認できませんでしたが、処理を続行します
+2026-05-14 02:14:15,508 [INFO] web_app_operator:   コンテンツ管理タブで保存確認中: グランディハウス株式会社
+2026-05-14 02:14:29,329 [INFO] web_app_operator:   [OK] コンテンツ管理ページ: grandy の存在を確認
+2026-05-14 02:14:29,329 [INFO] web_app_operator:   [FAQタブ] 検証開始
+2026-05-14 02:14:29,336 [WARNING] web_app_operator:   [FAQタブ] が見つかりません（タブ未表示の可能性、ページ全体で代替検証）
+2026-05-14 02:14:29,458 [INFO] web_app_operator:   [OK] [FAQタブ] 企業名/IDを確認 (スクショ: screenshots/tab_FAQ_grandy.png)
+2026-05-14 02:14:29,458 [INFO] web_app_operator:   [企業情報タブ] 検証開始
+2026-05-14 02:14:29,467 [WARNING] web_app_operator:   [企業情報タブ] が見つかりません（タブ未表示の可能性、ページ全体で代替検証）
+2026-05-14 02:14:29,598 [INFO] web_app_operator:   [OK] [企業情報タブ] 企業名/IDを確認 (スクショ: screenshots/tab_企業情報_grandy.png)
+2026-05-14 02:14:29,598 [INFO] web_app_operator:   [OK] FAQ・企業情報タブともに対象企業のコンテンツを確認
+2026-05-14 02:14:31,605 [INFO] web_app_operator: コンテンツ保存処理完了
+2026-05-14 02:14:31,606 [INFO] spreadsheet_manager: 企業リスト保存完了: 29社 → C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\data\company_list.csv
+2026-05-14 02:14:31,606 [INFO] __main__:   → コンテンツ生成・保存・検証完了
+2026-05-14 02:14:31,608 [INFO] spreadsheet_manager: 企業リスト保存完了: 29社 → C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\data\company_list.csv
+2026-05-14 02:14:31,608 [INFO] __main__: Step 5/5: フロントエンドアプリURL取得...
+2026-05-14 02:14:31,608 [INFO] __main__: Step 4完了 → ページを閉じて再ログイン（Step 5 のサイドバーキャッシュ対策）
+2026-05-14 02:14:31,608 [INFO] web_app_operator: ページを閉じて再ログインを開始...
+2026-05-14 02:14:31,688 [INFO] web_app_operator:   古いページタブを閉じました
+2026-05-14 02:14:31,827 [INFO] web_app_operator:   新しいページタブを開きました
+2026-05-14 02:14:31,828 [INFO] web_app_operator: 管理画面にログイン中...
+2026-05-14 02:14:37,877 [INFO] web_app_operator: ログイン成功
+2026-05-14 02:14:37,878 [INFO] web_app_operator: ページクローズ＆再ログイン完了
+2026-05-14 02:14:37,879 [INFO] web_app_operator: フロントエンドアプリURL取得開始 (企業ID: grandy)...
+2026-05-14 02:14:43,610 [INFO] web_app_operator: 企業選択 (ID): grandy
+2026-05-14 02:14:50,511 [INFO] web_app_operator: 企業選択完了: grandy
+2026-05-14 02:15:54,589 [WARNING] web_app_operator:   サイドバーから企業ID(grandy)に一致するURLが取得できませんでした。最後に見たURL: None
+2026-05-14 02:15:54,616 [WARNING] web_app_operator:   URL構造から推定（要目視確認）: https://casual-interview-dev.brainverse-ai.com/grandy
+2026-05-14 02:15:54,619 [INFO] spreadsheet_manager: 企業リスト保存完了: 29社 → C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\data\company_list.csv
+2026-05-14 02:15:54,619 [INFO] __main__:   → フロントエンドURL: [推定] https://casual-interview-dev.brainverse-ai.com/grandy
+2026-05-14 02:15:54,620 [INFO] __main__: [OK] グランディハウス株式会社: 全処理完了!
+2026-05-14 02:15:54,620 [INFO] __main__: 
+2026-05-14 02:15:54,620 [INFO] __main__: 1件処理完了 → 再ログイン＆キャッシュクリアを実行
+2026-05-14 02:15:54,621 [INFO] web_app_operator: 再ログイン＆キャッシュクリア開始...
+2026-05-14 02:15:54,626 [INFO] web_app_operator:   LocalStorage/SessionStorageをクリアしました
+2026-05-14 02:15:54,640 [INFO] web_app_operator:   Cookieをクリアしました
+2026-05-14 02:15:56,648 [INFO] web_app_operator: 管理画面にログイン中...
+2026-05-14 02:16:02,760 [INFO] web_app_operator: ログイン成功
+2026-05-14 02:16:02,761 [INFO] web_app_operator: 再ログイン＆キャッシュクリア完了
+2026-05-14 02:16:02,761 [INFO] __main__: 
+2026-05-14 02:16:02,762 [INFO] __main__: ──────────────────────────────────────────────────
+2026-05-14 02:16:02,764 [INFO] __main__: [4/27] 理化工業株式会社 (ステータス: 同名企業該当)
+2026-05-14 02:16:02,764 [INFO] __main__: ──────────────────────────────────────────────────
+2026-05-14 02:16:02,766 [INFO] __main__: Step 1/6: URL企業ID不一致 HOLD からの手動再開: https://www.rkcinst.co.jp
+2026-05-14 02:16:02,770 [INFO] spreadsheet_manager: 企業リスト保存完了: 29社 → C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\data\company_list.csv
+2026-05-14 02:16:02,770 [INFO] __main__: Step 2/6: 企業追加...
+2026-05-14 02:16:02,770 [INFO] web_app_operator: 企業追加開始: 理化工業株式会社
+2026-05-14 02:16:17,365 [INFO] web_app_operator: 企業追加完了: 理化工業株式会社 (ID: rkcinst)
+2026-05-14 02:16:17,365 [INFO] __main__: Step 2.5/6: 追加企業のID検証...
+2026-05-14 02:16:17,365 [INFO] web_app_operator:   企業ID検証中: 期待ID=rkcinst, URL=https://www.rkcinst.co.jp
+2026-05-14 02:16:19,920 [INFO] web_app_operator:   [OK] 企業ID 'rkcinst' をページ内に確認
+2026-05-14 02:16:19,924 [INFO] spreadsheet_manager: 企業リスト保存完了: 29社 → C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\data\company_list.csv
+2026-05-14 02:16:19,924 [INFO] __main__:   → 企業追加完了 (ID: rkcinst)
+2026-05-14 02:16:19,924 [INFO] __main__: 企業追加完了 → ページを閉じて再ログイン（キャッシュバグ防止）
+2026-05-14 02:16:19,924 [INFO] web_app_operator: ページを閉じて再ログインを開始...
+2026-05-14 02:16:19,946 [INFO] web_app_operator:   古いページタブを閉じました
+2026-05-14 02:16:19,983 [INFO] web_app_operator:   新しいページタブを開きました
+2026-05-14 02:16:19,983 [INFO] web_app_operator: 管理画面にログイン中...
+2026-05-14 02:16:25,918 [INFO] web_app_operator: ログイン成功
+2026-05-14 02:16:25,920 [INFO] web_app_operator: ページクローズ＆再ログイン完了
+2026-05-14 02:16:25,920 [INFO] __main__: Step 3/5: URL収集...
+2026-05-14 02:16:30,770 [INFO] recruit_url_finder: 求人サイトURL収集開始: 理化工業株式会社 (正規化: '理化工業')
+2026-05-14 02:16:33,509 [INFO] recruit_url_finder:   [マイナビ転職] 2件取り込み (累計 2件)
+2026-05-14 02:16:36,184 [INFO] recruit_url_finder:   [マイナビ新卒] 2件取り込み (累計 4件)
+2026-05-14 02:16:39,146 [INFO] recruit_url_finder:   [リクナビ] 2件取り込み (累計 6件)
+2026-05-14 02:16:41,748 [INFO] recruit_url_finder:   [DODA] 2件取り込み (累計 8件)
+2026-05-14 02:16:44,324 [INFO] recruit_url_finder:   [エン転職] 2件取り込み (累計 10件)
+2026-05-14 02:16:44,325 [INFO] recruit_url_finder: 求人サイトURL収集完了: 理化工業株式会社 → 合計 10 件
+2026-05-14 02:16:44,326 [INFO] __main__:   → 内部リンク:30件, 求人サイト:10件, 合計:40件
+2026-05-14 02:16:44,326 [INFO] __main__: Step 4/5: コンテンツ生成...
+2026-05-14 02:16:47,972 [INFO] __main__:   [検証] コンテンツ生成画面のヘッダーが対象企業に切替済か確認...
+2026-05-14 02:16:47,973 [INFO] web_app_operator: サイドバーから企業選択開始: 理化工業株式会社
+2026-05-14 02:16:55,105 [INFO] web_app_operator:   ヘッダー検証中: 企業名=理化工業株式会社, ID=rkcinst
+2026-05-14 02:16:55,166 [INFO] web_app_operator:   [OK] ヘッダー検証成功: 「🤖 理化工業株式会社 コンテンツ生成」
+2026-05-14 02:16:55,167 [INFO] web_app_operator: サイドバー企業選択完了: 理化工業株式会社
+2026-05-14 02:16:55,167 [INFO] web_app_operator: URL入力開始: 40件
+2026-05-14 02:16:58,839 [INFO] web_app_operator:   「全入力を処理」ボタンをクリックしました
+2026-05-14 02:17:33,389 [INFO] web_app_operator: URL入力・処理開始完了: 40件
+2026-05-14 02:17:33,389 [INFO] web_app_operator: コンテンツ生成開始...
+2026-05-14 02:17:43,988 [INFO] web_app_operator:   生成準備完了の待機中...
+2026-05-14 02:18:04,001 [WARNING] web_app_operator:   生成準備完了メッセージが特定できませんでしたが、続行を試みます
+2026-05-14 02:18:24,010 [WARNING] web_app_operator:   コンテンツ生成ボタン未検出 (試行 1/3) — 生成タブを再クリック
+2026-05-14 02:18:38,069 [INFO] web_app_operator:   コンテンツ生成ボタン検出 (試行 2/3)
+2026-05-14 02:18:38,619 [INFO] web_app_operator: コンテンツ生成中... (最大5分待機)
+2026-05-14 02:19:33,833 [INFO] web_app_operator: 生成完了検出 (経過: 55.0秒)
+2026-05-14 02:19:33,833 [INFO] web_app_operator: コンテンツ生成完了
+2026-05-14 02:19:33,833 [INFO] __main__:   [検証] 保存後のFAQ・企業情報タブを確認...
+2026-05-14 02:19:33,833 [INFO] web_app_operator: コンテンツ保存開始...
+2026-05-14 02:19:38,020 [INFO] web_app_operator:   FAQ保存ボタンの表示を確認中...
+2026-05-14 02:19:38,046 [INFO] web_app_operator:   FAQ保存ボタンの表示を確認（=FAQプレビュー描画完了）
+2026-05-14 02:19:38,047 [INFO] web_app_operator:   STEP1: FAQ保存ボタンを即クリック...
+2026-05-14 02:19:39,137 [INFO] web_app_operator:   FAQ保存ボタンをクリックしました
+2026-05-14 02:19:44,138 [WARNING] web_app_operator:   FAQ保存完了メッセージが出なかったため、もう一度クリックします
+2026-05-14 02:19:45,270 [INFO] web_app_operator:   FAQ保存ボタンを再クリックしました
+2026-05-14 02:19:48,806 [INFO] web_app_operator:   STEP2: 企業情報を保存ボタン（赤）を探してクリック...
+2026-05-14 02:19:50,334 [INFO] web_app_operator:   「企業情報を保存」ボタンが直接見つからないため、全ボタンを確認...
+2026-05-14 02:19:50,364 [INFO] web_app_operator:     保存関連ボタン発見: [👁️ プレビュー・保存]
+2026-05-14 02:19:50,387 [INFO] web_app_operator:     保存関連ボタン発見: [💾 FAQ保存（置換）]
+2026-05-14 02:19:50,394 [INFO] web_app_operator:     保存関連ボタン発見: [💾 企業情報保存]
+2026-05-14 02:19:50,405 [INFO] web_app_operator:   赤いボタンをクリック: [💾 企業情報保存]
+2026-05-14 02:19:56,558 [INFO] web_app_operator:   企業情報を保存ボタンのクリック完了
+2026-05-14 02:20:06,570 [WARNING] web_app_operator:   明確な保存完了メッセージは確認できませんでしたが、処理を続行します
+2026-05-14 02:20:06,570 [INFO] web_app_operator:   コンテンツ管理タブで保存確認中: 理化工業株式会社
+2026-05-14 02:20:20,233 [INFO] web_app_operator:   [OK] コンテンツ管理ページ: rkcinst の存在を確認
+2026-05-14 02:20:20,233 [INFO] web_app_operator:   [FAQタブ] 検証開始
+2026-05-14 02:20:20,240 [WARNING] web_app_operator:   [FAQタブ] が見つかりません（タブ未表示の可能性、ページ全体で代替検証）
+2026-05-14 02:20:20,358 [INFO] web_app_operator:   [OK] [FAQタブ] 企業名/IDを確認 (スクショ: screenshots/tab_FAQ_rkcinst.png)
+2026-05-14 02:20:20,358 [INFO] web_app_operator:   [企業情報タブ] 検証開始
+2026-05-14 02:20:20,365 [WARNING] web_app_operator:   [企業情報タブ] が見つかりません（タブ未表示の可能性、ページ全体で代替検証）
+2026-05-14 02:20:20,479 [INFO] web_app_operator:   [OK] [企業情報タブ] 企業名/IDを確認 (スクショ: screenshots/tab_企業情報_rkcinst.png)
+2026-05-14 02:20:20,479 [INFO] web_app_operator:   [OK] FAQ・企業情報タブともに対象企業のコンテンツを確認
+2026-05-14 02:20:22,501 [INFO] web_app_operator: コンテンツ保存処理完了
+2026-05-14 02:20:22,505 [INFO] spreadsheet_manager: 企業リスト保存完了: 29社 → C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\data\company_list.csv
+2026-05-14 02:20:22,505 [INFO] __main__:   → コンテンツ生成・保存・検証完了
+2026-05-14 02:20:22,510 [INFO] spreadsheet_manager: 企業リスト保存完了: 29社 → C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\data\company_list.csv
+2026-05-14 02:20:22,510 [INFO] __main__: Step 5/5: フロントエンドアプリURL取得...
+2026-05-14 02:20:22,511 [INFO] __main__: Step 4完了 → ページを閉じて再ログイン（Step 5 のサイドバーキャッシュ対策）
+2026-05-14 02:20:22,513 [INFO] web_app_operator: ページを閉じて再ログインを開始...
+2026-05-14 02:20:22,565 [INFO] web_app_operator:   古いページタブを閉じました
+2026-05-14 02:20:22,608 [INFO] web_app_operator:   新しいページタブを開きました
+2026-05-14 02:20:22,608 [INFO] web_app_operator: 管理画面にログイン中...
+2026-05-14 02:20:28,503 [INFO] web_app_operator: ログイン成功
+2026-05-14 02:20:28,503 [INFO] web_app_operator: ページクローズ＆再ログイン完了
+2026-05-14 02:20:28,503 [INFO] web_app_operator: フロントエンドアプリURL取得開始 (企業ID: rkcinst)...
+2026-05-14 02:20:34,236 [INFO] web_app_operator: 企業選択 (ID): rkcinst
+2026-05-14 02:20:41,135 [INFO] web_app_operator: 企業選択完了: rkcinst
+2026-05-14 02:21:45,301 [WARNING] web_app_operator:   サイドバーから企業ID(rkcinst)に一致するURLが取得できませんでした。最後に見たURL: None
+2026-05-14 02:21:45,325 [WARNING] web_app_operator:   URL構造から推定（要目視確認）: https://casual-interview-dev.brainverse-ai.com/rkcinst
+2026-05-14 02:21:45,326 [INFO] spreadsheet_manager: 企業リスト保存完了: 29社 → C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\data\company_list.csv
+2026-05-14 02:21:45,326 [INFO] __main__:   → フロントエンドURL: [推定] https://casual-interview-dev.brainverse-ai.com/rkcinst
+2026-05-14 02:21:45,326 [INFO] __main__: [OK] 理化工業株式会社: 全処理完了!
+2026-05-14 02:21:45,327 [INFO] __main__: 
+2026-05-14 02:21:45,327 [INFO] __main__: 1件処理完了 → 再ログイン＆キャッシュクリアを実行
+2026-05-14 02:21:45,327 [INFO] web_app_operator: 再ログイン＆キャッシュクリア開始...
+2026-05-14 02:21:45,331 [INFO] web_app_operator:   LocalStorage/SessionStorageをクリアしました
+2026-05-14 02:21:45,334 [INFO] web_app_operator:   Cookieをクリアしました
+2026-05-14 02:21:47,336 [INFO] web_app_operator: 管理画面にログイン中...
+2026-05-14 02:21:53,429 [INFO] web_app_operator: ログイン成功
+2026-05-14 02:21:53,429 [INFO] web_app_operator: 再ログイン＆キャッシュクリア完了
+2026-05-14 02:21:53,430 [INFO] __main__: 
+2026-05-14 02:21:53,430 [INFO] __main__: ──────────────────────────────────────────────────
+2026-05-14 02:21:53,431 [INFO] __main__: [5/27] 株式会社テンダーラビングケアサービス (ステータス: 同名企業該当)
+2026-05-14 02:21:53,431 [INFO] __main__: ──────────────────────────────────────────────────
+2026-05-14 02:21:53,432 [INFO] __main__: Step 1/6: URL企業ID不一致 HOLD からの手動再開: https://www.tenderlove.co.jp
+2026-05-14 02:21:53,434 [INFO] spreadsheet_manager: 企業リスト保存完了: 29社 → C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\data\company_list.csv
+2026-05-14 02:21:53,435 [INFO] __main__: Step 2/6: 企業追加...
+2026-05-14 02:21:53,435 [INFO] web_app_operator: 企業追加開始: 株式会社テンダーラビングケアサービス
+2026-05-14 02:22:08,040 [INFO] web_app_operator: 企業追加完了: 株式会社テンダーラビングケアサービス (ID: tenderlove)
+2026-05-14 02:22:08,040 [INFO] __main__: Step 2.5/6: 追加企業のID検証...
+2026-05-14 02:22:08,041 [INFO] web_app_operator:   企業ID検証中: 期待ID=tenderlove, URL=https://www.tenderlove.co.jp
+2026-05-14 02:22:10,609 [INFO] web_app_operator:   [OK] 企業ID 'tenderlove' をページ内に確認
+2026-05-14 02:22:10,609 [INFO] spreadsheet_manager: 企業リスト保存完了: 29社 → C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\data\company_list.csv
+2026-05-14 02:22:10,611 [INFO] __main__:   → 企業追加完了 (ID: tenderlove)
+2026-05-14 02:22:10,611 [INFO] __main__: 企業追加完了 → ページを閉じて再ログイン（キャッシュバグ防止）
+2026-05-14 02:22:10,611 [INFO] web_app_operator: ページを閉じて再ログインを開始...
+2026-05-14 02:22:10,644 [INFO] web_app_operator:   古いページタブを閉じました
+2026-05-14 02:22:10,680 [INFO] web_app_operator:   新しいページタブを開きました
+2026-05-14 02:22:10,681 [INFO] web_app_operator: 管理画面にログイン中...
+2026-05-14 02:22:16,586 [INFO] web_app_operator: ログイン成功
+2026-05-14 02:22:16,586 [INFO] web_app_operator: ページクローズ＆再ログイン完了
+2026-05-14 02:22:16,586 [INFO] __main__: Step 3/5: URL収集...
+2026-05-14 02:22:20,213 [INFO] recruit_url_finder: 求人サイトURL収集開始: 株式会社テンダーラビングケアサービス (正規化: 'テンダーラビングケアサービス')
+2026-05-14 02:22:24,301 [INFO] recruit_url_finder:   [マイナビ転職] 2件取り込み (累計 2件)
+2026-05-14 02:22:26,904 [INFO] recruit_url_finder:   [マイナビ新卒] 0件取り込み (累計 2件)
+2026-05-14 02:22:29,518 [INFO] recruit_url_finder:   [リクナビ] 2件取り込み (累計 4件)
+2026-05-14 02:22:32,164 [INFO] recruit_url_finder:   [DODA] 2件取り込み (累計 6件)
+2026-05-14 02:22:34,813 [INFO] recruit_url_finder:   [エン転職] 2件取り込み (累計 8件)
+2026-05-14 02:22:37,368 [INFO] recruit_url_finder:   [Wantedly] 2件取り込み (累計 10件)
+2026-05-14 02:22:37,370 [INFO] recruit_url_finder: 求人サイトURL収集完了: 株式会社テンダーラビングケアサービス → 合計 10 件
+2026-05-14 02:22:37,370 [INFO] __main__:   → 内部リンク:30件, 求人サイト:10件, 合計:40件
+2026-05-14 02:22:37,370 [INFO] __main__: Step 4/5: コンテンツ生成...
+2026-05-14 02:22:41,086 [INFO] __main__:   [検証] コンテンツ生成画面のヘッダーが対象企業に切替済か確認...
+2026-05-14 02:22:41,087 [INFO] web_app_operator: サイドバーから企業選択開始: 株式会社テンダーラビングケアサービス
+2026-05-14 02:22:48,234 [INFO] web_app_operator:   ヘッダー検証中: 企業名=株式会社テンダーラビングケアサービス, ID=tenderlove
+2026-05-14 02:22:48,263 [INFO] web_app_operator:   [OK] ヘッダー検証成功: 「🤖 株式会社テンダーラビングケアサービス コンテンツ生成」
+2026-05-14 02:22:48,263 [INFO] web_app_operator: サイドバー企業選択完了: 株式会社テンダーラビングケアサービス
+2026-05-14 02:22:48,263 [INFO] web_app_operator: URL入力開始: 40件
+2026-05-14 02:22:51,934 [INFO] web_app_operator:   「全入力を処理」ボタンをクリックしました
+2026-05-14 02:23:26,485 [INFO] web_app_operator: URL入力・処理開始完了: 40件
+2026-05-14 02:23:26,486 [INFO] web_app_operator: コンテンツ生成開始...
+2026-05-14 02:23:37,118 [INFO] web_app_operator:   生成準備完了の待機中...
+2026-05-14 02:23:57,122 [WARNING] web_app_operator:   生成準備完了メッセージが特定できませんでしたが、続行を試みます
+2026-05-14 02:24:02,147 [INFO] web_app_operator:   コンテンツ生成ボタン検出 (試行 1/3)
+2026-05-14 02:24:02,714 [INFO] web_app_operator: コンテンツ生成中... (最大5分待機)
+2026-05-14 02:24:57,963 [INFO] web_app_operator: 生成完了検出 (経過: 55.0秒)
+2026-05-14 02:24:57,963 [INFO] web_app_operator: コンテンツ生成完了
+2026-05-14 02:24:57,963 [INFO] __main__:   [検証] 保存後のFAQ・企業情報タブを確認...
+2026-05-14 02:24:57,963 [INFO] web_app_operator: コンテンツ保存開始...
+2026-05-14 02:25:02,149 [INFO] web_app_operator:   FAQ保存ボタンの表示を確認中...
+2026-05-14 02:25:02,155 [INFO] web_app_operator:   FAQ保存ボタンの表示を確認（=FAQプレビュー描画完了）
+2026-05-14 02:25:02,155 [INFO] web_app_operator:   STEP1: FAQ保存ボタンを即クリック...
+2026-05-14 02:25:03,266 [INFO] web_app_operator:   FAQ保存ボタンをクリックしました
+2026-05-14 02:25:08,282 [WARNING] web_app_operator:   FAQ保存完了メッセージが出なかったため、もう一度クリックします
+2026-05-14 02:25:09,382 [INFO] web_app_operator:   FAQ保存ボタンを再クリックしました
+2026-05-14 02:25:12,933 [INFO] web_app_operator:   STEP2: 企業情報を保存ボタン（赤）を探してクリック...
+2026-05-14 02:25:14,483 [INFO] web_app_operator:   「企業情報を保存」ボタンが直接見つからないため、全ボタンを確認...
+2026-05-14 02:25:14,539 [INFO] web_app_operator:     保存関連ボタン発見: [👁️ プレビュー・保存]
+2026-05-14 02:25:14,563 [INFO] web_app_operator:     保存関連ボタン発見: [💾 FAQ保存（置換）]
+2026-05-14 02:25:14,572 [INFO] web_app_operator:     保存関連ボタン発見: [💾 企業情報保存]
+2026-05-14 02:25:14,579 [INFO] web_app_operator:   赤いボタンをクリック: [💾 企業情報保存]
+2026-05-14 02:25:20,699 [INFO] web_app_operator:   企業情報を保存ボタンのクリック完了
+2026-05-14 02:25:30,716 [WARNING] web_app_operator:   明確な保存完了メッセージは確認できませんでしたが、処理を続行します
+2026-05-14 02:25:30,717 [INFO] web_app_operator:   コンテンツ管理タブで保存確認中: 株式会社テンダーラビングケアサービス
+2026-05-14 02:25:44,592 [INFO] web_app_operator:   [OK] コンテンツ管理ページ: tenderlove の存在を確認
+2026-05-14 02:25:44,592 [INFO] web_app_operator:   [FAQタブ] 検証開始
+2026-05-14 02:25:44,598 [WARNING] web_app_operator:   [FAQタブ] が見つかりません（タブ未表示の可能性、ページ全体で代替検証）
+2026-05-14 02:25:44,763 [INFO] web_app_operator:   [OK] [FAQタブ] 企業名/IDを確認 (スクショ: screenshots/tab_FAQ_tenderlove.png)
+2026-05-14 02:25:44,764 [INFO] web_app_operator:   [企業情報タブ] 検証開始
+2026-05-14 02:25:44,781 [WARNING] web_app_operator:   [企業情報タブ] が見つかりません（タブ未表示の可能性、ページ全体で代替検証）
+2026-05-14 02:25:44,955 [INFO] web_app_operator:   [OK] [企業情報タブ] 企業名/IDを確認 (スクショ: screenshots/tab_企業情報_tenderlove.png)
+2026-05-14 02:25:44,955 [INFO] web_app_operator:   [OK] FAQ・企業情報タブともに対象企業のコンテンツを確認
+2026-05-14 02:25:46,963 [INFO] web_app_operator: コンテンツ保存処理完了
+2026-05-14 02:25:46,967 [INFO] spreadsheet_manager: 企業リスト保存完了: 29社 → C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\data\company_list.csv
+2026-05-14 02:25:46,970 [INFO] __main__:   → コンテンツ生成・保存・検証完了
+2026-05-14 02:25:46,972 [INFO] spreadsheet_manager: 企業リスト保存完了: 29社 → C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\data\company_list.csv
+2026-05-14 02:25:46,974 [INFO] __main__: Step 5/5: フロントエンドアプリURL取得...
+2026-05-14 02:25:46,974 [INFO] __main__: Step 4完了 → ページを閉じて再ログイン（Step 5 のサイドバーキャッシュ対策）
+2026-05-14 02:25:46,974 [INFO] web_app_operator: ページを閉じて再ログインを開始...
+2026-05-14 02:25:47,036 [INFO] web_app_operator:   古いページタブを閉じました
+2026-05-14 02:25:47,074 [INFO] web_app_operator:   新しいページタブを開きました
+2026-05-14 02:25:47,074 [INFO] web_app_operator: 管理画面にログイン中...
+2026-05-14 02:25:52,998 [INFO] web_app_operator: ログイン成功
+2026-05-14 02:25:52,998 [INFO] web_app_operator: ページクローズ＆再ログイン完了
+2026-05-14 02:25:52,999 [INFO] web_app_operator: フロントエンドアプリURL取得開始 (企業ID: tenderlove)...
+2026-05-14 02:25:58,713 [INFO] web_app_operator: 企業選択 (ID): tenderlove
+2026-05-14 02:26:05,615 [INFO] web_app_operator: 企業選択完了: tenderlove
+2026-05-14 02:27:09,828 [WARNING] web_app_operator:   サイドバーから企業ID(tenderlove)に一致するURLが取得できませんでした。最後に見たURL: None
+2026-05-14 02:27:09,865 [WARNING] web_app_operator:   URL構造から推定（要目視確認）: https://casual-interview-dev.brainverse-ai.com/tenderlove
+2026-05-14 02:27:09,866 [INFO] spreadsheet_manager: 企業リスト保存完了: 29社 → C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\data\company_list.csv
+2026-05-14 02:27:09,867 [INFO] __main__:   → フロントエンドURL: [推定] https://casual-interview-dev.brainverse-ai.com/tenderlove
+2026-05-14 02:27:09,867 [INFO] __main__: [OK] 株式会社テンダーラビングケアサービス: 全処理完了!
+2026-05-14 02:27:09,867 [INFO] __main__: 
+2026-05-14 02:27:09,868 [INFO] __main__: 1件処理完了 → 再ログイン＆キャッシュクリアを実行
+2026-05-14 02:27:09,868 [INFO] web_app_operator: 再ログイン＆キャッシュクリア開始...
+2026-05-14 02:27:09,873 [INFO] web_app_operator:   LocalStorage/SessionStorageをクリアしました
+2026-05-14 02:27:09,875 [INFO] web_app_operator:   Cookieをクリアしました
+2026-05-14 02:27:11,880 [INFO] web_app_operator: 管理画面にログイン中...
+2026-05-14 02:27:17,780 [INFO] web_app_operator: ログイン成功
+2026-05-14 02:27:17,780 [INFO] web_app_operator: 再ログイン＆キャッシュクリア完了
+2026-05-14 02:27:17,780 [INFO] __main__: 
+2026-05-14 02:27:17,780 [INFO] __main__: ──────────────────────────────────────────────────
+2026-05-14 02:27:17,780 [INFO] __main__: [6/27] 信州航空電子株式会社 (ステータス: 同名企業該当)
+2026-05-14 02:27:17,780 [INFO] __main__: ──────────────────────────────────────────────────
+2026-05-14 02:27:17,780 [INFO] __main__: Step 1/6: URL企業ID不一致 HOLD からの手動再開: https://www.jae.com/shinshu/
+2026-05-14 02:27:17,789 [INFO] spreadsheet_manager: 企業リスト保存完了: 29社 → C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\data\company_list.csv
+2026-05-14 02:27:17,789 [INFO] __main__: Step 2/6: 企業追加...
+2026-05-14 02:27:17,789 [INFO] web_app_operator: 企業追加開始: 信州航空電子株式会社
+2026-05-14 02:27:32,447 [INFO] web_app_operator: 企業追加完了: 信州航空電子株式会社 (ID: jae)
+2026-05-14 02:27:32,451 [INFO] __main__: Step 2.5/6: 追加企業のID検証...
+2026-05-14 02:27:32,451 [INFO] web_app_operator:   企業ID検証中: 期待ID=jae, URL=https://www.jae.com/shinshu/
+2026-05-14 02:27:35,021 [INFO] web_app_operator:   [OK] 企業ID 'jae' をページ内に確認
+2026-05-14 02:27:35,029 [INFO] spreadsheet_manager: 企業リスト保存完了: 29社 → C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\data\company_list.csv
+2026-05-14 02:27:35,030 [INFO] __main__:   → 企業追加完了 (ID: jae)
+2026-05-14 02:27:35,031 [INFO] __main__: 企業追加完了 → ページを閉じて再ログイン（キャッシュバグ防止）
+2026-05-14 02:27:35,032 [INFO] web_app_operator: ページを閉じて再ログインを開始...
+2026-05-14 02:27:35,078 [INFO] web_app_operator:   古いページタブを閉じました
+2026-05-14 02:27:35,117 [INFO] web_app_operator:   新しいページタブを開きました
+2026-05-14 02:27:35,117 [INFO] web_app_operator: 管理画面にログイン中...
+2026-05-14 02:27:41,099 [INFO] web_app_operator: ログイン成功
+2026-05-14 02:27:41,099 [INFO] web_app_operator: ページクローズ＆再ログイン完了
+2026-05-14 02:27:41,101 [INFO] __main__: Step 3/5: URL収集...
+2026-05-14 02:27:44,465 [INFO] recruit_url_finder: 求人サイトURL収集開始: 信州航空電子株式会社 (正規化: '信州航空電子')
+2026-05-14 02:27:47,230 [INFO] recruit_url_finder:   [マイナビ転職] 0件取り込み (累計 0件)
+2026-05-14 02:27:49,897 [INFO] recruit_url_finder:   [マイナビ新卒] 2件取り込み (累計 2件)
+2026-05-14 02:27:52,480 [INFO] recruit_url_finder:   [リクナビ] 2件取り込み (累計 4件)
+2026-05-14 02:27:55,115 [INFO] recruit_url_finder:   [DODA] 2件取り込み (累計 6件)
+2026-05-14 02:27:57,665 [INFO] recruit_url_finder:   [エン転職] 0件取り込み (累計 6件)
+2026-05-14 02:28:00,196 [INFO] recruit_url_finder:   [Wantedly] 0件取り込み (累計 6件)
+2026-05-14 02:28:02,773 [INFO] recruit_url_finder:   [Green] 0件取り込み (累計 6件)
+2026-05-14 02:28:05,392 [INFO] recruit_url_finder:   [Indeed] 2件取り込み (累計 8件)
+2026-05-14 02:28:05,392 [INFO] recruit_url_finder: 求人サイトURL収集完了: 信州航空電子株式会社 → 合計 8 件
+2026-05-14 02:28:05,392 [INFO] __main__:   → 内部リンク:1件, 求人サイト:8件, 合計:9件
+2026-05-14 02:28:05,392 [INFO] __main__: Step 4/5: コンテンツ生成...
+2026-05-14 02:28:09,046 [INFO] __main__:   [検証] コンテンツ生成画面のヘッダーが対象企業に切替済か確認...
+2026-05-14 02:28:09,047 [INFO] web_app_operator: サイドバーから企業選択開始: 信州航空電子株式会社
+2026-05-14 02:28:24,312 [INFO] web_app_operator:   ヘッダー検証中: 企業名=信州航空電子株式会社, ID=jae
+2026-05-14 02:28:24,374 [INFO] web_app_operator:   [OK] ヘッダー検証成功: 「🤖 信州航空電子株式会社 コンテンツ生成」
+2026-05-14 02:28:24,375 [INFO] web_app_operator: サイドバー企業選択完了: 信州航空電子株式会社
+2026-05-14 02:28:24,376 [INFO] web_app_operator: URL入力開始: 9件
+2026-05-14 02:28:28,078 [INFO] web_app_operator:   「全入力を処理」ボタンをクリックしました
+2026-05-14 02:29:02,628 [INFO] web_app_operator: URL入力・処理開始完了: 9件
+2026-05-14 02:29:02,630 [INFO] web_app_operator: コンテンツ生成開始...
+2026-05-14 02:29:13,259 [INFO] web_app_operator:   生成準備完了の待機中...
+2026-05-14 02:29:33,280 [WARNING] web_app_operator:   生成準備完了メッセージが特定できませんでしたが、続行を試みます
+2026-05-14 02:29:33,315 [INFO] web_app_operator:   コンテンツ生成ボタン検出 (試行 1/3)
+2026-05-14 02:29:33,871 [INFO] web_app_operator: コンテンツ生成中... (最大5分待機)
+2026-05-14 02:30:19,053 [INFO] web_app_operator: 生成完了検出 (経過: 45.0秒)
+2026-05-14 02:30:19,055 [INFO] web_app_operator: コンテンツ生成完了
+2026-05-14 02:30:19,055 [INFO] __main__:   [検証] 保存後のFAQ・企業情報タブを確認...
+2026-05-14 02:30:19,055 [INFO] web_app_operator: コンテンツ保存開始...
+2026-05-14 02:30:23,210 [INFO] web_app_operator:   FAQ保存ボタンの表示を確認中...
+2026-05-14 02:30:23,215 [INFO] web_app_operator:   FAQ保存ボタンの表示を確認（=FAQプレビュー描画完了）
+2026-05-14 02:30:23,219 [INFO] web_app_operator:   STEP1: FAQ保存ボタンを即クリック...
+2026-05-14 02:30:24,292 [INFO] web_app_operator:   FAQ保存ボタンをクリックしました
+2026-05-14 02:30:29,311 [WARNING] web_app_operator:   FAQ保存完了メッセージが出なかったため、もう一度クリックします
+2026-05-14 02:30:30,393 [INFO] web_app_operator:   FAQ保存ボタンを再クリックしました
+2026-05-14 02:30:33,926 [INFO] web_app_operator:   STEP2: 企業情報を保存ボタン（赤）を探してクリック...
+2026-05-14 02:30:35,501 [INFO] web_app_operator:   「企業情報を保存」ボタンが直接見つからないため、全ボタンを確認...
+2026-05-14 02:30:35,538 [INFO] web_app_operator:     保存関連ボタン発見: [👁️ プレビュー・保存]
+2026-05-14 02:30:35,576 [INFO] web_app_operator:     保存関連ボタン発見: [💾 FAQ保存（置換）]
+2026-05-14 02:30:35,586 [INFO] web_app_operator:     保存関連ボタン発見: [💾 企業情報保存]
+2026-05-14 02:30:35,596 [INFO] web_app_operator:   赤いボタンをクリック: [💾 企業情報保存]
+2026-05-14 02:30:41,742 [INFO] web_app_operator:   企業情報を保存ボタンのクリック完了
+2026-05-14 02:30:51,776 [WARNING] web_app_operator:   明確な保存完了メッセージは確認できませんでしたが、処理を続行します
+2026-05-14 02:30:51,776 [INFO] web_app_operator:   コンテンツ管理タブで保存確認中: 信州航空電子株式会社
+2026-05-14 02:31:08,865 [INFO] web_app_operator:   [OK] コンテンツ管理ページ: jae の存在を確認
+2026-05-14 02:31:08,865 [INFO] web_app_operator:   [FAQタブ] 検証開始
+2026-05-14 02:31:08,873 [WARNING] web_app_operator:   [FAQタブ] が見つかりません（タブ未表示の可能性、ページ全体で代替検証）
+2026-05-14 02:31:08,980 [INFO] web_app_operator:   [OK] [FAQタブ] 企業名/IDを確認 (スクショ: screenshots/tab_FAQ_jae.png)
+2026-05-14 02:31:08,980 [INFO] web_app_operator:   [企業情報タブ] 検証開始
+2026-05-14 02:31:08,988 [WARNING] web_app_operator:   [企業情報タブ] が見つかりません（タブ未表示の可能性、ページ全体で代替検証）
+2026-05-14 02:31:09,096 [INFO] web_app_operator:   [OK] [企業情報タブ] 企業名/IDを確認 (スクショ: screenshots/tab_企業情報_jae.png)
+2026-05-14 02:31:09,101 [INFO] web_app_operator:   [OK] FAQ・企業情報タブともに対象企業のコンテンツを確認
+2026-05-14 02:31:11,108 [INFO] web_app_operator: コンテンツ保存処理完了
+2026-05-14 02:31:11,110 [INFO] spreadsheet_manager: 企業リスト保存完了: 29社 → C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\data\company_list.csv
+2026-05-14 02:31:11,113 [INFO] __main__:   → コンテンツ生成・保存・検証完了
+2026-05-14 02:31:11,115 [INFO] spreadsheet_manager: 企業リスト保存完了: 29社 → C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\data\company_list.csv
+2026-05-14 02:31:11,115 [INFO] __main__: Step 5/5: フロントエンドアプリURL取得...
+2026-05-14 02:31:11,118 [INFO] __main__: Step 4完了 → ページを閉じて再ログイン（Step 5 のサイドバーキャッシュ対策）
+2026-05-14 02:31:11,118 [INFO] web_app_operator: ページを閉じて再ログインを開始...
+2026-05-14 02:31:11,142 [INFO] web_app_operator:   古いページタブを閉じました
+2026-05-14 02:31:11,181 [INFO] web_app_operator:   新しいページタブを開きました
+2026-05-14 02:31:11,181 [INFO] web_app_operator: 管理画面にログイン中...
+2026-05-14 02:31:17,041 [INFO] web_app_operator: ログイン成功
+2026-05-14 02:31:17,042 [INFO] web_app_operator: ページクローズ＆再ログイン完了
+2026-05-14 02:31:17,042 [INFO] web_app_operator: フロントエンドアプリURL取得開始 (企業ID: jae)...
+2026-05-14 02:31:22,725 [INFO] web_app_operator: 企業選択 (ID): jae
+2026-05-14 02:31:33,008 [INFO] web_app_operator: 企業選択完了: jae
+2026-05-14 02:32:37,174 [WARNING] web_app_operator:   サイドバーから企業ID(jae)に一致するURLが取得できませんでした。最後に見たURL: None
+2026-05-14 02:32:37,194 [WARNING] web_app_operator:   URL構造から推定（要目視確認）: https://casual-interview-dev.brainverse-ai.com/jae
+2026-05-14 02:32:37,194 [INFO] spreadsheet_manager: 企業リスト保存完了: 29社 → C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\data\company_list.csv
+2026-05-14 02:32:37,194 [INFO] __main__:   → フロントエンドURL: [推定] https://casual-interview-dev.brainverse-ai.com/jae
+2026-05-14 02:32:37,194 [INFO] __main__: [OK] 信州航空電子株式会社: 全処理完了!
+2026-05-14 02:32:37,194 [INFO] __main__: 
+2026-05-14 02:32:37,196 [INFO] __main__: 1件処理完了 → 再ログイン＆キャッシュクリアを実行
+2026-05-14 02:32:37,196 [INFO] web_app_operator: 再ログイン＆キャッシュクリア開始...
+2026-05-14 02:32:37,196 [INFO] web_app_operator:   LocalStorage/SessionStorageをクリアしました
+2026-05-14 02:32:37,201 [INFO] web_app_operator:   Cookieをクリアしました
+2026-05-14 02:32:39,206 [INFO] web_app_operator: 管理画面にログイン中...
+2026-05-14 02:32:45,322 [INFO] web_app_operator: ログイン成功
+2026-05-14 02:32:45,322 [INFO] web_app_operator: 再ログイン＆キャッシュクリア完了
+2026-05-14 02:32:45,322 [INFO] __main__: 
+2026-05-14 02:32:45,322 [INFO] __main__: ──────────────────────────────────────────────────
+2026-05-14 02:32:45,322 [INFO] __main__: [7/27] 関口工業株式会社 (ステータス: 同名企業該当)
+2026-05-14 02:32:45,322 [INFO] __main__: ──────────────────────────────────────────────────
+2026-05-14 02:32:45,323 [INFO] __main__: Step 1/6: URL企業ID不一致 HOLD からの手動再開: https://pipe-sekiguchi.co.jp
+2026-05-14 02:32:45,324 [INFO] spreadsheet_manager: 企業リスト保存完了: 29社 → C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\data\company_list.csv
+2026-05-14 02:32:45,324 [INFO] __main__: Step 2/6: 企業追加...
+2026-05-14 02:32:45,324 [INFO] web_app_operator: 企業追加開始: 関口工業株式会社
+2026-05-14 02:32:59,792 [INFO] web_app_operator: 企業追加完了: 関口工業株式会社 (ID: pipe-sekiguchi)
+2026-05-14 02:32:59,792 [INFO] __main__: Step 2.5/6: 追加企業のID検証...
+2026-05-14 02:32:59,792 [INFO] web_app_operator:   企業ID検証中: 期待ID=pipe-sekiguchi, URL=https://pipe-sekiguchi.co.jp
+2026-05-14 02:33:02,336 [INFO] web_app_operator:   [OK] 企業ID 'pipe-sekiguchi' をページ内に確認
+2026-05-14 02:33:02,336 [INFO] spreadsheet_manager: 企業リスト保存完了: 29社 → C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\data\company_list.csv
+2026-05-14 02:33:02,336 [INFO] __main__:   → 企業追加完了 (ID: pipe-sekiguchi)
+2026-05-14 02:33:02,336 [INFO] __main__: 企業追加完了 → ページを閉じて再ログイン（キャッシュバグ防止）
+2026-05-14 02:33:02,338 [INFO] web_app_operator: ページを閉じて再ログインを開始...
+2026-05-14 02:33:02,365 [INFO] web_app_operator:   古いページタブを閉じました
+2026-05-14 02:33:02,405 [INFO] web_app_operator:   新しいページタブを開きました
+2026-05-14 02:33:02,405 [INFO] web_app_operator: 管理画面にログイン中...
+2026-05-14 02:33:08,257 [INFO] web_app_operator: ログイン成功
+2026-05-14 02:33:08,258 [INFO] web_app_operator: ページクローズ＆再ログイン完了
+2026-05-14 02:33:08,258 [INFO] __main__: Step 3/5: URL収集...
+2026-05-14 02:33:21,065 [INFO] recruit_url_finder: 求人サイトURL収集開始: 関口工業株式会社 (正規化: '関口工業')
+2026-05-14 02:33:23,873 [INFO] recruit_url_finder:   [マイナビ転職] 0件取り込み (累計 0件)
+2026-05-14 02:33:26,573 [INFO] recruit_url_finder:   [マイナビ新卒] 2件取り込み (累計 2件)
+2026-05-14 02:33:29,125 [INFO] recruit_url_finder:   [リクナビ] 2件取り込み (累計 4件)
+2026-05-14 02:33:31,696 [INFO] recruit_url_finder:   [DODA] 2件取り込み (累計 6件)
+2026-05-14 02:33:34,251 [INFO] recruit_url_finder:   [エン転職] 0件取り込み (累計 6件)
+2026-05-14 02:33:36,859 [INFO] recruit_url_finder:   [Wantedly] 1件取り込み (累計 7件)
+2026-05-14 02:33:39,342 [INFO] recruit_url_finder:   [Green] 0件取り込み (累計 7件)
+2026-05-14 02:33:41,969 [INFO] recruit_url_finder:   [Indeed] 2件取り込み (累計 9件)
+2026-05-14 02:33:41,969 [INFO] recruit_url_finder: 求人サイトURL収集完了: 関口工業株式会社 → 合計 9 件
+2026-05-14 02:33:41,969 [INFO] __main__:   → 内部リンク:30件, 求人サイト:9件, 合計:39件
+2026-05-14 02:33:41,969 [INFO] __main__: Step 4/5: コンテンツ生成...
+2026-05-14 02:33:45,605 [INFO] __main__:   [検証] コンテンツ生成画面のヘッダーが対象企業に切替済か確認...
+2026-05-14 02:33:45,605 [INFO] web_app_operator: サイドバーから企業選択開始: 関口工業株式会社
+2026-05-14 02:33:52,739 [INFO] web_app_operator:   ヘッダー検証中: 企業名=関口工業株式会社, ID=pipe-sekiguchi
+2026-05-14 02:33:52,765 [INFO] web_app_operator:   [OK] ヘッダー検証成功: 「🤖 関口工業株式会社 コンテンツ生成」
+2026-05-14 02:33:52,765 [INFO] web_app_operator: サイドバー企業選択完了: 関口工業株式会社
+2026-05-14 02:33:52,765 [INFO] web_app_operator: URL入力開始: 39件
+2026-05-14 02:33:56,432 [INFO] web_app_operator:   「全入力を処理」ボタンをクリックしました
+2026-05-14 02:34:30,955 [INFO] web_app_operator: URL入力・処理開始完了: 39件
+2026-05-14 02:34:30,956 [INFO] web_app_operator: コンテンツ生成開始...
+2026-05-14 02:34:41,622 [INFO] web_app_operator:   生成準備完了の待機中...
+2026-05-14 02:35:01,638 [WARNING] web_app_operator:   生成準備完了メッセージが特定できませんでしたが、続行を試みます
+2026-05-14 02:35:17,453 [INFO] web_app_operator:   コンテンツ生成ボタン検出 (試行 1/3)
+2026-05-14 02:35:18,003 [INFO] web_app_operator: コンテンツ生成中... (最大5分待機)
+2026-05-14 02:36:03,378 [INFO] web_app_operator: 生成完了検出 (経過: 45.0秒)
+2026-05-14 02:36:03,378 [INFO] web_app_operator: コンテンツ生成完了
+2026-05-14 02:36:03,378 [INFO] __main__:   [検証] 保存後のFAQ・企業情報タブを確認...
+2026-05-14 02:36:03,378 [INFO] web_app_operator: コンテンツ保存開始...
+2026-05-14 02:36:07,619 [INFO] web_app_operator:   FAQ保存ボタンの表示を確認中...
+2026-05-14 02:36:07,628 [INFO] web_app_operator:   FAQ保存ボタンの表示を確認（=FAQプレビュー描画完了）
+2026-05-14 02:36:07,628 [INFO] web_app_operator:   STEP1: FAQ保存ボタンを即クリック...
+2026-05-14 02:36:08,702 [INFO] web_app_operator:   FAQ保存ボタンをクリックしました
+2026-05-14 02:36:13,719 [WARNING] web_app_operator:   FAQ保存完了メッセージが出なかったため、もう一度クリックします
+2026-05-14 02:36:14,794 [INFO] web_app_operator:   FAQ保存ボタンを再クリックしました
+2026-05-14 02:36:18,336 [INFO] web_app_operator:   STEP2: 企業情報を保存ボタン（赤）を探してクリック...
+2026-05-14 02:36:19,904 [INFO] web_app_operator:   「企業情報を保存」ボタンが直接見つからないため、全ボタンを確認...
+2026-05-14 02:36:19,930 [INFO] web_app_operator:     保存関連ボタン発見: [👁️ プレビュー・保存]
+2026-05-14 02:36:19,965 [INFO] web_app_operator:     保存関連ボタン発見: [💾 FAQ保存（置換）]
+2026-05-14 02:36:19,972 [INFO] web_app_operator:     保存関連ボタン発見: [💾 企業情報保存]
+2026-05-14 02:36:19,990 [INFO] web_app_operator:   赤いボタンをクリック: [💾 企業情報保存]
+2026-05-14 02:36:26,237 [INFO] web_app_operator:   企業情報を保存ボタンのクリック完了
+2026-05-14 02:36:36,253 [WARNING] web_app_operator:   明確な保存完了メッセージは確認できませんでしたが、処理を続行します
+2026-05-14 02:36:36,254 [INFO] web_app_operator:   コンテンツ管理タブで保存確認中: 関口工業株式会社
+2026-05-14 02:36:49,924 [INFO] web_app_operator:   [OK] コンテンツ管理ページ: pipe-sekiguchi の存在を確認
+2026-05-14 02:36:49,924 [INFO] web_app_operator:   [FAQタブ] 検証開始
+2026-05-14 02:36:49,934 [WARNING] web_app_operator:   [FAQタブ] が見つかりません（タブ未表示の可能性、ページ全体で代替検証）
+2026-05-14 02:36:50,059 [INFO] web_app_operator:   [OK] [FAQタブ] 企業名/IDを確認 (スクショ: screenshots/tab_FAQ_pipe-sekiguchi.png)
+2026-05-14 02:36:50,059 [INFO] web_app_operator:   [企業情報タブ] 検証開始
+2026-05-14 02:36:50,069 [WARNING] web_app_operator:   [企業情報タブ] が見つかりません（タブ未表示の可能性、ページ全体で代替検証）
+2026-05-14 02:36:50,188 [INFO] web_app_operator:   [OK] [企業情報タブ] 企業名/IDを確認 (スクショ: screenshots/tab_企業情報_pipe-sekiguchi.png)
+2026-05-14 02:36:50,188 [INFO] web_app_operator:   [OK] FAQ・企業情報タブともに対象企業のコンテンツを確認
+2026-05-14 02:36:52,203 [INFO] web_app_operator: コンテンツ保存処理完了
+2026-05-14 02:36:52,205 [INFO] spreadsheet_manager: 企業リスト保存完了: 29社 → C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\data\company_list.csv
+2026-05-14 02:36:52,205 [INFO] __main__:   → コンテンツ生成・保存・検証完了
+2026-05-14 02:36:52,208 [INFO] spreadsheet_manager: 企業リスト保存完了: 29社 → C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\data\company_list.csv
+2026-05-14 02:36:52,208 [INFO] __main__: Step 5/5: フロントエンドアプリURL取得...
+2026-05-14 02:36:52,210 [INFO] __main__: Step 4完了 → ページを閉じて再ログイン（Step 5 のサイドバーキャッシュ対策）
+2026-05-14 02:36:52,210 [INFO] web_app_operator: ページを閉じて再ログインを開始...
+2026-05-14 02:36:52,244 [INFO] web_app_operator:   古いページタブを閉じました
+2026-05-14 02:36:52,282 [INFO] web_app_operator:   新しいページタブを開きました
+2026-05-14 02:36:52,283 [INFO] web_app_operator: 管理画面にログイン中...
+2026-05-14 02:36:58,186 [INFO] web_app_operator: ログイン成功
+2026-05-14 02:36:58,187 [INFO] web_app_operator: ページクローズ＆再ログイン完了
+2026-05-14 02:36:58,187 [INFO] web_app_operator: フロントエンドアプリURL取得開始 (企業ID: pipe-sekiguchi)...
+2026-05-14 02:37:03,918 [INFO] web_app_operator: 企業選択 (ID): pipe-sekiguchi
+2026-05-14 02:37:10,869 [INFO] web_app_operator: 企業選択完了: pipe-sekiguchi
+2026-05-14 02:37:14,421 [INFO] web_app_operator:   サイドバーのaタグからURLを取得成功: https://casual-interview-dev.brainverse-ai.com/pipe-sekiguchi
+2026-05-14 02:37:14,423 [INFO] spreadsheet_manager: 企業リスト保存完了: 29社 → C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\data\company_list.csv
+2026-05-14 02:37:14,424 [INFO] __main__:   → フロントエンドURL: https://casual-interview-dev.brainverse-ai.com/pipe-sekiguchi
+2026-05-14 02:37:14,424 [INFO] __main__: [OK] 関口工業株式会社: 全処理完了!
+2026-05-14 02:37:14,424 [INFO] __main__: 
+2026-05-14 02:37:14,424 [INFO] __main__: 1件処理完了 → 再ログイン＆キャッシュクリアを実行
+2026-05-14 02:37:14,424 [INFO] web_app_operator: 再ログイン＆キャッシュクリア開始...
+2026-05-14 02:37:14,448 [INFO] web_app_operator:   LocalStorage/SessionStorageをクリアしました
+2026-05-14 02:37:14,469 [INFO] web_app_operator:   Cookieをクリアしました
+2026-05-14 02:37:16,471 [INFO] web_app_operator: 管理画面にログイン中...
+2026-05-14 02:37:22,469 [INFO] web_app_operator: ログイン成功
+2026-05-14 02:37:22,470 [INFO] web_app_operator: 再ログイン＆キャッシュクリア完了
+2026-05-14 02:37:22,470 [INFO] __main__: 
+2026-05-14 02:37:22,470 [INFO] __main__: ──────────────────────────────────────────────────
+2026-05-14 02:37:22,470 [INFO] __main__: [8/27] トヨタ紡織東北株式会社 (ステータス: 同名企業該当)
+2026-05-14 02:37:22,470 [INFO] __main__: ──────────────────────────────────────────────────
+2026-05-14 02:37:22,470 [INFO] __main__: Step 1/6: URL企業ID不一致 HOLD からの手動再開: https://www.tb-tohoku.co.jp
+2026-05-14 02:37:22,472 [INFO] spreadsheet_manager: 企業リスト保存完了: 29社 → C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\data\company_list.csv
+2026-05-14 02:37:22,472 [INFO] __main__: Step 2/6: 企業追加...
+2026-05-14 02:37:22,472 [INFO] web_app_operator: 企業追加開始: トヨタ紡織東北株式会社
+2026-05-14 02:37:36,921 [INFO] web_app_operator: 企業追加完了: トヨタ紡織東北株式会社 (ID: tb-tohoku)
+2026-05-14 02:37:36,921 [INFO] __main__: Step 2.5/6: 追加企業のID検証...
+2026-05-14 02:37:36,921 [INFO] web_app_operator:   企業ID検証中: 期待ID=tb-tohoku, URL=https://www.tb-tohoku.co.jp
+2026-05-14 02:37:39,465 [INFO] web_app_operator:   [OK] 企業ID 'tb-tohoku' をページ内に確認
+2026-05-14 02:37:39,469 [INFO] spreadsheet_manager: 企業リスト保存完了: 29社 → C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\data\company_list.csv
+2026-05-14 02:37:39,469 [INFO] __main__:   → 企業追加完了 (ID: tb-tohoku)
+2026-05-14 02:37:39,469 [INFO] __main__: 企業追加完了 → ページを閉じて再ログイン（キャッシュバグ防止）
+2026-05-14 02:37:39,469 [INFO] web_app_operator: ページを閉じて再ログインを開始...
+2026-05-14 02:37:39,496 [INFO] web_app_operator:   古いページタブを閉じました
+2026-05-14 02:37:39,530 [INFO] web_app_operator:   新しいページタブを開きました
+2026-05-14 02:37:39,530 [INFO] web_app_operator: 管理画面にログイン中...
+2026-05-14 02:37:45,417 [INFO] web_app_operator: ログイン成功
+2026-05-14 02:37:45,417 [INFO] web_app_operator: ページクローズ＆再ログイン完了
+2026-05-14 02:37:45,417 [INFO] __main__: Step 3/5: URL収集...
+2026-05-14 02:37:52,852 [INFO] recruit_url_finder: 求人サイトURL収集開始: トヨタ紡織東北株式会社 (正規化: 'トヨタ紡織東北')
+2026-05-14 02:37:55,596 [INFO] recruit_url_finder:   [マイナビ転職] 1件取り込み (累計 1件)
+2026-05-14 02:37:58,188 [INFO] recruit_url_finder:   [マイナビ新卒] 2件取り込み (累計 3件)
+2026-05-14 02:38:00,959 [INFO] recruit_url_finder:   [リクナビ] 2件取り込み (累計 5件)
+2026-05-14 02:38:03,555 [INFO] recruit_url_finder:   [DODA] 2件取り込み (累計 7件)
+2026-05-14 02:38:06,169 [INFO] recruit_url_finder:   [エン転職] 0件取り込み (累計 7件)
+2026-05-14 02:38:08,730 [INFO] recruit_url_finder:   [Wantedly] 1件取り込み (累計 8件)
+2026-05-14 02:38:11,213 [INFO] recruit_url_finder:   [Green] 0件取り込み (累計 8件)
+2026-05-14 02:38:13,868 [INFO] recruit_url_finder:   [Indeed] 2件取り込み (累計 10件)
+2026-05-14 02:38:13,868 [INFO] recruit_url_finder: 求人サイトURL収集完了: トヨタ紡織東北株式会社 → 合計 10 件
+2026-05-14 02:38:13,869 [INFO] __main__:   → 内部リンク:30件, 求人サイト:10件, 合計:40件
+2026-05-14 02:38:13,869 [INFO] __main__: Step 4/5: コンテンツ生成...
+2026-05-14 02:38:17,518 [INFO] __main__:   [検証] コンテンツ生成画面のヘッダーが対象企業に切替済か確認...
+2026-05-14 02:38:17,518 [INFO] web_app_operator: サイドバーから企業選択開始: トヨタ紡織東北株式会社
+2026-05-14 02:38:24,685 [INFO] web_app_operator:   ヘッダー検証中: 企業名=トヨタ紡織東北株式会社, ID=tb-tohoku
+2026-05-14 02:38:24,737 [INFO] web_app_operator:   [OK] ヘッダー検証成功: 「🤖 トヨタ紡織東北株式会社 コンテンツ生成」
+2026-05-14 02:38:24,737 [INFO] web_app_operator: サイドバー企業選択完了: トヨタ紡織東北株式会社
+2026-05-14 02:38:24,738 [INFO] web_app_operator: URL入力開始: 40件
+2026-05-14 02:38:28,380 [INFO] web_app_operator:   「全入力を処理」ボタンをクリックしました
+2026-05-14 02:39:02,918 [INFO] web_app_operator: URL入力・処理開始完了: 40件
+2026-05-14 02:39:02,918 [INFO] web_app_operator: コンテンツ生成開始...
+2026-05-14 02:39:13,550 [INFO] web_app_operator:   生成準備完了の待機中...
+2026-05-14 02:39:33,567 [WARNING] web_app_operator:   生成準備完了メッセージが特定できませんでしたが、続行を試みます
+2026-05-14 02:39:53,584 [WARNING] web_app_operator:   コンテンツ生成ボタン未検出 (試行 1/3) — 生成タブを再クリック
+2026-05-14 02:40:04,234 [INFO] web_app_operator:   コンテンツ生成ボタン検出 (試行 2/3)
+2026-05-14 02:40:04,765 [INFO] web_app_operator: コンテンツ生成中... (最大5分待機)
+2026-05-14 02:40:59,959 [INFO] web_app_operator: 生成完了検出 (経過: 55.0秒)
+2026-05-14 02:40:59,966 [INFO] web_app_operator: コンテンツ生成完了
+2026-05-14 02:40:59,966 [INFO] __main__:   [検証] 保存後のFAQ・企業情報タブを確認...
+2026-05-14 02:40:59,966 [INFO] web_app_operator: コンテンツ保存開始...
+2026-05-14 02:41:04,135 [INFO] web_app_operator:   FAQ保存ボタンの表示を確認中...
+2026-05-14 02:41:04,154 [INFO] web_app_operator:   FAQ保存ボタンの表示を確認（=FAQプレビュー描画完了）
+2026-05-14 02:41:04,155 [INFO] web_app_operator:   STEP1: FAQ保存ボタンを即クリック...
+2026-05-14 02:41:05,282 [INFO] web_app_operator:   FAQ保存ボタンをクリックしました
+2026-05-14 02:41:10,299 [WARNING] web_app_operator:   FAQ保存完了メッセージが出なかったため、もう一度クリックします
+2026-05-14 02:41:11,381 [INFO] web_app_operator:   FAQ保存ボタンを再クリックしました
+2026-05-14 02:41:14,928 [INFO] web_app_operator:   STEP2: 企業情報を保存ボタン（赤）を探してクリック...
+2026-05-14 02:41:16,490 [INFO] web_app_operator:   「企業情報を保存」ボタンが直接見つからないため、全ボタンを確認...
+2026-05-14 02:41:16,513 [INFO] web_app_operator:     保存関連ボタン発見: [👁️ プレビュー・保存]
+2026-05-14 02:41:16,536 [INFO] web_app_operator:     保存関連ボタン発見: [💾 FAQ保存（置換）]
+2026-05-14 02:41:16,542 [INFO] web_app_operator:     保存関連ボタン発見: [💾 企業情報保存]
+2026-05-14 02:41:16,551 [INFO] web_app_operator:   赤いボタンをクリック: [💾 企業情報保存]
+2026-05-14 02:41:22,714 [INFO] web_app_operator:   企業情報を保存ボタンのクリック完了
+2026-05-14 02:41:32,718 [WARNING] web_app_operator:   明確な保存完了メッセージは確認できませんでしたが、処理を続行します
+2026-05-14 02:41:32,720 [INFO] web_app_operator:   コンテンツ管理タブで保存確認中: トヨタ紡織東北株式会社
+2026-05-14 02:41:46,491 [INFO] web_app_operator:   [OK] コンテンツ管理ページ: tb-tohoku の存在を確認
+2026-05-14 02:41:46,491 [INFO] web_app_operator:   [FAQタブ] 検証開始
+2026-05-14 02:41:46,499 [WARNING] web_app_operator:   [FAQタブ] が見つかりません（タブ未表示の可能性、ページ全体で代替検証）
+2026-05-14 02:41:46,621 [INFO] web_app_operator:   [OK] [FAQタブ] 企業名/IDを確認 (スクショ: screenshots/tab_FAQ_tb-tohoku.png)
+2026-05-14 02:41:46,621 [INFO] web_app_operator:   [企業情報タブ] 検証開始
+2026-05-14 02:41:46,628 [WARNING] web_app_operator:   [企業情報タブ] が見つかりません（タブ未表示の可能性、ページ全体で代替検証）
+2026-05-14 02:41:46,736 [INFO] web_app_operator:   [OK] [企業情報タブ] 企業名/IDを確認 (スクショ: screenshots/tab_企業情報_tb-tohoku.png)
+2026-05-14 02:41:46,736 [INFO] web_app_operator:   [OK] FAQ・企業情報タブともに対象企業のコンテンツを確認
+2026-05-14 02:41:48,746 [INFO] web_app_operator: コンテンツ保存処理完了
+2026-05-14 02:41:48,748 [INFO] spreadsheet_manager: 企業リスト保存完了: 29社 → C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\data\company_list.csv
+2026-05-14 02:41:48,748 [INFO] __main__:   → コンテンツ生成・保存・検証完了
+2026-05-14 02:41:48,749 [INFO] spreadsheet_manager: 企業リスト保存完了: 29社 → C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\data\company_list.csv
+2026-05-14 02:41:48,749 [INFO] __main__: Step 5/5: フロントエンドアプリURL取得...
+2026-05-14 02:41:48,749 [INFO] __main__: Step 4完了 → ページを閉じて再ログイン（Step 5 のサイドバーキャッシュ対策）
+2026-05-14 02:41:48,749 [INFO] web_app_operator: ページを閉じて再ログインを開始...
+2026-05-14 02:41:48,774 [INFO] web_app_operator:   古いページタブを閉じました
+2026-05-14 02:41:48,813 [INFO] web_app_operator:   新しいページタブを開きました
+2026-05-14 02:41:48,813 [INFO] web_app_operator: 管理画面にログイン中...
+2026-05-14 02:41:54,679 [INFO] web_app_operator: ログイン成功
+2026-05-14 02:41:54,679 [INFO] web_app_operator: ページクローズ＆再ログイン完了
+2026-05-14 02:41:54,679 [INFO] web_app_operator: フロントエンドアプリURL取得開始 (企業ID: tb-tohoku)...
+2026-05-14 02:42:00,409 [INFO] web_app_operator: 企業選択 (ID): tb-tohoku
+2026-05-14 02:42:07,295 [INFO] web_app_operator: 企業選択完了: tb-tohoku
+2026-05-14 02:42:10,852 [INFO] web_app_operator:   サイドバーのaタグからURLを取得成功: https://casual-interview-dev.brainverse-ai.com/tb-tohoku
+2026-05-14 02:42:10,854 [INFO] spreadsheet_manager: 企業リスト保存完了: 29社 → C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\data\company_list.csv
+2026-05-14 02:42:10,854 [INFO] __main__:   → フロントエンドURL: https://casual-interview-dev.brainverse-ai.com/tb-tohoku
+2026-05-14 02:42:10,854 [INFO] __main__: [OK] トヨタ紡織東北株式会社: 全処理完了!
+2026-05-14 02:42:10,854 [INFO] __main__: 
+2026-05-14 02:42:10,855 [INFO] __main__: 1件処理完了 → 再ログイン＆キャッシュクリアを実行
+2026-05-14 02:42:10,855 [INFO] web_app_operator: 再ログイン＆キャッシュクリア開始...
+2026-05-14 02:42:10,858 [INFO] web_app_operator:   LocalStorage/SessionStorageをクリアしました
+2026-05-14 02:42:10,859 [INFO] web_app_operator:   Cookieをクリアしました
+2026-05-14 02:42:12,864 [INFO] web_app_operator: 管理画面にログイン中...
+2026-05-14 02:42:18,814 [INFO] web_app_operator: ログイン成功
+2026-05-14 02:42:18,814 [INFO] web_app_operator: 再ログイン＆キャッシュクリア完了
+2026-05-14 02:42:18,814 [INFO] __main__: 
+2026-05-14 02:42:18,814 [INFO] __main__: ──────────────────────────────────────────────────
+2026-05-14 02:42:18,815 [INFO] __main__: [9/27] 横浜ゴム株式会社 (ステータス: 同名企業該当)
+2026-05-14 02:42:18,815 [INFO] __main__: ──────────────────────────────────────────────────
+2026-05-14 02:42:18,815 [INFO] __main__: Step 1/6: URL企業ID不一致 HOLD からの手動再開: https://www.y-yokohama.com
+2026-05-14 02:42:18,816 [INFO] spreadsheet_manager: 企業リスト保存完了: 29社 → C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\data\company_list.csv
+2026-05-14 02:42:18,816 [INFO] __main__: Step 2/6: 企業追加...
+2026-05-14 02:42:18,816 [INFO] web_app_operator: 企業追加開始: 横浜ゴム株式会社
+2026-05-14 02:42:33,244 [INFO] web_app_operator: 企業追加完了: 横浜ゴム株式会社 (ID: y-yokohama)
+2026-05-14 02:42:33,244 [INFO] __main__: Step 2.5/6: 追加企業のID検証...
+2026-05-14 02:42:33,244 [INFO] web_app_operator:   企業ID検証中: 期待ID=y-yokohama, URL=https://www.y-yokohama.com
+2026-05-14 02:42:35,788 [INFO] web_app_operator:   [OK] 企業ID 'y-yokohama' をページ内に確認
+2026-05-14 02:42:35,789 [INFO] spreadsheet_manager: 企業リスト保存完了: 29社 → C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\data\company_list.csv
+2026-05-14 02:42:35,789 [INFO] __main__:   → 企業追加完了 (ID: y-yokohama)
+2026-05-14 02:42:35,789 [INFO] __main__: 企業追加完了 → ページを閉じて再ログイン（キャッシュバグ防止）
+2026-05-14 02:42:35,790 [INFO] web_app_operator: ページを閉じて再ログインを開始...
+2026-05-14 02:42:35,808 [INFO] web_app_operator:   古いページタブを閉じました
+2026-05-14 02:42:35,846 [INFO] web_app_operator:   新しいページタブを開きました
+2026-05-14 02:42:35,846 [INFO] web_app_operator: 管理画面にログイン中...
+2026-05-14 02:42:41,762 [INFO] web_app_operator: ログイン成功
+2026-05-14 02:42:41,762 [INFO] web_app_operator: ページクローズ＆再ログイン完了
+2026-05-14 02:42:41,762 [INFO] __main__: Step 3/5: URL収集...
+2026-05-14 02:42:53,455 [INFO] recruit_url_finder: 求人サイトURL収集開始: 横浜ゴム株式会社 (正規化: '横浜ゴム')
+2026-05-14 02:42:56,374 [INFO] recruit_url_finder:   [マイナビ転職] 2件取り込み (累計 2件)
+2026-05-14 02:42:58,986 [INFO] recruit_url_finder:   [マイナビ新卒] 2件取り込み (累計 4件)
+2026-05-14 02:43:01,644 [INFO] recruit_url_finder:   [リクナビ] 2件取り込み (累計 6件)
+2026-05-14 02:43:04,305 [INFO] recruit_url_finder:   [DODA] 2件取り込み (累計 8件)
+2026-05-14 02:43:06,903 [INFO] recruit_url_finder:   [エン転職] 2件取り込み (累計 10件)
+2026-05-14 02:43:06,904 [INFO] recruit_url_finder: 求人サイトURL収集完了: 横浜ゴム株式会社 → 合計 10 件
+2026-05-14 02:43:06,904 [INFO] __main__:   → 内部リンク:30件, 求人サイト:10件, 合計:40件
+2026-05-14 02:43:06,904 [INFO] __main__: Step 4/5: コンテンツ生成...
+2026-05-14 02:43:10,528 [INFO] __main__:   [検証] コンテンツ生成画面のヘッダーが対象企業に切替済か確認...
+2026-05-14 02:43:10,528 [INFO] web_app_operator: サイドバーから企業選択開始: 横浜ゴム株式会社
+2026-05-14 02:43:17,613 [INFO] web_app_operator:   ヘッダー検証中: 企業名=横浜ゴム株式会社, ID=y-yokohama
+2026-05-14 02:43:17,640 [INFO] web_app_operator:   [OK] ヘッダー検証成功: 「🤖 横浜ゴム株式会社 コンテンツ生成」
+2026-05-14 02:43:17,640 [INFO] web_app_operator: サイドバー企業選択完了: 横浜ゴム株式会社
+2026-05-14 02:43:17,642 [INFO] web_app_operator: URL入力開始: 40件
+2026-05-14 02:43:21,278 [INFO] web_app_operator:   「全入力を処理」ボタンをクリックしました
+2026-05-14 02:43:55,828 [INFO] web_app_operator: URL入力・処理開始完了: 40件
+2026-05-14 02:43:55,829 [INFO] web_app_operator: コンテンツ生成開始...
+2026-05-14 02:44:06,428 [INFO] web_app_operator:   生成準備完了の待機中...
+2026-05-14 02:44:26,444 [WARNING] web_app_operator:   生成準備完了メッセージが特定できませんでしたが、続行を試みます
+2026-05-14 02:44:34,058 [INFO] web_app_operator:   コンテンツ生成ボタン検出 (試行 1/3)
+2026-05-14 02:44:34,611 [INFO] web_app_operator: コンテンツ生成中... (最大5分待機)
+2026-05-14 02:45:29,821 [INFO] web_app_operator: 生成完了検出 (経過: 55.0秒)
+2026-05-14 02:45:29,821 [INFO] web_app_operator: コンテンツ生成完了
+2026-05-14 02:45:29,821 [INFO] __main__:   [検証] 保存後のFAQ・企業情報タブを確認...
+2026-05-14 02:45:29,821 [INFO] web_app_operator: コンテンツ保存開始...
+2026-05-14 02:45:33,977 [INFO] web_app_operator:   FAQ保存ボタンの表示を確認中...
+2026-05-14 02:45:33,986 [INFO] web_app_operator:   FAQ保存ボタンの表示を確認（=FAQプレビュー描画完了）
+2026-05-14 02:45:33,986 [INFO] web_app_operator:   STEP1: FAQ保存ボタンを即クリック...
+2026-05-14 02:45:35,059 [INFO] web_app_operator:   FAQ保存ボタンをクリックしました
+2026-05-14 02:45:40,077 [WARNING] web_app_operator:   FAQ保存完了メッセージが出なかったため、もう一度クリックします
+2026-05-14 02:45:41,160 [INFO] web_app_operator:   FAQ保存ボタンを再クリックしました
+2026-05-14 02:45:44,692 [INFO] web_app_operator:   STEP2: 企業情報を保存ボタン（赤）を探してクリック...
+2026-05-14 02:45:46,215 [INFO] web_app_operator:   「企業情報を保存」ボタンが直接見つからないため、全ボタンを確認...
+2026-05-14 02:45:46,246 [INFO] web_app_operator:     保存関連ボタン発見: [👁️ プレビュー・保存]
+2026-05-14 02:45:46,278 [INFO] web_app_operator:     保存関連ボタン発見: [💾 FAQ保存（置換）]
+2026-05-14 02:45:46,287 [INFO] web_app_operator:     保存関連ボタン発見: [💾 企業情報保存]
+2026-05-14 02:45:46,296 [INFO] web_app_operator:   赤いボタンをクリック: [💾 企業情報保存]
+2026-05-14 02:45:52,509 [INFO] web_app_operator:   企業情報を保存ボタンのクリック完了
+2026-05-14 02:46:02,527 [WARNING] web_app_operator:   明確な保存完了メッセージは確認できませんでしたが、処理を続行します
+2026-05-14 02:46:02,527 [INFO] web_app_operator:   コンテンツ管理タブで保存確認中: 横浜ゴム株式会社
+2026-05-14 02:46:16,216 [INFO] web_app_operator:   [OK] コンテンツ管理ページ: y-yokohama の存在を確認
+2026-05-14 02:46:16,216 [INFO] web_app_operator:   [FAQタブ] 検証開始
+2026-05-14 02:46:16,226 [WARNING] web_app_operator:   [FAQタブ] が見つかりません（タブ未表示の可能性、ページ全体で代替検証）
+2026-05-14 02:46:16,353 [INFO] web_app_operator:   [OK] [FAQタブ] 企業名/IDを確認 (スクショ: screenshots/tab_FAQ_y-yokohama.png)
+2026-05-14 02:46:16,355 [INFO] web_app_operator:   [企業情報タブ] 検証開始
+2026-05-14 02:46:16,364 [WARNING] web_app_operator:   [企業情報タブ] が見つかりません（タブ未表示の可能性、ページ全体で代替検証）
+2026-05-14 02:46:16,488 [INFO] web_app_operator:   [OK] [企業情報タブ] 企業名/IDを確認 (スクショ: screenshots/tab_企業情報_y-yokohama.png)
+2026-05-14 02:46:16,488 [INFO] web_app_operator:   [OK] FAQ・企業情報タブともに対象企業のコンテンツを確認
+2026-05-14 02:46:18,492 [INFO] web_app_operator: コンテンツ保存処理完了
+2026-05-14 02:46:18,494 [INFO] spreadsheet_manager: 企業リスト保存完了: 29社 → C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\data\company_list.csv
+2026-05-14 02:46:18,494 [INFO] __main__:   → コンテンツ生成・保存・検証完了
+2026-05-14 02:46:18,494 [INFO] spreadsheet_manager: 企業リスト保存完了: 29社 → C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\data\company_list.csv
+2026-05-14 02:46:18,494 [INFO] __main__: Step 5/5: フロントエンドアプリURL取得...
+2026-05-14 02:46:18,494 [INFO] __main__: Step 4完了 → ページを閉じて再ログイン（Step 5 のサイドバーキャッシュ対策）
+2026-05-14 02:46:18,494 [INFO] web_app_operator: ページを閉じて再ログインを開始...
+2026-05-14 02:46:18,521 [INFO] web_app_operator:   古いページタブを閉じました
+2026-05-14 02:46:18,563 [INFO] web_app_operator:   新しいページタブを開きました
+2026-05-14 02:46:18,563 [INFO] web_app_operator: 管理画面にログイン中...
+2026-05-14 02:46:24,476 [INFO] web_app_operator: ログイン成功
+2026-05-14 02:46:24,476 [INFO] web_app_operator: ページクローズ＆再ログイン完了
+2026-05-14 02:46:24,477 [INFO] web_app_operator: フロントエンドアプリURL取得開始 (企業ID: y-yokohama)...
+2026-05-14 02:46:30,191 [INFO] web_app_operator: 企業選択 (ID): y-yokohama
+2026-05-14 02:46:37,108 [INFO] web_app_operator: 企業選択完了: y-yokohama
+2026-05-14 02:47:41,192 [WARNING] web_app_operator:   サイドバーから企業ID(y-yokohama)に一致するURLが取得できませんでした。最後に見たURL: None
+2026-05-14 02:47:41,230 [WARNING] web_app_operator:   URL構造から推定（要目視確認）: https://casual-interview-dev.brainverse-ai.com/y-yokohama
+2026-05-14 02:47:41,280 [INFO] spreadsheet_manager: 企業リスト保存完了: 29社 → C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\data\company_list.csv
+2026-05-14 02:47:41,282 [INFO] __main__:   → フロントエンドURL: [推定] https://casual-interview-dev.brainverse-ai.com/y-yokohama
+2026-05-14 02:47:41,283 [INFO] __main__: [OK] 横浜ゴム株式会社: 全処理完了!
+2026-05-14 02:47:41,284 [INFO] __main__: 
+2026-05-14 02:47:41,285 [INFO] __main__: 1件処理完了 → 再ログイン＆キャッシュクリアを実行
+2026-05-14 02:47:41,285 [INFO] web_app_operator: 再ログイン＆キャッシュクリア開始...
+2026-05-14 02:47:41,297 [INFO] web_app_operator:   LocalStorage/SessionStorageをクリアしました
+2026-05-14 02:47:41,301 [INFO] web_app_operator:   Cookieをクリアしました
+2026-05-14 02:47:43,306 [INFO] web_app_operator: 管理画面にログイン中...
+2026-05-14 02:47:49,523 [INFO] web_app_operator: ログイン成功
+2026-05-14 02:47:49,524 [INFO] web_app_operator: 再ログイン＆キャッシュクリア完了
+2026-05-14 02:47:49,524 [INFO] __main__: 
+2026-05-14 02:47:49,524 [INFO] __main__: ──────────────────────────────────────────────────
+2026-05-14 02:47:49,525 [INFO] __main__: [10/27] マキノジェイ株式会社 (ステータス: 同名企業該当)
+2026-05-14 02:47:49,525 [INFO] __main__: ──────────────────────────────────────────────────
+2026-05-14 02:47:49,525 [INFO] __main__: Step 1/6: URL企業ID不一致 HOLD からの手動再開: https://www.makinoj.co.jp
+2026-05-14 02:47:49,526 [INFO] spreadsheet_manager: 企業リスト保存完了: 29社 → C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\data\company_list.csv
+2026-05-14 02:47:49,527 [INFO] __main__: Step 2/6: 企業追加...
+2026-05-14 02:47:49,527 [INFO] web_app_operator: 企業追加開始: マキノジェイ株式会社
+2026-05-14 02:48:04,138 [INFO] web_app_operator: 企業追加完了: マキノジェイ株式会社 (ID: makinoj)
+2026-05-14 02:48:04,138 [INFO] __main__: Step 2.5/6: 追加企業のID検証...
+2026-05-14 02:48:04,138 [INFO] web_app_operator:   企業ID検証中: 期待ID=makinoj, URL=https://www.makinoj.co.jp
+2026-05-14 02:48:06,669 [INFO] web_app_operator:   [OK] 企業ID 'makinoj' をページ内に確認
+2026-05-14 02:48:06,669 [INFO] spreadsheet_manager: 企業リスト保存完了: 29社 → C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\data\company_list.csv
+2026-05-14 02:48:06,669 [INFO] __main__:   → 企業追加完了 (ID: makinoj)
+2026-05-14 02:48:06,669 [INFO] __main__: 企業追加完了 → ページを閉じて再ログイン（キャッシュバグ防止）
+2026-05-14 02:48:06,671 [INFO] web_app_operator: ページを閉じて再ログインを開始...
+2026-05-14 02:48:06,696 [INFO] web_app_operator:   古いページタブを閉じました
+2026-05-14 02:48:06,746 [INFO] web_app_operator:   新しいページタブを開きました
+2026-05-14 02:48:06,746 [INFO] web_app_operator: 管理画面にログイン中...
+2026-05-14 02:48:12,773 [INFO] web_app_operator: ログイン成功
+2026-05-14 02:48:12,773 [INFO] web_app_operator: ページクローズ＆再ログイン完了
+2026-05-14 02:48:12,775 [INFO] __main__: Step 3/5: URL収集...
+2026-05-14 02:48:24,292 [INFO] recruit_url_finder: 求人サイトURL収集開始: マキノジェイ株式会社 (正規化: 'マキノジェイ')
+2026-05-14 02:48:27,096 [INFO] recruit_url_finder:   [マイナビ転職] 2件取り込み (累計 2件)
+2026-05-14 02:48:29,732 [INFO] recruit_url_finder:   [マイナビ新卒] 2件取り込み (累計 4件)
+2026-05-14 02:48:32,369 [INFO] recruit_url_finder:   [リクナビ] 0件取り込み (累計 4件)
+2026-05-14 02:48:35,015 [INFO] recruit_url_finder:   [DODA] 2件取り込み (累計 6件)
+2026-05-14 02:48:37,550 [INFO] recruit_url_finder:   [エン転職] 2件取り込み (累計 8件)
+2026-05-14 02:48:40,117 [INFO] recruit_url_finder:   [Wantedly] 2件取り込み (累計 10件)
+2026-05-14 02:48:40,117 [INFO] recruit_url_finder: 求人サイトURL収集完了: マキノジェイ株式会社 → 合計 10 件
+2026-05-14 02:48:40,117 [INFO] __main__:   → 内部リンク:25件, 求人サイト:10件, 合計:35件
+2026-05-14 02:48:40,117 [INFO] __main__: Step 4/5: コンテンツ生成...
+2026-05-14 02:48:43,757 [INFO] __main__:   [検証] コンテンツ生成画面のヘッダーが対象企業に切替済か確認...
+2026-05-14 02:48:43,757 [INFO] web_app_operator: サイドバーから企業選択開始: マキノジェイ株式会社
+2026-05-14 02:48:50,840 [INFO] web_app_operator:   ヘッダー検証中: 企業名=マキノジェイ株式会社, ID=makinoj
+2026-05-14 02:48:50,859 [INFO] web_app_operator:   [OK] ヘッダー検証成功: 「🤖 マキノジェイ株式会社 コンテンツ生成」
+2026-05-14 02:48:50,863 [INFO] web_app_operator: サイドバー企業選択完了: マキノジェイ株式会社
+2026-05-14 02:48:50,863 [INFO] web_app_operator: URL入力開始: 35件
+2026-05-14 02:48:54,539 [INFO] web_app_operator:   「全入力を処理」ボタンをクリックしました
+2026-05-14 02:49:29,089 [INFO] web_app_operator: URL入力・処理開始完了: 35件
+2026-05-14 02:49:29,090 [INFO] web_app_operator: コンテンツ生成開始...
+2026-05-14 02:49:39,705 [INFO] web_app_operator:   生成準備完了の待機中...
+2026-05-14 02:49:59,722 [WARNING] web_app_operator:   生成準備完了メッセージが特定できませんでしたが、続行を試みます
+2026-05-14 02:50:04,746 [INFO] web_app_operator:   コンテンツ生成ボタン検出 (試行 1/3)
+2026-05-14 02:50:05,288 [INFO] web_app_operator: コンテンツ生成中... (最大5分待機)
+2026-05-14 02:51:05,571 [INFO] web_app_operator: 生成完了検出 (経過: 60.0秒)
+2026-05-14 02:51:05,571 [INFO] web_app_operator: コンテンツ生成完了
+2026-05-14 02:51:05,571 [INFO] __main__:   [検証] 保存後のFAQ・企業情報タブを確認...
+2026-05-14 02:51:05,572 [INFO] web_app_operator: コンテンツ保存開始...
+2026-05-14 02:51:09,739 [INFO] web_app_operator:   FAQ保存ボタンの表示を確認中...
+2026-05-14 02:51:09,759 [INFO] web_app_operator:   FAQ保存ボタンの表示を確認（=FAQプレビュー描画完了）
+2026-05-14 02:51:09,763 [INFO] web_app_operator:   STEP1: FAQ保存ボタンを即クリック...
+2026-05-14 02:51:10,865 [INFO] web_app_operator:   FAQ保存ボタンをクリックしました
+2026-05-14 02:51:15,871 [WARNING] web_app_operator:   FAQ保存完了メッセージが出なかったため、もう一度クリックします
+2026-05-14 02:51:16,983 [INFO] web_app_operator:   FAQ保存ボタンを再クリックしました
+2026-05-14 02:51:20,522 [INFO] web_app_operator:   STEP2: 企業情報を保存ボタン（赤）を探してクリック...
+2026-05-14 02:51:22,069 [INFO] web_app_operator:   「企業情報を保存」ボタンが直接見つからないため、全ボタンを確認...
+2026-05-14 02:51:22,094 [INFO] web_app_operator:     保存関連ボタン発見: [👁️ プレビュー・保存]
+2026-05-14 02:51:22,121 [INFO] web_app_operator:     保存関連ボタン発見: [💾 FAQ保存（置換）]
+2026-05-14 02:51:22,130 [INFO] web_app_operator:     保存関連ボタン発見: [💾 企業情報保存]
+2026-05-14 02:51:22,138 [INFO] web_app_operator:   赤いボタンをクリック: [💾 企業情報保存]
+2026-05-14 02:51:28,319 [INFO] web_app_operator:   企業情報を保存ボタンのクリック完了
+2026-05-14 02:51:38,337 [WARNING] web_app_operator:   明確な保存完了メッセージは確認できませんでしたが、処理を続行します
+2026-05-14 02:51:38,337 [INFO] web_app_operator:   コンテンツ管理タブで保存確認中: マキノジェイ株式会社
+2026-05-14 02:51:52,004 [INFO] web_app_operator:   [OK] コンテンツ管理ページ: makinoj の存在を確認
+2026-05-14 02:51:52,004 [INFO] web_app_operator:   [FAQタブ] 検証開始
+2026-05-14 02:51:52,013 [WARNING] web_app_operator:   [FAQタブ] が見つかりません（タブ未表示の可能性、ページ全体で代替検証）
+2026-05-14 02:51:52,131 [INFO] web_app_operator:   [OK] [FAQタブ] 企業名/IDを確認 (スクショ: screenshots/tab_FAQ_makinoj.png)
+2026-05-14 02:51:52,131 [INFO] web_app_operator:   [企業情報タブ] 検証開始
+2026-05-14 02:51:52,139 [WARNING] web_app_operator:   [企業情報タブ] が見つかりません（タブ未表示の可能性、ページ全体で代替検証）
+2026-05-14 02:51:52,263 [INFO] web_app_operator:   [OK] [企業情報タブ] 企業名/IDを確認 (スクショ: screenshots/tab_企業情報_makinoj.png)
+2026-05-14 02:51:52,263 [INFO] web_app_operator:   [OK] FAQ・企業情報タブともに対象企業のコンテンツを確認
+2026-05-14 02:51:54,270 [INFO] web_app_operator: コンテンツ保存処理完了
+2026-05-14 02:51:54,271 [INFO] spreadsheet_manager: 企業リスト保存完了: 29社 → C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\data\company_list.csv
+2026-05-14 02:51:54,271 [INFO] __main__:   → コンテンツ生成・保存・検証完了
+2026-05-14 02:51:54,271 [INFO] spreadsheet_manager: 企業リスト保存完了: 29社 → C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\data\company_list.csv
+2026-05-14 02:51:54,271 [INFO] __main__: Step 5/5: フロントエンドアプリURL取得...
+2026-05-14 02:51:54,271 [INFO] __main__: Step 4完了 → ページを閉じて再ログイン（Step 5 のサイドバーキャッシュ対策）
+2026-05-14 02:51:54,271 [INFO] web_app_operator: ページを閉じて再ログインを開始...
+2026-05-14 02:51:54,304 [INFO] web_app_operator:   古いページタブを閉じました
+2026-05-14 02:51:54,347 [INFO] web_app_operator:   新しいページタブを開きました
+2026-05-14 02:51:54,347 [INFO] web_app_operator: 管理画面にログイン中...
+2026-05-14 02:52:00,221 [INFO] web_app_operator: ログイン成功
+2026-05-14 02:52:00,222 [INFO] web_app_operator: ページクローズ＆再ログイン完了
+2026-05-14 02:52:00,222 [INFO] web_app_operator: フロントエンドアプリURL取得開始 (企業ID: makinoj)...
+2026-05-14 02:52:05,968 [INFO] web_app_operator: 企業選択 (ID): makinoj
+2026-05-14 02:52:14,001 [INFO] web_app_operator: 企業選択完了: makinoj
+2026-05-14 02:53:18,101 [WARNING] web_app_operator:   サイドバーから企業ID(makinoj)に一致するURLが取得できませんでした。最後に見たURL: None
+2026-05-14 02:53:18,111 [WARNING] web_app_operator:   URL構造から推定（要目視確認）: https://casual-interview-dev.brainverse-ai.com/makinoj
+2026-05-14 02:53:18,111 [INFO] spreadsheet_manager: 企業リスト保存完了: 29社 → C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\data\company_list.csv
+2026-05-14 02:53:18,111 [INFO] __main__:   → フロントエンドURL: [推定] https://casual-interview-dev.brainverse-ai.com/makinoj
+2026-05-14 02:53:18,111 [INFO] __main__: [OK] マキノジェイ株式会社: 全処理完了!
+2026-05-14 02:53:18,113 [INFO] __main__: 
+2026-05-14 02:53:18,113 [INFO] __main__: 1件処理完了 → 再ログイン＆キャッシュクリアを実行
+2026-05-14 02:53:18,113 [INFO] web_app_operator: 再ログイン＆キャッシュクリア開始...
+2026-05-14 02:53:18,115 [INFO] web_app_operator:   LocalStorage/SessionStorageをクリアしました
+2026-05-14 02:53:18,119 [INFO] web_app_operator:   Cookieをクリアしました
+2026-05-14 02:53:20,136 [INFO] web_app_operator: 管理画面にログイン中...
+2026-05-14 02:53:26,287 [INFO] web_app_operator: ログイン成功
+2026-05-14 02:53:26,288 [INFO] web_app_operator: 再ログイン＆キャッシュクリア完了
+2026-05-14 02:53:26,288 [INFO] __main__: 
+2026-05-14 02:53:26,288 [INFO] __main__: ──────────────────────────────────────────────────
+2026-05-14 02:53:26,290 [INFO] __main__: [11/27] 株式会社牧野フライス製作所 (ステータス: 同名企業該当)
+2026-05-14 02:53:26,290 [INFO] __main__: ──────────────────────────────────────────────────
+2026-05-14 02:53:26,290 [INFO] __main__: Step 1/6: URL企業ID不一致 HOLD からの手動再開: https://www.makino.co.jp/ja-jp/
+2026-05-14 02:53:26,294 [INFO] spreadsheet_manager: 企業リスト保存完了: 29社 → C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\data\company_list.csv
+2026-05-14 02:53:26,296 [INFO] __main__: Step 2/6: 企業追加...
+2026-05-14 02:53:26,296 [INFO] web_app_operator: 企業追加開始: 株式会社牧野フライス製作所
+2026-05-14 02:53:40,837 [INFO] web_app_operator: 企業追加完了: 株式会社牧野フライス製作所 (ID: makino)
+2026-05-14 02:53:40,842 [INFO] __main__: Step 2.5/6: 追加企業のID検証...
+2026-05-14 02:53:40,842 [INFO] web_app_operator:   企業ID検証中: 期待ID=makino, URL=https://www.makino.co.jp/ja-jp/
+2026-05-14 02:53:43,379 [INFO] web_app_operator:   [OK] 企業ID 'makino' をページ内に確認
+2026-05-14 02:53:43,381 [INFO] spreadsheet_manager: 企業リスト保存完了: 29社 → C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\data\company_list.csv
+2026-05-14 02:53:43,381 [INFO] __main__:   → 企業追加完了 (ID: makino)
+2026-05-14 02:53:43,381 [INFO] __main__: 企業追加完了 → ページを閉じて再ログイン（キャッシュバグ防止）
+2026-05-14 02:53:43,381 [INFO] web_app_operator: ページを閉じて再ログインを開始...
+2026-05-14 02:53:43,396 [INFO] web_app_operator:   古いページタブを閉じました
+2026-05-14 02:53:43,441 [INFO] web_app_operator:   新しいページタブを開きました
+2026-05-14 02:53:43,441 [INFO] web_app_operator: 管理画面にログイン中...
+2026-05-14 02:53:49,302 [INFO] web_app_operator: ログイン成功
+2026-05-14 02:53:49,302 [INFO] web_app_operator: ページクローズ＆再ログイン完了
+2026-05-14 02:53:49,302 [INFO] __main__: Step 3/5: URL収集...
+2026-05-14 02:53:55,744 [INFO] recruit_url_finder: 求人サイトURL収集開始: 株式会社牧野フライス製作所 (正規化: '牧野フライス製作所')
+2026-05-14 02:53:58,588 [INFO] recruit_url_finder:   [マイナビ転職] 2件取り込み (累計 2件)
+2026-05-14 02:54:01,313 [INFO] recruit_url_finder:   [マイナビ新卒] 2件取り込み (累計 4件)
+2026-05-14 02:54:03,896 [INFO] recruit_url_finder:   [リクナビ] 2件取り込み (累計 6件)
+2026-05-14 02:54:06,546 [INFO] recruit_url_finder:   [DODA] 2件取り込み (累計 8件)
+2026-05-14 02:54:09,153 [INFO] recruit_url_finder:   [エン転職] 2件取り込み (累計 10件)
+2026-05-14 02:54:09,153 [INFO] recruit_url_finder: 求人サイトURL収集完了: 株式会社牧野フライス製作所 → 合計 10 件
+2026-05-14 02:54:09,153 [INFO] __main__:   → 内部リンク:30件, 求人サイト:10件, 合計:40件
+2026-05-14 02:54:09,153 [INFO] __main__: Step 4/5: コンテンツ生成...
+2026-05-14 02:54:12,952 [INFO] __main__:   [検証] コンテンツ生成画面のヘッダーが対象企業に切替済か確認...
+2026-05-14 02:54:12,952 [INFO] web_app_operator: サイドバーから企業選択開始: 株式会社牧野フライス製作所
+2026-05-14 02:54:20,501 [INFO] web_app_operator:   ヘッダー検証中: 企業名=株式会社牧野フライス製作所, ID=makino
+2026-05-14 02:54:20,519 [INFO] web_app_operator:   [OK] ヘッダー検証成功: 「🤖 株式会社牧野フライス製作所 コンテンツ生成」
+2026-05-14 02:54:20,519 [INFO] web_app_operator: サイドバー企業選択完了: 株式会社牧野フライス製作所
+2026-05-14 02:54:20,519 [INFO] web_app_operator: URL入力開始: 40件
+2026-05-14 02:54:24,159 [INFO] web_app_operator:   「全入力を処理」ボタンをクリックしました
+2026-05-14 02:54:58,701 [INFO] web_app_operator: URL入力・処理開始完了: 40件
+2026-05-14 02:54:58,702 [INFO] web_app_operator: コンテンツ生成開始...
+2026-05-14 02:55:09,350 [INFO] web_app_operator:   生成準備完了の待機中...
+2026-05-14 02:55:29,365 [WARNING] web_app_operator:   生成準備完了メッセージが特定できませんでしたが、続行を試みます
+2026-05-14 02:55:49,382 [WARNING] web_app_operator:   コンテンツ生成ボタン未検出 (試行 1/3) — 生成タブを再クリック
+2026-05-14 02:56:03,686 [INFO] web_app_operator:   コンテンツ生成ボタン検出 (試行 2/3)
+2026-05-14 02:56:04,248 [INFO] web_app_operator: コンテンツ生成中... (最大5分待機)
+2026-05-14 02:56:54,446 [INFO] web_app_operator: 生成完了検出 (経過: 50.0秒)
+2026-05-14 02:56:54,447 [INFO] web_app_operator: コンテンツ生成完了
+2026-05-14 02:56:54,447 [INFO] __main__:   [検証] 保存後のFAQ・企業情報タブを確認...
+2026-05-14 02:56:54,447 [INFO] web_app_operator: コンテンツ保存開始...
+2026-05-14 02:56:58,581 [INFO] web_app_operator:   FAQ保存ボタンの表示を確認中...
+2026-05-14 02:56:58,588 [INFO] web_app_operator:   FAQ保存ボタンの表示を確認（=FAQプレビュー描画完了）
+2026-05-14 02:56:58,588 [INFO] web_app_operator:   STEP1: FAQ保存ボタンを即クリック...
+2026-05-14 02:56:59,665 [INFO] web_app_operator:   FAQ保存ボタンをクリックしました
+2026-05-14 02:57:04,668 [WARNING] web_app_operator:   FAQ保存完了メッセージが出なかったため、もう一度クリックします
+2026-05-14 02:57:05,731 [INFO] web_app_operator:   FAQ保存ボタンを再クリックしました
+2026-05-14 02:57:09,265 [INFO] web_app_operator:   STEP2: 企業情報を保存ボタン（赤）を探してクリック...
+2026-05-14 02:57:10,794 [INFO] web_app_operator:   「企業情報を保存」ボタンが直接見つからないため、全ボタンを確認...
+2026-05-14 02:57:10,826 [INFO] web_app_operator:     保存関連ボタン発見: [👁️ プレビュー・保存]
+2026-05-14 02:57:10,853 [INFO] web_app_operator:     保存関連ボタン発見: [💾 FAQ保存（置換）]
+2026-05-14 02:57:10,858 [INFO] web_app_operator:     保存関連ボタン発見: [💾 企業情報保存]
+2026-05-14 02:57:10,865 [INFO] web_app_operator:   赤いボタンをクリック: [💾 企業情報保存]
+2026-05-14 02:57:16,997 [INFO] web_app_operator:   企業情報を保存ボタンのクリック完了
+2026-05-14 02:57:27,000 [WARNING] web_app_operator:   明確な保存完了メッセージは確認できませんでしたが、処理を続行します
+2026-05-14 02:57:27,001 [INFO] web_app_operator:   コンテンツ管理タブで保存確認中: 株式会社牧野フライス製作所
+2026-05-14 02:57:40,932 [INFO] web_app_operator:   [OK] コンテンツ管理ページ: makino の存在を確認
+2026-05-14 02:57:40,932 [INFO] web_app_operator:   [FAQタブ] 検証開始
+2026-05-14 02:57:40,942 [WARNING] web_app_operator:   [FAQタブ] が見つかりません（タブ未表示の可能性、ページ全体で代替検証）
+2026-05-14 02:57:41,055 [INFO] web_app_operator:   [OK] [FAQタブ] 企業名/IDを確認 (スクショ: screenshots/tab_FAQ_makino.png)
+2026-05-14 02:57:41,055 [INFO] web_app_operator:   [企業情報タブ] 検証開始
+2026-05-14 02:57:41,063 [WARNING] web_app_operator:   [企業情報タブ] が見つかりません（タブ未表示の可能性、ページ全体で代替検証）
+2026-05-14 02:57:41,167 [INFO] web_app_operator:   [OK] [企業情報タブ] 企業名/IDを確認 (スクショ: screenshots/tab_企業情報_makino.png)
+2026-05-14 02:57:41,168 [INFO] web_app_operator:   [OK] FAQ・企業情報タブともに対象企業のコンテンツを確認
+2026-05-14 02:57:43,180 [INFO] web_app_operator: コンテンツ保存処理完了
+2026-05-14 02:57:43,244 [INFO] spreadsheet_manager: 企業リスト保存完了: 29社 → C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\data\company_list.csv
+2026-05-14 02:57:43,244 [INFO] __main__:   → コンテンツ生成・保存・検証完了
+2026-05-14 02:57:43,248 [INFO] spreadsheet_manager: 企業リスト保存完了: 29社 → C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\data\company_list.csv
+2026-05-14 02:57:43,248 [INFO] __main__: Step 5/5: フロントエンドアプリURL取得...
+2026-05-14 02:57:43,248 [INFO] __main__: Step 4完了 → ページを閉じて再ログイン（Step 5 のサイドバーキャッシュ対策）
+2026-05-14 02:57:43,248 [INFO] web_app_operator: ページを閉じて再ログインを開始...
+2026-05-14 02:57:43,329 [INFO] web_app_operator:   古いページタブを閉じました
+2026-05-14 02:57:43,443 [INFO] web_app_operator:   新しいページタブを開きました
+2026-05-14 02:57:43,443 [INFO] web_app_operator: 管理画面にログイン中...
+2026-05-14 02:57:49,446 [INFO] web_app_operator: ログイン成功
+2026-05-14 02:57:49,446 [INFO] web_app_operator: ページクローズ＆再ログイン完了
+2026-05-14 02:57:49,446 [INFO] web_app_operator: フロントエンドアプリURL取得開始 (企業ID: makino)...
+2026-05-14 02:57:55,217 [INFO] web_app_operator: 企業選択 (ID): makino
+2026-05-14 02:58:02,480 [INFO] web_app_operator: 企業選択完了: makino
+2026-05-14 02:59:06,546 [WARNING] web_app_operator:   サイドバーから企業ID(makino)に一致するURLが取得できませんでした。最後に見たURL: None
+2026-05-14 02:59:06,559 [WARNING] web_app_operator:   URL構造から推定（要目視確認）: https://casual-interview-dev.brainverse-ai.com/makino
+2026-05-14 02:59:06,564 [INFO] spreadsheet_manager: 企業リスト保存完了: 29社 → C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\data\company_list.csv
+2026-05-14 02:59:06,564 [INFO] __main__:   → フロントエンドURL: [推定] https://casual-interview-dev.brainverse-ai.com/makino
+2026-05-14 02:59:06,565 [INFO] __main__: [OK] 株式会社牧野フライス製作所: 全処理完了!
+2026-05-14 02:59:06,565 [INFO] __main__: 
+2026-05-14 02:59:06,565 [INFO] __main__: 1件処理完了 → 再ログイン＆キャッシュクリアを実行
+2026-05-14 02:59:06,565 [INFO] web_app_operator: 再ログイン＆キャッシュクリア開始...
+2026-05-14 02:59:06,572 [INFO] web_app_operator:   LocalStorage/SessionStorageをクリアしました
+2026-05-14 02:59:06,580 [INFO] web_app_operator:   Cookieをクリアしました
+2026-05-14 02:59:08,582 [INFO] web_app_operator: 管理画面にログイン中...
+2026-05-14 02:59:14,778 [INFO] web_app_operator: ログイン成功
+2026-05-14 02:59:14,780 [INFO] web_app_operator: 再ログイン＆キャッシュクリア完了
+2026-05-14 02:59:14,780 [INFO] __main__: 
+2026-05-14 02:59:14,780 [INFO] __main__: ──────────────────────────────────────────────────
+2026-05-14 02:59:14,780 [INFO] __main__: [12/27] 学校法人獨協学園 (ステータス: 同名企業該当)
+2026-05-14 02:59:14,780 [INFO] __main__: ──────────────────────────────────────────────────
+2026-05-14 02:59:14,780 [INFO] __main__: Step 1/6: URL企業ID不一致 HOLD からの手動再開: https://www.dac.ac.jp
+2026-05-14 02:59:14,782 [INFO] spreadsheet_manager: 企業リスト保存完了: 29社 → C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\data\company_list.csv
+2026-05-14 02:59:14,782 [INFO] __main__: Step 2/6: 企業追加...
+2026-05-14 02:59:14,782 [INFO] web_app_operator: 企業追加開始: 学校法人獨協学園
+2026-05-14 02:59:29,345 [INFO] web_app_operator: 企業追加完了: 学校法人獨協学園 (ID: dac)
+2026-05-14 02:59:29,345 [INFO] __main__: Step 2.5/6: 追加企業のID検証...
+2026-05-14 02:59:29,346 [INFO] web_app_operator:   企業ID検証中: 期待ID=dac, URL=https://www.dac.ac.jp
+2026-05-14 02:59:31,885 [INFO] web_app_operator:   [OK] 企業ID 'dac' をページ内に確認
+2026-05-14 02:59:31,886 [INFO] spreadsheet_manager: 企業リスト保存完了: 29社 → C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\data\company_list.csv
+2026-05-14 02:59:31,886 [INFO] __main__:   → 企業追加完了 (ID: dac)
+2026-05-14 02:59:31,886 [INFO] __main__: 企業追加完了 → ページを閉じて再ログイン（キャッシュバグ防止）
+2026-05-14 02:59:31,886 [INFO] web_app_operator: ページを閉じて再ログインを開始...
+2026-05-14 02:59:31,905 [INFO] web_app_operator:   古いページタブを閉じました
+2026-05-14 02:59:31,939 [INFO] web_app_operator:   新しいページタブを開きました
+2026-05-14 02:59:31,939 [INFO] web_app_operator: 管理画面にログイン中...
+2026-05-14 02:59:37,794 [INFO] web_app_operator: ログイン成功
+2026-05-14 02:59:37,794 [INFO] web_app_operator: ページクローズ＆再ログイン完了
+2026-05-14 02:59:37,794 [INFO] __main__: Step 3/5: URL収集...
+2026-05-14 02:59:42,946 [INFO] recruit_url_finder: 求人サイトURL収集開始: 学校法人獨協学園 (正規化: '獨協学園')
+2026-05-14 02:59:45,855 [INFO] recruit_url_finder:   [マイナビ転職] 2件取り込み (累計 2件)
+2026-05-14 02:59:48,557 [INFO] recruit_url_finder:   [マイナビ新卒] 2件取り込み (累計 4件)
+2026-05-14 02:59:51,205 [INFO] recruit_url_finder:   [リクナビ] 2件取り込み (累計 6件)
+2026-05-14 02:59:53,808 [INFO] recruit_url_finder:   [DODA] 2件取り込み (累計 8件)
+2026-05-14 02:59:56,365 [INFO] recruit_url_finder:   [エン転職] 0件取り込み (累計 8件)
+2026-05-14 02:59:59,071 [INFO] recruit_url_finder:   [Wantedly] 0件取り込み (累計 8件)
+2026-05-14 03:00:01,642 [INFO] recruit_url_finder:   [Green] 1件取り込み (累計 9件)
+2026-05-14 03:00:04,289 [INFO] recruit_url_finder:   [Indeed] 1件取り込み (累計 10件)
+2026-05-14 03:00:04,289 [INFO] recruit_url_finder: 求人サイトURL収集完了: 学校法人獨協学園 → 合計 10 件
+2026-05-14 03:00:04,289 [INFO] __main__:   → 内部リンク:30件, 求人サイト:10件, 合計:40件
+2026-05-14 03:00:04,289 [INFO] __main__: Step 4/5: コンテンツ生成...
+2026-05-14 03:00:07,928 [INFO] __main__:   [検証] コンテンツ生成画面のヘッダーが対象企業に切替済か確認...
+2026-05-14 03:00:07,928 [INFO] web_app_operator: サイドバーから企業選択開始: 学校法人獨協学園
+2026-05-14 03:00:23,027 [INFO] web_app_operator:   ヘッダー検証中: 企業名=学校法人獨協学園, ID=dac
+2026-05-14 03:00:23,105 [INFO] web_app_operator:   [OK] ヘッダー検証成功: 「🤖 学校法人獨協学園 コンテンツ生成」
+2026-05-14 03:00:23,105 [INFO] web_app_operator: サイドバー企業選択完了: 学校法人獨協学園
+2026-05-14 03:00:23,107 [INFO] web_app_operator: URL入力開始: 40件
+2026-05-14 03:00:26,861 [INFO] web_app_operator:   「全入力を処理」ボタンをクリックしました
+2026-05-14 03:01:01,409 [INFO] web_app_operator: URL入力・処理開始完了: 40件
+2026-05-14 03:01:01,409 [INFO] web_app_operator: コンテンツ生成開始...
+2026-05-14 03:01:12,060 [INFO] web_app_operator:   生成準備完了の待機中...
+2026-05-14 03:01:32,076 [WARNING] web_app_operator:   生成準備完了メッセージが特定できませんでしたが、続行を試みます
+2026-05-14 03:01:52,094 [WARNING] web_app_operator:   コンテンツ生成ボタン未検出 (試行 1/3) — 生成タブを再クリック
+2026-05-14 03:02:02,699 [INFO] web_app_operator:   コンテンツ生成ボタン検出 (試行 2/3)
+2026-05-14 03:02:03,260 [INFO] web_app_operator: コンテンツ生成中... (最大5分待機)
+2026-05-14 03:02:53,469 [INFO] web_app_operator: 生成完了検出 (経過: 50.0秒)
+2026-05-14 03:02:53,469 [INFO] web_app_operator: コンテンツ生成完了
+2026-05-14 03:02:53,469 [INFO] __main__:   [検証] 保存後のFAQ・企業情報タブを確認...
+2026-05-14 03:02:53,472 [INFO] web_app_operator: コンテンツ保存開始...
+2026-05-14 03:02:57,624 [INFO] web_app_operator:   FAQ保存ボタンの表示を確認中...
+2026-05-14 03:02:57,629 [INFO] web_app_operator:   FAQ保存ボタンの表示を確認（=FAQプレビュー描画完了）
+2026-05-14 03:02:57,629 [INFO] web_app_operator:   STEP1: FAQ保存ボタンを即クリック...
+2026-05-14 03:02:58,706 [INFO] web_app_operator:   FAQ保存ボタンをクリックしました
+2026-05-14 03:03:03,724 [WARNING] web_app_operator:   FAQ保存完了メッセージが出なかったため、もう一度クリックします
+2026-05-14 03:03:04,806 [INFO] web_app_operator:   FAQ保存ボタンを再クリックしました
+2026-05-14 03:03:08,325 [INFO] web_app_operator:   STEP2: 企業情報を保存ボタン（赤）を探してクリック...
+2026-05-14 03:03:09,846 [INFO] web_app_operator:   「企業情報を保存」ボタンが直接見つからないため、全ボタンを確認...
+2026-05-14 03:03:09,872 [INFO] web_app_operator:     保存関連ボタン発見: [👁️ プレビュー・保存]
+2026-05-14 03:03:09,901 [INFO] web_app_operator:     保存関連ボタン発見: [💾 FAQ保存（置換）]
+2026-05-14 03:03:09,909 [INFO] web_app_operator:     保存関連ボタン発見: [💾 企業情報保存]
+2026-05-14 03:03:09,919 [INFO] web_app_operator:   赤いボタンをクリック: [💾 企業情報保存]
+2026-05-14 03:03:16,124 [INFO] web_app_operator:   企業情報を保存ボタンのクリック完了
+2026-05-14 03:03:26,128 [WARNING] web_app_operator:   明確な保存完了メッセージは確認できませんでしたが、処理を続行します
+2026-05-14 03:03:26,129 [INFO] web_app_operator:   コンテンツ管理タブで保存確認中: 学校法人獨協学園
+2026-05-14 03:03:43,431 [INFO] web_app_operator:   [OK] コンテンツ管理ページ: dac の存在を確認
+2026-05-14 03:03:43,432 [INFO] web_app_operator:   [FAQタブ] 検証開始
+2026-05-14 03:03:43,440 [WARNING] web_app_operator:   [FAQタブ] が見つかりません（タブ未表示の可能性、ページ全体で代替検証）
+2026-05-14 03:03:43,553 [INFO] web_app_operator:   [OK] [FAQタブ] 企業名/IDを確認 (スクショ: screenshots/tab_FAQ_dac.png)
+2026-05-14 03:03:43,553 [INFO] web_app_operator:   [企業情報タブ] 検証開始
+2026-05-14 03:03:43,563 [WARNING] web_app_operator:   [企業情報タブ] が見つかりません（タブ未表示の可能性、ページ全体で代替検証）
+2026-05-14 03:03:43,693 [INFO] web_app_operator:   [OK] [企業情報タブ] 企業名/IDを確認 (スクショ: screenshots/tab_企業情報_dac.png)
+2026-05-14 03:03:43,693 [INFO] web_app_operator:   [OK] FAQ・企業情報タブともに対象企業のコンテンツを確認
+2026-05-14 03:03:45,707 [INFO] web_app_operator: コンテンツ保存処理完了
+2026-05-14 03:03:45,709 [INFO] spreadsheet_manager: 企業リスト保存完了: 29社 → C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\data\company_list.csv
+2026-05-14 03:03:45,709 [INFO] __main__:   → コンテンツ生成・保存・検証完了
+2026-05-14 03:03:45,710 [INFO] spreadsheet_manager: 企業リスト保存完了: 29社 → C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\data\company_list.csv
+2026-05-14 03:03:45,710 [INFO] __main__: Step 5/5: フロントエンドアプリURL取得...
+2026-05-14 03:03:45,710 [INFO] __main__: Step 4完了 → ページを閉じて再ログイン（Step 5 のサイドバーキャッシュ対策）
+2026-05-14 03:03:45,710 [INFO] web_app_operator: ページを閉じて再ログインを開始...
+2026-05-14 03:03:45,742 [INFO] web_app_operator:   古いページタブを閉じました
+2026-05-14 03:03:45,779 [INFO] web_app_operator:   新しいページタブを開きました
+2026-05-14 03:03:45,779 [INFO] web_app_operator: 管理画面にログイン中...
+2026-05-14 03:03:51,706 [INFO] web_app_operator: ログイン成功
+2026-05-14 03:03:51,707 [INFO] web_app_operator: ページクローズ＆再ログイン完了
+2026-05-14 03:03:51,707 [INFO] web_app_operator: フロントエンドアプリURL取得開始 (企業ID: dac)...
+2026-05-14 03:03:57,475 [INFO] web_app_operator: 企業選択 (ID): dac
+2026-05-14 03:04:07,873 [INFO] web_app_operator: 企業選択完了: dac
+2026-05-14 03:05:11,953 [WARNING] web_app_operator:   サイドバーから企業ID(dac)に一致するURLが取得できませんでした。最後に見たURL: None
+2026-05-14 03:05:11,960 [WARNING] web_app_operator:   URL構造から推定（要目視確認）: https://casual-interview-dev.brainverse-ai.com/dac
+2026-05-14 03:05:11,963 [INFO] spreadsheet_manager: 企業リスト保存完了: 29社 → C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\data\company_list.csv
+2026-05-14 03:05:11,963 [INFO] __main__:   → フロントエンドURL: [推定] https://casual-interview-dev.brainverse-ai.com/dac
+2026-05-14 03:05:11,964 [INFO] __main__: [OK] 学校法人獨協学園: 全処理完了!
+2026-05-14 03:05:11,964 [INFO] __main__: 
+2026-05-14 03:05:11,964 [INFO] __main__: 1件処理完了 → 再ログイン＆キャッシュクリアを実行
+2026-05-14 03:05:11,964 [INFO] web_app_operator: 再ログイン＆キャッシュクリア開始...
+2026-05-14 03:05:11,965 [INFO] web_app_operator:   LocalStorage/SessionStorageをクリアしました
+2026-05-14 03:05:11,965 [INFO] web_app_operator:   Cookieをクリアしました
+2026-05-14 03:05:13,972 [INFO] web_app_operator: 管理画面にログイン中...
+2026-05-14 03:05:19,889 [INFO] web_app_operator: ログイン成功
+2026-05-14 03:05:19,890 [INFO] web_app_operator: 再ログイン＆キャッシュクリア完了
+2026-05-14 03:05:19,890 [INFO] __main__: 
+2026-05-14 03:05:19,890 [INFO] __main__: ──────────────────────────────────────────────────
+2026-05-14 03:05:19,890 [INFO] __main__: [13/27] オックスフォード・インストゥルメンツ株式会社 (ステータス: 同名企業該当)
+2026-05-14 03:05:19,890 [INFO] __main__: ──────────────────────────────────────────────────
+2026-05-14 03:05:19,890 [INFO] __main__: Step 1/6: URL企業ID不一致 HOLD からの手動再開: https://www.oxinst.jp
+2026-05-14 03:05:19,890 [INFO] spreadsheet_manager: 企業リスト保存完了: 29社 → C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\data\company_list.csv
+2026-05-14 03:05:19,890 [INFO] __main__: Step 2/6: 企業追加...
+2026-05-14 03:05:19,890 [INFO] web_app_operator: 企業追加開始: オックスフォード・インストゥルメンツ株式会社
+2026-05-14 03:05:34,265 [INFO] web_app_operator: 企業追加完了: オックスフォード・インストゥルメンツ株式会社 (ID: oxinst)
+2026-05-14 03:05:34,265 [INFO] __main__: Step 2.5/6: 追加企業のID検証...
+2026-05-14 03:05:34,265 [INFO] web_app_operator:   企業ID検証中: 期待ID=oxinst, URL=https://www.oxinst.jp
+2026-05-14 03:05:36,796 [INFO] web_app_operator:   [OK] 企業ID 'oxinst' をページ内に確認
+2026-05-14 03:05:36,798 [INFO] spreadsheet_manager: 企業リスト保存完了: 29社 → C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\data\company_list.csv
+2026-05-14 03:05:36,798 [INFO] __main__:   → 企業追加完了 (ID: oxinst)
+2026-05-14 03:05:36,798 [INFO] __main__: 企業追加完了 → ページを閉じて再ログイン（キャッシュバグ防止）
+2026-05-14 03:05:36,798 [INFO] web_app_operator: ページを閉じて再ログインを開始...
+2026-05-14 03:05:36,816 [INFO] web_app_operator:   古いページタブを閉じました
+2026-05-14 03:05:36,855 [INFO] web_app_operator:   新しいページタブを開きました
+2026-05-14 03:05:36,856 [INFO] web_app_operator: 管理画面にログイン中...
+2026-05-14 03:05:42,708 [INFO] web_app_operator: ログイン成功
+2026-05-14 03:05:42,710 [INFO] web_app_operator: ページクローズ＆再ログイン完了
+2026-05-14 03:05:42,710 [INFO] __main__: Step 3/5: URL収集...
+2026-05-14 03:06:03,820 [INFO] recruit_url_finder: 求人サイトURL収集開始: オックスフォード・インストゥルメンツ株式会社 (正規化: 'オックスフォード・インストゥルメンツ')
+2026-05-14 03:06:06,553 [INFO] recruit_url_finder:   [マイナビ転職] 2件取り込み (累計 2件)
+2026-05-14 03:06:09,266 [INFO] recruit_url_finder:   [マイナビ新卒] 0件取り込み (累計 2件)
+2026-05-14 03:06:11,869 [INFO] recruit_url_finder:   [リクナビ] 2件取り込み (累計 4件)
+2026-05-14 03:06:14,540 [INFO] recruit_url_finder:   [DODA] 2件取り込み (累計 6件)
+2026-05-14 03:06:17,116 [INFO] recruit_url_finder:   [エン転職] 2件取り込み (累計 8件)
+2026-05-14 03:06:19,732 [INFO] recruit_url_finder:   [Wantedly] 1件取り込み (累計 9件)
+2026-05-14 03:06:22,432 [INFO] recruit_url_finder:   [Green] 0件取り込み (累計 9件)
+2026-05-14 03:06:25,030 [INFO] recruit_url_finder:   [Indeed] 1件取り込み (累計 10件)
+2026-05-14 03:06:25,032 [INFO] recruit_url_finder: 求人サイトURL収集完了: オックスフォード・インストゥルメンツ株式会社 → 合計 10 件
+2026-05-14 03:06:25,032 [INFO] __main__:   → 内部リンク:30件, 求人サイト:10件, 合計:40件
+2026-05-14 03:06:25,032 [INFO] __main__: Step 4/5: コンテンツ生成...
+2026-05-14 03:06:28,689 [INFO] __main__:   [検証] コンテンツ生成画面のヘッダーが対象企業に切替済か確認...
+2026-05-14 03:06:28,690 [INFO] web_app_operator: サイドバーから企業選択開始: オックスフォード・インストゥルメンツ株式会社
+2026-05-14 03:06:35,904 [INFO] web_app_operator:   ヘッダー検証中: 企業名=オックスフォード・インストゥルメンツ株式会社, ID=oxinst
+2026-05-14 03:06:35,975 [INFO] web_app_operator:   [OK] ヘッダー検証成功: 「🤖 オックスフォード・インストゥルメンツ株式会社 コンテンツ生成」
+2026-05-14 03:06:35,976 [INFO] web_app_operator: サイドバー企業選択完了: オックスフォード・インストゥルメンツ株式会社
+2026-05-14 03:06:35,977 [INFO] web_app_operator: URL入力開始: 40件
+2026-05-14 03:06:39,672 [INFO] web_app_operator:   「全入力を処理」ボタンをクリックしました
+2026-05-14 03:07:14,219 [INFO] web_app_operator: URL入力・処理開始完了: 40件
+2026-05-14 03:07:14,220 [INFO] web_app_operator: コンテンツ生成開始...
+2026-05-14 03:07:24,858 [INFO] web_app_operator:   生成準備完了の待機中...
+2026-05-14 03:07:44,872 [WARNING] web_app_operator:   生成準備完了メッセージが特定できませんでしたが、続行を試みます
+2026-05-14 03:08:04,880 [WARNING] web_app_operator:   コンテンツ生成ボタン未検出 (試行 1/3) — 生成タブを再クリック
+2026-05-14 03:08:15,544 [INFO] web_app_operator:   コンテンツ生成ボタン検出 (試行 2/3)
+2026-05-14 03:08:16,115 [INFO] web_app_operator: コンテンツ生成中... (最大5分待機)
+2026-05-14 03:09:06,369 [INFO] web_app_operator: 生成完了検出 (経過: 50.0秒)
+2026-05-14 03:09:06,369 [INFO] web_app_operator: コンテンツ生成完了
+2026-05-14 03:09:06,370 [INFO] __main__:   [検証] 保存後のFAQ・企業情報タブを確認...
+2026-05-14 03:09:06,371 [INFO] web_app_operator: コンテンツ保存開始...
+2026-05-14 03:09:10,536 [INFO] web_app_operator:   FAQ保存ボタンの表示を確認中...
+2026-05-14 03:09:10,544 [INFO] web_app_operator:   FAQ保存ボタンの表示を確認（=FAQプレビュー描画完了）
+2026-05-14 03:09:10,544 [INFO] web_app_operator:   STEP1: FAQ保存ボタンを即クリック...
+2026-05-14 03:09:11,618 [INFO] web_app_operator:   FAQ保存ボタンをクリックしました
+2026-05-14 03:09:16,635 [WARNING] web_app_operator:   FAQ保存完了メッセージが出なかったため、もう一度クリックします
+2026-05-14 03:09:17,717 [INFO] web_app_operator:   FAQ保存ボタンを再クリックしました
+2026-05-14 03:09:21,251 [INFO] web_app_operator:   STEP2: 企業情報を保存ボタン（赤）を探してクリック...
+2026-05-14 03:09:22,771 [INFO] web_app_operator:   「企業情報を保存」ボタンが直接見つからないため、全ボタンを確認...
+2026-05-14 03:09:22,796 [INFO] web_app_operator:     保存関連ボタン発見: [👁️ プレビュー・保存]
+2026-05-14 03:09:22,830 [INFO] web_app_operator:     保存関連ボタン発見: [💾 FAQ保存（置換）]
+2026-05-14 03:09:22,837 [INFO] web_app_operator:     保存関連ボタン発見: [💾 企業情報保存]
+2026-05-14 03:09:22,846 [INFO] web_app_operator:   赤いボタンをクリック: [💾 企業情報保存]
+2026-05-14 03:09:29,451 [INFO] web_app_operator:   企業情報を保存ボタンのクリック完了
+2026-05-14 03:09:39,468 [WARNING] web_app_operator:   明確な保存完了メッセージは確認できませんでしたが、処理を続行します
+2026-05-14 03:09:39,469 [INFO] web_app_operator:   コンテンツ管理タブで保存確認中: オックスフォード・インストゥルメンツ株式会社
+2026-05-14 03:09:53,158 [INFO] web_app_operator:   [OK] コンテンツ管理ページ: oxinst の存在を確認
+2026-05-14 03:09:53,158 [INFO] web_app_operator:   [FAQタブ] 検証開始
+2026-05-14 03:09:53,165 [WARNING] web_app_operator:   [FAQタブ] が見つかりません（タブ未表示の可能性、ページ全体で代替検証）
+2026-05-14 03:09:53,286 [INFO] web_app_operator:   [OK] [FAQタブ] 企業名/IDを確認 (スクショ: screenshots/tab_FAQ_oxinst.png)
+2026-05-14 03:09:53,286 [INFO] web_app_operator:   [企業情報タブ] 検証開始
+2026-05-14 03:09:53,294 [WARNING] web_app_operator:   [企業情報タブ] が見つかりません（タブ未表示の可能性、ページ全体で代替検証）
+2026-05-14 03:09:53,404 [INFO] web_app_operator:   [OK] [企業情報タブ] 企業名/IDを確認 (スクショ: screenshots/tab_企業情報_oxinst.png)
+2026-05-14 03:09:53,404 [INFO] web_app_operator:   [OK] FAQ・企業情報タブともに対象企業のコンテンツを確認
+2026-05-14 03:09:55,417 [INFO] web_app_operator: コンテンツ保存処理完了
+2026-05-14 03:09:58,271 [INFO] spreadsheet_manager: 企業リスト保存完了: 29社 → C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\data\company_list.csv
+2026-05-14 03:09:58,277 [INFO] __main__:   → コンテンツ生成・保存・検証完了
+2026-05-14 03:09:58,277 [INFO] spreadsheet_manager: 企業リスト保存完了: 29社 → C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\data\company_list.csv
+2026-05-14 03:09:58,278 [INFO] __main__: Step 5/5: フロントエンドアプリURL取得...
+2026-05-14 03:09:58,278 [INFO] __main__: Step 4完了 → ページを閉じて再ログイン（Step 5 のサイドバーキャッシュ対策）
+2026-05-14 03:09:58,278 [INFO] web_app_operator: ページを閉じて再ログインを開始...
+2026-05-14 03:09:58,308 [INFO] web_app_operator:   古いページタブを閉じました
+2026-05-14 03:09:58,355 [INFO] web_app_operator:   新しいページタブを開きました
+2026-05-14 03:09:58,355 [INFO] web_app_operator: 管理画面にログイン中...
+2026-05-14 03:10:04,234 [INFO] web_app_operator: ログイン成功
+2026-05-14 03:10:04,234 [INFO] web_app_operator: ページクローズ＆再ログイン完了
+2026-05-14 03:10:04,234 [INFO] web_app_operator: フロントエンドアプリURL取得開始 (企業ID: oxinst)...
+2026-05-14 03:10:09,884 [INFO] web_app_operator: 企業選択 (ID): oxinst
+2026-05-14 03:10:16,734 [INFO] web_app_operator: 企業選択完了: oxinst
+2026-05-14 03:11:20,783 [WARNING] web_app_operator:   サイドバーから企業ID(oxinst)に一致するURLが取得できませんでした。最後に見たURL: None
+2026-05-14 03:11:20,797 [WARNING] web_app_operator:   URL構造から推定（要目視確認）: https://casual-interview-dev.brainverse-ai.com/oxinst
+2026-05-14 03:11:20,800 [INFO] spreadsheet_manager: 企業リスト保存完了: 29社 → C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\data\company_list.csv
+2026-05-14 03:11:20,801 [INFO] __main__:   → フロントエンドURL: [推定] https://casual-interview-dev.brainverse-ai.com/oxinst
+2026-05-14 03:11:20,801 [INFO] __main__: [OK] オックスフォード・インストゥルメンツ株式会社: 全処理完了!
+2026-05-14 03:11:20,801 [INFO] __main__: 
+2026-05-14 03:11:20,801 [INFO] __main__: 1件処理完了 → 再ログイン＆キャッシュクリアを実行
+2026-05-14 03:11:20,803 [INFO] web_app_operator: 再ログイン＆キャッシュクリア開始...
+2026-05-14 03:11:20,806 [INFO] web_app_operator:   LocalStorage/SessionStorageをクリアしました
+2026-05-14 03:11:20,810 [INFO] web_app_operator:   Cookieをクリアしました
+2026-05-14 03:11:22,816 [INFO] web_app_operator: 管理画面にログイン中...
+2026-05-14 03:11:28,933 [INFO] web_app_operator: ログイン成功
+2026-05-14 03:11:28,933 [INFO] web_app_operator: 再ログイン＆キャッシュクリア完了
+2026-05-14 03:11:28,934 [INFO] __main__: 
+2026-05-14 03:11:28,934 [INFO] __main__: ──────────────────────────────────────────────────
+2026-05-14 03:11:28,934 [INFO] __main__: [14/27] 株式会社環境技術研究所 (ステータス: 同名企業該当)
+2026-05-14 03:11:28,934 [INFO] __main__: ──────────────────────────────────────────────────
+2026-05-14 03:11:28,934 [INFO] __main__: Step 1/6: URL企業ID不一致 HOLD からの手動再開: https://www.etlabo.co.jp
+2026-05-14 03:11:28,934 [INFO] spreadsheet_manager: 企業リスト保存完了: 29社 → C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\data\company_list.csv
+2026-05-14 03:11:28,934 [INFO] __main__: Step 2/6: 企業追加...
+2026-05-14 03:11:28,934 [INFO] web_app_operator: 企業追加開始: 株式会社環境技術研究所
+2026-05-14 03:11:43,303 [INFO] web_app_operator: 企業追加完了: 株式会社環境技術研究所 (ID: etlabo)
+2026-05-14 03:11:43,303 [INFO] __main__: Step 2.5/6: 追加企業のID検証...
+2026-05-14 03:11:43,303 [INFO] web_app_operator:   企業ID検証中: 期待ID=etlabo, URL=https://www.etlabo.co.jp
+2026-05-14 03:11:45,851 [INFO] web_app_operator:   [OK] 企業ID 'etlabo' をページ内に確認
+2026-05-14 03:11:45,851 [INFO] spreadsheet_manager: 企業リスト保存完了: 29社 → C:\Users\shofu\Desktop\neo-career\DOCdemo_update_project\data\company_list.csv
+2026-05-14 03:11:45,853 [INFO] __main__:   → 企業追加完了 (ID: etlabo)
+2026-05-14 03:11:45,853 [INFO] __main__: 企業追加完了 → ページを閉じて再ログイン（キャッシュバグ防止）
+2026-05-14 03:11:45,854 [INFO] web_app_operator: ページを閉じて再ログインを開始...
+2026-05-14 03:11:45,871 [INFO] web_app_operator:   古いページタブを閉じました
+2026-05-14 03:11:45,909 [INFO] web_app_operator:   新しいページタブを開きました
+2026-05-14 03:11:45,910 [INFO] web_app_operator: 管理画面にログイン中...
+2026-05-14 03:11:51,765 [INFO] web_app_operator: ログイン成功
+2026-05-14 03:11:51,766 [INFO] web_app_operator: ページクローズ＆再ログイン完了
+2026-05-14 03:11:51,766 [INFO] __main__: Step 3/5: URL収集...
+2026-05-14 03:11:55,559 [INFO] recruit_url_finder: 求人サイトURL収集開始: 株式会社環境技術研究所 (正規化: '環境技術研究所')
+2026-05-14 03:11:58,387 [INFO] recruit_url_finder:   [マイナビ転職] 2件取り込み (累計 2件)
+2026-05-14 03:12:01,009 [INFO] recruit_url_finder:   [マイナビ新卒] 2件取り込み (累計 4件)
+2026-05-14 03:12:03,617 [INFO] recruit_url_finder:   [リクナビ] 2件取り込み (累計 6件)
+2026-05-14 03:12:06,246 [INFO] recruit_url_finder:   [DODA] 2件取り込み (累計 8件)
+2026-05-14 03:12:08,846 [INFO] recruit_url_finder:   [エン転職] 0件取り込み (累計 8件)
+2026-05-14 03:12:11,403 [INFO] recruit_url_finder:   [Wantedly] 0件取り込み (累計 8件)
+2026-05-14 03:12:14,031 [INFO] recruit_url_finder:   [Green] 0件取り込み (累計 8件)
+2026-05-14 03:12:16,729 [INFO] recruit_url_finder:   [Indeed] 2件取り込み (累計 10件)
+2026-05-14 03:12:16,729 [INFO] recruit_url_finder: 求人サイトURL収集完了: 株式会社環境技術研究所 → 合計 10 件
+2026-05-14 03:12:16,729 [INFO] __main__:   → 内部リンク:26件, 求人サイト:10件, 合計:36件
+2026-05-14 03:12:16,729 [INFO] __main__: Step 4/5: コンテンツ生成...
+2026-05-14 03:12:20,398 [INFO] __main__:   [検証] コンテンツ生成画面のヘッダーが対象企業に切替済か確認...
+2026-05-14 03:12:20,399 [INFO] web_app_operator: サイドバーから企業選択開始: 株式会社環境技術研究所
+2026-05-14 03:12:27,516 [INFO] web_app_operator:   ヘッダー検証中: 企業名=株式会社環境技術研究所, ID=etlabo
+2026-05-14 03:12:27,538 [INFO] web_app_operator:   [OK] ヘッダー検証成功: 「🤖 株式会社環境技術研究所 コンテンツ生成」
+2026-05-14 03:12:27,538 [INFO] web_app_operator: サイドバー企業選択完了: 株式会社環境技術研究所
+2026-05-14 03:12:27,538 [INFO] web_app_operator: URL入力開始: 36件
+2026-05-14 03:12:31,205 [INFO] web_app_operator:   「全入力を処理」ボタンをクリックしました
