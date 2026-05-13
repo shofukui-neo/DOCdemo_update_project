@@ -375,13 +375,163 @@ for p in new_files:
     shutil.copy(p, dst_ss / p.name)
 print(f'✅ 直近24hのスクショ {len(new_files)} 件を Drive に保存: {dst_ss}')""")
 
-# ===== 12. 同名企業該当への対応 =====
+# ===== 12. 同名企業該当への対応 (UI) =====
 md("""---
 ## 11. 「同名企業該当」(URL企業ID不一致) になった企業への対応
 
 検索結果に複数のドメインがあり、URL内の企業IDが一致しない候補が複数検出された場合、ステータスは `同名企業該当` になる。
+ローカル版の `resolve_hold_ui.py` (tkinter) と同等の機能を、Colab 上で動く `ipywidgets` UI として実装してある。
 
-**対応手順:**
+### 11-A. HOLD 解消 UI (推奨)
+
+下のセルを実行 → HOLD 中の企業を 1 社ずつ候補ボタン付きで表示
+→ クリックで採用 → CSV へ即時オートセーブ → 次の企業へ自動遷移
+
+> 採用後に「6. 自動化フロー実行」セルを再実行すれば、該当企業のみ Step 2 以降から続きで処理される。""")
+
+code("""# Colab 用 HOLD 解消 UI (ローカル resolve_hold_ui.py の ipywidgets 版)
+import csv as _csv
+from pathlib import Path
+import ipywidgets as widgets
+from IPython.display import display, clear_output, HTML
+
+from config import CSV_COLUMNS
+from models import ProcessStatus
+
+_COL = CSV_COLUMNS
+
+
+def _load_rows(path):
+    with open(path, 'r', encoding='utf-8-sig', newline='') as f:
+        return list(_csv.DictReader(f))
+
+
+def _save_rows(path, rows):
+    if not rows:
+        return
+    fieldnames = list(rows[0].keys())
+    with open(path, 'w', encoding='utf-8-sig', newline='') as f:
+        w = _csv.DictWriter(f, fieldnames=fieldnames)
+        w.writeheader()
+        w.writerows(rows)
+
+
+class ColabHoldResolver:
+    \"\"\"HOLD 状態 (同名企業該当) の企業を 1 社ずつ解消するノートブック UI。\"\"\"
+
+    def __init__(self, csv_path):
+        self.csv_path = Path(csv_path)
+        self.rows = _load_rows(self.csv_path)
+        self.hold_indices = [
+            i for i, r in enumerate(self.rows)
+            if r.get(_COL['status']) == ProcessStatus.DUPLICATE_DETECTED.value
+            and not (r.get(_COL['homepage_url'], '') or '').strip()
+        ]
+        self.pos = 0
+        self.resolved = 0
+        self.skipped = 0
+        self.output = widgets.Output()
+        display(self.output)
+        self.render()
+
+    def render(self):
+        with self.output:
+            clear_output(wait=True)
+            if not self.hold_indices:
+                display(HTML('<h3>✓ HOLD 中の企業はありません</h3>'))
+                return
+            if self.pos >= len(self.hold_indices):
+                display(HTML(
+                    f'<h3>完了</h3>'
+                    f'<p>採用: <b>{self.resolved}</b> 社 / スキップ: <b>{self.skipped}</b> 社</p>'
+                    f'<p>CSV 保存先: <code>{self.csv_path}</code></p>'
+                    f'<p>このまま <b>「6. 自動化フロー実行」</b> セルを再実行すれば、URL を採用した企業は Step 2 以降から続きで処理されます。</p>'
+                ))
+                return
+
+            row_idx = self.hold_indices[self.pos]
+            row = self.rows[row_idx]
+            name = row.get(_COL['company_name'], '')
+            candidates = [
+                c.strip()
+                for c in (row.get(_COL['url_candidates'], '') or '').split('|')
+                if c.strip()
+            ]
+
+            display(HTML(
+                f'<h3 style="margin-bottom:4px">{name}</h3>'
+                f'<p style="color:#666;margin-top:0">'
+                f'[{self.pos + 1} / {len(self.hold_indices)}] '
+                f'候補ドメイン: {len(candidates)} 件 / '
+                f'採用済: {self.resolved} / スキップ: {self.skipped}</p>'
+            ))
+
+            for cand in candidates:
+                adopt_btn = widgets.Button(
+                    description='このURLを採用',
+                    button_style='primary',
+                    layout=widgets.Layout(width='150px'),
+                )
+                adopt_btn.on_click(lambda b, u=cand: self.adopt(u))
+                url_html = widgets.HTML(
+                    f'<a href="{cand}" target="_blank" '
+                    f'style="font-family:monospace;color:#1a73e8">{cand}</a>'
+                )
+                display(widgets.HBox([adopt_btn, url_html]))
+
+            custom_input = widgets.Text(
+                placeholder='候補に正解が無い場合はここに正解 URL を入力',
+                layout=widgets.Layout(width='500px'),
+            )
+            custom_btn = widgets.Button(
+                description='このURLを採用',
+                layout=widgets.Layout(width='150px'),
+            )
+
+            def _on_custom(b):
+                u = custom_input.value.strip()
+                if u:
+                    self.adopt(u)
+
+            custom_btn.on_click(_on_custom)
+            display(widgets.HBox([custom_input, custom_btn]))
+
+            skip_btn = widgets.Button(description='スキップ →')
+            skip_btn.on_click(lambda b: self.skip())
+            quit_btn = widgets.Button(
+                description='終了して保存',
+                button_style='warning',
+            )
+            quit_btn.on_click(lambda b: self.quit_now())
+            display(widgets.HBox([skip_btn, quit_btn]))
+
+    def adopt(self, url):
+        row_idx = self.hold_indices[self.pos]
+        self.rows[row_idx][_COL['homepage_url']] = url
+        err_key = _COL.get('error_message')
+        if err_key and err_key in self.rows[row_idx]:
+            self.rows[row_idx][err_key] = ''
+        self.resolved += 1
+        _save_rows(self.csv_path, self.rows)
+        self.pos += 1
+        self.render()
+
+    def skip(self):
+        self.skipped += 1
+        self.pos += 1
+        self.render()
+
+    def quit_now(self):
+        _save_rows(self.csv_path, self.rows)
+        self.pos = len(self.hold_indices)  # 完了画面を表示
+        self.render()
+
+
+resolver = ColabHoldResolver(CSV_PATH)""")
+
+md("""### 11-B. 手動編集で解消 (代替手段)
+
+UI が表示されない / スプレッドシートで一覧管理したい場合:
 
 1. Drive 上の `MyDrive/DOCdemo_Colab/data/company_list.csv` を **Google スプレッドシート** で開く (右クリック → アプリで開く → Google スプレッドシート)
 2. ステータス列が `同名企業該当` の行を見つける
@@ -395,8 +545,7 @@ md("""---
 4. 各候補を実際にブラウザで開き、対象企業の公式サイトを判別
 5. 正しい URL を `ホームページURL` 列に貼り付け
 6. ファイル → ダウンロード → カンマ区切り形式 で保存し、Drive の同じ場所に `company_list.csv` として上書き
-   - または Google スプレッドシートで保存 → 「6. 自動化フロー実行」セルを再実行
-7. 該当企業のみ続きから処理される (他の `完了` 企業は自動スキップ)
+7. 「6. 自動化フロー実行」セルを再実行 → 該当企業のみ続きから処理される
 
 > Google スプレッドシートで開いた CSV を直接編集する場合、ファイル形式が変わらないよう注意 (必ずカンマ区切り CSV で書き出し)。
 
