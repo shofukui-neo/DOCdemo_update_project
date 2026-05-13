@@ -17,6 +17,31 @@ from models import CompanyInfo, ProcessStatus
 logger = logging.getLogger(__name__)
 
 
+def flatten_company_names(items) -> List[str]:
+    """企業名リストの各要素を改行で分割し、個別の企業名リストに正規化する。
+
+    Colab で `COMPANY_NAMES = ["A\\nB\\nC"]` のように複数行を1要素に貼り付けた
+    ケースを救う共通ユーティリティ。
+
+    仕様:
+    - 各要素を `\\n` (CRLF含む) で分割
+    - 各行は strip
+    - 空行は除外
+    - None は除外、その他の非文字列は str() で文字列化
+    - カンマや読点(、)では分割しない (企業名に含まれる可能性のため)
+    """
+    result = []
+    for item in items:
+        if item is None:
+            continue
+        text = str(item).replace("\r\n", "\n").replace("\r", "\n")
+        for line in text.split("\n"):
+            line = line.strip()
+            if line:
+                result.append(line)
+    return result
+
+
 class SpreadsheetManager:
     """企業リストCSVの読み書きを管理するクラス"""
 
@@ -173,6 +198,9 @@ class SpreadsheetManager:
         path = csv_path or COMPANY_LIST_CSV
         path.parent.mkdir(parents=True, exist_ok=True)
 
+        # 改行が混じった入力 (Colab で複数行貼り付け等) を個別企業に正規化
+        normalized = flatten_company_names(company_names)
+
         col = CSV_COLUMNS
         fieldnames = list(col.values())
 
@@ -180,11 +208,7 @@ class SpreadsheetManager:
             writer = csv.DictWriter(f, fieldnames=fieldnames)
             writer.writeheader()
 
-            for i, name in enumerate(company_names):
-                name = name.strip()
-                if not name:
-                    continue
-
+            for i, name in enumerate(normalized):
                 company = CompanyInfo(row_index=i, name=name)
                 writer.writerow({
                     col["company_name"]: company.name,

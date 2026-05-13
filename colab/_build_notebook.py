@@ -157,32 +157,51 @@ print('   email   :', os.environ['DOCDEMO_LOGIN_EMAIL'])
 print('   headless:', os.environ['DOCDEMO_HEADLESS'])""")
 
 # ===== 6. CSV 準備 =====
-md("""## 5. 企業リストCSVを準備
-
-**ケースA: 新規作成** — 下のセルの `COMPANY_NAMES` に企業名を並べて実行 → Drive に初期CSVが生成される
-**ケースB: 既存CSVを使う** — `MyDrive/DOCdemo_Colab/data/company_list.csv` に CSV が既にあれば、それを引き続き使う (途中再開可能)""")
+md("## 5. 企業リストCSVを準備\n\n"
+   "**ケースA: 新規作成** — 下のセルの `COMPANY_NAMES` に企業名を並べて実行 → Drive に初期CSVが生成される\n"
+   "**ケースB: 既存CSVを使う** — `MyDrive/DOCdemo_Colab/data/company_list.csv` に CSV が既にあれば、それを引き続き使う (途中再開可能)\n\n"
+   "> **入力形式 (ケースA)**: `COMPANY_NAMES` は **文字列のリスト**。1要素=1社が原則。\n"
+   "> 1要素に改行が含まれていても自動で分割するので、Excel/メモ帳から複数行を3連クォートで括ったヒアドキュメント形式でまとめて貼っても OK:\n"
+   ">\n"
+   "> ```python\n"
+   "> COMPANY_NAMES = ['''\n"
+   "> 株式会社A\n"
+   "> 株式会社B\n"
+   "> 株式会社C\n"
+   "> ''']\n"
+   "> ```\n"
+   ">\n"
+   "> または1行1要素でも同じ結果になります:\n"
+   "> ```python\n"
+   "> COMPANY_NAMES = ['株式会社A', '株式会社B', '株式会社C']\n"
+   "> ```")
 
 code("""from pathlib import Path
-from spreadsheet_manager import SpreadsheetManager
+from spreadsheet_manager import SpreadsheetManager, flatten_company_names
 from config import CSV_COLUMNS, LEGACY_COLUMN_ALIASES
 
 CSV_PATH = Path(f'{DRIVE_BASE}/data/company_list.csv')
 
 # === 新規作成する場合はここに企業名を並べる ===
+# 1要素=1社が原則。改行混じりで貼り付けても自動分割される。
 COMPANY_NAMES = [
     # "株式会社サンプル",
     # "テスト株式会社",
 ]
 
 if not CSV_PATH.exists():
-    if not COMPANY_NAMES:
+    # 改行で複数行貼り付けされていた場合に個別企業へ正規化
+    normalized = flatten_company_names(COMPANY_NAMES)
+    if not normalized:
         raise RuntimeError(
             f'CSV がありません: {CSV_PATH}\\n'
             f'COMPANY_NAMES に企業名を記入して再実行するか、'
             f'Drive 上の {CSV_PATH} に既存CSVを配置してください。'
         )
-    SpreadsheetManager.create_initial_csv(COMPANY_NAMES, csv_path=CSV_PATH)
-    print(f'✅ 初期CSV作成: {CSV_PATH} ({len(COMPANY_NAMES)}社)')
+    SpreadsheetManager.create_initial_csv(normalized, csv_path=CSV_PATH)
+    print(f'✅ 初期CSV作成: {CSV_PATH} ({len(normalized)}社)')
+    if len(normalized) != len(COMPANY_NAMES):
+        print(f'   (入力 {len(COMPANY_NAMES)}要素 → 正規化後 {len(normalized)}社に展開)')
 else:
     print(f'📂 既存のCSVを使用: {CSV_PATH}')
 
