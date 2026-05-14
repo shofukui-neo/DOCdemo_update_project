@@ -17,6 +17,31 @@ from models import CompanyInfo, ProcessStatus
 logger = logging.getLogger(__name__)
 
 
+def flatten_company_names(items) -> List[str]:
+    """企業名リストの各要素を改行で分割し、個別の企業名リストに正規化する。
+
+    Colab で `COMPANY_NAMES = ["A\\nB\\nC"]` のように複数行を1要素に貼り付けた
+    ケースを救う共通ユーティリティ。
+
+    仕様:
+    - 各要素を `\\n` (CRLF含む) で分割
+    - 各行は strip
+    - 空行は除外
+    - None は除外、その他の非文字列は str() で文字列化
+    - カンマや読点(、)では分割しない (企業名に含まれる可能性のため)
+    """
+    result = []
+    for item in items:
+        if item is None:
+            continue
+        text = str(item).replace("\r\n", "\n").replace("\r", "\n")
+        for line in text.split("\n"):
+            line = line.strip()
+            if line:
+                result.append(line)
+    return result
+
+
 class SpreadsheetManager:
     """企業リストCSVの読み書きを管理するクラス"""
 
@@ -36,15 +61,6 @@ class SpreadsheetManager:
         """
         CSVファイルから企業リストを読み込み、CompanyInfoリストを返す。
 
-        入力CSVは以下3形式に自動対応:
-            (a) 1列のみ「企業名」 → 8列に展開して保存
-            (b) 2列「企業名」「ホームページURL」 → 8列に展開して保存
-            (c) フルスキーマ (8列、ステータス列を含む) → そのまま読込
-
-        空欄/None/列不足の行に対しても堅牢に動作:
-            - 全セル空 or 企業名空 → スキップ + 警告ログ
-            - csv.DictReader は不足列の値を None で返す → 全アクセスを None ガード
-
         Returns:
             List[CompanyInfo]: 企業情報のリスト
 
@@ -57,125 +73,44 @@ class SpreadsheetManager:
                 f"先に create_initial_csv() で初期CSVを作成してください。"
             )
 
-        # ヘッダーを覗いて入力形式を判定 (ステータス列の有無で決める)
-        with open(self.csv_path, "r", encoding="utf-8-sig", newline="") as f:
-            r = csv.reader(f)
-            try:
-                header = [h.strip() for h in next(r)]
-            except StopIteration:
-                logger.warning(f"CSVが空です: {self.csv_path}")
-                return []
-
-        col = CSV_COLUMNS
-        is_full_schema = col["status"] in header
-
-        if not is_full_schema:
-            return self._read_minimal_csv(header)
-
-        return self._read_full_schema_csv()
-
-    def _read_minimal_csv(self, header: list) -> List[CompanyInfo]:
-        """
-        最小入力CSV (1列 or 2列) を読込み、8列スキーマに正規化して書き戻す。
-        - 1列: 企業名のみ → status=未処理
-        - 2列: 企業名,ホームページURL → URL有なら URL_FOUND、無なら 未処理
-        """
+        companies = []
         col = CSV_COLUMNS
 
-        # 企業名キー (ヘッダーが「企業名」でなくても先頭列を企業名と見なす)
-        name_key = col["company_name"] if col["company_name"] in header else (
-            header[0] if header else col["company_name"]
-        )
-        # URLキー (2列目があればURLとして扱う)
-        url_key = None
-        if col["homepage_url"] in header:
-            url_key = col["homepage_url"]
-        elif len(header) >= 2:
-            url_key = header[1]
-
-        companies: List[CompanyInfo] = []
-        skipped = 0
-        with open(self.csv_path, "r", encoding="utf-8-sig", newline="") as f:
-            reader = csv.DictReader(f)
-            for i, row in enumerate(reader):
-                if not row or all(
-                    (v is None or str(v).strip() == "") for v in row.values()
-                ):
-                    skipped += 1
-                    continue
-                company_name = (row.get(name_key) or "").strip()
-                if not company_name:
-                    skipped += 1
-                    logger.warning(f"  [skip] {i+2}行目: 企業名が空")
-                    continue
-                homepage_url = (
-                    (row.get(url_key) or "").strip() if url_key else ""
-                )
-                company = CompanyInfo(
-                    row_index=i,
-                    name=company_name,
-                    homepage_url=homepage_url,
-                    status=ProcessStatus.URL_FOUND if homepage_url else ProcessStatus.PENDING,
-                )
-                companies.append(company)
-
-        if skipped:
-            logger.info(f"  空欄行をスキップ: {skipped}行")
-        logger.info(
-            f"企業リスト読み込み完了 (最小入力 {len(header)}列): {len(companies)}社"
-        )
-        # 8列フルスキーマに正規化して書き戻す
-        self.save_company_list(companies)
-        return companies
-
-    def _read_full_schema_csv(self) -> List[CompanyInfo]:
-        """フルスキーマCSV (8列、旧カラム互換含む) を null-safe に読み込む。"""
-        companies: List[CompanyInfo] = []
-        col = CSV_COLUMNS
-
-        def _safe(row: dict, key: str, default: str = "") -> str:
-            """None でも安全に strip() できる取得関数"""
-            v = row.get(key)
-            return (v if v is not None else default).strip()
+        def _cell(row: dict, key: str, default: str = "") -> str:
+            """カラム値を None セーフに取得。
+            csv.DictReader は行のカラム数が見出しより少ない場合 None を返すため、
+            row.get(..., default) だけでは .strip() が落ちる。"""
+            value = row.get(col[key])
+            if value is None or value == "":
+                return default
+            return value.strip()
 
         def _get_with_legacy(row: dict, key: str) -> str:
-            value = _safe(row, col[key])
+            """現在のカラム名で取得し、見つからない場合は旧名にフォールバック"""
+            value = _cell(row, key)
             if not value:
                 for alias in LEGACY_COLUMN_ALIASES.get(key, []):
-                    alias_val = _safe(row, alias)
+                    alias_val = row.get(alias)
                     if alias_val:
-                        value = alias_val
+                        value = alias_val.strip()
                         break
             return value
 
-        skipped = 0
         with open(self.csv_path, "r", encoding="utf-8-sig", newline="") as f:
             reader = csv.DictReader(f)
             for i, row in enumerate(reader):
-                if not row or all(
-                    (v is None or str(v).strip() == "") for v in row.values()
-                ):
-                    skipped += 1
-                    continue
-
-                company_name = _safe(row, col["company_name"])
+                company_name = _cell(row, "company_name")
                 if not company_name:
-                    skipped += 1
-                    logger.warning(f"  [skip] {i+2}行目: 企業名が空")
                     continue
 
-                status_str = _safe(row, col["status"], "未処理") or "未処理"
+                status_str = _cell(row, "status", "未処理")
                 try:
                     status = ProcessStatus(status_str)
                 except ValueError:
-                    logger.warning(
-                        f"  [warn] {company_name}: 不明なステータス "
-                        f"'{status_str}' → 未処理として扱います"
-                    )
                     status = ProcessStatus.PENDING
 
                 # URL候補列をパイプ区切りで読み込み
-                candidates_raw = _safe(row, col["url_candidates"])
+                candidates_raw = _cell(row, "url_candidates")
                 url_candidates = [
                     u.strip() for u in candidates_raw.split("|") if u.strip()
                 ] if candidates_raw else []
@@ -183,18 +118,16 @@ class SpreadsheetManager:
                 company = CompanyInfo(
                     row_index=i,
                     name=company_name,
-                    enterprise_id=_safe(row, col["enterprise_id"]),
-                    homepage_url=_safe(row, col["homepage_url"]),
+                    enterprise_id=_cell(row, "enterprise_id"),
+                    homepage_url=_cell(row, "homepage_url"),
                     url_candidates=url_candidates,
                     frontend_app_url=_get_with_legacy(row, "frontend_url"),
                     status=status,
-                    error_message=_safe(row, col["error_message"]),
-                    screenshot_path=_safe(row, col["screenshot_path"]),
+                    error_message=_cell(row, "error_message"),
+                    screenshot_path=_cell(row, "screenshot_path"),
                 )
                 companies.append(company)
 
-        if skipped:
-            logger.info(f"  空欄行をスキップ: {skipped}行")
         logger.info(f"企業リスト読み込み完了: {len(companies)}社")
         return companies
 
@@ -243,32 +176,17 @@ class SpreadsheetManager:
         self.save_company_list(companies)
         logger.debug(f"企業情報更新: {company.name} → {company.status.value}")
 
-    def get_pending_companies(
-        self,
-        companies: List[CompanyInfo],
-        require_url: bool = False,
-    ) -> List[CompanyInfo]:
+    def get_pending_companies(self, companies: List[CompanyInfo]) -> List[CompanyInfo]:
         """
         未処理または途中の企業のみをフィルタして返す。
 
         Args:
             companies: 全企業リスト
-            require_url: True なら homepage_url が空の行を除外 (Stage 2 用)。
-                Stage 1 (select_urls.py) では False、Stage 2 (orchestrator.py)
-                では True を指定して、URL未確定の行を確実にスキップする。
 
         Returns:
             処理可能な企業のリスト
         """
         pending = [c for c in companies if c.is_processable()]
-        if require_url:
-            before = len(pending)
-            pending = [c for c in pending if c.homepage_url]
-            skipped = before - len(pending)
-            if skipped:
-                logger.info(
-                    f"  Stage 2 フィルタ: URL未入力の {skipped}社 をスキップ"
-                )
         logger.info(f"処理対象企業: {len(pending)}社 / 全{len(companies)}社")
         return pending
 
@@ -290,6 +208,9 @@ class SpreadsheetManager:
         path = csv_path or COMPANY_LIST_CSV
         path.parent.mkdir(parents=True, exist_ok=True)
 
+        # 改行が混じった入力 (Colab で複数行貼り付け等) を個別企業に正規化
+        normalized = flatten_company_names(company_names)
+
         col = CSV_COLUMNS
         fieldnames = list(col.values())
 
@@ -297,11 +218,7 @@ class SpreadsheetManager:
             writer = csv.DictWriter(f, fieldnames=fieldnames)
             writer.writeheader()
 
-            for i, name in enumerate(company_names):
-                name = name.strip()
-                if not name:
-                    continue
-
+            for i, name in enumerate(normalized):
                 company = CompanyInfo(row_index=i, name=name)
                 writer.writerow({
                     col["company_name"]: company.name,

@@ -782,7 +782,8 @@ class WebAppOperator:
         生成したコンテンツを保存する。
 
         2段階保存フロー:
-        1. 「プレビュー・保存」タブで第1のボタン（FAQ保存）をクリック
+        1. 「プレビュー・保存」タブで FAQ保存ボタンの表示を確認したら
+           間を空けずに即クリック（保存トーストが出なければ1回だけ再クリック）
         2. ページを進めて 赤い「企業情報を保存」ボタンをクリック
         3. 「コンテンツ管理」タブで保存が正しく行われたか確認
         """
@@ -804,30 +805,26 @@ class WebAppOperator:
         await self.page.wait_for_timeout(2000)
         await self._wait_for_streamlit_load()
 
-        # === FAQプレビューの表示を確認 ===
-        logger.info("  FAQプレビューの確認中...")
-        # 「生成されたFAQs」見出し or h2/h3/h4 にFAQを含む要素 or 「FAQ 1:」などのテキスト
-        faq_preview = self.page.locator(
-            'h1, h2, h3, h4, [data-testid="stHeading"]'
-        ).filter(has_text="FAQ")
+        # === STEP 1: FAQ保存ボタンを「表示確認 → 即クリック」 ===
+        # FAQ保存ボタンが表示されていること自体を FAQ生成完了の確認シグナルとする。
+        # （見出しテキスト探索より確実、かつ確認とクリックの間に余計な待機を挟まない）
+        logger.info("  FAQ保存ボタンの表示を確認中...")
+        first_save_btn = self.page.locator(
+            'button:has-text("FAQ保存（置換）"), '
+            'button:has-text("FAQ保存")'
+        ).first
 
         try:
-            await faq_preview.first.wait_for(state="visible", timeout=15000)
-            logger.info("  FAQプレビューの表示を確認しました")
+            await first_save_btn.wait_for(state="visible", timeout=20000)
+            logger.info("  FAQ保存ボタンの表示を確認（=FAQプレビュー描画完了）")
         except Exception:
-            # フォールバック: ページ全体のテキストにFAQが含まれているかチェック
+            # フォールバック: ページ全体に FAQ 関連テキストがあるかだけチェック
             page_text = await self.page.content()
-            if "FAQ" in page_text and (
-                "生成されたFAQ" in page_text or "FAQ 1" in page_text
-                or "FAQ1" in page_text
+            if not (
+                "FAQ" in page_text
+                and ("生成されたFAQ" in page_text or "FAQ 1" in page_text
+                     or "FAQ1" in page_text)
             ):
-                logger.info(
-                    "  FAQプレビューはページ内に存在 (見出しセレクター不一致を許容)"
-                )
-            else:
-                logger.error(
-                    "  FAQプレビューが確認できません。コンテンツ生成に失敗している可能性があります。"
-                )
                 screenshot_err = (
                     f"screenshots/faq_not_found_{company.enterprise_id}.png"
                 )
@@ -836,24 +833,45 @@ class WebAppOperator:
                     f"FAQプレビューが確認できませんでした。詳細は "
                     f"{screenshot_err} を確認してください。"
                 )
+            logger.warning(
+                "  FAQ保存ボタンが直接見つからないため、より広い保存ボタンを使用"
+            )
+            first_save_btn = self.page.locator(
+                'button:has-text("保存")'
+            ).first
 
-        # === STEP 1: 第1保存ボタン（FAQ保存・置換）をクリック ===
-        logger.info("  STEP1: 第1保存ボタン（FAQ保存）をクリック...")
-        first_save_btn = self.page.locator(
-            'button:has-text("FAQ保存（置換）"), '
-            'button:has-text("FAQ保存"), '
-            'button:has-text("保存")'
-        ).first
+        # === 確認直後、間を空けずに即クリック ===
+        logger.info("  STEP1: FAQ保存ボタンを即クリック...")
+        await first_save_btn.scroll_into_view_if_needed()
+        await first_save_btn.click()
+        logger.info("  FAQ保存ボタンをクリックしました")
 
-        if await first_save_btn.count() > 0:
-            await first_save_btn.scroll_into_view_if_needed()
-            await self.page.wait_for_timeout(500)
-            await first_save_btn.click()
-            logger.info("  第1保存ボタンをクリックしました")
-            await self.page.wait_for_timeout(2000)
-            await self._wait_for_streamlit_load()
-        else:
-            logger.warning("  第1保存ボタンが見つかりません（スキップ）")
+        # === FAQ保存完了の確認 — トーストが出なければ1回だけリトライ ===
+        faq_toast = self.page.locator(
+            '[data-testid="stNotification"], [data-testid="stToast"], .stAlert'
+        ).filter(has_text=re.compile(r"(FAQ|保存|完了|成功|saved)", re.IGNORECASE))
+        try:
+            await faq_toast.first.wait_for(state="visible", timeout=5000)
+            logger.info("  FAQ保存完了メッセージを確認しました")
+        except Exception:
+            logger.warning(
+                "  FAQ保存完了メッセージが出なかったため、もう一度クリックします"
+            )
+            try:
+                # 再ロケート（Streamlit再描画でハンドルが古くなる対策）
+                retry_btn = self.page.locator(
+                    'button:has-text("FAQ保存（置換）"), '
+                    'button:has-text("FAQ保存")'
+                ).first
+                if await retry_btn.count() > 0:
+                    await retry_btn.scroll_into_view_if_needed()
+                    await retry_btn.click()
+                    logger.info("  FAQ保存ボタンを再クリックしました")
+            except Exception as e:
+                logger.warning(f"  FAQ保存ボタンの再クリックに失敗: {e}")
+
+        await self.page.wait_for_timeout(2000)
+        await self._wait_for_streamlit_load()
 
         # === STEP 2: ページを下にスクロールして「企業情報を保存」赤ボタンを探す ===
         logger.info("  STEP2: 企業情報を保存ボタン（赤）を探してクリック...")
@@ -1364,12 +1382,13 @@ class WebAppOperator:
                 logger.warning(f"  候補者面談ページでの企業選択に失敗: {e} — そのまま続行")
 
         # 1. サイドバー内の「フロントエンドアプリを開く」aタグを探す
-        # Streamlitの再描画 + FastAPI同期遅延に対応するため最大30秒リトライ
+        # Streamlitの再描画 + FastAPI同期遅延に対応するため最大60秒リトライ
+        # （前社のURLからの切替・初回ロード遅延を含めて吸収する）
         sidebar = self.page.locator("[data-testid='stSidebar']")
         sidebar_link = sidebar.locator('a:has-text("フロントエンド")')
 
         last_seen_url = None
-        max_attempts = 15  # 15 * 2s = 最大30秒
+        max_attempts = 30  # 30 * 2s = 最大60秒
         for attempt in range(max_attempts):
             try:
                 count = await sidebar_link.count()
@@ -1439,6 +1458,25 @@ class WebAppOperator:
         if last_seen_url:
             logger.warning(f"  企業ID検証なしのフォールバック: {last_seen_url}")
             return last_seen_url
+
+        # 5. URL構造からの推定フォールバック（Brainverse URL は規則的）
+        # サイドバー/ページ内に該当リンクが一切無くても、Brainverse側に企業登録が
+        # 済んでいれば https://casual-interview-dev.brainverse-ai.com/<id> でアクセス可能。
+        # ただし「目視確認していない推定値」であることを明示し、納品URL列に **「[推定] 」**
+        # プレフィックスを付けて返す。
+        if company_id:
+            from urllib.parse import urlparse
+            try:
+                base = urlparse(WEB_APP_BASE_URL)
+                # WEB_APP_BASE_URL: casual-interview-api-dev → casual-interview-dev に変換
+                host = base.netloc.replace("-api-", "-")
+                estimated = f"{base.scheme}://{host}/{company_id}"
+                logger.warning(
+                    f"  URL構造から推定（要目視確認）: {estimated}"
+                )
+                return f"[推定] {estimated}"
+            except Exception as e:
+                logger.debug(f"  推定URL生成エラー: {e}")
 
         raise RuntimeError("フロントエンドアプリのURLが取得できませんでした。ボタンまたはリンクが見つかりません。")
 
