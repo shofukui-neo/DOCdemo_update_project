@@ -41,13 +41,14 @@ from config import (
     LOG_FILE,
     RETRY_COUNT,
     RETRY_DELAY,
+    FAQ_SAVE_MAX_RETRIES,
 )
 from models import CompanyInfo, ProcessStatus
 from spreadsheet_manager import SpreadsheetManager
 from url_finder import URLFinder
 from image_fetcher import extract_enterprise_id_from_url
 from recruit_url_finder import find_recruit_site_urls
-from web_app_operator import WebAppOperator
+from web_app_operator import WebAppOperator, ContentSaveVerificationError
 
 logger = logging.getLogger(__name__)
 
@@ -331,37 +332,64 @@ class Orchestrator:
                 logger.warning(f"  [WARN] リンク取得失敗: {e} (続行)")
                 company.extracted_links = [company.homepage_url]
 
-        # ===== Step 4: コンテンツ生成 =====
+        # ===== Step 4: コンテンツ生成 (検証失敗時は最大 FAQ_SAVE_MAX_RETRIES 回再生成) =====
         if company.status in (ProcessStatus.COMPANY_ADDED,):
-            logger.info("Step 4/5: コンテンツ生成...")
+            max_attempts = 1 + FAQ_SAVE_MAX_RETRIES
+            for attempt in range(1, max_attempts + 1):
+                logger.info(
+                    f"Step 4/5: コンテンツ生成... "
+                    f"(試行 {attempt}/{max_attempts})"
+                )
 
-            # コンテンツ生成ページへ遷移
-            await web_operator.navigate_to_content_generator()
-            await web_operator._wait_for_streamlit_load()
+                # コンテンツ生成ページへ遷移
+                await web_operator.navigate_to_content_generator()
+                await web_operator._wait_for_streamlit_load()
 
-            # === Step 4-pre: サイドバーで企業を選択し、ヘッダーが対象企業に
-            #     切り替わっているかを検証（失敗時は例外）===
-            logger.info("  [検証] コンテンツ生成画面のヘッダーが対象企業に切替済か確認...")
-            await web_operator.select_company_from_sidebar(company)
+                # === Step 4-pre: サイドバーで企業を選択し、ヘッダーが対象企業に
+                #     切り替わっているかを検証（失敗時は例外）===
+                logger.info(
+                    "  [検証] コンテンツ生成画面のヘッダーが対象企業に切替済か確認..."
+                )
+                await web_operator.select_company_from_sidebar(company)
 
-            # URL入力
-            if company.extracted_links:
-                await web_operator.input_urls_for_content(company.extracted_links)
-            else:
-                logger.warning("  抽出リンクがありません。ホームページURLのみ入力...")
-                await web_operator.input_urls_for_content([company.homepage_url])
+                # URL入力
+                if company.extracted_links:
+                    await web_operator.input_urls_for_content(company.extracted_links)
+                else:
+                    logger.warning("  抽出リンクがありません。ホームページURLのみ入力...")
+                    await web_operator.input_urls_for_content([company.homepage_url])
 
-            # 生成実行
-            await web_operator.generate_content()
+                # 生成実行 (内部で完了待機 + FAQ実体検証まで行う)
+                # ContentSaveVerificationError が出たらリトライ対象
+                try:
+                    await web_operator.generate_content(company)
 
-            # === Step 4-post: 保存（2段階）+ コンテンツ管理タブで
-            #     FAQ・企業情報の両タブに対象企業のコンテンツが反映されたかを検証 ===
-            logger.info("  [検証] 保存後のFAQ・企業情報タブを確認...")
-            await web_operator.save_content(company)
+                    # === Step 4-post: 保存 + 検証 ===
+                    logger.info("  [検証] 保存後のFAQ・企業情報タブを確認...")
+                    await web_operator.save_content(company)
 
-            company.status = ProcessStatus.CONTENT_GENERATED
-            self.sheet_manager.update_company(company, companies)
-            logger.info("  → コンテンツ生成・保存・検証完了")
+                    company.status = ProcessStatus.CONTENT_GENERATED
+                    self.sheet_manager.update_company(company, companies)
+                    logger.info("  → コンテンツ生成・保存・検証完了")
+                    break
+                except ContentSaveVerificationError as e:
+                    if attempt >= max_attempts:
+                        logger.error(
+                            f"  [ERR] FAQ/企業情報の保存検証に "
+                            f"{max_attempts}回失敗。最終的に失敗とします: {e}"
+                        )
+                        raise
+                    logger.warning(
+                        f"  [RETRY] 保存/生成検証失敗 ({e}) "
+                        f"→ Step 4 から再試行 (次回 {attempt + 1}/{max_attempts})"
+                    )
+                    # ページ状態をクリーンにしてから次の試行へ
+                    try:
+                        await web_operator.close_page_and_relogin()
+                    except Exception as relogin_err:
+                        logger.warning(
+                            f"  再ログイン失敗（続行）: {relogin_err}"
+                        )
 
         # 背景画像アップロード機能はオミット
         # CONTENT_GENERATED から直接 IMAGE_UPLOADED に遷移して Step 5 (旧Step 6) へ進む

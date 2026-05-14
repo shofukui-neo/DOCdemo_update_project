@@ -38,6 +38,21 @@ from models import CompanyInfo
 logger = logging.getLogger(__name__)
 
 
+class ContentSaveVerificationError(Exception):
+    """
+    FAQ/企業情報の生成・保存検証に失敗したことを示す例外。
+
+    orchestrator はこれを捕捉して Step 4 (コンテンツ生成) から再試行する。
+    発生条件:
+        - 生成完了検出後、FAQ実体がページに反映されていない
+        - 「プレビュー・保存」タブにFAQプレビューが表示されていない
+        - コンテンツ管理タブの FAQ/企業情報 が空 (未保存)
+        - コンテンツ管理タブに対象企業以外のデータが表示されている (混入)
+        - FAQ保存/企業情報保存ボタンが特定できない
+    """
+    pass
+
+
 class WebAppOperator:
     """
     Webアプリ管理画面を自動操作するクラス。
@@ -682,8 +697,13 @@ class WebAppOperator:
 
         logger.info(f"URL入力・処理開始完了: {len(urls)}件")
 
-    async def generate_content(self):
-        """コンテンツを生成する。ボタン未検出時はリトライ + デバッグスクショを撮ってエラー。"""
+    async def generate_content(self, company: Optional[CompanyInfo] = None):
+        """
+        コンテンツを生成する。ボタン未検出時はリトライ + デバッグスクショを撮ってエラー。
+
+        Args:
+            company: 生成対象の企業 (生成後のFAQ実体検証で企業マッチングに使用)
+        """
         logger.info("コンテンツ生成開始...")
 
         gen_button_selector = (
@@ -758,7 +778,134 @@ class WebAppOperator:
         logger.info("コンテンツ生成中... (最大5分待機)")
         await self._wait_for_generation_complete()
 
+        # === 生成実体検証: FAQ がページに現れたことを確認 ===
+        # スピナー消失だけでは「生成完了」と誤判定する場合がある
+        # (前回ページの残骸 / クリック直後にスピナーが現れる前のタイミング 等)。
+        # 生成結果(FAQ項目+対象企業)が実際にDOM上に現れるまで明示的にポーリング。
+        await self._verify_faq_generation(company)
+
         logger.info("コンテンツ生成完了")
+
+    async def _verify_faq_generation(
+        self,
+        company: Optional[CompanyInfo] = None,
+        max_wait_seconds: int = 60,
+    ):
+        """
+        コンテンツ生成完了後に、FAQ実体がページに反映されたかを検証する。
+
+        検出条件:
+            - FAQ項目パターン (FAQ N / Q1: / 質問N / Q&A / よくある質問) が
+              メイン領域に 2件以上存在
+            - (company指定時) 対象企業の名前 or 企業IDも同時に存在
+
+        失敗時は ContentSaveVerificationError を送出し、orchestrator が
+        Step 4 から再試行できるようにする。
+        """
+        target_label = (
+            f"{company.name} (id={company.enterprise_id})" if company else "(全体)"
+        )
+        logger.info(f"  [検証] 生成結果のFAQ実体を確認: {target_label}")
+
+        faq_patterns = [
+            re.compile(r"FAQ\s*\d+"),
+            re.compile(r"Q\s*\d+\s*[:：.\)]"),
+            re.compile(r"質問\s*\d+"),
+            re.compile(r"^\s*Q\s*[:：]\s*", re.MULTILINE),
+            re.compile(r"よくある質問"),
+        ]
+
+        poll_interval_ms = 2500
+        elapsed_ms = 0
+        max_ms = max_wait_seconds * 1000
+        last_match_count = 0
+
+        while elapsed_ms < max_ms:
+            try:
+                main = self.page.locator(
+                    "main, [data-testid='stMain'], section[role='main']"
+                )
+                if await main.count() > 0:
+                    page_text = await main.first.inner_text(timeout=3000)
+                else:
+                    page_text = await self.page.locator("body").inner_text(timeout=3000)
+            except Exception:
+                page_text = ""
+
+            match_count = sum(1 for p in faq_patterns if p.search(page_text))
+            company_ok = True
+            if company:
+                company_ok = (
+                    (company.enterprise_id and company.enterprise_id in page_text)
+                    or (company.name and company.name in page_text)
+                )
+
+            if match_count >= 2 and company_ok:
+                logger.info(
+                    f"  [OK] FAQ実体を確認 (パターン一致: {match_count}件, "
+                    f"経過: {elapsed_ms/1000:.0f}s)"
+                )
+                return
+
+            last_match_count = max(last_match_count, match_count)
+            await self.page.wait_for_timeout(poll_interval_ms)
+            elapsed_ms += poll_interval_ms
+
+        # === 検証失敗 ===
+        ts = company.enterprise_id if company else "unknown"
+        screenshot = f"screenshots/gen_verify_fail_{ts}.png"
+        try:
+            await self.page.screenshot(path=screenshot, full_page=True)
+        except Exception:
+            pass
+        raise ContentSaveVerificationError(
+            f"生成完了検出後、FAQ実体がページに現れません "
+            f"(パターン一致: {last_match_count}件、{max_wait_seconds}s経過)。"
+            f"生成失敗 or 別企業のデータ残存疑い。スクショ: {screenshot}"
+        )
+
+    async def _find_action_button(
+        self,
+        require_all: list,
+        exclude_any: Optional[list] = None,
+    ):
+        """
+        ページ内の <button> を全走査し、テキストが
+            - require_all 全てを含む (AND条件)
+            - exclude_any のいずれも含まない (OR除外)
+        最初の可視ボタン Locator を返す。見つからなければ None。
+
+        Playwright の `locator(...).first` は CSS セレクタ記載順ではなく
+        DOM 順で最初のマッチを返すため、「保存」のような頻出語を含む CSS
+        セレクタ + `.first` だと意図しないタブボタン等を掴むことがある。
+        この関数はテキスト一致を正確に判定するためのフォールバック手段。
+        """
+        exclude_any = exclude_any or []
+        try:
+            all_buttons = self.page.locator("button")
+            btn_count = await all_buttons.count()
+        except Exception:
+            return None
+
+        for i in range(btn_count):
+            try:
+                text = (await all_buttons.nth(i).text_content()) or ""
+            except Exception:
+                continue
+            t = text.strip()
+            if not t:
+                continue
+            if not all(kw in t for kw in require_all):
+                continue
+            if any(kw in t for kw in exclude_any):
+                continue
+            try:
+                if not await all_buttons.nth(i).is_visible():
+                    continue
+            except Exception:
+                pass
+            return all_buttons.nth(i)
+        return None
 
     async def _click_generation_tab(self):
         """コンテンツ生成画面の「生成」タブをクリックする。"""
@@ -806,42 +953,49 @@ class WebAppOperator:
         await self._wait_for_streamlit_load()
 
         # === STEP 1: FAQ保存ボタンを「表示確認 → 即クリック」 ===
-        # FAQ保存ボタンが表示されていること自体を FAQ生成完了の確認シグナルとする。
-        # （見出しテキスト探索より確実、かつ確認とクリックの間に余計な待機を挟まない）
+        # 重要 (2026-05-13): `.first` は CSS セレクタ記載順ではなく DOM 順で
+        # 最初のマッチを返すため、「保存」のような頻出語を含む CSS セレクタ +
+        # `.first` だと上部の「👁️ プレビュー・保存」タブを掴むことがある。
+        # → _find_action_button で「FAQ」+「保存」両方含み「プレビュー」を含まない
+        #   ボタンに厳密に限定する。
         logger.info("  FAQ保存ボタンの表示を確認中...")
-        first_save_btn = self.page.locator(
+
+        # 表示出現待ち (ボタンが現れていなければ最大20秒待つ)
+        faq_visible_locator = self.page.locator(
             'button:has-text("FAQ保存（置換）"), '
             'button:has-text("FAQ保存")'
         ).first
-
         try:
-            await first_save_btn.wait_for(state="visible", timeout=20000)
+            await faq_visible_locator.wait_for(state="visible", timeout=20000)
             logger.info("  FAQ保存ボタンの表示を確認（=FAQプレビュー描画完了）")
         except Exception:
-            # フォールバック: ページ全体に FAQ 関連テキストがあるかだけチェック
-            page_text = await self.page.content()
-            if not (
-                "FAQ" in page_text
-                and ("生成されたFAQ" in page_text or "FAQ 1" in page_text
-                     or "FAQ1" in page_text)
-            ):
-                screenshot_err = (
-                    f"screenshots/faq_not_found_{company.enterprise_id}.png"
-                )
-                await self.page.screenshot(path=screenshot_err)
-                raise RuntimeError(
-                    f"FAQプレビューが確認できませんでした。詳細は "
-                    f"{screenshot_err} を確認してください。"
-                )
-            logger.warning(
-                "  FAQ保存ボタンが直接見つからないため、より広い保存ボタンを使用"
+            screenshot_err = (
+                f"screenshots/faq_not_found_{company.enterprise_id}.png"
             )
-            first_save_btn = self.page.locator(
-                'button:has-text("保存")'
-            ).first
+            await self.page.screenshot(path=screenshot_err)
+            raise ContentSaveVerificationError(
+                f"FAQ保存ボタンが表示されません (FAQプレビュー未生成 or "
+                f"対象企業のページ未表示)。スクショ: {screenshot_err}"
+            )
+
+        # 厳密にテキスト一致するボタンを取得 (タブの「プレビュー・保存」を除外)
+        first_save_btn = await self._find_action_button(
+            require_all=["FAQ", "保存"],
+            exclude_any=["プレビュー"],
+        )
+        if first_save_btn is None:
+            screenshot_err = (
+                f"screenshots/faq_save_btn_not_found_{company.enterprise_id}.png"
+            )
+            await self.page.screenshot(path=screenshot_err)
+            raise ContentSaveVerificationError(
+                f"FAQ保存ボタンが特定できません (見えるボタンの中に「FAQ」+「保存」"
+                f"を含むものなし)。スクショ: {screenshot_err}"
+            )
 
         # === 確認直後、間を空けずに即クリック ===
-        logger.info("  STEP1: FAQ保存ボタンを即クリック...")
+        faq_btn_text = (await first_save_btn.text_content() or "").strip()
+        logger.info(f"  STEP1: FAQ保存ボタンをクリック: [{faq_btn_text}]")
         await first_save_btn.scroll_into_view_if_needed()
         await first_save_btn.click()
         logger.info("  FAQ保存ボタンをクリックしました")
@@ -858,12 +1012,11 @@ class WebAppOperator:
                 "  FAQ保存完了メッセージが出なかったため、もう一度クリックします"
             )
             try:
-                # 再ロケート（Streamlit再描画でハンドルが古くなる対策）
-                retry_btn = self.page.locator(
-                    'button:has-text("FAQ保存（置換）"), '
-                    'button:has-text("FAQ保存")'
-                ).first
-                if await retry_btn.count() > 0:
+                retry_btn = await self._find_action_button(
+                    require_all=["FAQ", "保存"],
+                    exclude_any=["プレビュー"],
+                )
+                if retry_btn is not None:
                     await retry_btn.scroll_into_view_if_needed()
                     await retry_btn.click()
                     logger.info("  FAQ保存ボタンを再クリックしました")
@@ -873,57 +1026,53 @@ class WebAppOperator:
         await self.page.wait_for_timeout(2000)
         await self._wait_for_streamlit_load()
 
-        # === STEP 2: ページを下にスクロールして「企業情報を保存」赤ボタンを探す ===
-        logger.info("  STEP2: 企業情報を保存ボタン（赤）を探してクリック...")
-        
-        # まずスクロールダウン
+        # === STEP 2: ページを下にスクロールして「企業情報保存」ボタンを探す ===
+        # 「企業情報保存」「企業情報を保存」どちらの表記でも対応するため、
+        # _find_action_button で「企業情報」+「保存」両方含むものに限定。
+        # 「プレビュー」「FAQ」を含むものは除外 (タブ/FAQボタンとの混同回避)。
+        logger.info("  STEP2: 企業情報保存ボタンを探してクリック...")
+
         await self.page.evaluate("window.scrollTo(0, document.body.scrollHeight)")
         await self.page.wait_for_timeout(1500)
 
-        # 赤い「企業情報を保存」ボタンを探す
-        # primary ボタン（Streamlitではtype="primary"が赤い）
-        red_save_btn = self.page.locator(
-            'button[data-testid="stBaseButton-primary"]:has-text("企業情報を保存"), '
-            'button[kind="primary"]:has-text("企業情報を保存"), '
-            'button:has-text("企業情報を保存")'
+        red_save_target = await self._find_action_button(
+            require_all=["企業情報", "保存"],
+            exclude_any=["プレビュー", "FAQ"],
         )
-        
-        # 見つからない場合はページ内の全ボタンを確認
-        if await red_save_btn.count() == 0:
-            logger.info("  「企業情報を保存」ボタンが直接見つからないため、全ボタンを確認...")
-            all_buttons = self.page.locator("button")
-            btn_count = await all_buttons.count()
-            for i in range(btn_count):
-                btn_text = await all_buttons.nth(i).text_content()
-                logger.debug(f"    ボタン[{i}]: {btn_text}")
-                if btn_text and ("保存" in btn_text or "save" in btn_text.lower()):
-                    logger.info(f"    保存関連ボタン発見: [{btn_text}]")
-            
-            # primaryクラスのボタンを探す
-            red_save_btn = self.page.locator(
-                'button[data-testid="stBaseButton-primary"]'
+
+        if red_save_target is None:
+            # 失敗時、デバッグ用に保存関連ボタン一覧をログ出力
+            logger.warning(
+                "  「企業情報保存」ボタンが見つかりません。ページ内ボタン一覧を出力します..."
+            )
+            try:
+                all_buttons = self.page.locator("button")
+                btn_count = await all_buttons.count()
+                for i in range(btn_count):
+                    btn_text = await all_buttons.nth(i).text_content()
+                    if btn_text and "保存" in btn_text:
+                        logger.warning(f"    保存関連ボタン発見: [{btn_text}]")
+            except Exception:
+                pass
+            screenshot_path = (
+                f"screenshots/save_btn_not_found_{company.enterprise_id}.png"
+            )
+            await self.page.screenshot(path=screenshot_path)
+            raise ContentSaveVerificationError(
+                f"「企業情報保存」ボタンが見つかりませんでした。"
+                f"スクリーンショット: {screenshot_path}"
             )
 
-        if await red_save_btn.count() > 0:
-            # 最後のprimaryボタン（企業情報を保存は通常一番下）
-            btn_count = await red_save_btn.count()
-            target_btn = red_save_btn.nth(btn_count - 1)
-            
-            btn_text = await target_btn.text_content()
-            logger.info(f"  赤いボタンをクリック: [{btn_text}]")
-            
-            await target_btn.scroll_into_view_if_needed()
-            await self.page.wait_for_timeout(500)
-            await target_btn.click()
-            
-            await self.page.wait_for_timeout(3000)
-            await self._wait_for_streamlit_load()
-            logger.info("  企業情報を保存ボタンのクリック完了")
-        else:
-            logger.error("  赤い保存ボタン（企業情報を保存）が見つかりません")
-            screenshot_path = f"screenshots/save_btn_not_found_{company.enterprise_id}.png"
-            await self.page.screenshot(path=screenshot_path)
-            raise RuntimeError(f"企業情報を保存ボタンが見つかりませんでした。スクリーンショット: {screenshot_path}")
+        btn_text = (await red_save_target.text_content() or "").strip()
+        logger.info(f"  企業情報保存ボタンをクリック: [{btn_text}]")
+
+        await red_save_target.scroll_into_view_if_needed()
+        await self.page.wait_for_timeout(500)
+        await red_save_target.click()
+
+        await self.page.wait_for_timeout(3000)
+        await self._wait_for_streamlit_load()
+        logger.info("  企業情報保存ボタンのクリック完了")
 
         # 保存完了メッセージの確認
         success_msg = self.page.locator('[data-testid="stNotification"], .stAlert, [data-testid="stToast"]').filter(
@@ -944,18 +1093,20 @@ class WebAppOperator:
     async def _verify_content_saved(self, company: CompanyInfo):
         """
         コンテンツ管理タブで FAQ と 企業情報 の両タブを開き、
-        対象企業のコンテンツが正しく保存されているかを検証する。
+        対象企業のコンテンツが正しく保存されているかを厳格検証する。
 
         検証項目:
         1. コンテンツ管理ページに対象企業が選択できること
-        2. FAQタブ内に企業名 or 企業IDの出現
-        3. 企業情報タブ内に企業名 or 企業IDの出現
+        2. FAQタブ内に企業名 or 企業IDの出現 + FAQ項目の実体存在
+        3. 企業情報タブ内に企業名 or 企業IDの出現 + 本文の実体存在
 
-        いずれの検証も失敗した場合は RuntimeError を送出して
-        誤った企業のコンテンツが保存された状態を検出する。
+        失敗時は ContentSaveVerificationError を送出し、orchestrator が
+        Step 4 (コンテンツ生成) から再試行できるようにする。
 
         Raises:
-            RuntimeError: FAQ/企業情報の両方で対象企業を確認できなかった場合
+            ContentSaveVerificationError:
+                - 未保存検出 (FAQ/企業情報タブが空)
+                - 対象企業以外のデータの混入検出
         """
         logger.info(f"  コンテンツ管理タブで保存確認中: {company.name}")
 
@@ -978,20 +1129,21 @@ class WebAppOperator:
                 and company.name not in page_content):
             msg = (
                 f"コンテンツ管理ページに対象企業 ({company.enterprise_id} / "
-                f"{company.name}) の情報が見つかりません。スクショ: {screenshot_path}"
+                f"{company.name}) の情報が見つかりません (未保存疑い)。"
+                f"スクショ: {screenshot_path}"
             )
             logger.error(f"  [ERR] {msg}")
-            raise RuntimeError(msg)
+            raise ContentSaveVerificationError(msg)
 
         logger.info(
             f"  [OK] コンテンツ管理ページ: {company.enterprise_id} の存在を確認"
         )
 
         # FAQタブ・企業情報タブをそれぞれ開いて検証
-        faq_ok = await self._verify_tab_content(
+        faq_ok, faq_reason = await self._verify_tab_content(
             company, tab_keywords=["FAQ", "よくある質問", "Q&A"], tab_label="FAQ"
         )
-        info_ok = await self._verify_tab_content(
+        info_ok, info_reason = await self._verify_tab_content(
             company,
             tab_keywords=["企業情報", "会社情報", "企業詳細", "プロフィール"],
             tab_label="企業情報",
@@ -1000,11 +1152,12 @@ class WebAppOperator:
         if not (faq_ok and info_ok):
             msg = (
                 f"FAQ/企業情報タブのコンテンツ検証に失敗 "
-                f"(faq_ok={faq_ok}, info_ok={info_ok}, "
+                f"(faq_ok={faq_ok}: {faq_reason} / "
+                f"info_ok={info_ok}: {info_reason}, "
                 f"id={company.enterprise_id}, スクショ: {screenshot_path})"
             )
             logger.error(f"  [ERR] {msg}")
-            raise RuntimeError(msg)
+            raise ContentSaveVerificationError(msg)
 
         logger.info("  [OK] FAQ・企業情報タブともに対象企業のコンテンツを確認")
 
@@ -1013,22 +1166,25 @@ class WebAppOperator:
         company: CompanyInfo,
         tab_keywords: list,
         tab_label: str,
-    ) -> bool:
+    ) -> tuple:
         """
-        指定キーワードを持つタブを開き、そのタブ内に対象企業の
-        企業名 or 企業IDが出現するかを検証する。
+        指定キーワードを持つタブを開き、そのタブパネル内に対象企業の
+        コンテンツが実体として存在するかを検証する。
 
-        Args:
-            company: 検証対象の企業
-            tab_keywords: タブを特定するためのテキスト候補
-            tab_label: ログ用のタブ名
+        厳格化:
+            - 対象企業の名前/IDが panel 内に出現
+            - panel 内に「実体のあるコンテンツ」(FAQ項目や企業情報本文) が存在
+              → 空ヘッダーだけの未保存状態を検出
 
         Returns:
-            タブ内に企業情報が確認できれば True
+            (ok: bool, reason: str)
+              ok=False の場合、reason に未保存/混入などの理由を入れる
         """
         logger.info(f"  [{tab_label}タブ] 検証開始")
 
-        tab_locators = self.page.locator("[data-baseweb='tab'], [role='tab'], button[role='tab']")
+        tab_locators = self.page.locator(
+            "[data-baseweb='tab'], [role='tab'], button[role='tab']"
+        )
         tab_count = await tab_locators.count()
         clicked = False
 
@@ -1047,34 +1203,100 @@ class WebAppOperator:
 
         if not clicked:
             logger.warning(
-                f"  [{tab_label}タブ] が見つかりません（タブ未表示の可能性、"
-                f"ページ全体で代替検証）"
+                f"  [{tab_label}タブ] が見つかりません（タブ未表示の可能性）"
             )
+            return False, "タブが見つからない"
 
-        # タブ表示後のページコンテンツで企業が確認できるか
-        body_text = await self.page.content()
-        # FAQ的な要素を探す（FAQタブの場合）/企業情報的な要素を探す
-        in_company = (
-            (company.enterprise_id and company.enterprise_id in body_text)
-            or (company.name and company.name in body_text)
-        )
+        # タブパネル本文を取得 (サイドバー等を除外)
+        panel_text = await self._get_active_tab_panel_text()
 
         screenshot_path = (
             f"screenshots/tab_{tab_label}_{company.enterprise_id}.png"
         )
         await self.page.screenshot(path=screenshot_path)
 
-        if in_company:
-            logger.info(
-                f"  [OK] [{tab_label}タブ] 企業名/IDを確認 (スクショ: {screenshot_path})"
-            )
-            return True
-        else:
+        # 1. 対象企業の名前/IDが本文に出現するか
+        in_company = (
+            (company.enterprise_id and company.enterprise_id in panel_text)
+            or (company.name and company.name in panel_text)
+        )
+        if not in_company:
             logger.warning(
                 f"  [WARN] [{tab_label}タブ] 企業名/IDを確認できませんでした "
                 f"(スクショ: {screenshot_path})"
             )
+            return False, "対象企業の名前/IDがタブ本文に見つからない"
+
+        # 2. タブパネル内にコンテンツの実体があるか (未保存検出)
+        if not self._tab_has_substantive_content(panel_text, tab_label):
+            logger.warning(
+                f"  [WARN] [{tab_label}タブ] 本文の実体コンテンツが確認できません "
+                f"(未保存疑い、スクショ: {screenshot_path})"
+            )
+            return False, "タブ本文に実体コンテンツがない (未保存疑い)"
+
+        logger.info(
+            f"  [OK] [{tab_label}タブ] 企業名/ID + 実体コンテンツを確認 "
+            f"(スクショ: {screenshot_path})"
+        )
+        return True, ""
+
+    async def _get_active_tab_panel_text(self) -> str:
+        """
+        アクティブなタブパネル (role='tabpanel') のテキストを取得する。
+        取れない場合はメインエリア → body にフォールバック。
+        """
+        try:
+            panel = self.page.locator(
+                "[role='tabpanel']:visible, [data-baseweb='tab-panel']:visible"
+            )
+            if await panel.count() > 0:
+                txt = await panel.first.inner_text(timeout=3000)
+                if txt and txt.strip():
+                    return txt
+        except Exception:
+            pass
+
+        try:
+            main = self.page.locator(
+                "main, [data-testid='stMain'], section[role='main']"
+            )
+            if await main.count() > 0:
+                return await main.first.inner_text(timeout=3000)
+        except Exception:
+            pass
+
+        try:
+            return await self.page.locator("body").inner_text(timeout=3000)
+        except Exception:
+            return ""
+
+    def _tab_has_substantive_content(self, text: str, tab_label: str) -> bool:
+        """
+        タブパネル本文に「実体のあるコンテンツ」が存在するかを判定。
+        未保存の状態だとFAQ/企業情報が空のヘッダーのみになるのを検出する。
+        """
+        if not text:
             return False
+        compact = re.sub(r"\s+", "", text)
+        if len(compact) < 30:
+            return False
+
+        if tab_label == "FAQ":
+            faq_patterns = [
+                r"FAQ\s*\d+",
+                r"Q\s*\d+",
+                r"質問\s*\d+",
+                r"^\s*Q\s*[:：]",
+                r"^\s*A\s*[:：]",
+            ]
+            for p in faq_patterns:
+                if re.search(p, text, re.MULTILINE):
+                    return True
+            return len(compact) >= 100
+
+        # 企業情報タブ: 一定量のテキストがあれば実体ありとみなす
+        return len(compact) >= 50
 
     async def _try_select_company_in_page(self, company_id: str):
         """ページ内に企業選択UIがあれば選択を試みる"""
@@ -1521,40 +1743,69 @@ class WebAppOperator:
             pass
 
     async def _wait_for_generation_complete(self):
-        """コンテンツ生成の完了を待機する（ポーリング方式）"""
-        poll_interval = 5000  # 5秒ごとにチェック
-        elapsed = 0
+        """
+        コンテンツ生成の完了を待機する（ポーリング方式）。
 
+        改善 (2026-05-13):
+            - クリック直後にスピナーが現れる前から「完了」判定する誤検知を防止
+              (過去ログで「生成完了検出 5.0秒」という早すぎの誤検知が発生)
+            - 最低待機時間 (MIN_WAIT_MS) を確保
+            - スピナー出現を 15秒まで待ってから消失検出フェーズに入る
+        """
+        MIN_WAIT_MS = 15000           # 最低この時間は完了判定しない
+        SPINNER_APPEAR_TIMEOUT = 15000  # スピナー出現待ち
+        poll_interval = 3000
+        elapsed = 0
+        spinner_selector = "[data-testid='stSpinner'], .stSpinner"
+
+        # フェーズ1: スピナー出現を待つ (出なくても最低待機後に消失検出へ移行)
+        spinner_seen = False
+        try:
+            await self.page.locator(spinner_selector).first.wait_for(
+                state="visible", timeout=SPINNER_APPEAR_TIMEOUT
+            )
+            spinner_seen = True
+            logger.debug("  スピナー出現を確認 → 消失待ちへ")
+        except Exception:
+            logger.debug(
+                "  スピナー出現せず → 最低待機時間後に完了判定"
+            )
+
+        # フェーズ2: スピナー消失をポーリング + 最低待機時間を保証
         while elapsed < CONTENT_GENERATION_TIMEOUT:
             await self.page.wait_for_timeout(poll_interval)
             elapsed += poll_interval
 
-            # 完了判定: スピナーが消える
             spinner_visible = False
             try:
-                spinner = self.page.locator(
-                    "[data-testid='stSpinner'], .stSpinner"
-                )
+                spinner = self.page.locator(spinner_selector)
                 spinner_visible = await spinner.is_visible()
             except Exception:
                 pass
 
-            if not spinner_visible:
-                # エラーチェック
-                try:
-                    error = self.page.locator("[data-testid='stAlert']")
-                    if await error.count() > 0:
-                        error_text = await error.first.text_content()
-                        if "エラー" in (error_text or "") or "Error" in (error_text or ""):
-                            raise RuntimeError(
-                                f"コンテンツ生成エラー: {error_text}"
-                            )
-                except RuntimeError:
-                    raise
-                except Exception:
-                    pass
+            # エラーチェック
+            try:
+                error = self.page.locator("[data-testid='stAlert']")
+                if await error.count() > 0:
+                    error_text = await error.first.text_content()
+                    if (
+                        "エラー" in (error_text or "")
+                        or "Error" in (error_text or "")
+                    ):
+                        raise RuntimeError(
+                            f"コンテンツ生成エラー: {error_text}"
+                        )
+            except RuntimeError:
+                raise
+            except Exception:
+                pass
 
-                logger.info(f"生成完了検出 (経過: {elapsed / 1000}秒)")
+            # 完了判定: スピナーが見えない & 最低待機時間を経過
+            if not spinner_visible and elapsed >= MIN_WAIT_MS:
+                logger.info(
+                    f"生成完了検出 (経過: {elapsed / 1000}秒, "
+                    f"スピナー出現: {spinner_seen})"
+                )
                 return
 
             logger.debug(f"生成中... (経過: {elapsed / 1000}秒)")
