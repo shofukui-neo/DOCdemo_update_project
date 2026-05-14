@@ -41,7 +41,6 @@ from config import (
     LOG_FILE,
     RETRY_COUNT,
     RETRY_DELAY,
-    URL_CANDIDATE_MAX,
 )
 from models import CompanyInfo, ProcessStatus
 from spreadsheet_manager import SpreadsheetManager
@@ -124,16 +123,24 @@ class Orchestrator:
         }
 
     async def run(self):
-        """メインエントリーポイント: 全企業の自動化フローを実行する。"""
+        """
+        メインエントリーポイント (Stage 2: デモ作成自動化)。
+
+        前提: Stage 1 (`python select_urls.py`) でホームページURLが確定済みの
+              CSVを入力とする。URL未入力の行は本ステージでは自動スキップ。
+        """
         start_time = datetime.now()
         logger.info("=" * 60)
-        logger.info("DOCdemo 自動化フロー 開始")
+        logger.info("DOCdemo 自動化フロー 開始 (Stage 2: デモ作成)")
         logger.info(f"開始時刻: {start_time.strftime('%Y-%m-%d %H:%M:%S')}")
         logger.info("=" * 60)
 
         # 企業リスト読み込み
         companies = self.sheet_manager.read_company_list()
-        pending = self.sheet_manager.get_pending_companies(companies)
+        # Stage 2 はURL確定済の行だけ処理する (URL未入力行は select_urls.py 側で扱う)
+        pending = self.sheet_manager.get_pending_companies(
+            companies, require_url=True
+        )
 
         if self.test_mode and self.target_company:
             pending = [c for c in pending if self.target_company in c.name]
@@ -221,104 +228,33 @@ class Orchestrator:
         各ステップはステータスを更新し、途中から再開可能にする。
         """
 
-        # ===== Step 1: ホームページURL検索 =====
-        # ===== Step 1.5: URL企業ID重複検証 =====
-        #   候補URLから抽出した企業ID（URL内で企業を表すスラッグ）が
-        #   完全一致しない種類が複数あれば手動確認待ちで中断する。
-        if company.status == ProcessStatus.PENDING:
-            logger.info("Step 1/6: ホームページURL候補検索...")
-
-            if "リンクなし" in company.name or "見当たらず" in company.name:
-                clean_name = company.name.split("（")[0].split("(")[0].strip()
-                company.name = clean_name
-
-            candidates = await url_finder.find_homepage_candidates(
-                company.name, max_candidates=URL_CANDIDATE_MAX
+        # ===== Step 1 (URL検索) は Stage 1 (select_urls.py) に移管済 =====
+        # ここでは URL 確定済の前提で homepage_url + enterprise_id の同期だけ行う。
+        if not company.homepage_url:
+            # require_url=True フィルタで除外されているはずだが二重ガード
+            logger.warning(
+                f"  [SKIP] {company.name}: homepage_url が未確定。"
+                "先に `python select_urls.py` を実行してください。"
             )
+            self.stats["skipped"] += 1
+            return
 
-            if not candidates:
-                company.mark_skipped("ホームページURLが見つかりませんでした")
-                self.sheet_manager.update_company(company, companies)
-                self.stats["skipped"] += 1
-                logger.warning(f"[SKIP] {company.name}: URL不明のためスキップ")
-                return
+        # URLからenterprise_idを同期 (URL変更があった場合に備えて毎回確認)
+        url_based_id = extract_enterprise_id_from_url(company.homepage_url)
+        if url_based_id and url_based_id != "unknown":
+            company.enterprise_id = url_based_id
 
-            # === URL企業ID重複検証 ===
-            # 各候補URLから企業IDを抽出し、ユニークなIDが複数あれば
-            # 「URL内の企業IDが完全一致しない候補が複数」=手動確認待ち。
-            candidate_ids = [
-                extract_enterprise_id_from_url(c) for c in candidates
-            ]
-            unique_ids = {eid for eid in candidate_ids if eid and eid != "unknown"}
-
-            if len(unique_ids) >= 2:
-                logger.warning(
-                    f"  [PAUSE] URL内の企業IDが完全一致しない候補が "
-                    f"{len(unique_ids)} 種類 (候補URL {len(candidates)}件) "
-                    f"検出されました → 手動確認待ちにします"
-                )
-                for idx_c, (cand, eid) in enumerate(
-                    zip(candidates, candidate_ids), start=1
-                ):
-                    logger.warning(f"    候補 {idx_c}: {cand} (企業ID: {eid})")
-                company.mark_duplicate(
-                    candidates,
-                    reason=(
-                        f"URL内の企業IDが完全一致しない候補が "
-                        f"{len(unique_ids)} 種類検出されました。"
-                        "「ホームページURL」列に正しいURLを入力して再実行してください。"
-                    ),
-                )
-                self.sheet_manager.update_company(company, companies)
-                self.stats["duplicate"] += 1
-                logger.warning(
-                    f"[HOLD] {company.name}: URL企業ID不一致候補複数 "
-                    f"(CSVの「ホームページURL」列に正解URLを記入して再実行してください)"
-                )
-                return
-
-            # 候補のURL企業IDが1種類のみ (TLD違い・サブドメイン正規化後に同一)
-            # → 先頭の候補URLを採用して通常フロー
-            homepage_url = candidates[0]
-            company.homepage_url = homepage_url
-            company.url_candidates = candidates  # 履歴として保持
-
-            url_based_id = extract_enterprise_id_from_url(homepage_url)
-            if url_based_id and url_based_id != "unknown":
-                logger.info(f"  企業ID (URLから抽出): {url_based_id}")
-                company.enterprise_id = url_based_id
-            else:
-                logger.warning(
-                    f"  URLからIDを抽出できないため、企業名から生成します: "
-                    f"{company.enterprise_id}"
-                )
-
-            company.status = ProcessStatus.URL_FOUND
-            self.sheet_manager.update_company(company, companies)
-            logger.info(f"  → URL: {homepage_url}, ID: {company.enterprise_id}")
-
-        # URL企業ID不一致で HOLD された状態から再実行されたケース
-        # （人間が CSV の homepage_url 列に正しいURLを記入した想定）
-        # → URL_FOUND として扱い後続処理に進める
-        elif (
-            company.status == ProcessStatus.DUPLICATE_DETECTED
-            and company.homepage_url
+        # PENDING / DUPLICATE_DETECTED かつ URL確定済 → URL_FOUND に昇格して後続処理
+        if company.status in (
+            ProcessStatus.PENDING,
+            ProcessStatus.DUPLICATE_DETECTED,
         ):
             logger.info(
-                f"Step 1/6: URL企業ID不一致 HOLD からの手動再開: {company.homepage_url}"
+                f"Step 1/5: URL確定済の企業を Stage 2 で処理: {company.homepage_url}"
             )
-            url_based_id = extract_enterprise_id_from_url(company.homepage_url)
-            if url_based_id and url_based_id != "unknown":
-                company.enterprise_id = url_based_id
             company.status = ProcessStatus.URL_FOUND
             company.error_message = ""
             self.sheet_manager.update_company(company, companies)
-
-        # URLが既にある場合もIDをURLから再確認
-        elif company.status != ProcessStatus.PENDING and company.homepage_url:
-            url_based_id = extract_enterprise_id_from_url(company.homepage_url)
-            if url_based_id and url_based_id != "unknown":
-                company.enterprise_id = url_based_id
 
         # ===== Step 2: 企業追加 =====
         if company.status == ProcessStatus.URL_FOUND:

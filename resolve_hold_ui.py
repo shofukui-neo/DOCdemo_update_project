@@ -65,10 +65,12 @@ class HoldResolverApp:
         self.col = CSV_COLUMNS
 
         self.all_rows = load_rows(csv_path)
+        # null-safe フィルタ: 不足セルは None になるため (row[key] or "") で守る
         self.hold_indices = [
             i for i, r in enumerate(self.all_rows)
-            if r[self.col["status"]] == ProcessStatus.DUPLICATE_DETECTED.value
-            and not r[self.col["homepage_url"]].strip()
+            if (r.get(self.col["status"]) or "")
+            == ProcessStatus.DUPLICATE_DETECTED.value
+            and not (r.get(self.col["homepage_url"]) or "").strip()
         ]
         self.current_pos = 0  # hold_indices内の位置
         self.resolved_count = 0
@@ -141,9 +143,11 @@ class HoldResolverApp:
         self._clear_buttons()
         row_idx = self.hold_indices[self.current_pos]
         row = self.all_rows[row_idx]
-        name = row[self.col["company_name"]]
+        name = (row.get(self.col["company_name"]) or "").strip()
+        # null-safe + URL候補列が空欄でも落ちないように守る
+        candidates_raw = (row.get(self.col["url_candidates"]) or "").strip()
         candidates = [
-            c.strip() for c in row[self.col["url_candidates"]].split("|") if c.strip()
+            c.strip() for c in candidates_raw.split("|") if c.strip()
         ]
 
         self.title_label.config(text=name)
@@ -153,6 +157,17 @@ class HoldResolverApp:
         self.status_label.config(
             text=f"採用済: {self.resolved_count} / スキップ: {self.skipped_count}"
         )
+
+        # URL候補が空欄のケース: カスタムURL入力でのみ対応可能と表示
+        if not candidates:
+            ttk.Label(
+                self.buttons_frame,
+                text=(
+                    "(URL候補が記録されていません。"
+                    "下のカスタムURL欄に正しいURLを入力して採用してください)"
+                ),
+                foreground="#a0522d",
+            ).pack(pady=10, anchor="w")
 
         # 候補ごとに行を作成: [採用]ボタン + URLラベル + [プレビュー]ボタン
         for cand in candidates:

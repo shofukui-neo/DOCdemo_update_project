@@ -692,9 +692,13 @@ class WebAppOperator:
             'button:has-text("コンテンツ生成")'
         )
 
-        # 「生成」タブをクリック + 「コンテンツ生成」ボタンが現れるまで最大3回リトライ
+        # 「生成」タブをクリック + 「コンテンツ生成」ボタンが現れるまでリトライ
+        # 過去ログから、URL処理が重い企業 (40件以上の参考資料を持つ等) では
+        # 90秒 (3試行) では不十分で、120〜180秒待機が必要なケースあり。
+        # YKT のように新規作成直後でサーバーキャッシュが冷えている企業も同様。
+        MAX_GEN_ATTEMPTS = 6
         gen_button = None
-        for attempt in range(3):
+        for attempt in range(MAX_GEN_ATTEMPTS):
             # 「生成」タブをクリック
             await self._click_generation_tab()
 
@@ -704,30 +708,33 @@ class WebAppOperator:
             await self._wait_for_streamlit_load()
 
             # 「生成準備完了」メッセージを待機 (出なくても続行)
+            # 初回は 40秒まで延長 (新規作成企業の URL 処理は重い)
             if attempt == 0:
                 logger.info("  生成準備完了の待機中...")
                 ready_msg = self.page.locator('div, p, span').filter(
                     has_text=re.compile(r"✅.*準備完了")
                 )
                 try:
-                    await ready_msg.first.wait_for(state="visible", timeout=20000)
+                    await ready_msg.first.wait_for(state="visible", timeout=40000)
                     logger.info("  生成準備完了を確認しました")
                 except Exception:
                     logger.warning(
                         "  生成準備完了メッセージが特定できませんでしたが、続行を試みます"
                     )
 
-            # 「コンテンツ生成」ボタンが visible になるまで待機 (旧: 10000ms)
+            # 「コンテンツ生成」ボタンが visible になるまで待機
             candidate_button = self.page.locator(gen_button_selector)
             try:
                 await candidate_button.first.wait_for(state="visible", timeout=20000)
                 if await candidate_button.count() > 0:
                     gen_button = candidate_button
-                    logger.info(f"  コンテンツ生成ボタン検出 (試行 {attempt+1}/3)")
+                    logger.info(
+                        f"  コンテンツ生成ボタン検出 (試行 {attempt+1}/{MAX_GEN_ATTEMPTS})"
+                    )
                     break
             except Exception:
                 logger.warning(
-                    f"  コンテンツ生成ボタン未検出 (試行 {attempt+1}/3) — 生成タブを再クリック"
+                    f"  コンテンツ生成ボタン未検出 (試行 {attempt+1}/{MAX_GEN_ATTEMPTS}) — 生成タブを再クリック"
                 )
 
         if not gen_button or await gen_button.count() == 0:
@@ -741,7 +748,7 @@ class WebAppOperator:
             except Exception:
                 pass
             raise RuntimeError(
-                "コンテンツ生成ボタンが見つかりませんでした (3回試行)。"
+                f"コンテンツ生成ボタンが見つかりませんでした ({MAX_GEN_ATTEMPTS}回試行)。"
                 "「生成」タブのクリックが反映されていない可能性があります。"
             )
 
