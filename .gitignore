@@ -15,6 +15,10 @@ __pycache__/
 # Playwright
 test-results/
 
+# 自動化スクショ・検証スクショ・デバッグ画像（実行ごとに生成・差し替わるためトラッキング不要）
+screenshots/
+!screenshots/.gitkeep
+
 # Distribution / packaging
 dist/
 build/
