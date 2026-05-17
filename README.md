@@ -112,13 +112,32 @@ python create_initial_csv.py
 
 ### 3-2. 自動化実行（基本）
 
-全件処理:
+本システムは **2段階構成** になりました（2026-05 以降）。
+
+| 段階 | スクリプト | 役割 |
+|---|---|---|
+| **Stage 1** | `python select_urls.py` | 各企業のホームページURLを Yahoo!検索で候補抽出し、CSV の `URL候補` 列に書き込む。複数候補があれば自動で `resolve_hold_ui.py`（GUI）を起動して人間に選ばせる |
+| **Stage 2** | `python orchestrator.py` | URL確定済の行だけを対象に「企業追加〜コンテンツ生成〜納品URL取得」を実行 |
+
+**実行順序:**
 
 ```powershell
+# 1. URL選定（候補検索 + HOLD UIで人間判断）
+python select_urls.py --no-headless
+
+# 2. デモ作成自動化
 python orchestrator.py --no-headless
 ```
 
-特定1社のみのテスト実行:
+Stage 1 で `URL候補` が複数（=同名企業該当）になった行は自動的に `resolve_hold_ui.py` の GUI が立ち上がり、候補ボタンから正解URLを選ぶか、カスタムURLを入力して採用します。GUIを後から再開したいときは:
+
+```powershell
+python resolve_hold_ui.py
+```
+
+> **注意**: `resolve_hold_ui.py` を `select_urls.py` 実行前に起動すると「先に Stage 1 を実行してください」と表示されます。必ず `select_urls.py` を先に走らせてください。
+
+特定1社のみのテスト実行（Stage 2 のみ）:
 
 ```powershell
 python orchestrator.py --test-mode --company "株式会社サンプル" --no-headless
@@ -127,10 +146,11 @@ python orchestrator.py --test-mode --company "株式会社サンプル" --no-hea
 ヘッドレス（バックグラウンド・大量処理用）:
 
 ```powershell
+python select_urls.py --headless
 python orchestrator.py --headless
 ```
 
-> 1社あたり目安 **3〜4分**。147社で約7時間（過去実績）。
+> 1社あたり Stage 1 で約 **5秒**、Stage 2 で **3〜4分**。147社で Stage 2 が約7時間（過去実績）。
 
 ### 3-3. 進捗の確認
 
@@ -160,19 +180,23 @@ python orchestrator.py --headless
 
 検索結果に複数のドメインがあり、自動で判定できない場合に発生します。
 
-**対応手順:**
+**推奨フロー（GUIで一括処理）:**
 
-1. 実行終了後、[data/company_list.csv](data/company_list.csv) を Excel または VS Code で開く
-2. 該当行を見つける（ステータス列が「同名企業該当」）
-3. `URL候補` 列を確認 — パイプ `|` 区切りで最大5件のURLが入っている
+`select_urls.py` 実行後に HOLD 行が 1社以上あれば、`resolve_hold_ui.py`（tkinter製GUI）が自動で立ち上がります。各企業について
 
-   ```
-   https://akiyama-group.com|https://kei-ichiman.com|...|https://www.c-c-akiyama.com|...
-   ```
+- 候補URL横の「このURLを採用」ボタンで採用
+- 「ブラウザで開く」で候補を実機確認
+- 候補にない場合は下部の「カスタムURL」欄に貼り付け→「このURLを採用」
 
-4. 候補を実際にブラウザで開き、対象企業の公式サイトかどうか確認
-5. 正しい URL を `ホームページURL` 列に貼り付けて保存
-6. 再度 orchestrator.py を実行 — 自動で続きから再開
+を選ぶと CSV にその場で書き戻され、次の HOLD 企業に進みます。完了後に `python orchestrator.py` を実行するだけで Stage 2 に進めます。
+
+**従来通り CSV を直接編集する方法（GUIを使わない場合）:**
+
+1. `python select_urls.py --no-popup` で HOLD UI を起動せず CSV だけ更新
+2. [data/company_list.csv](data/company_list.csv) を Excel または VS Code で開く
+3. 該当行を見つける（ステータス列が「同名企業該当」）
+4. `URL候補` 列のパイプ `|` 区切りURLから正解を選び、`ホームページURL` 列に貼り付けて保存
+5. `python orchestrator.py` を実行
 
 > Excel で開いた場合は **保存して閉じてから** 再実行してください（Excel がファイルをロックします）。
 
@@ -257,7 +281,9 @@ python generate_delivery_list.py
 
 ```
 DOCdemo_update_project/
-├── orchestrator.py              # メインエントリーポイント（自動化フロー全体）
+├── select_urls.py               # ★ Stage 1: URL候補検索 (Stage 1 のエントリポイント)
+├── resolve_hold_ui.py           # ★ Stage 1: HOLD候補のGUI選定 (Stage 1 から自動起動)
+├── orchestrator.py              # ★ Stage 2: 企業追加〜納品URL取得 (Stage 2 のエントリポイント)
 ├── config.py                    # 設定（URL・タイムアウト・CSV列名等）
 ├── models.py                    # CompanyInfo, ProcessStatus
 ├── spreadsheet_manager.py       # CSV 読み書き
@@ -304,4 +330,4 @@ DOCdemo_update_project/
 
 ---
 
-最終更新: 2026-05-11
+最終更新: 2026-05-18 — 2段階構成 (`select_urls.py` + `orchestrator.py`) に追従
