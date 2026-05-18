@@ -42,6 +42,10 @@ class CompanyInfo:
     status: ProcessStatus = ProcessStatus.PENDING
     error_message: str = ""           # エラー発生時の詳細メッセージ
 
+    # Stage 4 (verify_quality.py) の結果
+    quality_check: str = ""           # "OK" / "NG" / "部分OK" / "" (未チェック)
+    quality_detail: str = ""          # 項目別の OK/NG 内訳 (例: "HTTP=OK / 企業名=OK / 背景画像=NG / FAQ=OK / AIチャット=OK")
+
     def __post_init__(self):
         """初期化後に企業IDを自動生成（未設定の場合）"""
         if not self.enterprise_id and self.name:

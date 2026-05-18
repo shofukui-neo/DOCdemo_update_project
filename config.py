@@ -52,6 +52,8 @@ CSV_COLUMNS = {
     "frontend_url": "納品URL",  # フロントエンド公開URL = エンドユーザに渡す納品URL
     "status": "ステータス",
     "error_message": "エラー詳細",
+    "quality_check": "品質チェック",          # Stage 4: OK / NG / 部分OK
+    "quality_detail": "品質チェック詳細",      # Stage 4: 項目別 OK/NG 内訳
     "screenshot_path": "スクリーンショットパス",
 }
 
@@ -84,6 +86,26 @@ RETRY_DELAY = 5        # リトライ間隔 (秒)
 # FAQ/企業情報 保存検証失敗時、Step 4 (コンテンツ生成) から再試行する最大回数
 # (合計試行回数 = 1 + FAQ_SAVE_MAX_RETRIES)
 FAQ_SAVE_MAX_RETRIES = 2
+
+# 生成完了後の FAQ 実体検証 (DOM へ反映されるまで) の最大待機秒数
+# 旧 60s → 120s に延長。生成完了スピナー消失後でも企業によっては
+# FAQ レンダリングまでに 60〜90 秒程度かかるケースがあるため。
+FAQ_VERIFY_TIMEOUT_SECONDS = 120
+
+# =============================================================================
+# Stage 4 (verify_quality.py) 設定
+# =============================================================================
+# AIチャットに送信するテスト質問 (返信に企業名が含まれるか検証する)
+QUALITY_CHECK_CHAT_QUESTION = "御社の事業内容や強みについて教えてください。"
+
+# AIチャットの返信を待つタイムアウト (ミリ秒)
+QUALITY_CHECK_CHAT_TIMEOUT = 60000
+
+# 1社あたりの全体タイムアウト (ミリ秒) — 静的5項目 + AIチャット
+QUALITY_CHECK_TIMEOUT_PER_COMPANY = 120000
+
+# 品質チェック結果のスクリーンショット保存ディレクトリ
+QUALITY_SCREENSHOTS_DIR = SCREENSHOTS_DIR / "quality"
 
 # =============================================================================
 # ブラウザ設定

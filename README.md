@@ -8,14 +8,24 @@
 
 ## 0. このシステムでできること
 
-1. CSV に並べた企業名 1社ずつを Brainverse の管理画面に登録
-2. 企業 HP を Yahoo! 検索で自動特定（複数候補がある場合は人間判断に委ねる）
-3. HP の画像と内部リンクを自動取得し、コンテンツ生成（FAQ＋企業情報）に渡す
-4. 生成内容を 2 段階保存し、コンテンツ管理画面で**対象企業のデータか自動検証**
-5. 背景画像を自動アップロード
-6. 完成したフロントエンド公開URL（=**納品URL**）を CSV に書き戻し
+このシステムは **複数のフェーズ** に分かれています。1列(企業名のみ)のCSVから納品URLまで一気通貫で生成し、最後に自動品質チェックできます。
 
-> 注: 背景画像は Web アプリ側の反映遅延等により、納品URL上で即座に表示されない場合があります。**画像確認は手動チェックリストで担保**します。
+| フェーズ | 担当スクリプト | 入力 | 出力 |
+|---|---|---|---|
+| **Stage ① URL選定** | [select_urls.py](select_urls.py) | 企業名のみ / 企業名+URL のCSV | ホームページURL確定済の8列CSV |
+| **Stage ② デモ作成** | [orchestrator.py](orchestrator.py) | Stage ① 出力 CSV | 納品URL確定済CSV |
+| **Stage ③ 画像差替** *(構築中)* | `select_images.py` *(予定)* | 完了済企業 | 背景画像アップロード完了 |
+| **Stage ④ 品質チェック** | [verify_quality.py](verify_quality.py) | 完了済企業 (納品URL有) | CSV「品質チェック」列更新 + NG企業はエラーに戻す |
+
+**Stage ①** は企業名から HP URL を Yahoo! 検索で自動特定。複数候補が見つかった企業は **HOLD UI ポップアップ**で人間が選択。
+
+**Stage ②** は確定 URL を元に Brainverse 管理画面で企業追加〜FAQ生成〜保存〜納品URL取得。生成・保存検証が失敗したら最大3回まで自動再試行。
+
+**Stage ③** *(仕様策定中)*: Web画像検索3枚 + HPスクショ + 企業ロゴ の計5候補から人間が1枚選択→背景画像としてアップロード。
+
+**Stage ④** は納品URL を実機で開き、5項目 (HTTP / 企業名表示 / 背景画像 / FAQ / **AIチャット返信内容**) を自動チェック。NGなら status を「エラー」に戻し、Stage ② 再実行で自動修復。
+
+> 注: Stage ② 完了時点で納品URLは取得できます。Stage ③ の画像反映は別工程として運用してください。
 
 ---
 
@@ -88,53 +98,127 @@ python -m pytest tests/ -q
 
 ## 3. 日常運用フロー
 
-### 3-1. 初期 CSV の作成
+### 3-0. 全体の流れ
 
-[create_initial_csv.py](create_initial_csv.py) に企業名リストを書き、CSV を生成します。
-
-```powershell
-notepad create_initial_csv.py
+```
+  [入力CSV]
+   ├ 1列: 企業名のみ
+   ├ 2列: 企業名,ホームページURL
+   └ 8列: 既存フル
+        ↓
+  ┌────────────────────────────────┐
+  │ Stage ① select_urls.py         │  URL検索 → HOLD UI → URL確定
+  └────────────────────────────────┘
+        ↓ (data/company_list.csv は同じものを更新)
+  ┌────────────────────────────────┐
+  │ Stage ② orchestrator.py        │  企業追加→FAQ生成→保存→納品URL取得
+  └────────────────────────────────┘
+        ↓
+  ┌────────────────────────────────┐
+  │ Stage ③ (構築中)                │  背景画像5候補から1選択→アップロード
+  └────────────────────────────────┘
+        ↓
+  [納品URL付きCSV] → クライアント共有
 ```
 
-```python
-COMPANY_NAMES = [
-    "株式会社サンプル",
-    "テスト株式会社",
-    # ...
-]
+CSV は **同じファイル** (`data/company_list.csv` 等) を各ステージで更新していきます。
+
+### 3-1. 入力 CSV の準備
+
+**最小構成 (1列のみ)** — 企業名だけのCSVから始められます:
+
+```csv
+企業名
+株式会社サンプル
+テスト株式会社
 ```
 
-```powershell
-python create_initial_csv.py
+**2列構成** — URLが分かっている企業はそのまま入れておけば検索を省略:
+
+```csv
+企業名,ホームページURL
+株式会社サンプル,https://sample.co.jp
+テスト株式会社,
 ```
 
-→ `data/company_list.csv` が生成され、全企業のステータスは `未処理` になります。
+**既存スキーマ (8列)** も自動認識します。再実行時は前回の進捗を引き継ぎ。
 
-### 3-2. 自動化実行（基本）
-
-全件処理:
+初期CSVを企業名リストから一括生成したい場合:
 
 ```powershell
-python orchestrator.py --no-headless
+notepad create_initial_csv.py    # COMPANY_NAMES を編集
+python create_initial_csv.py     # data/company_list.csv を生成
 ```
 
-特定1社のみのテスト実行:
+---
+
+### 3-2. Stage ① — URL選定 (`select_urls.py`)
+
+**実行コマンド:**
 
 ```powershell
+# 標準実行 (HOLD があれば自動でUI起動)
+python select_urls.py --csv data/company_list.csv --no-headless
+
+# UIを起動したくない場合 (HOLD は CSV に記録のみ)
+python select_urls.py --csv data/company_list.csv --no-popup
+```
+
+**処理内容:**
+
+| 状態 | 検出条件 | 結果 |
+|---|---|---|
+| 自動採用 | 候補URLから抽出した企業IDが 1種類 (TLD違い等) | `URL特定済` + `ホームページURL` 自動入力 |
+| **HOLD** | 候補IDが 2種類以上 | `同名企業該当` + 全社処理後に **HOLD UIポップアップ起動** |
+| スキップ | 検索結果なし | `スキップ` + エラー詳細 |
+| 既済 | 既に `ホームページURL` が入っている | 何もしない (Stage ② の対象) |
+
+**HOLD UI の操作:**
+
+ポップアップで該当企業のURL候補が並びます。各候補は:
+- 「このURLを採用」ボタン → URLを確定
+- 「ブラウザで開く」ボタン → 候補ページをプレビュー
+- 「カスタムURL」欄 → 候補にない正しいURLを直接入力
+
+「終了して保存」でCSVに反映。
+
+> 後で再度 HOLD UI を開きたい場合: `python resolve_hold_ui.py --csv data/company_list.csv`
+
+---
+
+### 3-3. Stage ② — デモ作成 (`orchestrator.py`)
+
+**実行コマンド:**
+
+```powershell
+# 全件処理
+python orchestrator.py --csv data/company_list.csv --no-headless
+
+# 特定1社のテスト
 python orchestrator.py --test-mode --company "株式会社サンプル" --no-headless
+
+# 大量処理 (ヘッドレス)
+python orchestrator.py --csv data/company_list.csv --headless
 ```
 
-ヘッドレス（バックグラウンド・大量処理用）:
+**処理内容:**
 
-```powershell
-python orchestrator.py --headless
-```
+| Step | 内容 |
+|---|---|
+| 0 | `ホームページURL` 未入力行は自動スキップ (Stage ① 未完の企業を保護) |
+| 2 | Brainverse 管理画面に企業追加 → 企業ID検証 (Step 2.5) |
+| 3 | HP内部リンク + 求人サイトURLを収集 (FAQ生成の素材) |
+| 4 | コンテンツ生成 → FAQ実体検証 → 保存(2段階) → コンテンツ管理タブで再検証 |
+| 5 | フロントエンドアプリURL (= 納品URL) を取得し CSV に書戻し |
 
-> 1社あたり目安 **3〜4分**。147社で約7時間（過去実績）。
+**自動リトライ:**
+- Step 4 の生成失敗 / 保存検証失敗 (FAQ未生成・別企業データ混入) は **最大3回まで自動再生成** (`config.FAQ_SAVE_MAX_RETRIES`)
+- ボタン押下の取り違え (例: 「FAQ保存」ボタンが「プレビュー・保存」タブと誤判定) を防ぐため、AND/除外条件でボタン特定を厳格化
+- 1件処理ごとにページクローズ&再ログインで Streamlit セッション state を完全リセット
 
-### 3-3. 進捗の確認
+> 1社あたり目安 **3〜4分**。1社目はサーバキャッシュが冷えており追加で1〜2分かかることあり。
 
-実行中は次の3か所で進捗が分かります:
+**1社あたり目安と進捗確認:**
 
 | 確認場所 | 内容 |
 |---|---|
@@ -144,96 +228,135 @@ python orchestrator.py --headless
 
 ステータスの読み方:
 
-| ステータス | 意味 | 次にやること |
+| ステータス | 意味 | 担当ステージ |
 |---|---|---|
-| 未処理 | まだ何もしていない | 自動化実行で進む |
-| URL特定済 | HP URL を1件取得した | 自動的に Step 2 へ |
-| **同名企業該当** | 検索候補が複数あり、人が判断する必要 | **手動介入（後述 3-4）** |
-| 企業追加済 | Brainverse に企業を登録した | 自動的に Step 3 へ |
-| コンテンツ生成済 | FAQ・企業情報生成完了 | 自動的に Step 5 へ |
-| 画像UP済 | 背景画像アップロード完了 | 自動的に Step 6 へ |
-| 完了 | **納品URL 取得済（CSVの「納品URL」列を見る）** | 何もしなくてよい |
-| エラー | 何かしらの例外で停止 | エラー詳細列を読む、必要なら再実行 |
-| スキップ | HP URL が見つからなかった | 手動で URL を埋めて再実行 |
+| 未処理 | まだ何もしていない | Stage ① |
+| URL特定済 | HP URLを取得済 | Stage ② |
+| **同名企業該当** | 検索候補が複数あり手動判断待ち | Stage ① の HOLD UI |
+| 企業追加済 / コンテンツ生成済 / 画像UP済 | Stage ② の中間状態 | Stage ② (再開時に途中から続行) |
+| **完了** | **納品URL取得済** | (Stage ③ で画像も差し替えるとベター) |
+| エラー | 例外で停止 | エラー詳細列を読んで再実行 |
+| スキップ | URL候補なし | 手動でURLを入れて再実行 |
 
-### 3-4. 「同名企業該当」になったときの手動介入
+---
 
-検索結果に複数のドメインがあり、自動で判定できない場合に発生します。
+### 3-4. Stage ④ — 納品URL品質チェック (`verify_quality.py`)
 
-**対応手順:**
-
-1. 実行終了後、[data/company_list.csv](data/company_list.csv) を Excel または VS Code で開く
-2. 該当行を見つける（ステータス列が「同名企業該当」）
-3. `URL候補` 列を確認 — パイプ `|` 区切りで最大5件のURLが入っている
-
-   ```
-   https://akiyama-group.com|https://kei-ichiman.com|...|https://www.c-c-akiyama.com|...
-   ```
-
-4. 候補を実際にブラウザで開き、対象企業の公式サイトかどうか確認
-5. 正しい URL を `ホームページURL` 列に貼り付けて保存
-6. 再度 orchestrator.py を実行 — 自動で続きから再開
-
-> Excel で開いた場合は **保存して閉じてから** 再実行してください（Excel がファイルをロックします）。
-
-### 3-5. 納品物の納品先
-
-自動化完了後、[data/company_list.csv](data/company_list.csv) の各行 **「納品URL」列** に納品先が記録されます。
-
-```
-https://casual-interview-dev.brainverse-ai.com/<企業ID>
-```
-
-このURLをクライアントに渡してください。
-
-### 3-6. 品質検証チェックリストの生成
-
-納品物の手動検証用チェックリストを再生成:
+**実行コマンド:**
 
 ```powershell
-python generate_checklist.py
+# 全完了企業を再チェック (推奨)
+python verify_quality.py --csv data/company_list.csv --no-headless
+
+# 特定1社のみテスト
+python verify_quality.py --company "株式会社サンプル" --no-headless
+
+# 大量処理 (ヘッドレス)
+python verify_quality.py --csv data/company_list.csv --headless
 ```
 
-→ [verification_checklist.md](verification_checklist.md) が更新され、現在のCSVから「企業名／納品URL／背景画像／企業名一致／FAQ」の表が出力されます。
+**チェック内容 (5項目):**
 
-検証担当者は各 URL を開き、3つのチェック項目を埋めてください:
+| 項目 | 検証 |
+|---|---|
+| HTTP | 納品URLが 2xx で応答するか |
+| 企業名 | title / h1〜h3 / header に対象企業名 or 企業ID が表示されているか |
+| 背景画像 | 任意要素に `background-image` CSS または大きめ `<img>` (≥200×100) があるか |
+| FAQ | 本文に FAQ パターン (FAQ N / Q1: / 質問N / Q&A) + 対象企業名が同時にあるか |
+| **AIチャット** | チャット起動ボタンクリック → テスト質問送信 → **返信に対象企業名が含まれるか** |
 
+AIチャットの質問文は [config.py](config.py) `QUALITY_CHECK_CHAT_QUESTION` で変更可。
+
+**判定ロジック:**
+
+| 結果 | 条件 | 影響 |
+|---|---|---|
+| **OK** | 全項目OK | ステータス維持 (`完了`) |
+| **部分OK** | 一部 SKIP (Webアプリ側の制約で判定不能) | ステータス維持 |
+| **NG** | 1項目以上 NG | **ステータスを `エラー` に戻す** → 次回 Stage ② で自動再処理 |
+
+**出力:**
+- CSV「品質チェック」列: OK / NG / 部分OK
+- CSV「品質チェック詳細」列: `HTTP=OK / 企業名=OK / 背景画像=NG(...) / FAQ=OK / AIチャット=OK(...)`
+- `screenshots/quality/<企業ID>.png`: 検証時のスクリーンショット
+- 全件サマリは標準出力 + `logs/automation.log`
+
+**運用例 (品質保証ループ):**
+
+```pwsh
+python orchestrator.py --csv data/company_list.csv      # Stage 2: デモ作成
+python verify_quality.py --csv data/company_list.csv    # Stage 4: 品質チェック (NGをエラーに戻す)
+python orchestrator.py --csv data/company_list.csv      # Stage 2再実行: エラーになったものを再処理
+python verify_quality.py --csv data/company_list.csv    # Stage 4再実行: 再チェック
+# OK率が安定するまで繰り返し
+```
+
+---
+
+### 3-6. Stage ③ — 背景画像差替 *(構築中)*
+
+仕様策定中。完成すると以下のフローで使えるようになります:
+
+```powershell
+python select_images.py --csv data/company_list.csv  # ※未実装
+```
+
+**予定動作:**
+1. 完了済の各企業について、5候補画像を収集 (Web画像検索3 + HPスクショ1 + 企業ロゴ1)
+2. tkinter UI で5枚を並べて表示
+3. 人間が1枚選択 → 他4枚を削除 → 選択画像を `upload_background_image` で背景画像にアップロード
+
+現在は [verification_checklist.md](verification_checklist.md) を使って手動で背景画像をチェック・差替してください。
+
+---
+
+### 3-7. 補助スクリプト
+
+| スクリプト | 用途 |
+|---|---|
+| [resolve_hold_ui.py](resolve_hold_ui.py) | HOLD UI を手動起動 (Stage ① の `--no-popup` で後送り処理用) |
+| [generate_delivery_list.py](generate_delivery_list.py) | `企業名,納品URL` の 2列CSV を出力 (クライアント納品用) |
+| [generate_checklist.py](generate_checklist.py) | `verification_checklist.md` を再生成 (手動検証用) |
+| [verify_delivery.py](verify_delivery.py) | 納品URLの実機HTTPチェック |
+
+```powershell
+# クライアント納品用シンプルCSV
+python generate_delivery_list.py     # → data/delivery_urls.csv
+
+# 手動検証チェックリスト
+python generate_checklist.py         # → verification_checklist.md
+```
+
+検証担当者は各URLを開き、3つのチェック項目を埋めてください:
 - **背景画像**: アップロードした画像が表示されているか
 - **企業名一致**: ヘッダーの企業名が正しいか
-- **FAQ**: AI 面談を起動して FAQ が対象企業の内容か
-
-### 3-7. クライアント納品用シンプルCSVの生成
-
-「企業名」と「納品URL」だけの**2列CSV**を出力（クライアント共有用）:
-
-```powershell
-python generate_delivery_list.py
-```
-
-→ [data/delivery_urls.csv](data/delivery_urls.csv) が生成されます:
-
-```csv
-企業名,納品URL
-株式会社サンプル,https://casual-interview-dev.brainverse-ai.com/sample
-...
-```
+- **FAQ**: AI面談を起動して FAQ が対象企業の内容か
 
 ---
 
 ## 4. システムが自動でやっている品質検証
 
-`orchestrator.py` 実行中、以下4つのポイントで**自動的に**検証されます。失敗時はステータスが「エラー」または「同名企業該当」になり、人に知らせます。
+実行中、以下の検証ポイントで**自動的に**検証されます。失敗時はステータスが「エラー」または「同名企業該当」になり、人に知らせます。
 
+### Stage ① `select_urls.py` の検証
 | 検証ポイント | 内容 |
 |---|---|
-| Step 1.5 | 検索結果に複数候補ドメインがあれば人間判断に委ねる |
-| Step 2.5 | 企業追加直後、URL から抽出した企業 ID がページに反映されているか |
-| Step 4-pre | コンテンツ生成画面のヘッダーが対象企業に切替済か |
-| Step 4-post | コンテンツ管理画面で FAQ・企業情報の両タブが対象企業の内容か |
+| URL候補ID重複 | 検索結果から抽出した企業IDが2種類以上あれば HOLD UI で人間判断に委ねる |
+
+### Stage ② `orchestrator.py` の検証
+| 検証ポイント | 内容 | 失敗時の挙動 |
+|---|---|---|
+| Step 2.5 | 企業追加直後、URLから抽出した企業IDがページに反映されているか | 例外で停止 |
+| Step 4-pre | コンテンツ生成画面のヘッダーが対象企業に切替済か | 例外で停止 |
+| **Step 4-gen** | 生成完了検出後、FAQ実体 (FAQ N / Q1: パターン2件以上 + 対象企業名) が DOM 上に現れたか | **Step 4 から自動再試行** |
+| **Step 4-post** | コンテンツ管理タブのFAQ・企業情報両タブに対象企業データ + 実体テキストが存在するか | **Step 4 から自動再試行** |
+
+リトライ回数は `config.FAQ_SAVE_MAX_RETRIES = 2` (合計3回試行)。
 
 **安定化処理:**
-- 企業追加完了後（Step 2.5 後）に **ページを閉じて再ログイン** — ページ内キャッシュ／JavaScript状態が次の企業のコンテンツ生成に混入するのを防止
-- 1社処理完了後にもキャッシュクリア＋再ログイン — セッションを毎回フレッシュに保つ
+- ボタン特定は AND/除外条件の厳密マッチ (Playwright `.first` が DOM 順で「プレビュー・保存」タブを誤掴みしないように)
+- 生成完了待機は **最低15秒 + スピナー出現確認** (前回ページ残骸を「完了」と誤判定しないように)
+- 企業追加完了後 / 1社処理完了後に **ページクローズ&再ログイン** — Streamlit セッション state を完全リセット
 
 ---
 
@@ -257,14 +380,20 @@ python generate_delivery_list.py
 
 ```
 DOCdemo_update_project/
-├── orchestrator.py              # メインエントリーポイント（自動化フロー全体）
-├── config.py                    # 設定（URL・タイムアウト・CSV列名等）
+├── select_urls.py               # ★ Stage ① — URL選定 (検索→HOLD UI起動)
+├── orchestrator.py              # ★ Stage ② — デモ作成 (企業追加→FAQ生成→納品URL取得)
+├── verify_quality.py            # ★ Stage ④ — 納品URL品質チェック (5項目+AIチャット)
+├── resolve_hold_ui.py           #   HOLD UI (tkinter製、単体起動も可)
+│
+├── config.py                    # 設定（URL・タイムアウト・CSV列名・リトライ等）
 ├── models.py                    # CompanyInfo, ProcessStatus
-├── spreadsheet_manager.py       # CSV 読み書き
-├── url_finder.py                # Yahoo! 検索で URL 候補取得
-├── image_fetcher.py             # 企業HPのOGP画像取得
+├── spreadsheet_manager.py       # CSV 読み書き (1/2/8列入力 + null-safe)
+├── url_finder.py                # Yahoo! 検索で URL 候補取得 (Stage ①)
+├── recruit_url_finder.py        # 求人サイトURL収集 (Stage ② Step 3)
+├── image_fetcher.py             # 企業HPのOGP画像・スクショ取得
 ├── link_extractor.py            # 内部リンク抽出
 ├── web_app_operator.py          # Playwright で Brainverse 管理画面操作
+│
 ├── create_initial_csv.py        # 初期 CSV 生成スクリプト
 ├── generate_checklist.py        # 検証チェックリスト生成
 ├── generate_delivery_list.py    # クライアント納品用シンプルCSV生成
@@ -273,6 +402,7 @@ DOCdemo_update_project/
 │   ├── company_list.csv         # ★ 企業リスト・進捗台帳・納品URL（フル列）
 │   └── delivery_urls.csv        # ★ 企業名 + 納品URL のみ（納品用シンプル版）
 ├── screenshots/                 # HP画像・検証スクショ・エラースクショ
+│   └── quality/                 # Stage ④ 品質チェック時の納品URLスクショ
 ├── logs/
 │   └── automation.log           # 実行ログ（追記式）
 ├── tests/                       # ユニットテスト
@@ -304,4 +434,4 @@ DOCdemo_update_project/
 
 ---
 
-最終更新: 2026-05-11
+最終更新: 2026-05-13 (3-Stage アーキテクチャに再構成)

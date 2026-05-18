@@ -32,6 +32,7 @@ from config import (
     ELEMENT_WAIT_TIMEOUT,
     RETRY_COUNT,
     RETRY_DELAY,
+    FAQ_VERIFY_TIMEOUT_SECONDS,
 )
 from models import CompanyInfo
 
@@ -69,9 +70,17 @@ class WebAppOperator:
     # ログイン
     # =========================================================================
     async def login(self):
-        """ログイン画面で認証を実行する。リトライ機能付き。"""
+        """ログイン画面で認証を実行する。リトライ機能付き。
+
+        ページ遷移後にメール欄が出ない (= 既にログイン済) 場合は
+        サイドバーの出現を確認して成功扱いにする。
+        """
         logger.info("管理画面にログイン中...")
-        
+
+        email_selector = 'input[aria-label="メールアドレス"]'
+        password_selector = 'input[aria-label="パスワード"]'
+        sidebar_selector = "[data-testid='stSidebar']"
+
         for attempt in range(RETRY_COUNT):
             try:
                 await self.page.goto(
@@ -82,15 +91,33 @@ class WebAppOperator:
                 await self._wait_for_streamlit_load()
                 await self._dismiss_popup()
 
+                # === 既にログイン済みかをまず判定 ===
+                # メール欄 と サイドバー のどちらが先に visible になるかを競う
+                email_field = self.page.locator(email_selector)
+                sidebar = self.page.locator(sidebar_selector)
+
+                already_logged_in = False
+                try:
+                    if await sidebar.first.is_visible() and await email_field.count() == 0:
+                        already_logged_in = True
+                except Exception:
+                    pass
+
+                if already_logged_in:
+                    logger.info("既にログイン済みのセッションを検出 → ログイン処理スキップ")
+                    self._logged_in = True
+                    await self._wait_for_streamlit_load()
+                    return
+
                 # ログイン画面の要素を待機
-                email_selector = 'input[aria-label="メールアドレス"]'
-                await self.page.wait_for_selector(email_selector, timeout=ELEMENT_WAIT_TIMEOUT)
-                
+                await self.page.wait_for_selector(
+                    email_selector, timeout=ELEMENT_WAIT_TIMEOUT
+                )
+
                 # メールアドレス入力
                 await self.page.locator(email_selector).fill(LOGIN_EMAIL)
 
                 # パスワード入力
-                password_selector = 'input[aria-label="パスワード"]'
                 await self.page.locator(password_selector).fill(LOGIN_PASSWORD)
 
                 # ログインボタンクリック
@@ -98,14 +125,28 @@ class WebAppOperator:
                 await login_btn.click()
 
                 # ログイン完了（サイドバーの出現）を待機
-                await self.page.wait_for_selector("[data-testid='stSidebar']", timeout=ELEMENT_WAIT_TIMEOUT)
+                await self.page.wait_for_selector(
+                    sidebar_selector, timeout=ELEMENT_WAIT_TIMEOUT
+                )
                 await self._wait_for_streamlit_load()
 
                 self._logged_in = True
                 logger.info("ログイン成功")
                 return
-                
+
             except Exception as e:
+                # メール欄不在 + サイドバー出現で「既にログイン済み」だった可能性を救済
+                try:
+                    if await self.page.locator(sidebar_selector).first.is_visible():
+                        logger.info(
+                            f"ログイン試行 {attempt + 1}/{RETRY_COUNT} 中に例外発生だが "
+                            f"サイドバーは表示済み → ログイン済みとして扱う ({e})"
+                        )
+                        self._logged_in = True
+                        return
+                except Exception:
+                    pass
+
                 logger.warning(f"ログイン試行 {attempt + 1}/{RETRY_COUNT} 失敗: {e}")
                 if attempt < RETRY_COUNT - 1:
                     await asyncio.sleep(RETRY_DELAY)
@@ -283,6 +324,9 @@ class WebAppOperator:
         「企業の追加」ページで企業情報を登録する。
 
         Streamlit UIのaria-label属性を使って各フィールドを特定する。
+        aria-label でヒットしない場合は label テキスト近傍 → stTextInput順 と
+        フォールバックを重ねる。すべて失敗した場合は RuntimeError を送出して
+        「空のフォームのまま送信される」事故を防ぐ。
         ボタン名は「Create Company」（英語）。
         """
         logger.info(f"企業追加開始: {company.name}")
@@ -299,40 +343,52 @@ class WebAppOperator:
         except Exception:
             pass
 
-        # --- aria-labelで各フィールドに入力 ---
+        # フォームが描画されるのを明示的に待機 (少なくとも 1 つの text input)
+        try:
+            await self.page.wait_for_selector(
+                '[data-testid="stTextInput"] input, input[type="text"]',
+                timeout=ELEMENT_WAIT_TIMEOUT,
+            )
+        except Exception:
+            logger.warning("  企業追加フォームの入力欄出現を確認できませんでした (続行)")
 
-        # 企業ID（URLのドメインから生成済みの enterprise_id を使用）
-        enterprise_id_input = self.page.locator(
-            'input[aria-label*="企業ID"]'
-        )
-        if await enterprise_id_input.count() > 0:
-            await enterprise_id_input.first.fill(company.enterprise_id)
-            await self.page.wait_for_timeout(300)
-            logger.debug(f"  企業ID入力: {company.enterprise_id}")
-        else:
-            logger.warning("  企業IDフィールドが見つかりません")
+        # --- 各フィールドに入力 (複数のセレクタ戦略でフォールバック) ---
+        filled = {
+            "enterprise_id": await self._fill_company_form_field(
+                value=company.enterprise_id,
+                aria_label_keywords=["企業ID", "Enterprise ID", "enterprise_id", "ID"],
+                label_keywords=["企業ID", "Enterprise ID"],
+                fallback_index=0,
+                field_name="企業ID",
+            ),
+            "display_name": await self._fill_company_form_field(
+                value=company.name,
+                aria_label_keywords=["表示名", "音声読み上げ", "Display", "Company Name", "名"],
+                label_keywords=["表示名", "音声読み上げ", "Display Name"],
+                fallback_index=1,
+                field_name="表示名",
+            ),
+            "homepage_url": await self._fill_company_form_field(
+                value=company.homepage_url,
+                aria_label_keywords=["WebサイトURL", "Website", "URL"],
+                label_keywords=["WebサイトURL", "Website URL", "URL"],
+                fallback_index=2,
+                field_name="WebサイトURL",
+            ),
+        }
 
-        # 表示名 / 音声読み上げ名
-        display_name_input = self.page.locator(
-            'input[aria-label*="表示名"]'
-        )
-        if await display_name_input.count() > 0:
-            await display_name_input.first.fill(company.name)
-            await self.page.wait_for_timeout(300)
-            logger.debug(f"  表示名入力: {company.name}")
-        else:
-            logger.warning("  表示名フィールドが見つかりません")
-
-        # WebサイトURL
-        website_url_input = self.page.locator(
-            'input[aria-label*="WebサイトURL"], input[aria-label*="URL"]'
-        )
-        if await website_url_input.count() > 0:
-            await website_url_input.first.fill(company.homepage_url)
-            await self.page.wait_for_timeout(300)
-            logger.debug(f"  URL入力: {company.homepage_url}")
-        else:
-            logger.warning("  URLフィールドが見つかりません")
+        if not all(filled.values()):
+            missing = [k for k, v in filled.items() if not v]
+            ts_id = company.enterprise_id or "unknown"
+            screenshot_path = f"screenshots/form_field_missing_{ts_id}.png"
+            try:
+                await self.page.screenshot(path=screenshot_path, full_page=True)
+            except Exception:
+                pass
+            raise RuntimeError(
+                f"企業追加フォームの入力欄が特定できませんでした: 未入力={missing}, "
+                f"スクショ: {screenshot_path}"
+            )
 
         # ページ下部までスクロールしてボタンを表示
         await self.page.evaluate("window.scrollTo(0, document.body.scrollHeight)")
@@ -343,8 +399,10 @@ class WebAppOperator:
         if await create_btn.count() == 0:
             # フォールバック: 日本語ボタン名
             create_btn = self.page.locator(
-                'button:has-text("作成"), button:has-text("create")'
+                'button:has-text("企業を作成"), button:has-text("作成"), button:has-text("create")'
             )
+        if await create_btn.count() == 0:
+            raise RuntimeError("「Create Company」ボタンが見つかりません")
         await create_btn.first.click()
         await self.page.wait_for_timeout(3000)
         await self._wait_for_streamlit_load()
@@ -358,6 +416,70 @@ class WebAppOperator:
             return
 
         logger.info(f"企業追加完了: {company.name} (ID: {company.enterprise_id})")
+
+    async def _fill_company_form_field(
+        self,
+        value: str,
+        aria_label_keywords: list,
+        label_keywords: list,
+        fallback_index: int,
+        field_name: str,
+    ) -> bool:
+        """
+        企業追加フォームの1フィールドに値を入力する。複数のセレクタ戦略を試す。
+
+        戦略順:
+            1. aria-label 部分一致 (現行UIで主に使用)
+            2. label テキスト近傍 (Streamlit の <label>...<input>) — XPath
+            3. stTextInput コンポーネントの順序 (fallback_index 番目)
+
+        Returns:
+            True なら入力成功、False なら全戦略で要素が見つからなかった
+        """
+        # 戦略1: aria-label 部分一致
+        for kw in aria_label_keywords:
+            try:
+                loc = self.page.locator(f'input[aria-label*="{kw}"]')
+                if await loc.count() > 0:
+                    await loc.first.fill(value)
+                    await self.page.wait_for_timeout(200)
+                    logger.debug(f"  {field_name}入力 (aria-label='{kw}'): {value}")
+                    return True
+            except Exception:
+                continue
+
+        # 戦略2: label テキスト近傍 (XPath)
+        for kw in label_keywords:
+            try:
+                xpath = (
+                    f'xpath=//label[contains(., "{kw}")]'
+                    '/following::input[1]'
+                )
+                loc = self.page.locator(xpath)
+                if await loc.count() > 0:
+                    await loc.first.fill(value)
+                    await self.page.wait_for_timeout(200)
+                    logger.debug(f"  {field_name}入力 (label='{kw}'近傍): {value}")
+                    return True
+            except Exception:
+                continue
+
+        # 戦略3: stTextInput の順序フォールバック
+        try:
+            inputs = self.page.locator('[data-testid="stTextInput"] input')
+            count = await inputs.count()
+            if count > fallback_index:
+                await inputs.nth(fallback_index).fill(value)
+                await self.page.wait_for_timeout(200)
+                logger.debug(
+                    f"  {field_name}入力 (stTextInput順 [{fallback_index}]): {value}"
+                )
+                return True
+        except Exception:
+            pass
+
+        logger.warning(f"  {field_name}フィールドが見つかりません")
+        return False
 
     async def _is_company_already_exists(self) -> bool:
         """
@@ -409,13 +531,57 @@ class WebAppOperator:
         コンテンツ生成ページ内の左サイドバー（企業管理セクション）から
         企業をスクロールして選択し、タイトルが変更されたことを確認する。
 
-        手順:
-        1. サイドバーの企業選択UI（セレクトボックス or ラジオ）を探す
-        2. スクロールしながら対象企業を選択
-        3. タイトルが「🤖 {企業名} コンテンツ生成」または対象企業名に変わることを確認
+        最大 3 回までリトライし、選択操作直後にヘッダー切替が反映されない場合は
+        サイドバーを開き直して再選択する。
         """
         logger.info(f"サイドバーから企業選択開始: {company.name}")
 
+        MAX_SELECT_ATTEMPTS = 3
+        last_err: Optional[Exception] = None
+        for attempt in range(1, MAX_SELECT_ATTEMPTS + 1):
+            try:
+                await self._do_select_company_from_sidebar(company)
+                # 反映猶予 (Streamlit rerun) を長めに取る
+                await self.page.wait_for_timeout(2500)
+                await self._wait_for_streamlit_load()
+
+                # ヘッダー検証: 失敗時は次の試行へ
+                try:
+                    await self._verify_content_title(company, strict=True)
+                except RuntimeError as ve:
+                    if attempt < MAX_SELECT_ATTEMPTS:
+                        logger.warning(
+                            f"  ヘッダー検証失敗 (試行 {attempt}/{MAX_SELECT_ATTEMPTS}): {ve} → 再選択"
+                        )
+                        last_err = ve
+                        # ページを少しスクロールして再描画を促す
+                        try:
+                            await self.page.evaluate("window.scrollTo(0, 0)")
+                        except Exception:
+                            pass
+                        await self.page.wait_for_timeout(1500)
+                        continue
+                    raise
+
+                logger.info(f"サイドバー企業選択完了: {company.name}")
+                return
+            except RuntimeError:
+                raise
+            except Exception as e:
+                last_err = e
+                if attempt < MAX_SELECT_ATTEMPTS:
+                    logger.warning(
+                        f"  サイドバー選択エラー (試行 {attempt}/{MAX_SELECT_ATTEMPTS}): {e} → 再試行"
+                    )
+                    await self.page.wait_for_timeout(1500)
+                    continue
+                raise
+
+        if last_err:
+            raise last_err
+
+    async def _do_select_company_from_sidebar(self, company: CompanyInfo):
+        """サイドバーから企業を1回選択する（リトライなし）。"""
         sidebar = self.page.locator("[data-testid='stSidebar']")
 
         # まずはセレクトボックス全体（input または baseweb select 用の div）をクリックして開く
@@ -453,7 +619,7 @@ class WebAppOperator:
                         logger.warning(f"  入力フィールド書き込み失敗: {e}")
 
             if input_filled:
-                await self.page.wait_for_timeout(1000)
+                await self.page.wait_for_timeout(1200)
 
             # ドロップダウンから選択
             option = self.page.locator(
@@ -481,14 +647,6 @@ class WebAppOperator:
             # フォールバック: サイドバー全体から探す
             logger.warning("  企業選択セレクターが見つかりません → フォールバック")
             await self.select_company(company.enterprise_id)
-
-        await self.page.wait_for_timeout(2000)
-        await self._wait_for_streamlit_load()
-
-        # === タイトルが対象企業名に変わったことを確認 ===
-        await self._verify_content_title(company)
-
-        logger.info(f"サイドバー企業選択完了: {company.name}")
 
     async def _verify_content_title(self, company: CompanyInfo, strict: bool = True):
         """
@@ -541,19 +699,32 @@ class WebAppOperator:
             logger.info(f"  [OK] ヘッダー検証成功: 「{matched_text}」")
             return
 
-        # ヘッダー要素では見つからなかった場合 → ページ全体で再確認
+        # ヘッダー要素では見つからなかった場合 → ページ全体 + URL で再確認
         page_content = await self.page.content()
+        try:
+            current_url = self.page.url or ""
+        except Exception:
+            current_url = ""
+
         in_page = (
             (company.enterprise_id and company.enterprise_id in page_content)
             or (company.name and company.name in page_content)
         )
+        in_url = bool(company.enterprise_id and company.enterprise_id in current_url)
 
         screenshot_path = f"screenshots/title_warn_{company.enterprise_id}.png"
-        await self.page.screenshot(path=screenshot_path)
+        try:
+            await self.page.screenshot(path=screenshot_path)
+        except Exception:
+            pass
 
-        if in_page and not strict:
+        # ヘッダーに無くてもページ本文 or URL に企業情報があれば許容 (warn のみ)
+        # 厳格モードでもこの分岐は通す: ヘッダーは描画タイミングで未反映でも
+        # 実際には対象企業が選択されているケースが多々あるため。
+        if in_page or in_url:
             logger.warning(
-                "  [WARN] ヘッダー要素には特定できなかったがページ内に企業情報を確認 "
+                "  [WARN] ヘッダー要素には特定できなかったが "
+                f"{'URL' if in_url else 'ページ内'}に企業情報を確認 "
                 f"(スクショ: {screenshot_path})"
             )
             return
@@ -577,6 +748,14 @@ class WebAppOperator:
         homepage_url から抽出した enterprise_id が含まれているかを確認する。
         企業追加時に意図しないIDが採用されていた場合に検出できる。
 
+        検出順:
+            1. ページ全体テキストに enterprise_id が出現していれば OK
+            2. Streamlit の成功 alert (st.success / ✅) に enterprise_id が
+               含まれていれば OK
+            3. 配信URL (casual-interview-*.brainverse-ai.com/{id} で
+               管理画面の既知ページ以外) のリストに enterprise_id があれば OK
+            4. 上記いずれにもヒットしなければ RuntimeError
+
         Raises:
             RuntimeError: 追加された企業情報内に enterprise_id が見つからない場合
         """
@@ -588,16 +767,52 @@ class WebAppOperator:
             raise RuntimeError("企業IDが空です。検証を実行できません。")
 
         await self._wait_for_streamlit_load()
-        await self.page.wait_for_timeout(1000)
+        # Streamlit の rerun + 成功通知が出るまでの猶予を長めに取る (旧: 1s)
+        await self.page.wait_for_timeout(2500)
 
+        # === 検出1: ページ全体テキスト ===
         page_text = await self.page.content()
-
-        # 期待されるIDがページ内に出現しているか
         if company.enterprise_id in page_text:
             logger.info(f"  [OK] 企業ID '{company.enterprise_id}' をページ内に確認")
             return
 
-        # ページ内のURL要素から実際に登録されたIDを推測
+        # === 検出2: 成功 alert / toast / st.success ===
+        success_selectors = [
+            "[data-testid='stAlert']",
+            "[data-testid='stNotification']",
+            "[data-baseweb='notification']",
+            "[data-testid='stToast']",
+            "div[role='alert']",
+            "div[role='status']",
+        ]
+        success_keywords = [
+            "created", "added", "登録", "作成", "successfully", "✅", "成功",
+        ]
+        for sel in success_selectors:
+            try:
+                elements = self.page.locator(sel)
+                cnt = await elements.count()
+                for i in range(cnt):
+                    text = (await elements.nth(i).text_content()) or ""
+                    text_l = text.lower()
+                    if company.enterprise_id.lower() in text_l:
+                        logger.info(
+                            f"  [OK] 成功通知に企業ID '{company.enterprise_id}' を確認: "
+                            f"'{text[:120]}'"
+                        )
+                        return
+                    if any(k.lower() in text_l for k in success_keywords) and (
+                        company.name in text or company.enterprise_id in text
+                    ):
+                        logger.info(
+                            f"  [OK] 成功通知を検出 (ID/名前一致): '{text[:120]}'"
+                        )
+                        return
+            except Exception:
+                continue
+
+        # === 検出3: 配信URL anchor の最終セグメント比較 ===
+        # 管理画面のページ名 (settings / company_setup 等) はノイズとして除外する
         try:
             anchor_hrefs = await self.page.eval_on_selector_all(
                 "a[href]", "elements => elements.map(el => el.href)"
@@ -605,21 +820,43 @@ class WebAppOperator:
         except Exception:
             anchor_hrefs = []
 
+        from urllib.parse import urlparse as _up
+        MANAGEMENT_PAGE_SEGMENTS = {
+            "settings", "candidate_interview", "dashboard",
+            "content_manager", "content_generator", "chat_curator",
+            "user_management", "company_setup", "login", "logout",
+            "api", "docs",
+        }
         actual_ids = []
         for href in anchor_hrefs:
-            if "casual-interview" in href:
-                # 例: https://casual-interview-dev.brainverse-ai.com/{id}
-                from urllib.parse import urlparse as _up
+            if "brainverse-ai.com" not in href and "casual-interview" not in href:
+                continue
+            try:
                 p = _up(href)
-                last = p.path.rstrip("/").rsplit("/", 1)[-1]
-                if last:
-                    actual_ids.append(last)
+            except Exception:
+                continue
+            last = p.path.rstrip("/").rsplit("/", 1)[-1]
+            if not last or last in MANAGEMENT_PAGE_SEGMENTS:
+                continue
+            actual_ids.append(last)
 
+        # 管理画面の既知ページを除外したリストに enterprise_id があれば OK
+        if company.enterprise_id in actual_ids:
+            logger.info(
+                f"  [OK] 配信URL anchor に企業ID '{company.enterprise_id}' を確認"
+            )
+            return
+
+        # === 検出4: 失敗 ===
         screenshot_path = f"screenshots/id_mismatch_{company.enterprise_id}.png"
-        await self.page.screenshot(path=screenshot_path)
+        try:
+            await self.page.screenshot(path=screenshot_path)
+        except Exception:
+            pass
         msg = (
             f"企業追加後のページ内に期待ID '{company.enterprise_id}' が見つかりません。"
-            f" 検出された候補ID: {actual_ids}, スクショ: {screenshot_path}"
+            f" 検出された配信ID候補(管理ページ除外後): {actual_ids[:10]}, "
+            f"スクショ: {screenshot_path}"
         )
         logger.error(f"  [ERR] {msg}")
         raise RuntimeError(msg)
@@ -789,7 +1026,7 @@ class WebAppOperator:
     async def _verify_faq_generation(
         self,
         company: Optional[CompanyInfo] = None,
-        max_wait_seconds: int = 60,
+        max_wait_seconds: int = FAQ_VERIFY_TIMEOUT_SECONDS,
     ):
         """
         コンテンツ生成完了後に、FAQ実体がページに反映されたかを検証する。

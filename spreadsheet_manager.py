@@ -215,6 +215,8 @@ class SpreadsheetManager:
                     status=status,
                     error_message=_safe(row, col["error_message"]),
                     screenshot_path=_safe(row, col["screenshot_path"]),
+                    quality_check=_safe(row, col["quality_check"]),
+                    quality_detail=_safe(row, col["quality_detail"]),
                 )
                 companies.append(company)
 
@@ -246,6 +248,8 @@ class SpreadsheetManager:
                     col["frontend_url"]: company.frontend_app_url,
                     col["status"]: company.status.value,
                     col["error_message"]: company.error_message,
+                    col["quality_check"]: company.quality_check,
+                    col["quality_detail"]: company.quality_detail,
                     col["screenshot_path"]: company.screenshot_path,
                 })
 
@@ -267,6 +271,36 @@ class SpreadsheetManager:
 
         self.save_company_list(companies)
         logger.debug(f"企業情報更新: {company.name} → {company.status.value}")
+
+    def get_completed_companies(
+        self,
+        companies: List[CompanyInfo],
+        require_delivery_url: bool = True,
+    ) -> List[CompanyInfo]:
+        """
+        ステータス「完了」の企業を返す (Stage 4 verify_quality.py 用)。
+
+        Args:
+            companies: 全企業リスト
+            require_delivery_url: True なら納品URL が空の行を除外。
+                Stage 4 は納品URL を実機で開いて検証するので、URL がなければ
+                検証しようがない。デフォルト True。
+        """
+        completed = [
+            c for c in companies if c.status == ProcessStatus.COMPLETED
+        ]
+        if require_delivery_url:
+            before = len(completed)
+            completed = [c for c in completed if c.frontend_app_url]
+            skipped = before - len(completed)
+            if skipped:
+                logger.info(
+                    f"  Stage 4 フィルタ: 納品URL未確定の {skipped}社 をスキップ"
+                )
+        logger.info(
+            f"品質チェック対象企業: {len(completed)}社 / 全{len(companies)}社"
+        )
+        return completed
 
     def get_pending_companies(
         self,
