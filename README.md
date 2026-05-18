@@ -152,9 +152,34 @@ python create_initial_csv.py     # data/company_list.csv を生成
 
 ---
 
-### 3-2. Stage ① — URL選定 (`select_urls.py`)
+### 3-2. 自動化実行（基本）
 
-**実行コマンド:**
+本システムは **2段階構成** になりました（2026-05 以降）。
+
+| 段階 | スクリプト | 役割 |
+|---|---|---|
+| **Stage 1** | `python select_urls.py` | 各企業のホームページURLを Yahoo!検索で候補抽出し、CSV の `URL候補` 列に書き込む。複数候補があれば自動で `resolve_hold_ui.py`（GUI）を起動して人間に選ばせる |
+| **Stage 2** | `python orchestrator.py` | URL確定済の行だけを対象に「企業追加〜コンテンツ生成〜納品URL取得」を実行 |
+
+**実行順序:**
+
+```powershell
+# 1. URL選定（候補検索 + HOLD UIで人間判断）
+python select_urls.py --no-headless
+
+# 2. デモ作成自動化
+python orchestrator.py --no-headless
+```
+
+Stage 1 で `URL候補` が複数（=同名企業該当）になった行は自動的に `resolve_hold_ui.py` の GUI が立ち上がり、候補ボタンから正解URLを選ぶか、カスタムURLを入力して採用します。GUIを後から再開したいときは:
+
+```powershell
+python resolve_hold_ui.py
+```
+
+> **注意**: `resolve_hold_ui.py` を `select_urls.py` 実行前に起動すると「先に Stage 1 を実行してください」と表示されます。必ず `select_urls.py` を先に走らせてください。
+
+特定1社のみのテスト実行（Stage 2 のみ）:
 
 ```powershell
 # 標準実行 (HOLD があれば自動でUI起動)
@@ -205,7 +230,7 @@ python orchestrator.py --csv data/company_list.csv --headless
 
 | Step | 内容 |
 |---|---|
-| 0 | `ホームページURL` 未入力行は自動スキップ (Stage ① 未完の企業を保護) |
+| 0 | `ホームページURL` 未入力行は自動スキップ (Stage 1 未完の企業を保護) |
 | 2 | Brainverse 管理画面に企業追加 → 企業ID検証 (Step 2.5) |
 | 3 | HP内部リンク + 求人サイトURLを収集 (FAQ生成の素材) |
 | 4 | コンテンツ生成 → FAQ実体検証 → 保存(2段階) → コンテンツ管理タブで再検証 |
@@ -215,6 +240,15 @@ python orchestrator.py --csv data/company_list.csv --headless
 - Step 4 の生成失敗 / 保存検証失敗 (FAQ未生成・別企業データ混入) は **最大3回まで自動再生成** (`config.FAQ_SAVE_MAX_RETRIES`)
 - ボタン押下の取り違え (例: 「FAQ保存」ボタンが「プレビュー・保存」タブと誤判定) を防ぐため、AND/除外条件でボタン特定を厳格化
 - 1件処理ごとにページクローズ&再ログインで Streamlit セッション state を完全リセット
+
+**大量処理（ヘッドレス）:**
+
+```powershell
+python select_urls.py --headless
+python orchestrator.py --headless
+```
+
+> 1社あたり Stage 1 で約 **5秒**、Stage 2 で **3〜4分**。147社で Stage 2 が約7時間（過去実績）。
 
 > 1社あたり目安 **3〜4分**。1社目はサーバキャッシュが冷えており追加で1〜2分かかることあり。
 
@@ -241,6 +275,38 @@ python orchestrator.py --csv data/company_list.csv --headless
 ---
 
 ### 3-4. Stage ④ — 納品URL品質チェック (`verify_quality.py`)
+
+**推奨フロー（GUIで一括処理）:**
+
+`select_urls.py` 実行後に HOLD 行が 1社以上あれば、`resolve_hold_ui.py`（tkinter製GUI）が自動で立ち上がります。各企業について
+
+- 候補URL横の「このURLを採用」ボタンで採用
+- 「ブラウザで開く」で候補を実機確認
+- 候補にない場合は下部の「カスタムURL」欄に貼り付け→「このURLを採用」
+
+を選ぶと CSV にその場で書き戻され、次の HOLD 企業に進みます。完了後に `python orchestrator.py` を実行するだけで Stage 2 に進めます。
+
+**従来通り CSV を直接編集する方法（GUIを使わない場合）:**
+
+1. `python select_urls.py --no-popup` で HOLD UI を起動せず CSV だけ更新
+2. [data/company_list.csv](data/company_list.csv) を Excel または VS Code で開く
+3. 該当行を見つける（ステータス列が「同名企業該当」）
+4. `URL候補` 列のパイプ `|` 区切りURLから正解を選び、`ホームページURL` 列に貼り付けて保存
+5. `python orchestrator.py` を実行
+
+> Excel で開いた場合は **保存して閉じてから** 再実行してください（Excel がファイルをロックします）。
+
+### 3-3. 納品物の納品先
+
+自動化完了後、[data/company_list.csv](data/company_list.csv) の各行 **「納品URL」列** に納品先が記録されます。
+
+```
+https://casual-interview-dev.brainverse-ai.com/<企業ID>
+```
+
+このURLをクライアントに渡してください。
+
+### 3-4. Stage 4 — 納品URL品質チェック (`verify_quality.py`)
 
 **実行コマンド:**
 
@@ -380,10 +446,10 @@ python generate_checklist.py         # → verification_checklist.md
 
 ```
 DOCdemo_update_project/
-├── select_urls.py               # ★ Stage ① — URL選定 (検索→HOLD UI起動)
-├── orchestrator.py              # ★ Stage ② — デモ作成 (企業追加→FAQ生成→納品URL取得)
-├── verify_quality.py            # ★ Stage ④ — 納品URL品質チェック (5項目+AIチャット)
-├── resolve_hold_ui.py           #   HOLD UI (tkinter製、単体起動も可)
+├── select_urls.py               # ★ Stage 1: URL候補検索 (Stage 1 のエントリポイント)
+├── resolve_hold_ui.py           # ★ Stage 1: HOLD候補のGUI選定 (Stage 1 から自動起動)
+├── orchestrator.py              # ★ Stage 2: 企業追加〜納品URL取得 (Stage 2 のエントリポイント)
+├── verify_quality.py            # ★ Stage 4: 納品URL品質チェック (5項目+AIチャット)
 │
 ├── config.py                    # 設定（URL・タイムアウト・CSV列名・リトライ等）
 ├── models.py                    # CompanyInfo, ProcessStatus
@@ -434,4 +500,4 @@ DOCdemo_update_project/
 
 ---
 
-最終更新: 2026-05-13 (3-Stage アーキテクチャに再構成)
+最終更新: 2026-05-18 — 2段階構成および品質チェック追加

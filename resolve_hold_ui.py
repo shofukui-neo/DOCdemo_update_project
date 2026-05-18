@@ -72,6 +72,11 @@ class HoldResolverApp:
             == ProcessStatus.DUPLICATE_DETECTED.value
             and not (r.get(self.col["homepage_url"]) or "").strip()
         ]
+        # CSV が完全未処理 (ステータス列が全行空欄) なら Stage 1 未実行と判定
+        self.unprocessed = all(
+            not (r.get(self.col["status"]) or "").strip()
+            for r in self.all_rows
+        ) and len(self.all_rows) > 0
         self.current_pos = 0  # hold_indices内の位置
         self.resolved_count = 0
         self.skipped_count = 0
@@ -197,12 +202,31 @@ class HoldResolverApp:
 
     def _show_empty(self):
         self._clear_buttons()
-        self.title_label.config(text="HOLD中の企業はありません")
-        self.progress_label.config(text="")
-        ttk.Label(
-            self.buttons_frame,
-            text="✓ すべての企業が処理済または未HOLD状態です。",
-        ).pack(pady=20)
+        if self.unprocessed:
+            # CSV がまだ Stage 1 (URL候補検索) を通っていない
+            self.title_label.config(text="先に Stage 1 (URL候補検索) を実行してください")
+            self.progress_label.config(
+                text=f"対象CSV: {self.csv_path} (全 {len(self.all_rows)} 行が未処理)"
+            )
+            ttk.Label(
+                self.buttons_frame,
+                text=(
+                    "このCSVはまだ URL検索 (Stage 1) が走っていないため、\n"
+                    "HOLD候補が CSV 上に存在しません。\n\n"
+                    "次のコマンドを先に実行してください:\n"
+                    "    python select_urls.py\n\n"
+                    "(Stage 1 完了後、HOLDがあれば自動でこのUIが再起動します)"
+                ),
+                foreground="#a0522d",
+                justify="left",
+            ).pack(pady=20, padx=12, anchor="w")
+        else:
+            self.title_label.config(text="HOLD中の企業はありません")
+            self.progress_label.config(text="")
+            ttk.Label(
+                self.buttons_frame,
+                text="✓ すべての企業が処理済または未HOLD状態です。",
+            ).pack(pady=20)
         self.custom_entry.config(state="disabled")
         self.custom_btn.config(state="disabled")
         self.skip_btn.config(state="disabled")
