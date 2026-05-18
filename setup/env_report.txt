@@ -1,38 +1,38 @@
 ﻿
 ========== 基本ツールのインストール状況 ==========
-[ OK ] Git                            git version 2.53.0.windows.2
-[ OK ] Python (python)                Python 3.11.9
-[ OK ]   └ 実体パス                       C:\Users\NC00018174\AppData\Local\Programs\Python\Python311\python.exe
-[ OK ] pip                            pip 24.0 from C:\Users\NC00018174\AppData\Local\Programs\Python\Python311\Lib\site-packages\pip (python 3.11)
-[ OK ] VSCode (code)                  v1.119.0
-[ OK ] Node.js                        v25.9.0
+[ OK ] Git                            git version 2.54.0.windows.1
+[ OK ] Python (python)                Python 3.15.0b1
+[ OK ]   └ 実体パス                       C:\Users\NC00016149\AppData\Local\Programs\Python\Python315\python.exe
+[ OK ] pip                            pip 26.1.1 from C:\Users\NC00016149\AppData\Local\Programs\Python\Python315\Lib\site-packages\pip (python 3.15)
+[ OK ] VSCode (code)                  v
+[WARN] Node.js                        未インストール (任意。Playwright Python版だけなら不要)
 
 ========== 仮想環境 (.venv) 確認 ==========
-[ OK ] .venv                          Python 3.11.9
-[ OK ]   └ パス                         C:\Users\NC00018174\Desktop\DOCdemo_update_project\.venv\Scripts\python.exe
+[ OK ] .venv                          Python 3.12.10
+[ OK ]   └ パス                         C:\Users\NC00016149\DOCdemo_update_project\.venv\Scripts\python.exe
 
 ========== Pythonパッケージ (requirements.txt) ==========
-[ OK ] playwright                     v1.58.0
+[ OK ] playwright                     v1.59.0
 [ OK ] gspread                        v6.2.1
 [ OK ] openpyxl                       v3.1.5
 [ OK ] python-dotenv                  v1.2.2
 [ OK ] pytest                         v9.0.3
 [ OK ] pytest-asyncio                 v1.3.0
-[ OK ] requests                       v2.33.1
-[MISS] beautifulsoup4                 未インストール
-[ OK ] google-auth                    v2.49.1
+[ OK ] requests                       v2.34.2
+[ OK ] beautifulsoup4                 v4.14.3
+[ OK ] google-auth                    v2.53.0
 
 ========== Playwright ブラウザ ==========
-[ OK ] .links                         C:\Users\NC00018174\AppData\Local\ms-playwright\.links
-[ OK ] chromium-1208                  C:\Users\NC00018174\AppData\Local\ms-playwright\chromium-1208
-[ OK ] chromium_headless_shell-1208   C:\Users\NC00018174\AppData\Local\ms-playwright\chromium_headless_shell-1208
-[ OK ] ffmpeg-1011                    C:\Users\NC00018174\AppData\Local\ms-playwright\ffmpeg-1011
-[ OK ] firefox-1509                   C:\Users\NC00018174\AppData\Local\ms-playwright\firefox-1509
-[ OK ] webkit-2248                    C:\Users\NC00018174\AppData\Local\ms-playwright\webkit-2248
-[ OK ] winldd-1007                    C:\Users\NC00018174\AppData\Local\ms-playwright\winldd-1007
+[ OK ] .links                         C:\Users\NC00016149\AppData\Local\ms-playwright\.links
+[ OK ] chromium-1217                  C:\Users\NC00016149\AppData\Local\ms-playwright\chromium-1217
+[ OK ] chromium_headless_shell-1217   C:\Users\NC00016149\AppData\Local\ms-playwright\chromium_headless_shell-1217
+[ OK ] ffmpeg-1011                    C:\Users\NC00016149\AppData\Local\ms-playwright\ffmpeg-1011
+[ OK ] firefox-1511                   C:\Users\NC00016149\AppData\Local\ms-playwright\firefox-1511
+[ OK ] webkit-2272                    C:\Users\NC00016149\AppData\Local\ms-playwright\webkit-2272
+[ OK ] winldd-1007                    C:\Users\NC00016149\AppData\Local\ms-playwright\winldd-1007
 
 ========== Git ユーザー設定 ==========
-[ OK ] user.name                      shofukui-neo
-[ OK ] user.email                     sho.fukui@neo-career.com.jp
+[MISS] user.name                      未設定
+[MISS] user.email                     未設定
 
 ========== サマリ ==========
