@@ -32,7 +32,9 @@
 [ OK ] winldd-1007                    C:\Users\NC00016149\AppData\Local\ms-playwright\winldd-1007
 
 ========== Git ユーザー設定 ==========
-[MISS] user.name                      未設定
-[MISS] user.email                     未設定
+[ OK ] user.name                      kinyatanaka-code
+[ OK ] user.email                     kinya.tanaka@neo-career.co.jp
 
 ========== サマリ ==========
+
+ALL OK
