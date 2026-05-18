@@ -33079,3 +33079,786 @@ Call log:
 2026-05-15 23:01:46,785 [WARNING] web_app_operator:   生成準備完了メッセージが特定できませんでしたが、続行を試みます
 2026-05-15 23:01:46,823 [INFO] web_app_operator:   コンテンツ生成ボタン検出 (試行 1/6)
 2026-05-15 23:01:47,384 [INFO] web_app_operator: コンテンツ生成中... (最大5分待機)
+2026-05-18 12:11:24,454 [INFO] __main__: ============================================================
+2026-05-18 12:11:24,454 [INFO] __main__: Stage 1: URL選定フェーズ 開始
+2026-05-18 12:11:24,454 [INFO] __main__: 開始時刻: 2026-05-18 12:11:24
+2026-05-18 12:11:24,454 [INFO] __main__: 対象CSV: C:\Users\NC00018174\Desktop\DOCdemo_update_project\data\company_list.csv
+2026-05-18 12:11:24,454 [INFO] __main__: ============================================================
+2026-05-18 12:11:24,459 [INFO] spreadsheet_manager: 企業リスト読み込み完了: 63社
+2026-05-18 12:11:27,650 [INFO] __main__: 
+2026-05-18 12:11:27,650 [INFO] __main__: [1/63] 株式会社竹中製作所 (現ステータス: 同名企業該当)
+2026-05-18 12:11:27,650 [INFO] __main__:   URL候補を検索中...
+2026-05-18 12:11:27,650 [INFO] url_finder: URL候補検索開始: 株式会社竹中製作所 公式サイト (最大 5 件)
+2026-05-18 12:11:33,926 [INFO] url_finder: 候補ドメイン抽出: 株式会社竹中製作所 -> 5件 (['www.takenaka-mfg.co.jp', 'www.i-takenaka.co.jp', 'www.take.co.jp', 'takenaka-ss.co.jp', 'takenaka-ss.webnode.jp'])
+2026-05-18 12:11:33,926 [WARNING] __main__:     候補1: https://www.takenaka-mfg.co.jp (企業ID: takenaka-mfg)
+2026-05-18 12:11:33,926 [WARNING] __main__:     候補2: https://www.i-takenaka.co.jp (企業ID: i-takenaka)
+2026-05-18 12:11:33,926 [WARNING] __main__:     候補3: https://www.take.co.jp (企業ID: take)
+2026-05-18 12:11:33,928 [WARNING] __main__:     候補4: https://takenaka-ss.co.jp (企業ID: takenaka-ss)
+2026-05-18 12:11:33,928 [WARNING] __main__:     候補5: https://takenaka-ss.webnode.jp/news-/ (企業ID: takenaka-ss-webnode)
+2026-05-18 12:11:33,928 [INFO] spreadsheet_manager: 企業リスト保存完了: 63社 → C:\Users\NC00018174\Desktop\DOCdemo_update_project\data\company_list.csv
+2026-05-18 12:11:33,928 [WARNING] __main__:   [HOLD] 株式会社竹中製作所: 候補ID 5種類 → 後で UI で確定
+2026-05-18 12:11:33,928 [INFO] __main__: 
+2026-05-18 12:11:33,928 [INFO] __main__: [2/63] 株式会社長谷工コミュニティ (現ステータス: 同名企業該当)
+2026-05-18 12:11:33,928 [INFO] __main__:   URL候補を検索中...
+2026-05-18 12:11:33,931 [INFO] url_finder: URL候補検索開始: 株式会社長谷工コミュニティ 公式サイト (最大 5 件)
+2026-05-18 12:11:37,112 [INFO] url_finder: 候補ドメイン抽出: 株式会社長谷工コミュニティ -> 5件 (['www.haseko-hcm.co.jp', 'www.haseko.co.jp', 'job-gear.net', 'www.hcm-kanri-staff.com', 'www.haseko-hkh.co.jp'])
+2026-05-18 12:11:37,112 [WARNING] __main__:     候補1: https://www.haseko-hcm.co.jp (企業ID: haseko-hcm)
+2026-05-18 12:11:37,112 [WARNING] __main__:     候補2: https://www.haseko.co.jp/cmq/ (企業ID: haseko)
+2026-05-18 12:11:37,112 [WARNING] __main__:     候補3: https://job-gear.net/haseko/ (企業ID: job-gear)
+2026-05-18 12:11:37,112 [WARNING] __main__:     候補4: https://www.hcm-kanri-staff.com (企業ID: hcm-kanri-staff)
+2026-05-18 12:11:37,112 [WARNING] __main__:     候補5: https://www.haseko-hkh.co.jp (企業ID: haseko-hkh)
+2026-05-18 12:11:37,112 [INFO] spreadsheet_manager: 企業リスト保存完了: 63社 → C:\Users\NC00018174\Desktop\DOCdemo_update_project\data\company_list.csv
+2026-05-18 12:11:37,116 [WARNING] __main__:   [HOLD] 株式会社長谷工コミュニティ: 候補ID 5種類 → 後で UI で確定
+2026-05-18 12:11:37,116 [INFO] __main__: 
+2026-05-18 12:11:37,117 [INFO] __main__: [3/63] 株式会社鳥忠 (現ステータス: 同名企業該当)
+2026-05-18 12:11:37,117 [INFO] __main__:   URL候補を検索中...
+2026-05-18 12:11:37,117 [INFO] url_finder: URL候補検索開始: 株式会社鳥忠 公式サイト (最大 5 件)
+2026-05-18 12:11:40,326 [INFO] url_finder: 候補ドメイン抽出: 株式会社鳥忠 -> 5件 (['www.toritada.co.jp', 'kobe-torichu.com', 'torichu-gumyoji.com', 'www.menya-torichu.com', 'www.torichu.kyoto'])
+2026-05-18 12:11:40,326 [WARNING] __main__:     候補1: https://www.toritada.co.jp (企業ID: toritada)
+2026-05-18 12:11:40,326 [WARNING] __main__:     候補2: http://kobe-torichu.com (企業ID: kobe-torichu)
+2026-05-18 12:11:40,326 [WARNING] __main__:     候補3: https://torichu-gumyoji.com (企業ID: torichu-gumyoji)
+2026-05-18 12:11:40,326 [WARNING] __main__:     候補4: https://www.menya-torichu.com (企業ID: menya-torichu)
+2026-05-18 12:11:40,326 [WARNING] __main__:     候補5: https://www.torichu.kyoto (企業ID: torichu-kyoto)
+2026-05-18 12:11:40,326 [INFO] spreadsheet_manager: 企業リスト保存完了: 63社 → C:\Users\NC00018174\Desktop\DOCdemo_update_project\data\company_list.csv
+2026-05-18 12:11:40,326 [WARNING] __main__:   [HOLD] 株式会社鳥忠: 候補ID 5種類 → 後で UI で確定
+2026-05-18 12:11:40,326 [INFO] __main__: 
+2026-05-18 12:11:40,326 [INFO] __main__: [4/63] 株式会社福井亀之助商店 (現ステータス: 同名企業該当)
+2026-05-18 12:11:40,330 [INFO] __main__:   URL候補を検索中...
+2026-05-18 12:11:40,330 [INFO] url_finder: URL候補検索開始: 株式会社福井亀之助商店 公式サイト (最大 5 件)
+2026-05-18 12:11:43,586 [INFO] url_finder: 候補ドメイン抽出: 株式会社福井亀之助商店 -> 5件 (['www.fukukame.co.jp', 'www.doraever.jp', 'onomichi-f.com', 'syukatsu-kaigi.jp', 'baytown.or.jp'])
+2026-05-18 12:11:43,587 [WARNING] __main__:     候補1: https://www.fukukame.co.jp (企業ID: fukukame)
+2026-05-18 12:11:43,587 [WARNING] __main__:     候補2: https://www.doraever.jp/job-1258572 (企業ID: doraever)
+2026-05-18 12:11:43,587 [WARNING] __main__:     候補3: https://onomichi-f.com (企業ID: onomichi-f)
+2026-05-18 12:11:43,587 [WARNING] __main__:     候補4: https://syukatsu-kaigi.jp (企業ID: syukatsu-kaigi)
+2026-05-18 12:11:43,587 [WARNING] __main__:     候補5: https://baytown.or.jp (企業ID: baytown)
+2026-05-18 12:11:43,587 [INFO] spreadsheet_manager: 企業リスト保存完了: 63社 → C:\Users\NC00018174\Desktop\DOCdemo_update_project\data\company_list.csv
+2026-05-18 12:11:43,587 [WARNING] __main__:   [HOLD] 株式会社福井亀之助商店: 候補ID 5種類 → 後で UI で確定
+2026-05-18 12:11:43,587 [INFO] __main__: 
+2026-05-18 12:11:43,589 [INFO] __main__: [5/63] 社会福祉法人博由社 (現ステータス: 同名企業該当)
+2026-05-18 12:11:43,589 [INFO] __main__:   URL候補を検索中...
+2026-05-18 12:11:43,589 [INFO] url_finder: URL候補検索開始: 社会福祉法人博由社 公式サイト (最大 5 件)
+2026-05-18 12:11:46,660 [INFO] url_finder: 候補ドメイン抽出: 社会福祉法人博由社 -> 3件 (['hakuyusha.or.jp', 'hakuyuen.jp', 'happytown-kobe.jp'])
+2026-05-18 12:11:46,660 [WARNING] __main__:     候補1: https://hakuyusha.or.jp (企業ID: hakuyusha)
+2026-05-18 12:11:46,660 [WARNING] __main__:     候補2: https://hakuyuen.jp (企業ID: hakuyuen)
+2026-05-18 12:11:46,660 [WARNING] __main__:     候補3: https://happytown-kobe.jp (企業ID: happytown-kobe)
+2026-05-18 12:11:46,660 [INFO] spreadsheet_manager: 企業リスト保存完了: 63社 → C:\Users\NC00018174\Desktop\DOCdemo_update_project\data\company_list.csv
+2026-05-18 12:11:46,660 [WARNING] __main__:   [HOLD] 社会福祉法人博由社: 候補ID 3種類 → 後で UI で確定
+2026-05-18 12:11:46,660 [INFO] __main__: 
+2026-05-18 12:11:46,660 [INFO] __main__: [6/63] 浜田電気工業株式会社 (現ステータス: URL特定済)
+2026-05-18 12:11:46,660 [INFO] __main__:   → 既にURL確定済: https://hama-grp.com
+2026-05-18 12:11:46,660 [INFO] __main__: 
+2026-05-18 12:11:46,660 [INFO] __main__: [7/63] アテナ工業株式会社 (現ステータス: 同名企業該当)
+2026-05-18 12:11:46,660 [INFO] __main__:   URL候補を検索中...
+2026-05-18 12:11:46,660 [INFO] url_finder: URL候補検索開始: アテナ工業株式会社 公式サイト (最大 5 件)
+2026-05-18 12:11:49,844 [INFO] url_finder: 候補ドメイン抽出: アテナ工業株式会社 -> 2件 (['athena-kogyo.co.jp', 'gifush.pref.gifu.lg.jp'])
+2026-05-18 12:11:49,844 [WARNING] __main__:     候補1: https://athena-kogyo.co.jp (企業ID: athena-kogyo)
+2026-05-18 12:11:49,844 [WARNING] __main__:     候補2: https://gifush.pref.gifu.lg.jp (企業ID: gifush-pref-gifu)
+2026-05-18 12:11:49,844 [INFO] spreadsheet_manager: 企業リスト保存完了: 63社 → C:\Users\NC00018174\Desktop\DOCdemo_update_project\data\company_list.csv
+2026-05-18 12:11:49,844 [WARNING] __main__:   [HOLD] アテナ工業株式会社: 候補ID 2種類 → 後で UI で確定
+2026-05-18 12:11:49,844 [INFO] __main__: 
+2026-05-18 12:11:49,844 [INFO] __main__: [8/63] イシハラ株式会社 (現ステータス: 同名企業該当)
+2026-05-18 12:11:49,844 [INFO] __main__:   URL候補を検索中...
+2026-05-18 12:11:49,844 [INFO] url_finder: URL候補検索開始: イシハラ株式会社 公式サイト (最大 5 件)
+2026-05-18 12:11:53,133 [INFO] url_finder: 候補ドメイン抽出: イシハラ株式会社 -> 3件 (['www.ishihara-group.co.jp', 'www.kk-ishihara.com', 'www.ishihara-kaitai.com'])
+2026-05-18 12:11:53,133 [WARNING] __main__:     候補1: https://www.ishihara-group.co.jp (企業ID: ishihara-group)
+2026-05-18 12:11:53,133 [WARNING] __main__:     候補2: https://www.kk-ishihara.com/index.html (企業ID: kk-ishihara)
+2026-05-18 12:11:53,133 [WARNING] __main__:     候補3: https://www.ishihara-kaitai.com/company (企業ID: ishihara-kaitai)
+2026-05-18 12:11:53,136 [INFO] spreadsheet_manager: 企業リスト保存完了: 63社 → C:\Users\NC00018174\Desktop\DOCdemo_update_project\data\company_list.csv
+2026-05-18 12:11:53,136 [WARNING] __main__:   [HOLD] イシハラ株式会社: 候補ID 3種類 → 後で UI で確定
+2026-05-18 12:11:53,136 [INFO] __main__: 
+2026-05-18 12:11:53,136 [INFO] __main__: [9/63] ウチダ株式会社 (現ステータス: URL特定済)
+2026-05-18 12:11:53,136 [INFO] __main__:   → 既にURL確定済: https://www.uchida-kk.jp
+2026-05-18 12:11:53,136 [INFO] __main__: 
+2026-05-18 12:11:53,136 [INFO] __main__: [10/63] サンケンフォーキャスト株式会社 (現ステータス: 同名企業該当)
+2026-05-18 12:11:53,137 [INFO] __main__:   URL候補を検索中...
+2026-05-18 12:11:53,137 [INFO] url_finder: URL候補検索開始: サンケンフォーキャスト株式会社 公式サイト (最大 5 件)
+2026-05-18 12:11:56,151 [INFO] url_finder: 候補ドメイン抽出: サンケンフォーキャスト株式会社 -> 3件 (['www.skfc.jp', 'hakata-kanzeikai.com', 'syukatsu-kaigi.jp'])
+2026-05-18 12:11:56,151 [WARNING] __main__:     候補1: https://www.skfc.jp (企業ID: skfc)
+2026-05-18 12:11:56,151 [WARNING] __main__:     候補2: https://hakata-kanzeikai.com (企業ID: hakata-kanzeikai)
+2026-05-18 12:11:56,151 [WARNING] __main__:     候補3: https://syukatsu-kaigi.jp (企業ID: syukatsu-kaigi)
+2026-05-18 12:11:56,153 [INFO] spreadsheet_manager: 企業リスト保存完了: 63社 → C:\Users\NC00018174\Desktop\DOCdemo_update_project\data\company_list.csv
+2026-05-18 12:11:56,153 [WARNING] __main__:   [HOLD] サンケンフォーキャスト株式会社: 候補ID 3種類 → 後で UI で確定
+2026-05-18 12:11:56,153 [INFO] __main__: 
+2026-05-18 12:11:56,153 [INFO] __main__: [11/63] シーシーアイホールディングス株式会社 (現ステータス: 同名企業該当)
+2026-05-18 12:11:56,153 [INFO] __main__:   URL候補を検索中...
+2026-05-18 12:11:56,154 [INFO] url_finder: URL候補検索開始: シーシーアイホールディングス株式会社 公式サイト (最大 5 件)
+2026-05-18 12:11:59,200 [INFO] url_finder: 候補ドメイン抽出: シーシーアイホールディングス株式会社 -> 2件 (['cci-corporation.com', 'www.ccig.co.jp'])
+2026-05-18 12:11:59,201 [WARNING] __main__:     候補1: https://cci-corporation.com (企業ID: cci-corporation)
+2026-05-18 12:11:59,201 [WARNING] __main__:     候補2: https://www.ccig.co.jp (企業ID: ccig)
+2026-05-18 12:11:59,203 [INFO] spreadsheet_manager: 企業リスト保存完了: 63社 → C:\Users\NC00018174\Desktop\DOCdemo_update_project\data\company_list.csv
+2026-05-18 12:11:59,203 [WARNING] __main__:   [HOLD] シーシーアイホールディングス株式会社: 候補ID 2種類 → 後で UI で確定
+2026-05-18 12:11:59,203 [INFO] __main__: 
+2026-05-18 12:11:59,203 [INFO] __main__: [12/63] ショウケンガリレイ株式会社 (現ステータス: URL特定済)
+2026-05-18 12:11:59,203 [INFO] __main__:   → 既にURL確定済: https://galilei-shoken.co.jp
+2026-05-18 12:11:59,203 [INFO] __main__: 
+2026-05-18 12:11:59,204 [INFO] __main__: [13/63] シンコール株式会社 (現ステータス: 同名企業該当)
+2026-05-18 12:11:59,204 [INFO] __main__:   URL候補を検索中...
+2026-05-18 12:11:59,204 [INFO] url_finder: URL候補検索開始: シンコール株式会社 公式サイト (最大 5 件)
+2026-05-18 12:12:02,328 [INFO] url_finder: 候補ドメイン抽出: シンコール株式会社 -> 5件 (['www.sincol.co.jp', 'sincol-group.jp', 'www.sincol-kys.co.jp', 'sincol-it.jp', 'www.o-sincol.co.jp'])
+2026-05-18 12:12:02,328 [WARNING] __main__:     候補1: https://www.sincol.co.jp (企業ID: sincol)
+2026-05-18 12:12:02,328 [WARNING] __main__:     候補2: https://sincol-group.jp (企業ID: sincol-group)
+2026-05-18 12:12:02,328 [WARNING] __main__:     候補3: https://www.sincol-kys.co.jp (企業ID: sincol-kys)
+2026-05-18 12:12:02,330 [WARNING] __main__:     候補4: https://sincol-it.jp (企業ID: sincol-it)
+2026-05-18 12:12:02,330 [WARNING] __main__:     候補5: https://www.o-sincol.co.jp (企業ID: o-sincol)
+2026-05-18 12:12:02,331 [INFO] spreadsheet_manager: 企業リスト保存完了: 63社 → C:\Users\NC00018174\Desktop\DOCdemo_update_project\data\company_list.csv
+2026-05-18 12:12:02,333 [WARNING] __main__:   [HOLD] シンコール株式会社: 候補ID 5種類 → 後で UI で確定
+2026-05-18 12:12:02,333 [INFO] __main__: 
+2026-05-18 12:12:02,333 [INFO] __main__: [14/63] スターキャット株式会社 (現ステータス: URL特定済)
+2026-05-18 12:12:02,333 [INFO] __main__:   → 既にURL確定済: https://www.starcat.co.jp
+2026-05-18 12:12:02,333 [INFO] __main__: 
+2026-05-18 12:12:02,333 [INFO] __main__: [15/63] ナガイホールディングス株式会社 (現ステータス: 同名企業該当)
+2026-05-18 12:12:02,333 [INFO] __main__:   URL候補を検索中...
+2026-05-18 12:12:02,333 [INFO] url_finder: URL候補検索開始: ナガイホールディングス株式会社 公式サイト (最大 5 件)
+2026-05-18 12:12:05,366 [INFO] url_finder: 候補ドメイン抽出: ナガイホールディングス株式会社 -> 2件 (['nagaiholdings.jp', 'recruit.nagaiholdings.jp'])
+2026-05-18 12:12:05,366 [WARNING] __main__:     候補1: https://nagaiholdings.jp (企業ID: nagaiholdings)
+2026-05-18 12:12:05,367 [WARNING] __main__:     候補2: https://recruit.nagaiholdings.jp (企業ID: recruit-nagaiholdings)
+2026-05-18 12:12:05,367 [INFO] spreadsheet_manager: 企業リスト保存完了: 63社 → C:\Users\NC00018174\Desktop\DOCdemo_update_project\data\company_list.csv
+2026-05-18 12:12:05,367 [WARNING] __main__:   [HOLD] ナガイホールディングス株式会社: 候補ID 2種類 → 後で UI で確定
+2026-05-18 12:12:05,367 [INFO] __main__: 
+2026-05-18 12:12:05,367 [INFO] __main__: [16/63] 伊藤製油株式会社 (現ステータス: URL特定済)
+2026-05-18 12:12:05,367 [INFO] __main__:   → 既にURL確定済: https://www.itoh-oilchem.co.jp
+2026-05-18 12:12:05,367 [INFO] __main__: 
+2026-05-18 12:12:05,367 [INFO] __main__: [17/63] 株式会社アタックス (現ステータス: 同名企業該当)
+2026-05-18 12:12:05,370 [INFO] __main__:   URL候補を検索中...
+2026-05-18 12:12:05,370 [INFO] url_finder: URL候補検索開始: 株式会社アタックス 公式サイト (最大 5 件)
+2026-05-18 12:12:08,813 [INFO] url_finder: 候補ドメイン抽出: 株式会社アタックス -> 5件 (['www.attax.co.jp', 'www.atax-net.com', 'www.atacs.co.jp', 'attax.marumiya-store.co.jp', 'atax-saiyo.jimdoweb.com'])
+2026-05-18 12:12:08,813 [WARNING] __main__:     候補1: https://www.attax.co.jp (企業ID: attax)
+2026-05-18 12:12:08,813 [WARNING] __main__:     候補2: https://www.atax-net.com (企業ID: atax-net)
+2026-05-18 12:12:08,813 [WARNING] __main__:     候補3: https://www.atacs.co.jp (企業ID: atacs)
+2026-05-18 12:12:08,813 [WARNING] __main__:     候補4: https://attax.marumiya-store.co.jp (企業ID: attax-marumiya-store)
+2026-05-18 12:12:08,813 [WARNING] __main__:     候補5: https://atax-saiyo.jimdoweb.com/instagram/ (企業ID: atax-saiyo-jimdoweb)
+2026-05-18 12:12:08,816 [INFO] spreadsheet_manager: 企業リスト保存完了: 63社 → C:\Users\NC00018174\Desktop\DOCdemo_update_project\data\company_list.csv
+2026-05-18 12:12:08,816 [WARNING] __main__:   [HOLD] 株式会社アタックス: 候補ID 5種類 → 後で UI で確定
+2026-05-18 12:12:08,817 [INFO] __main__: 
+2026-05-18 12:12:08,817 [INFO] __main__: [18/63] 株式会社エルハンド (現ステータス: URL特定済)
+2026-05-18 12:12:08,817 [INFO] __main__:   → 既にURL確定済: https://www.el-hand.co.jp
+2026-05-18 12:12:08,817 [INFO] __main__: 
+2026-05-18 12:12:08,817 [INFO] __main__: [19/63] 株式会社ゲオホールディングス (現ステータス: 同名企業該当)
+2026-05-18 12:12:08,817 [INFO] __main__:   URL候補を検索中...
+2026-05-18 12:12:08,817 [INFO] url_finder: URL候補検索開始: 株式会社ゲオホールディングス 公式サイト (最大 5 件)
+2026-05-18 12:12:11,937 [INFO] url_finder: 候補ドメイン抽出: 株式会社ゲオホールディングス -> 4件 (['www.geonet.co.jp', 'geo-recruit.jp', 'geo-online.co.jp', 'ec.geo-online.co.jp'])
+2026-05-18 12:12:11,937 [WARNING] __main__:     候補1: https://www.geonet.co.jp (企業ID: geonet)
+2026-05-18 12:12:11,940 [WARNING] __main__:     候補2: https://geo-recruit.jp (企業ID: geo-recruit)
+2026-05-18 12:12:11,940 [WARNING] __main__:     候補3: https://geo-online.co.jp (企業ID: geo-online)
+2026-05-18 12:12:11,940 [WARNING] __main__:     候補4: https://ec.geo-online.co.jp/shop/ (企業ID: ec-geo-online)
+2026-05-18 12:12:11,940 [INFO] spreadsheet_manager: 企業リスト保存完了: 63社 → C:\Users\NC00018174\Desktop\DOCdemo_update_project\data\company_list.csv
+2026-05-18 12:12:11,940 [WARNING] __main__:   [HOLD] 株式会社ゲオホールディングス: 候補ID 4種類 → 後で UI で確定
+2026-05-18 12:12:11,940 [INFO] __main__: 
+2026-05-18 12:12:11,942 [INFO] __main__: [20/63] 株式会社サトウ商会 (現ステータス: 同名企業該当)
+2026-05-18 12:12:11,942 [INFO] __main__:   URL候補を検索中...
+2026-05-18 12:12:11,942 [INFO] url_finder: URL候補検索開始: 株式会社サトウ商会 公式サイト (最大 5 件)
+2026-05-18 12:12:15,073 [INFO] url_finder: 候補ドメイン抽出: 株式会社サトウ商会 -> 5件 (['sato-shokai.com', 'satou-syoukai.co.jp', 'ss310.jp', 'satou-corp.co.jp', 'sato-shoukai.co.jp'])
+2026-05-18 12:12:15,073 [WARNING] __main__:     候補1: https://sato-shokai.com (企業ID: sato-shokai)
+2026-05-18 12:12:15,073 [WARNING] __main__:     候補2: http://satou-syoukai.co.jp (企業ID: satou-syoukai)
+2026-05-18 12:12:15,073 [WARNING] __main__:     候補3: https://ss310.jp (企業ID: ss310)
+2026-05-18 12:12:15,073 [WARNING] __main__:     候補4: https://satou-corp.co.jp (企業ID: satou-corp)
+2026-05-18 12:12:15,073 [WARNING] __main__:     候補5: https://sato-shoukai.co.jp (企業ID: sato-shoukai)
+2026-05-18 12:12:15,075 [INFO] spreadsheet_manager: 企業リスト保存完了: 63社 → C:\Users\NC00018174\Desktop\DOCdemo_update_project\data\company_list.csv
+2026-05-18 12:12:15,075 [WARNING] __main__:   [HOLD] 株式会社サトウ商会: 候補ID 5種類 → 後で UI で確定
+2026-05-18 12:12:15,075 [INFO] __main__: 
+2026-05-18 12:12:15,075 [INFO] __main__: [21/63] 株式会社シーアイエス (現ステータス: 同名企業該当)
+2026-05-18 12:12:15,076 [INFO] __main__:   URL候補を検索中...
+2026-05-18 12:12:15,076 [INFO] url_finder: URL候補検索開始: 株式会社シーアイエス 公式サイト (最大 5 件)
+2026-05-18 12:12:18,121 [INFO] url_finder: 候補ドメイン抽出: 株式会社シーアイエス -> 5件 (['www.cisjp.com', 'www.ciscorp.co.jp', 'www.c-i-s.jp', 'www.cis.vc', 'www.kkcis.com'])
+2026-05-18 12:12:18,121 [WARNING] __main__:     候補1: https://www.cisjp.com (企業ID: cisjp)
+2026-05-18 12:12:18,121 [WARNING] __main__:     候補2: https://www.ciscorp.co.jp (企業ID: ciscorp)
+2026-05-18 12:12:18,121 [WARNING] __main__:     候補3: https://www.c-i-s.jp (企業ID: c-i-s)
+2026-05-18 12:12:18,123 [WARNING] __main__:     候補4: https://www.cis.vc (企業ID: cis-vc)
+2026-05-18 12:12:18,123 [WARNING] __main__:     候補5: https://www.kkcis.com (企業ID: kkcis)
+2026-05-18 12:12:18,123 [INFO] spreadsheet_manager: 企業リスト保存完了: 63社 → C:\Users\NC00018174\Desktop\DOCdemo_update_project\data\company_list.csv
+2026-05-18 12:12:18,123 [WARNING] __main__:   [HOLD] 株式会社シーアイエス: 候補ID 5種類 → 後で UI で確定
+2026-05-18 12:12:18,123 [INFO] __main__: 
+2026-05-18 12:12:18,123 [INFO] __main__: [22/63] 株式会社ジーケーエス (現ステータス: 同名企業該当)
+2026-05-18 12:12:18,123 [INFO] __main__:   URL候補を検索中...
+2026-05-18 12:12:18,123 [INFO] url_finder: URL候補検索開始: 株式会社ジーケーエス 公式サイト (最大 5 件)
+2026-05-18 12:12:21,312 [INFO] url_finder: 候補ドメイン抽出: 株式会社ジーケーエス -> 5件 (['g-k-s.co.jp', 'www.g-gks.co.jp', 'gks-sus.com', 'kyoto-kosodatepia.jp', 'gkskss.co.jp'])
+2026-05-18 12:12:21,312 [WARNING] __main__:     候補1: https://g-k-s.co.jp (企業ID: g-k-s)
+2026-05-18 12:12:21,312 [WARNING] __main__:     候補2: http://www.g-gks.co.jp (企業ID: g-gks)
+2026-05-18 12:12:21,312 [WARNING] __main__:     候補3: https://gks-sus.com (企業ID: gks-sus)
+2026-05-18 12:12:21,312 [WARNING] __main__:     候補4: https://kyoto-kosodatepia.jp (企業ID: kyoto-kosodatepia)
+2026-05-18 12:12:21,312 [WARNING] __main__:     候補5: https://gkskss.co.jp (企業ID: gkskss)
+2026-05-18 12:12:21,312 [INFO] spreadsheet_manager: 企業リスト保存完了: 63社 → C:\Users\NC00018174\Desktop\DOCdemo_update_project\data\company_list.csv
+2026-05-18 12:12:21,312 [WARNING] __main__:   [HOLD] 株式会社ジーケーエス: 候補ID 5種類 → 後で UI で確定
+2026-05-18 12:12:21,316 [INFO] __main__: 
+2026-05-18 12:12:21,316 [INFO] __main__: [23/63] 株式会社テック (現ステータス: 同名企業該当)
+2026-05-18 12:12:21,317 [INFO] __main__:   URL候補を検索中...
+2026-05-18 12:12:21,317 [INFO] url_finder: URL候補検索開始: 株式会社テック 公式サイト (最大 5 件)
+2026-05-18 12:12:24,684 [INFO] url_finder: 候補ドメイン抽出: 株式会社テック -> 5件 (['tec-inc.co.jp', 'www.facus.co.jp', 'sai-kktec.com', 'www.tech-japan.co.jp', 'www.tecc.biz'])
+2026-05-18 12:12:24,684 [WARNING] __main__:     候補1: https://tec-inc.co.jp (企業ID: tec-inc)
+2026-05-18 12:12:24,684 [WARNING] __main__:     候補2: https://www.facus.co.jp (企業ID: facus)
+2026-05-18 12:12:24,684 [WARNING] __main__:     候補3: https://sai-kktec.com (企業ID: sai-kktec)
+2026-05-18 12:12:24,686 [WARNING] __main__:     候補4: https://www.tech-japan.co.jp (企業ID: tech-japan)
+2026-05-18 12:12:24,686 [WARNING] __main__:     候補5: https://www.tecc.biz (企業ID: tecc)
+2026-05-18 12:12:24,687 [INFO] spreadsheet_manager: 企業リスト保存完了: 63社 → C:\Users\NC00018174\Desktop\DOCdemo_update_project\data\company_list.csv
+2026-05-18 12:12:24,687 [WARNING] __main__:   [HOLD] 株式会社テック: 候補ID 5種類 → 後で UI で確定
+2026-05-18 12:12:24,687 [INFO] __main__: 
+2026-05-18 12:12:24,687 [INFO] __main__: [24/63] 株式会社フジケン (現ステータス: 同名企業該当)
+2026-05-18 12:12:24,687 [INFO] __main__:   URL候補を検索中...
+2026-05-18 12:12:24,687 [INFO] url_finder: URL候補検索開始: 株式会社フジケン 公式サイト (最大 5 件)
+2026-05-18 12:12:27,710 [INFO] url_finder: 候補ドメイン抽出: 株式会社フジケン -> 5件 (['www.fujikengroup.co.jp', 'www.fujiken-corp.com', 'www.fujiken-sumai.jp', 'www.fj-jpn1.com', 'www.fujikenhousing.com'])
+2026-05-18 12:12:27,710 [WARNING] __main__:     候補1: https://www.fujikengroup.co.jp (企業ID: fujikengroup)
+2026-05-18 12:12:27,710 [WARNING] __main__:     候補2: https://www.fujiken-corp.com (企業ID: fujiken-corp)
+2026-05-18 12:12:27,710 [WARNING] __main__:     候補3: https://www.fujiken-sumai.jp (企業ID: fujiken-sumai)
+2026-05-18 12:12:27,710 [WARNING] __main__:     候補4: https://www.fj-jpn1.com (企業ID: fj-jpn1)
+2026-05-18 12:12:27,710 [WARNING] __main__:     候補5: https://www.fujikenhousing.com (企業ID: fujikenhousing)
+2026-05-18 12:12:27,710 [INFO] spreadsheet_manager: 企業リスト保存完了: 63社 → C:\Users\NC00018174\Desktop\DOCdemo_update_project\data\company_list.csv
+2026-05-18 12:12:27,710 [WARNING] __main__:   [HOLD] 株式会社フジケン: 候補ID 5種類 → 後で UI で確定
+2026-05-18 12:12:27,710 [INFO] __main__: 
+2026-05-18 12:12:27,710 [INFO] __main__: [25/63] 株式会社フジケンハウジング (現ステータス: 同名企業該当)
+2026-05-18 12:12:27,710 [INFO] __main__:   URL候補を検索中...
+2026-05-18 12:12:27,710 [INFO] url_finder: URL候補検索開始: 株式会社フジケンハウジング 公式サイト (最大 5 件)
+2026-05-18 12:12:30,923 [INFO] url_finder: 候補ドメイン抽出: 株式会社フジケンハウジング -> 5件 (['www.fujikenhousing.com', 'www.fujikenhousing.jp', 'fashionrenove.jp', 'www.fujikenfamilia.co.jp', 'www.fujikengroup.co.jp'])
+2026-05-18 12:12:30,926 [WARNING] __main__:     候補1: https://www.fujikenhousing.com (企業ID: fujikenhousing)
+2026-05-18 12:12:30,926 [WARNING] __main__:     候補2: https://www.fujikenhousing.jp (企業ID: fujikenhousing)
+2026-05-18 12:12:30,926 [WARNING] __main__:     候補3: https://fashionrenove.jp (企業ID: fashionrenove)
+2026-05-18 12:12:30,926 [WARNING] __main__:     候補4: https://www.fujikenfamilia.co.jp/recruit/ (企業ID: fujikenfamilia)
+2026-05-18 12:12:30,926 [WARNING] __main__:     候補5: https://www.fujikengroup.co.jp (企業ID: fujikengroup)
+2026-05-18 12:12:30,926 [INFO] spreadsheet_manager: 企業リスト保存完了: 63社 → C:\Users\NC00018174\Desktop\DOCdemo_update_project\data\company_list.csv
+2026-05-18 12:12:30,926 [WARNING] __main__:   [HOLD] 株式会社フジケンハウジング: 候補ID 4種類 → 後で UI で確定
+2026-05-18 12:12:30,926 [INFO] __main__: 
+2026-05-18 12:12:30,926 [INFO] __main__: [26/63] 株式会社吉田エス・ケイ・テイ (現ステータス: 同名企業該当)
+2026-05-18 12:12:30,926 [INFO] __main__:   URL候補を検索中...
+2026-05-18 12:12:30,926 [INFO] url_finder: URL候補検索開始: 株式会社吉田エス・ケイ・テイ 公式サイト (最大 5 件)
+2026-05-18 12:12:34,026 [INFO] url_finder: 候補ドメイン抽出: 株式会社吉田エス・ケイ・テイ -> 4件 (['www.y-skt.co.jp', 'jgoodtech.smrj.go.jp', 'info.gbiz.go.jp', 'pr.mono.ipros.com'])
+2026-05-18 12:12:34,029 [WARNING] __main__:     候補1: https://www.y-skt.co.jp (企業ID: y-skt)
+2026-05-18 12:12:34,029 [WARNING] __main__:     候補2: https://jgoodtech.smrj.go.jp (企業ID: jgoodtech-smrj)
+2026-05-18 12:12:34,029 [WARNING] __main__:     候補3: https://info.gbiz.go.jp (企業ID: info-gbiz)
+2026-05-18 12:12:34,029 [WARNING] __main__:     候補4: https://pr.mono.ipros.com/y-skt/ (企業ID: pr-mono-ipros)
+2026-05-18 12:12:34,031 [INFO] spreadsheet_manager: 企業リスト保存完了: 63社 → C:\Users\NC00018174\Desktop\DOCdemo_update_project\data\company_list.csv
+2026-05-18 12:12:34,031 [WARNING] __main__:   [HOLD] 株式会社吉田エス・ケイ・テイ: 候補ID 4種類 → 後で UI で確定
+2026-05-18 12:12:34,031 [INFO] __main__: 
+2026-05-18 12:12:34,031 [INFO] __main__: [27/63] 教育産業株式会社 (現ステータス: 同名企業該当)
+2026-05-18 12:12:34,031 [INFO] __main__:   URL候補を検索中...
+2026-05-18 12:12:34,031 [INFO] url_finder: URL候補検索開始: 教育産業株式会社 公式サイト (最大 5 件)
+2026-05-18 12:12:37,208 [INFO] url_finder: 候補ドメイン抽出: 教育産業株式会社 -> 2件 (['ksg.co.jp', 'www.kyouikusangyou.co.jp'])
+2026-05-18 12:12:37,208 [WARNING] __main__:     候補1: https://ksg.co.jp (企業ID: ksg)
+2026-05-18 12:12:37,208 [WARNING] __main__:     候補2: https://www.kyouikusangyou.co.jp (企業ID: kyouikusangyou)
+2026-05-18 12:12:37,213 [INFO] spreadsheet_manager: 企業リスト保存完了: 63社 → C:\Users\NC00018174\Desktop\DOCdemo_update_project\data\company_list.csv
+2026-05-18 12:12:37,213 [WARNING] __main__:   [HOLD] 教育産業株式会社: 候補ID 2種類 → 後で UI で確定
+2026-05-18 12:12:37,213 [INFO] __main__: 
+2026-05-18 12:12:37,213 [INFO] __main__: [28/63] 九重味淋株式会社 (現ステータス: 同名企業該当)
+2026-05-18 12:12:37,213 [INFO] __main__:   URL候補を検索中...
+2026-05-18 12:12:37,213 [INFO] url_finder: URL候補検索開始: 九重味淋株式会社 公式サイト (最大 5 件)
+2026-05-18 12:12:40,512 [INFO] url_finder: 候補ドメイン抽出: 九重味淋株式会社 -> 2件 (['kokonoe.co.jp', 'www.kokonoe-shop.com'])
+2026-05-18 12:12:40,512 [WARNING] __main__:     候補1: https://kokonoe.co.jp (企業ID: kokonoe)
+2026-05-18 12:12:40,512 [WARNING] __main__:     候補2: https://www.kokonoe-shop.com (企業ID: kokonoe-shop)
+2026-05-18 12:12:40,512 [INFO] spreadsheet_manager: 企業リスト保存完了: 63社 → C:\Users\NC00018174\Desktop\DOCdemo_update_project\data\company_list.csv
+2026-05-18 12:12:40,512 [WARNING] __main__:   [HOLD] 九重味淋株式会社: 候補ID 2種類 → 後で UI で確定
+2026-05-18 12:12:40,512 [INFO] __main__: 
+2026-05-18 12:12:40,512 [INFO] __main__: [29/63] 東レエンジニアリング中部株式会社 (現ステータス: URL特定済)
+2026-05-18 12:12:40,512 [INFO] __main__:   → 既にURL確定済: https://www.toray-eng.co.jp/central/
+2026-05-18 12:12:40,512 [INFO] __main__: 
+2026-05-18 12:12:40,512 [INFO] __main__: [30/63] 浜松委托運送株式会社 (現ステータス: 同名企業該当)
+2026-05-18 12:12:40,512 [INFO] __main__:   URL候補を検索中...
+2026-05-18 12:12:40,516 [INFO] url_finder: URL候補検索開始: 浜松委托運送株式会社 公式サイト (最大 5 件)
+2026-05-18 12:12:43,681 [INFO] url_finder: 候補ドメイン抽出: 浜松委托運送株式会社 -> 5件 (['www.itaku-unso.co.jp', 'hamamatsuitaku.fuerubooubo.com', 'itaku.three-count.net', 'www.h-itaku.co.jp', 'www.koyou.pref.shizuoka.jp'])
+2026-05-18 12:12:43,681 [WARNING] __main__:     候補1: https://www.itaku-unso.co.jp (企業ID: itaku-unso)
+2026-05-18 12:12:43,681 [WARNING] __main__:     候補2: https://hamamatsuitaku.fuerubooubo.com (企業ID: hamamatsuitaku-fuerubooubo)
+2026-05-18 12:12:43,683 [WARNING] __main__:     候補3: http://itaku.three-count.net (企業ID: itaku-three-count)
+2026-05-18 12:12:43,683 [WARNING] __main__:     候補4: https://www.h-itaku.co.jp (企業ID: h-itaku)
+2026-05-18 12:12:43,683 [WARNING] __main__:     候補5: https://www.koyou.pref.shizuoka.jp (企業ID: koyou-pref-shizuoka)
+2026-05-18 12:12:43,683 [INFO] spreadsheet_manager: 企業リスト保存完了: 63社 → C:\Users\NC00018174\Desktop\DOCdemo_update_project\data\company_list.csv
+2026-05-18 12:12:43,683 [WARNING] __main__:   [HOLD] 浜松委托運送株式会社: 候補ID 5種類 → 後で UI で確定
+2026-05-18 12:12:43,686 [INFO] __main__: 
+2026-05-18 12:12:43,686 [INFO] __main__: [31/63] 名鉄グループバスホールディングス株式会社 (現ステータス: 同名企業該当)
+2026-05-18 12:12:43,686 [INFO] __main__:   URL候補を検索中...
+2026-05-18 12:12:43,686 [INFO] url_finder: URL候補検索開始: 名鉄グループバスホールディングス株式会社 公式サイト (最大 5 件)
+2026-05-18 12:12:46,717 [INFO] url_finder: 候補ドメイン抽出: 名鉄グループバスホールディングス株式会社 -> 4件 (['www.meitetsugroup-bus-holdings.co.jp', 'www.meitetsu.co.jp', 'www.meitetsu-bus.co.jp', 'www.meitetsugroup-bus-holdings.wjosaka.biz'])
+2026-05-18 12:12:46,717 [WARNING] __main__:     候補1: https://www.meitetsugroup-bus-holdings.co.jp (企業ID: meitetsugroup-bus-holdings)
+2026-05-18 12:12:46,717 [WARNING] __main__:     候補2: https://www.meitetsu.co.jp (企業ID: meitetsu)
+2026-05-18 12:12:46,717 [WARNING] __main__:     候補3: https://www.meitetsu-bus.co.jp (企業ID: meitetsu-bus)
+2026-05-18 12:12:46,717 [WARNING] __main__:     候補4: https://www.meitetsugroup-bus-holdings.wjosaka.biz/recruit/ (企業ID: meitetsugroup-bus-holdings-wjosaka)
+2026-05-18 12:12:46,719 [INFO] spreadsheet_manager: 企業リスト保存完了: 63社 → C:\Users\NC00018174\Desktop\DOCdemo_update_project\data\company_list.csv
+2026-05-18 12:12:46,719 [WARNING] __main__:   [HOLD] 名鉄グループバスホールディングス株式会社: 候補ID 4種類 → 後で UI で確定
+2026-05-18 12:12:46,719 [INFO] __main__: 
+2026-05-18 12:12:46,719 [INFO] __main__: [32/63] 名鉄バス株式会社 (現ステータス: 同名企業該当)
+2026-05-18 12:12:46,719 [INFO] __main__:   URL候補を検索中...
+2026-05-18 12:12:46,719 [INFO] url_finder: URL候補検索開始: 名鉄バス株式会社 公式サイト (最大 5 件)
+2026-05-18 12:12:49,776 [INFO] url_finder: 候補ドメイン抽出: 名鉄バス株式会社 -> 5件 (['www.meitetsu-bus.co.jp', 'www.meitetsugroup-bus-holdings.co.jp', 'trainbus.meitetsu.co.jp', 'www.meitetsu-kankobus.co.jp', 'job-gear.net'])
+2026-05-18 12:12:49,776 [WARNING] __main__:     候補1: https://www.meitetsu-bus.co.jp (企業ID: meitetsu-bus)
+2026-05-18 12:12:49,776 [WARNING] __main__:     候補2: https://www.meitetsugroup-bus-holdings.co.jp (企業ID: meitetsugroup-bus-holdings)
+2026-05-18 12:12:49,776 [WARNING] __main__:     候補3: https://trainbus.meitetsu.co.jp (企業ID: trainbus-meitetsu)
+2026-05-18 12:12:49,777 [WARNING] __main__:     候補4: https://www.meitetsu-kankobus.co.jp (企業ID: meitetsu-kankobus)
+2026-05-18 12:12:49,777 [WARNING] __main__:     候補5: https://job-gear.net/meitetsubus/ (企業ID: job-gear)
+2026-05-18 12:12:49,779 [INFO] spreadsheet_manager: 企業リスト保存完了: 63社 → C:\Users\NC00018174\Desktop\DOCdemo_update_project\data\company_list.csv
+2026-05-18 12:12:49,779 [WARNING] __main__:   [HOLD] 名鉄バス株式会社: 候補ID 5種類 → 後で UI で確定
+2026-05-18 12:12:49,779 [INFO] __main__: 
+2026-05-18 12:12:49,779 [INFO] __main__: [33/63] シンザカ会計事務所 (現ステータス: 同名企業該当)
+2026-05-18 12:12:49,779 [INFO] __main__:   URL候補を検索中...
+2026-05-18 12:12:49,780 [INFO] url_finder: URL候補検索開始: シンザカ会計事務所 公式サイト (最大 5 件)
+2026-05-18 12:12:52,883 [INFO] url_finder: 候補ドメイン抽出: シンザカ会計事務所 -> 5件 (['taxconsulting.jp', 'souzoku-adv.com', 'ican88.org', 'search-advisors.freee.co.jp', 'www.mitsugi-kaikei.com'])
+2026-05-18 12:12:52,883 [WARNING] __main__:     候補1: https://taxconsulting.jp (企業ID: taxconsulting)
+2026-05-18 12:12:52,883 [WARNING] __main__:     候補2: https://souzoku-adv.com (企業ID: souzoku-adv)
+2026-05-18 12:12:52,883 [WARNING] __main__:     候補3: https://ican88.org (企業ID: ican88)
+2026-05-18 12:12:52,886 [WARNING] __main__:     候補4: https://search-advisors.freee.co.jp (企業ID: search-advisors-freee)
+2026-05-18 12:12:52,886 [WARNING] __main__:     候補5: https://www.mitsugi-kaikei.com (企業ID: mitsugi-kaikei)
+2026-05-18 12:12:52,887 [INFO] spreadsheet_manager: 企業リスト保存完了: 63社 → C:\Users\NC00018174\Desktop\DOCdemo_update_project\data\company_list.csv
+2026-05-18 12:12:52,887 [WARNING] __main__:   [HOLD] シンザカ会計事務所: 候補ID 5種類 → 後で UI で確定
+2026-05-18 12:12:52,887 [INFO] __main__: 
+2026-05-18 12:12:52,887 [INFO] __main__: [34/63] フジプレアム株式会社 (現ステータス: URL特定済)
+2026-05-18 12:12:52,887 [INFO] __main__:   → 既にURL確定済: https://www.fujipream.co.jp
+2026-05-18 12:12:52,887 [INFO] __main__: 
+2026-05-18 12:12:52,887 [INFO] __main__: [35/63] 医療法人松澤呼吸器クリニック (現ステータス: 同名企業該当)
+2026-05-18 12:12:52,887 [INFO] __main__:   URL候補を検索中...
+2026-05-18 12:12:52,887 [INFO] url_finder: URL候補検索開始: 医療法人松澤呼吸器クリニック 公式サイト (最大 5 件)
+2026-05-18 12:12:56,000 [INFO] url_finder: 候補ドメイン抽出: 医療法人松澤呼吸器クリニック -> 5件 (['www.matsuzawa-sas.com', 'www.matsuzawa-cl.com', 'www.iryou.teikyouseido.mhlw.go.jp', 'matsuzawa-c.com', '659naoso.com'])
+2026-05-18 12:12:56,000 [WARNING] __main__:     候補1: https://www.matsuzawa-sas.com (企業ID: matsuzawa-sas)
+2026-05-18 12:12:56,000 [WARNING] __main__:     候補2: https://www.matsuzawa-cl.com (企業ID: matsuzawa-cl)
+2026-05-18 12:12:56,000 [WARNING] __main__:     候補3: https://www.iryou.teikyouseido.mhlw.go.jp (企業ID: iryou-teikyouseido-mhlw)
+2026-05-18 12:12:56,000 [WARNING] __main__:     候補4: https://matsuzawa-c.com (企業ID: matsuzawa-c)
+2026-05-18 12:12:56,000 [WARNING] __main__:     候補5: https://659naoso.com (企業ID: 659naoso)
+2026-05-18 12:12:56,001 [INFO] spreadsheet_manager: 企業リスト保存完了: 63社 → C:\Users\NC00018174\Desktop\DOCdemo_update_project\data\company_list.csv
+2026-05-18 12:12:56,002 [WARNING] __main__:   [HOLD] 医療法人松澤呼吸器クリニック: 候補ID 5種類 → 後で UI で確定
+2026-05-18 12:12:56,002 [INFO] __main__: 
+2026-05-18 12:12:56,002 [INFO] __main__: [36/63] 一般社団法人メタローグ (現ステータス: 同名企業該当)
+2026-05-18 12:12:56,002 [INFO] __main__:   URL候補を検索中...
+2026-05-18 12:12:56,002 [INFO] url_finder: URL候補検索開始: 一般社団法人メタローグ 公式サイト (最大 5 件)
+2026-05-18 12:12:59,087 [INFO] url_finder: 候補ドメイン抽出: 一般社団法人メタローグ -> 5件 (['hattori-swimmy-clinic.com', 'sakai-swimmy-clinic.or.jp', 'job-medley.com', 'www.web-clover.net', 'caloo.jp'])
+2026-05-18 12:12:59,087 [WARNING] __main__:     候補1: https://hattori-swimmy-clinic.com (企業ID: hattori-swimmy-clinic)
+2026-05-18 12:12:59,087 [WARNING] __main__:     候補2: https://sakai-swimmy-clinic.or.jp (企業ID: sakai-swimmy-clinic)
+2026-05-18 12:12:59,087 [WARNING] __main__:     候補3: https://job-medley.com (企業ID: job-medley)
+2026-05-18 12:12:59,087 [WARNING] __main__:     候補4: https://www.web-clover.net (企業ID: web-clover)
+2026-05-18 12:12:59,087 [WARNING] __main__:     候補5: https://caloo.jp (企業ID: caloo)
+2026-05-18 12:12:59,090 [INFO] spreadsheet_manager: 企業リスト保存完了: 63社 → C:\Users\NC00018174\Desktop\DOCdemo_update_project\data\company_list.csv
+2026-05-18 12:12:59,090 [WARNING] __main__:   [HOLD] 一般社団法人メタローグ: 候補ID 5種類 → 後で UI で確定
+2026-05-18 12:12:59,090 [INFO] __main__: 
+2026-05-18 12:12:59,090 [INFO] __main__: [37/63] 株式会社XREED (現ステータス: 同名企業該当)
+2026-05-18 12:12:59,090 [INFO] __main__:   URL候補を検索中...
+2026-05-18 12:12:59,090 [INFO] url_finder: URL候補検索開始: 株式会社XREED 公式サイト (最大 5 件)
+2026-05-18 12:13:02,271 [INFO] url_finder: 候補ドメイン抽出: 株式会社XREED -> 2件 (['xreed.info', 'xi-inc.net'])
+2026-05-18 12:13:02,271 [WARNING] __main__:     候補1: https://xreed.info (企業ID: xreed)
+2026-05-18 12:13:02,271 [WARNING] __main__:     候補2: https://xi-inc.net (企業ID: xi-inc)
+2026-05-18 12:13:02,273 [INFO] spreadsheet_manager: 企業リスト保存完了: 63社 → C:\Users\NC00018174\Desktop\DOCdemo_update_project\data\company_list.csv
+2026-05-18 12:13:02,273 [WARNING] __main__:   [HOLD] 株式会社XREED: 候補ID 2種類 → 後で UI で確定
+2026-05-18 12:13:02,274 [INFO] __main__: 
+2026-05-18 12:13:02,274 [INFO] __main__: [38/63] 株式会社アカカベ (現ステータス: 同名企業該当)
+2026-05-18 12:13:02,274 [INFO] __main__:   URL候補を検索中...
+2026-05-18 12:13:02,274 [INFO] url_finder: URL候補検索開始: 株式会社アカカベ 公式サイト (最大 5 件)
+2026-05-18 12:13:05,425 [INFO] url_finder: 候補ドメイン抽出: 株式会社アカカベ -> 3件 (['www.akakabe.com', 'tenpo.akakabe.com', 'nut.akakabe.com'])
+2026-05-18 12:13:05,425 [WARNING] __main__:     候補1: https://www.akakabe.com (企業ID: akakabe)
+2026-05-18 12:13:05,425 [WARNING] __main__:     候補2: https://tenpo.akakabe.com (企業ID: tenpo-akakabe)
+2026-05-18 12:13:05,425 [WARNING] __main__:     候補3: https://nut.akakabe.com (企業ID: nut-akakabe)
+2026-05-18 12:13:05,431 [INFO] spreadsheet_manager: 企業リスト保存完了: 63社 → C:\Users\NC00018174\Desktop\DOCdemo_update_project\data\company_list.csv
+2026-05-18 12:13:05,431 [WARNING] __main__:   [HOLD] 株式会社アカカベ: 候補ID 3種類 → 後で UI で確定
+2026-05-18 12:13:05,431 [INFO] __main__: 
+2026-05-18 12:13:05,431 [INFO] __main__: [39/63] 株式会社ジェイオーダー (現ステータス: 同名企業該当)
+2026-05-18 12:13:05,431 [INFO] __main__:   URL候補を検索中...
+2026-05-18 12:13:05,431 [INFO] url_finder: URL候補検索開始: 株式会社ジェイオーダー 公式サイト (最大 5 件)
+2026-05-18 12:13:08,744 [INFO] url_finder: 候補ドメイン抽出: 株式会社ジェイオーダー -> 4件 (['jorder.jp', 'recruit.jorder.jp', 'member.jorder.jp', 'arwrk.net'])
+2026-05-18 12:13:08,744 [WARNING] __main__:     候補1: https://jorder.jp (企業ID: jorder)
+2026-05-18 12:13:08,744 [WARNING] __main__:     候補2: https://recruit.jorder.jp (企業ID: recruit-jorder)
+2026-05-18 12:13:08,744 [WARNING] __main__:     候補3: https://member.jorder.jp (企業ID: member-jorder)
+2026-05-18 12:13:08,744 [WARNING] __main__:     候補4: https://arwrk.net (企業ID: arwrk)
+2026-05-18 12:13:08,749 [INFO] spreadsheet_manager: 企業リスト保存完了: 63社 → C:\Users\NC00018174\Desktop\DOCdemo_update_project\data\company_list.csv
+2026-05-18 12:13:08,749 [WARNING] __main__:   [HOLD] 株式会社ジェイオーダー: 候補ID 4種類 → 後で UI で確定
+2026-05-18 12:13:08,749 [INFO] __main__: 
+2026-05-18 12:13:08,749 [INFO] __main__: [40/63] 株式会社ダイチュウ (現ステータス: 同名企業該当)
+2026-05-18 12:13:08,749 [INFO] __main__:   URL候補を検索中...
+2026-05-18 12:13:08,749 [INFO] url_finder: URL候補検索開始: 株式会社ダイチュウ 公式サイト (最大 5 件)
+2026-05-18 12:13:11,931 [INFO] url_finder: 候補ドメイン抽出: 株式会社ダイチュウ -> 5件 (['dg-daichu.co.jp', 'www.daichu-group.co.jp', 'www.daichu-d.co.jp', 'www.daichutec.co.jp', 'daichu-game.com'])
+2026-05-18 12:13:11,931 [WARNING] __main__:     候補1: https://dg-daichu.co.jp (企業ID: dg-daichu)
+2026-05-18 12:13:11,931 [WARNING] __main__:     候補2: https://www.daichu-group.co.jp (企業ID: daichu-group)
+2026-05-18 12:13:11,931 [WARNING] __main__:     候補3: http://www.daichu-d.co.jp (企業ID: daichu-d)
+2026-05-18 12:13:11,933 [WARNING] __main__:     候補4: https://www.daichutec.co.jp (企業ID: daichutec)
+2026-05-18 12:13:11,933 [WARNING] __main__:     候補5: https://daichu-game.com (企業ID: daichu-game)
+2026-05-18 12:13:11,933 [INFO] spreadsheet_manager: 企業リスト保存完了: 63社 → C:\Users\NC00018174\Desktop\DOCdemo_update_project\data\company_list.csv
+2026-05-18 12:13:11,933 [WARNING] __main__:   [HOLD] 株式会社ダイチュウ: 候補ID 5種類 → 後で UI で確定
+2026-05-18 12:13:11,933 [INFO] __main__: 
+2026-05-18 12:13:11,933 [INFO] __main__: [41/63] 株式会社モバイルコム (現ステータス: 同名企業該当)
+2026-05-18 12:13:11,933 [INFO] __main__:   URL候補を検索中...
+2026-05-18 12:13:11,933 [INFO] url_finder: URL候補検索開始: 株式会社モバイルコム 公式サイト (最大 5 件)
+2026-05-18 12:13:14,974 [INFO] url_finder: 候補ドメイン抽出: 株式会社モバイルコム -> 2件 (['www.mobilecom.co.jp', 'mobilecom.toebisu.biz'])
+2026-05-18 12:13:14,974 [WARNING] __main__:     候補1: https://www.mobilecom.co.jp (企業ID: mobilecom)
+2026-05-18 12:13:14,975 [WARNING] __main__:     候補2: https://mobilecom.toebisu.biz (企業ID: mobilecom-toebisu)
+2026-05-18 12:13:14,976 [INFO] spreadsheet_manager: 企業リスト保存完了: 63社 → C:\Users\NC00018174\Desktop\DOCdemo_update_project\data\company_list.csv
+2026-05-18 12:13:14,976 [WARNING] __main__:   [HOLD] 株式会社モバイルコム: 候補ID 2種類 → 後で UI で確定
+2026-05-18 12:13:14,976 [INFO] __main__: 
+2026-05-18 12:13:14,976 [INFO] __main__: [42/63] 株式会社リモハブ (現ステータス: URL特定済)
+2026-05-18 12:13:14,976 [INFO] __main__:   → 既にURL確定済: https://www.remohab.com
+2026-05-18 12:13:14,976 [INFO] __main__: 
+2026-05-18 12:13:14,976 [INFO] __main__: [43/63] 株式会社新通エスピー (現ステータス: 同名企業該当)
+2026-05-18 12:13:14,976 [INFO] __main__:   URL候補を検索中...
+2026-05-18 12:13:14,976 [INFO] url_finder: URL候補検索開始: 株式会社新通エスピー 公式サイト (最大 5 件)
+2026-05-18 12:13:18,016 [INFO] url_finder: 候補ドメイン抽出: 株式会社新通エスピー -> 3件 (['www.shintsusp.co.jp', 'www.shintsu.co.jp', 'www.shintsusp-job.com'])
+2026-05-18 12:13:18,016 [WARNING] __main__:     候補1: https://www.shintsusp.co.jp (企業ID: shintsusp)
+2026-05-18 12:13:18,016 [WARNING] __main__:     候補2: https://www.shintsu.co.jp (企業ID: shintsu)
+2026-05-18 12:13:18,016 [WARNING] __main__:     候補3: https://www.shintsusp-job.com/shintsusp/ (企業ID: shintsusp-job)
+2026-05-18 12:13:18,017 [INFO] spreadsheet_manager: 企業リスト保存完了: 63社 → C:\Users\NC00018174\Desktop\DOCdemo_update_project\data\company_list.csv
+2026-05-18 12:13:18,017 [WARNING] __main__:   [HOLD] 株式会社新通エスピー: 候補ID 3種類 → 後で UI で確定
+2026-05-18 12:13:18,017 [INFO] __main__: 
+2026-05-18 12:13:18,017 [INFO] __main__: [44/63] 株式会社内村 (現ステータス: URL特定済)
+2026-05-18 12:13:18,017 [INFO] __main__:   → 既にURL確定済: https://www.uchimura.co.jp
+2026-05-18 12:13:18,017 [INFO] __main__: 
+2026-05-18 12:13:18,017 [INFO] __main__: [45/63] 近鉄住宅管理株式会社 (現ステータス: 同名企業該当)
+2026-05-18 12:13:18,017 [INFO] __main__:   URL候補を検索中...
+2026-05-18 12:13:18,017 [INFO] url_finder: URL候補検索開始: 近鉄住宅管理株式会社 公式サイト (最大 5 件)
+2026-05-18 12:13:21,111 [INFO] url_finder: 候補ドメイン抽出: 近鉄住宅管理株式会社 -> 5件 (['www.kintetsu-community.co.jp', 'www.kanrikyo.or.jp', 'www.kintetsu-re.co.jp', 'sumachika.com', 'www.osaka-takken.or.jp'])
+2026-05-18 12:13:21,111 [WARNING] __main__:     候補1: https://www.kintetsu-community.co.jp (企業ID: kintetsu-community)
+2026-05-18 12:13:21,111 [WARNING] __main__:     候補2: https://www.kanrikyo.or.jp (企業ID: kanrikyo)
+2026-05-18 12:13:21,111 [WARNING] __main__:     候補3: https://www.kintetsu-re.co.jp/contact/ (企業ID: kintetsu-re)
+2026-05-18 12:13:21,111 [WARNING] __main__:     候補4: https://sumachika.com (企業ID: sumachika)
+2026-05-18 12:13:21,116 [WARNING] __main__:     候補5: https://www.osaka-takken.or.jp (企業ID: osaka-takken)
+2026-05-18 12:13:21,117 [INFO] spreadsheet_manager: 企業リスト保存完了: 63社 → C:\Users\NC00018174\Desktop\DOCdemo_update_project\data\company_list.csv
+2026-05-18 12:13:21,117 [WARNING] __main__:   [HOLD] 近鉄住宅管理株式会社: 候補ID 5種類 → 後で UI で確定
+2026-05-18 12:13:21,117 [INFO] __main__: 
+2026-05-18 12:13:21,117 [INFO] __main__: [46/63] 甲南防災株式会社 (現ステータス: 同名企業該当)
+2026-05-18 12:13:21,117 [INFO] __main__:   URL候補を検索中...
+2026-05-18 12:13:21,117 [INFO] url_finder: URL候補検索開始: 甲南防災株式会社 公式サイト (最大 5 件)
+2026-05-18 12:13:24,269 [INFO] url_finder: 候補ドメイン抽出: 甲南防災株式会社 -> 4件 (['www.konanbousai.com', 'www.konan-bousai.info', 'www.konanbousai-se.co.jp', 'en-gage.net'])
+2026-05-18 12:13:24,269 [WARNING] __main__:     候補1: https://www.konanbousai.com (企業ID: konanbousai)
+2026-05-18 12:13:24,270 [WARNING] __main__:     候補2: https://www.konan-bousai.info (企業ID: konan-bousai)
+2026-05-18 12:13:24,270 [WARNING] __main__:     候補3: https://www.konanbousai-se.co.jp (企業ID: konanbousai-se)
+2026-05-18 12:13:24,270 [WARNING] __main__:     候補4: https://en-gage.net/konanbousai/ (企業ID: en-gage)
+2026-05-18 12:13:24,271 [INFO] spreadsheet_manager: 企業リスト保存完了: 63社 → C:\Users\NC00018174\Desktop\DOCdemo_update_project\data\company_list.csv
+2026-05-18 12:13:24,271 [WARNING] __main__:   [HOLD] 甲南防災株式会社: 候補ID 4種類 → 後で UI で確定
+2026-05-18 12:13:24,271 [INFO] __main__: 
+2026-05-18 12:13:24,271 [INFO] __main__: [47/63] 新潟県土地改良事業団体連合会 (現ステータス: 同名企業該当)
+2026-05-18 12:13:24,271 [INFO] __main__:   URL候補を検索中...
+2026-05-18 12:13:24,271 [INFO] url_finder: URL候補検索開始: 新潟県土地改良事業団体連合会 公式サイト (最大 5 件)
+2026-05-18 12:13:27,348 [INFO] url_finder: 候補ドメイン抽出: 新潟県土地改良事業団体連合会 -> 4件 (['www.doren-niigata.or.jp', 'www.inakajin.or.jp', 'www.pref.niigata.lg.jp', 'www.niigata-job.ne.jp'])
+2026-05-18 12:13:27,348 [WARNING] __main__:     候補1: https://www.doren-niigata.or.jp (企業ID: doren-niigata)
+2026-05-18 12:13:27,348 [WARNING] __main__:     候補2: https://www.inakajin.or.jp (企業ID: inakajin)
+2026-05-18 12:13:27,348 [WARNING] __main__:     候補3: https://www.pref.niigata.lg.jp (企業ID: pref-niigata)
+2026-05-18 12:13:27,348 [WARNING] __main__:     候補4: https://www.niigata-job.ne.jp (企業ID: niigata-job)
+2026-05-18 12:13:27,350 [INFO] spreadsheet_manager: 企業リスト保存完了: 63社 → C:\Users\NC00018174\Desktop\DOCdemo_update_project\data\company_list.csv
+2026-05-18 12:13:27,350 [WARNING] __main__:   [HOLD] 新潟県土地改良事業団体連合会: 候補ID 4種類 → 後で UI で確定
+2026-05-18 12:13:27,350 [INFO] __main__: 
+2026-05-18 12:13:27,350 [INFO] __main__: [48/63] 静光産業株式会社 (現ステータス: 同名企業該当)
+2026-05-18 12:13:27,351 [INFO] __main__:   URL候補を検索中...
+2026-05-18 12:13:27,351 [INFO] url_finder: URL候補検索開始: 静光産業株式会社 公式サイト (最大 5 件)
+2026-05-18 12:13:30,571 [INFO] url_finder: 候補ドメイン抽出: 静光産業株式会社 -> 5件 (['www.seiko-detergent.com', 'www.ipros.com', 'arwrk.net', 'syukatsu-kaigi.jp', 'www.seiko-s.co.jp'])
+2026-05-18 12:13:30,572 [WARNING] __main__:     候補1: https://www.seiko-detergent.com (企業ID: seiko-detergent)
+2026-05-18 12:13:30,572 [WARNING] __main__:     候補2: https://www.ipros.com (企業ID: ipros)
+2026-05-18 12:13:30,572 [WARNING] __main__:     候補3: https://arwrk.net (企業ID: arwrk)
+2026-05-18 12:13:30,572 [WARNING] __main__:     候補4: https://syukatsu-kaigi.jp (企業ID: syukatsu-kaigi)
+2026-05-18 12:13:30,572 [WARNING] __main__:     候補5: https://www.seiko-s.co.jp (企業ID: seiko-s)
+2026-05-18 12:13:30,574 [INFO] spreadsheet_manager: 企業リスト保存完了: 63社 → C:\Users\NC00018174\Desktop\DOCdemo_update_project\data\company_list.csv
+2026-05-18 12:13:30,574 [WARNING] __main__:   [HOLD] 静光産業株式会社: 候補ID 5種類 → 後で UI で確定
+2026-05-18 12:13:30,574 [INFO] __main__: 
+2026-05-18 12:13:30,574 [INFO] __main__: [49/63] 大洋興業株式会社 (現ステータス: 同名企業該当)
+2026-05-18 12:13:30,574 [INFO] __main__:   URL候補を検索中...
+2026-05-18 12:13:30,574 [INFO] url_finder: URL候補検索開始: 大洋興業株式会社 公式サイト (最大 5 件)
+2026-05-18 12:13:33,761 [INFO] url_finder: 候補ドメイン抽出: 大洋興業株式会社 -> 5件 (['www.taiyo21.com', 'www.taiyo-kougyou.jp', 'www.taiyokogyo.ecnet.jp', 'www.nittetsu-hikari-group.com', 'www.taiyou-kk.com'])
+2026-05-18 12:13:33,762 [WARNING] __main__:     候補1: https://www.taiyo21.com (企業ID: taiyo21)
+2026-05-18 12:13:33,762 [WARNING] __main__:     候補2: https://www.taiyo-kougyou.jp (企業ID: taiyo-kougyou)
+2026-05-18 12:13:33,762 [WARNING] __main__:     候補3: http://www.taiyokogyo.ecnet.jp (企業ID: taiyokogyo-ecnet)
+2026-05-18 12:13:33,762 [WARNING] __main__:     候補4: https://www.nittetsu-hikari-group.com (企業ID: nittetsu-hikari-group)
+2026-05-18 12:13:33,762 [WARNING] __main__:     候補5: http://www.taiyou-kk.com (企業ID: taiyou-kk)
+2026-05-18 12:13:33,763 [INFO] spreadsheet_manager: 企業リスト保存完了: 63社 → C:\Users\NC00018174\Desktop\DOCdemo_update_project\data\company_list.csv
+2026-05-18 12:13:33,763 [WARNING] __main__:   [HOLD] 大洋興業株式会社: 候補ID 5種類 → 後で UI で確定
+2026-05-18 12:13:33,764 [INFO] __main__: 
+2026-05-18 12:13:33,764 [INFO] __main__: [50/63] 東洋製罐株式会社 (現ステータス: 同名企業該当)
+2026-05-18 12:13:33,764 [INFO] __main__:   URL候補を検索中...
+2026-05-18 12:13:33,764 [INFO] url_finder: URL候補検索開始: 東洋製罐株式会社 公式サイト (最大 5 件)
+2026-05-18 12:13:36,877 [INFO] url_finder: 候補ドメイン抽出: 東洋製罐株式会社 -> 3件 (['www.toyo-seikan.co.jp', 'www.tskg-hd.com', 'www.tokan.co.jp'])
+2026-05-18 12:13:36,877 [WARNING] __main__:     候補1: https://www.toyo-seikan.co.jp (企業ID: toyo-seikan)
+2026-05-18 12:13:36,877 [WARNING] __main__:     候補2: https://www.tskg-hd.com (企業ID: tskg-hd)
+2026-05-18 12:13:36,877 [WARNING] __main__:     候補3: https://www.tokan.co.jp (企業ID: tokan)
+2026-05-18 12:13:36,877 [INFO] spreadsheet_manager: 企業リスト保存完了: 63社 → C:\Users\NC00018174\Desktop\DOCdemo_update_project\data\company_list.csv
+2026-05-18 12:13:36,877 [WARNING] __main__:   [HOLD] 東洋製罐株式会社: 候補ID 3種類 → 後で UI で確定
+2026-05-18 12:13:36,881 [INFO] __main__: 
+2026-05-18 12:13:36,881 [INFO] __main__: [51/63] 株式会社リンク・トラスト (現ステータス: エラー)
+2026-05-18 12:13:36,881 [INFO] __main__:   → 既にURL確定済: https://linktrust.co.jp
+2026-05-18 12:13:36,881 [INFO] __main__: 
+2026-05-18 12:13:36,881 [INFO] __main__: [52/63] 株式会社Mountain Bull (現ステータス: エラー)
+2026-05-18 12:13:36,881 [INFO] __main__:   → 既にURL確定済: https://mountainbull.co.jp
+2026-05-18 12:13:36,881 [INFO] __main__: 
+2026-05-18 12:13:36,881 [INFO] __main__: [53/63] 日本製紙木材株式会社 (現ステータス: エラー)
+2026-05-18 12:13:36,881 [INFO] __main__:   → 既にURL確定済: https://www.np-l.co.jp
+2026-05-18 12:13:36,881 [INFO] __main__: 
+2026-05-18 12:13:36,881 [INFO] __main__: [54/63] 株式会社ベストランス (現ステータス: エラー)
+2026-05-18 12:13:36,881 [INFO] __main__:   → 既にURL確定済: https://www.bestrans.co.jp
+2026-05-18 12:13:36,881 [INFO] __main__: 
+2026-05-18 12:13:36,881 [INFO] __main__: [55/63] 郵船クルーズ株式会社 (現ステータス: エラー)
+2026-05-18 12:13:36,881 [INFO] __main__:   → 既にURL確定済: https://www.asukacruise.co.jp
+2026-05-18 12:13:36,881 [INFO] __main__: 
+2026-05-18 12:13:36,881 [INFO] __main__: [56/63] 株式会社システムズプラン (現ステータス: エラー)
+2026-05-18 12:13:36,881 [INFO] __main__:   → 既にURL確定済: https://systemsplan.co.jp
+2026-05-18 12:13:36,881 [INFO] __main__: 
+2026-05-18 12:13:36,881 [INFO] __main__: [57/63] 株式会社ケーシーエスキャロット (現ステータス: エラー)
+2026-05-18 12:13:36,881 [INFO] __main__:   → 既にURL確定済: https://www.carrot.co.jp
+2026-05-18 12:13:36,881 [INFO] __main__: 
+2026-05-18 12:13:36,881 [INFO] __main__: [58/63] アウトルックコンサルティング株式会社 (現ステータス: エラー)
+2026-05-18 12:13:36,881 [INFO] __main__:   → 既にURL確定済: https://www.outlook.co.jp
+2026-05-18 12:13:36,881 [INFO] __main__: 
+2026-05-18 12:13:36,881 [INFO] __main__: [59/63] 株式会社ピート (現ステータス: エラー)
+2026-05-18 12:13:36,881 [INFO] __main__:   → 既にURL確定済: https://www.peetonline.com
+2026-05-18 12:13:36,881 [INFO] __main__: 
+2026-05-18 12:13:36,881 [INFO] __main__: [60/63] 株式会社エスプロシステム (現ステータス: エラー)
+2026-05-18 12:13:36,881 [INFO] __main__:   → 既にURL確定済: https://www.s-pro.co.jp
+2026-05-18 12:13:36,881 [INFO] __main__: 
+2026-05-18 12:13:36,881 [INFO] __main__: [61/63] 京急建設株式会社 (現ステータス: エラー)
+2026-05-18 12:13:36,881 [INFO] __main__:   → 既にURL確定済: https://www.keikyu-const.jp
+2026-05-18 12:13:36,881 [INFO] __main__: 
+2026-05-18 12:13:36,883 [INFO] __main__: [62/63] 齋藤木材工業株式会社 (現ステータス: エラー)
+2026-05-18 12:13:36,883 [INFO] __main__:   → 既にURL確定済: https://saito-mokuzai.co.jp
+2026-05-18 12:13:36,883 [INFO] __main__: 
+2026-05-18 12:13:36,883 [INFO] __main__: [63/63] 升川建設株式会社 (現ステータス: エラー)
+2026-05-18 12:13:36,883 [INFO] __main__:   → 既にURL確定済: https://www.masukawa.co.jp
+2026-05-18 12:13:36,966 [INFO] __main__: 
+2026-05-18 12:13:36,966 [INFO] __main__: ============================================================
+2026-05-18 12:13:36,966 [INFO] __main__: Stage 1: URL選定フェーズ 完了サマリー
+2026-05-18 12:13:36,967 [INFO] __main__: ============================================================
+2026-05-18 12:13:36,967 [INFO] __main__:   対象企業:           63社
+2026-05-18 12:13:36,967 [INFO] __main__:   [既済] 既にURL確定:  23社
+2026-05-18 12:13:36,967 [INFO] __main__:   [新規] 今回URL確定:  0社
+2026-05-18 12:13:36,967 [INFO] __main__:   [HOLD] 候補複数:    40社
+2026-05-18 12:13:36,968 [INFO] __main__:   [SKIP] 候補なし:    0社
+2026-05-18 12:13:36,968 [INFO] __main__:   [ERR]  エラー:      0社
+2026-05-18 12:13:36,969 [INFO] __main__:   所要時間:           0:02:12.511511
+2026-05-18 12:13:36,969 [INFO] __main__: ============================================================
+2026-05-18 12:13:36,969 [INFO] __main__: 
+2026-05-18 12:13:36,969 [INFO] __main__: HOLD企業のURL選定UIを起動します...
+2026-05-18 12:13:36,969 [INFO] __main__:   (UI上で各企業の正しいURLを選択 → 終了して保存)
+2026-05-18 14:36:22,143 [INFO] __main__: HOLD UI 終了 (rc=0)
+2026-05-18 14:36:22,143 [INFO] __main__: 
+2026-05-18 14:36:22,143 [INFO] __main__: HOLD UI 終了後の状態を再確認...
+2026-05-18 14:36:22,173 [INFO] spreadsheet_manager: 企業リスト読み込み完了: 63社
+2026-05-18 14:36:22,176 [INFO] __main__:   URL確定済: 10社
+2026-05-18 14:36:22,176 [INFO] __main__:   未解消HOLD: 3社
+2026-05-18 14:36:22,176 [WARNING] __main__:   ※ 未解消の HOLD が 3社 あります。後で `python resolve_hold_ui.py` を再実行できます。
+2026-05-18 14:36:22,176 [INFO] __main__: 
+2026-05-18 14:36:22,177 [INFO] __main__: Stage 1 完了。次は `python orchestrator.py` で Stage 2 を実行してください。
+2026-05-18 14:36:33,524 [INFO] __main__: ============================================================
+2026-05-18 14:36:33,525 [INFO] __main__: DOCdemo 自動化フロー 開始 (Stage 2: デモ作成)
+2026-05-18 14:36:33,525 [INFO] __main__: 開始時刻: 2026-05-18 14:36:33
+2026-05-18 14:36:33,525 [INFO] __main__: ============================================================
+2026-05-18 14:36:33,528 [INFO] spreadsheet_manager: 企業リスト読み込み完了: 63社
+2026-05-18 14:36:33,528 [INFO] spreadsheet_manager: 処理対象企業: 47社 / 全63社
+2026-05-18 14:36:33,528 [INFO] __main__: 処理対象: 47社
+2026-05-18 14:36:34,625 [INFO] web_app_operator: 管理画面にログイン中...
+2026-05-18 14:36:43,859 [INFO] web_app_operator: ログイン成功
+2026-05-18 14:36:43,859 [INFO] __main__: 
+2026-05-18 14:36:43,859 [INFO] __main__: ──────────────────────────────────────────────────
+2026-05-18 14:36:43,861 [INFO] __main__: [1/47] 株式会社竹中製作所 (ステータス: 同名企業該当)
+2026-05-18 14:36:43,861 [INFO] __main__: ──────────────────────────────────────────────────
+2026-05-18 14:36:43,861 [INFO] __main__: Step 1/5: URL確定済の企業を Stage 2 で処理: https://www.takenaka-mfg.co.jp
+2026-05-18 14:36:43,861 [INFO] spreadsheet_manager: 企業リスト保存完了: 63社 → C:\Users\NC00018174\Desktop\DOCdemo_update_project\data\company_list.csv
+2026-05-18 14:36:43,861 [INFO] __main__: Step 2/6: 企業追加...
+2026-05-18 14:36:43,861 [INFO] web_app_operator: 企業追加開始: 株式会社竹中製作所
+2026-05-18 14:36:58,923 [INFO] web_app_operator: 企業追加完了: 株式会社竹中製作所 (ID: takenaka-mfg)
+2026-05-18 14:36:58,923 [INFO] __main__: Step 2.5/6: 追加企業のID検証...
+2026-05-18 14:36:58,923 [INFO] web_app_operator:   企業ID検証中: 期待ID=takenaka-mfg, URL=https://www.takenaka-mfg.co.jp
+2026-05-18 14:37:03,003 [INFO] web_app_operator:   [OK] 企業ID 'takenaka-mfg' をページ内に確認
+2026-05-18 14:37:03,007 [INFO] spreadsheet_manager: 企業リスト保存完了: 63社 → C:\Users\NC00018174\Desktop\DOCdemo_update_project\data\company_list.csv
+2026-05-18 14:37:03,007 [INFO] __main__:   → 企業追加完了 (ID: takenaka-mfg)
+2026-05-18 14:37:03,007 [INFO] __main__: 企業追加完了 → ページを閉じて再ログイン（キャッシュバグ防止）
+2026-05-18 14:37:03,008 [INFO] web_app_operator: ページを閉じて再ログインを開始...
+2026-05-18 14:37:03,050 [INFO] web_app_operator:   古いページタブを閉じました
+2026-05-18 14:37:03,156 [INFO] web_app_operator:   新しいページタブを開きました
+2026-05-18 14:37:03,157 [INFO] web_app_operator: 管理画面にログイン中...
+2026-05-18 14:37:09,240 [INFO] web_app_operator: ログイン成功
+2026-05-18 14:37:09,240 [INFO] web_app_operator: ページクローズ＆再ログイン完了
+2026-05-18 14:37:09,240 [INFO] __main__: Step 3/5: URL収集...
+2026-05-18 14:37:14,490 [INFO] recruit_url_finder: 求人サイトURL収集開始: 株式会社竹中製作所 (正規化: '竹中製作所')
+2026-05-18 14:37:17,578 [INFO] recruit_url_finder:   [マイナビ転職] 2件取り込み (累計 2件)
+2026-05-18 14:37:20,445 [INFO] recruit_url_finder:   [マイナビ新卒] 2件取り込み (累計 4件)
+2026-05-18 14:37:23,196 [INFO] recruit_url_finder:   [リクナビ] 2件取り込み (累計 6件)
+2026-05-18 14:37:26,111 [INFO] recruit_url_finder:   [DODA] 2件取り込み (累計 8件)
+2026-05-18 14:37:28,927 [INFO] recruit_url_finder:   [エン転職] 0件取り込み (累計 8件)
+2026-05-18 14:37:31,675 [INFO] recruit_url_finder:   [Wantedly] 0件取り込み (累計 8件)
+2026-05-18 14:37:34,553 [INFO] recruit_url_finder:   [Green] 0件取り込み (累計 8件)
+2026-05-18 14:37:37,228 [INFO] recruit_url_finder:   [Indeed] 2件取り込み (累計 10件)
+2026-05-18 14:37:37,228 [INFO] recruit_url_finder: 求人サイトURL収集完了: 株式会社竹中製作所 → 合計 10 件
+2026-05-18 14:37:37,228 [INFO] __main__:   → 内部リンク:30件, 求人サイト:10件, 合計:40件
+2026-05-18 14:37:37,228 [INFO] __main__: Step 4/5: コンテンツ生成... (試行 1/3)
+2026-05-18 14:37:41,025 [INFO] __main__:   [検証] コンテンツ生成画面のヘッダーが対象企業に切替済か確認...
+2026-05-18 14:37:41,025 [INFO] web_app_operator: サイドバーから企業選択開始: 株式会社竹中製作所
+2026-05-18 14:37:49,108 [INFO] web_app_operator:   ヘッダー検証中: 企業名=株式会社竹中製作所, ID=takenaka-mfg
+2026-05-18 14:37:49,226 [INFO] web_app_operator:   [OK] ヘッダー検証成功: 「🤖 株式会社竹中製作所 コンテンツ生成」
+2026-05-18 14:37:49,226 [INFO] web_app_operator: サイドバー企業選択完了: 株式会社竹中製作所
+2026-05-18 14:37:49,226 [INFO] web_app_operator: URL入力開始: 40件
+2026-05-18 14:37:53,023 [INFO] web_app_operator:   「全入力を処理」ボタンをクリックしました
+2026-05-18 14:38:27,586 [INFO] web_app_operator: URL入力・処理開始完了: 40件
+2026-05-18 14:38:27,586 [INFO] web_app_operator: コンテンツ生成開始...
+2026-05-18 14:38:38,273 [INFO] web_app_operator:   生成準備完了の待機中...
+2026-05-18 14:39:18,294 [WARNING] web_app_operator:   生成準備完了メッセージが特定できませんでしたが、続行を試みます
+2026-05-18 14:39:38,327 [WARNING] web_app_operator:   コンテンツ生成ボタン未検出 (試行 1/6) — 生成タブを再クリック
+2026-05-18 14:40:08,991 [WARNING] web_app_operator:   コンテンツ生成ボタン未検出 (試行 2/6) — 生成タブを再クリック
+2026-05-18 14:40:39,640 [WARNING] web_app_operator:   コンテンツ生成ボタン未検出 (試行 3/6) — 生成タブを再クリック
+2026-05-18 14:40:59,582 [INFO] web_app_operator:   コンテンツ生成ボタン検出 (試行 4/6)
+2026-05-18 14:41:00,138 [INFO] web_app_operator: コンテンツ生成中... (最大5分待機)
+2026-05-18 14:42:01,990 [INFO] web_app_operator: 生成完了検出 (経過: 60.0秒, スピナー出現: True)
+2026-05-18 14:42:01,991 [INFO] web_app_operator:   [検証] 生成結果のFAQ実体を確認: 株式会社竹中製作所 (id=takenaka-mfg)
+2026-05-18 14:44:04,914 [WARNING] __main__:   [RETRY] 保存/生成検証失敗 (生成完了検出後、FAQ実体がページに現れません (パターン一致: 1件、120s経過)。生成失敗 or 別企業のデータ残存疑い。スクショ: screenshots/gen_verify_fail_takenaka-mfg.png) → Step 4 から再試行 (次回 2/3)
+2026-05-18 14:44:04,915 [INFO] web_app_operator: ページを閉じて再ログインを開始...
+2026-05-18 14:44:04,952 [INFO] web_app_operator:   古いページタブを閉じました
+2026-05-18 14:44:05,067 [INFO] web_app_operator:   新しいページタブを開きました
+2026-05-18 14:44:05,067 [INFO] web_app_operator: 管理画面にログイン中...
+2026-05-18 14:44:14,202 [INFO] web_app_operator: ログイン成功
+2026-05-18 14:44:14,203 [INFO] web_app_operator: ページクローズ＆再ログイン完了
+2026-05-18 14:44:14,203 [INFO] __main__: Step 4/5: コンテンツ生成... (試行 2/3)
+2026-05-18 14:44:17,838 [INFO] __main__:   [検証] コンテンツ生成画面のヘッダーが対象企業に切替済か確認...
+2026-05-18 14:44:17,838 [INFO] web_app_operator: サイドバーから企業選択開始: 株式会社竹中製作所
+2026-05-18 14:44:25,920 [INFO] web_app_operator:   ヘッダー検証中: 企業名=株式会社竹中製作所, ID=takenaka-mfg
+2026-05-18 14:44:25,991 [INFO] web_app_operator:   [OK] ヘッダー検証成功: 「🤖 株式会社竹中製作所 コンテンツ生成」
+2026-05-18 14:44:25,991 [INFO] web_app_operator: サイドバー企業選択完了: 株式会社竹中製作所
+2026-05-18 14:44:25,991 [INFO] web_app_operator: URL入力開始: 40件
+2026-05-18 14:44:29,756 [INFO] web_app_operator:   「全入力を処理」ボタンをクリックしました
+2026-05-18 14:45:04,312 [INFO] web_app_operator: URL入力・処理開始完了: 40件
+2026-05-18 14:45:04,312 [INFO] web_app_operator: コンテンツ生成開始...
+2026-05-18 14:45:14,980 [INFO] web_app_operator:   生成準備完了の待機中...
+2026-05-18 14:45:54,996 [WARNING] web_app_operator:   生成準備完了メッセージが特定できませんでしたが、続行を試みます
+2026-05-18 14:46:15,019 [WARNING] web_app_operator:   コンテンツ生成ボタン未検出 (試行 1/6) — 生成タブを再クリック
+2026-05-18 14:46:45,686 [WARNING] web_app_operator:   コンテンツ生成ボタン未検出 (試行 2/6) — 生成タブを再クリック
+2026-05-18 14:47:16,319 [WARNING] web_app_operator:   コンテンツ生成ボタン未検出 (試行 3/6) — 生成タブを再クリック
+2026-05-18 14:47:33,143 [INFO] web_app_operator:   コンテンツ生成ボタン検出 (試行 4/6)
+2026-05-18 14:47:33,716 [INFO] web_app_operator: コンテンツ生成中... (最大5分待機)
+2026-05-18 14:48:17,744 [INFO] web_app_operator: 生成完了検出 (経過: 42.0秒, スピナー出現: True)
+2026-05-18 14:48:17,745 [INFO] web_app_operator:   [検証] 生成結果のFAQ実体を確認: 株式会社竹中製作所 (id=takenaka-mfg)
+2026-05-18 14:50:20,824 [WARNING] __main__:   [RETRY] 保存/生成検証失敗 (生成完了検出後、FAQ実体がページに現れません (パターン一致: 1件、120s経過)。生成失敗 or 別企業のデータ残存疑い。スクショ: screenshots/gen_verify_fail_takenaka-mfg.png) → Step 4 から再試行 (次回 3/3)
+2026-05-18 14:50:20,825 [INFO] web_app_operator: ページを閉じて再ログインを開始...
+2026-05-18 14:50:20,875 [INFO] web_app_operator:   古いページタブを閉じました
+2026-05-18 14:50:20,995 [INFO] web_app_operator:   新しいページタブを開きました
+2026-05-18 14:50:20,996 [INFO] web_app_operator: 管理画面にログイン中...
+2026-05-18 14:50:30,147 [INFO] web_app_operator: ログイン成功
+2026-05-18 14:50:30,147 [INFO] web_app_operator: ページクローズ＆再ログイン完了
+2026-05-18 14:50:30,147 [INFO] __main__: Step 4/5: コンテンツ生成... (試行 3/3)
+2026-05-18 14:50:33,948 [INFO] __main__:   [検証] コンテンツ生成画面のヘッダーが対象企業に切替済か確認...
+2026-05-18 14:50:33,949 [INFO] web_app_operator: サイドバーから企業選択開始: 株式会社竹中製作所
+2026-05-18 14:50:41,965 [INFO] web_app_operator:   ヘッダー検証中: 企業名=株式会社竹中製作所, ID=takenaka-mfg
+2026-05-18 14:50:42,047 [INFO] web_app_operator:   [OK] ヘッダー検証成功: 「🤖 株式会社竹中製作所 コンテンツ生成」
+2026-05-18 14:50:42,048 [INFO] web_app_operator: サイドバー企業選択完了: 株式会社竹中製作所
+2026-05-18 14:50:42,049 [INFO] web_app_operator: URL入力開始: 40件
+2026-05-18 14:50:45,813 [INFO] web_app_operator:   「全入力を処理」ボタンをクリックしました
+2026-05-18 14:51:20,365 [INFO] web_app_operator: URL入力・処理開始完了: 40件
+2026-05-18 14:51:20,366 [INFO] web_app_operator: コンテンツ生成開始...
+2026-05-18 14:51:31,062 [INFO] web_app_operator:   生成準備完了の待機中...
+2026-05-18 14:52:11,084 [WARNING] web_app_operator:   生成準備完了メッセージが特定できませんでしたが、続行を試みます
+2026-05-18 14:52:31,089 [WARNING] web_app_operator:   コンテンツ生成ボタン未検出 (試行 1/6) — 生成タブを再クリック
+2026-05-18 14:53:01,749 [WARNING] web_app_operator:   コンテンツ生成ボタン未検出 (試行 2/6) — 生成タブを再クリック
+2026-05-18 14:53:32,399 [WARNING] web_app_operator:   コンテンツ生成ボタン未検出 (試行 3/6) — 生成タブを再クリック
+2026-05-18 14:53:49,063 [INFO] web_app_operator:   コンテンツ生成ボタン検出 (試行 4/6)
+2026-05-18 14:53:49,652 [INFO] web_app_operator: コンテンツ生成中... (最大5分待機)
+2026-05-18 14:54:45,477 [INFO] web_app_operator: 生成完了検出 (経過: 54.0秒, スピナー出現: True)
+2026-05-18 14:54:45,478 [INFO] web_app_operator:   [検証] 生成結果のFAQ実体を確認: 株式会社竹中製作所 (id=takenaka-mfg)
+2026-05-18 14:56:48,397 [ERROR] __main__:   [ERR] FAQ/企業情報の保存検証に 3回失敗。最終的に失敗とします: 生成完了検出後、FAQ実体がページに現れません (パターン一致: 1件、120s経過)。生成失敗 or 別企業のデータ残存疑い。スクショ: screenshots/gen_verify_fail_takenaka-mfg.png
+2026-05-18 14:56:48,398 [ERROR] __main__: [ERROR] 株式会社竹中製作所: 処理失敗 -- 生成完了検出後、FAQ実体がページに現れません (パターン一致: 1件、120s経過)。生成失敗 or 別企業のデータ残存疑い。スクショ: screenshots/gen_verify_fail_takenaka-mfg.png
+2026-05-18 14:56:48,400 [INFO] spreadsheet_manager: 企業リスト保存完了: 63社 → C:\Users\NC00018174\Desktop\DOCdemo_update_project\data\company_list.csv
+2026-05-18 14:56:48,400 [INFO] __main__: 
+2026-05-18 14:56:48,400 [INFO] __main__: 1件処理完了 → 再ログイン＆キャッシュクリアを実行
+2026-05-18 14:56:48,400 [INFO] web_app_operator: 再ログイン＆キャッシュクリア開始...
+2026-05-18 14:56:48,411 [INFO] web_app_operator:   LocalStorage/SessionStorageをクリアしました
+2026-05-18 14:56:48,424 [INFO] web_app_operator:   Cookieをクリアしました
+2026-05-18 14:56:50,428 [INFO] web_app_operator: 管理画面にログイン中...
+2026-05-18 14:56:59,613 [INFO] web_app_operator: ログイン成功
+2026-05-18 14:56:59,613 [INFO] web_app_operator: 再ログイン＆キャッシュクリア完了
+2026-05-18 14:56:59,614 [INFO] __main__: 
+2026-05-18 14:56:59,614 [INFO] __main__: ──────────────────────────────────────────────────
+2026-05-18 14:56:59,614 [INFO] __main__: [2/47] 株式会社長谷工コミュニティ (ステータス: 同名企業該当)
+2026-05-18 14:56:59,614 [INFO] __main__: ──────────────────────────────────────────────────
+2026-05-18 14:56:59,614 [INFO] __main__: Step 1/5: URL確定済の企業を Stage 2 で処理: https://www.haseko-hcm.co.jp
+2026-05-18 14:56:59,617 [INFO] spreadsheet_manager: 企業リスト保存完了: 63社 → C:\Users\NC00018174\Desktop\DOCdemo_update_project\data\company_list.csv
+2026-05-18 14:56:59,617 [INFO] __main__: Step 2/6: 企業追加...
+2026-05-18 14:56:59,617 [INFO] web_app_operator: 企業追加開始: 株式会社長谷工コミュニティ
+2026-05-18 14:57:14,577 [INFO] web_app_operator: 企業追加完了: 株式会社長谷工コミュニティ (ID: haseko-hcm)
+2026-05-18 14:57:14,577 [INFO] __main__: Step 2.5/6: 追加企業のID検証...
+2026-05-18 14:57:14,579 [INFO] web_app_operator:   企業ID検証中: 期待ID=haseko-hcm, URL=https://www.haseko-hcm.co.jp
+2026-05-18 14:57:18,659 [INFO] web_app_operator:   [OK] 企業ID 'haseko-hcm' をページ内に確認
+2026-05-18 14:57:18,664 [INFO] spreadsheet_manager: 企業リスト保存完了: 63社 → C:\Users\NC00018174\Desktop\DOCdemo_update_project\data\company_list.csv
+2026-05-18 14:57:18,664 [INFO] __main__:   → 企業追加完了 (ID: haseko-hcm)
+2026-05-18 14:57:18,665 [INFO] __main__: 企業追加完了 → ページを閉じて再ログイン（キャッシュバグ防止）
+2026-05-18 14:57:18,665 [INFO] web_app_operator: ページを閉じて再ログインを開始...
+2026-05-18 14:57:18,708 [INFO] web_app_operator:   古いページタブを閉じました
+2026-05-18 14:57:18,814 [INFO] web_app_operator:   新しいページタブを開きました
+2026-05-18 14:57:18,815 [INFO] web_app_operator: 管理画面にログイン中...
+2026-05-18 14:57:24,806 [INFO] web_app_operator: ログイン成功
+2026-05-18 14:57:24,808 [INFO] web_app_operator: ページクローズ＆再ログイン完了
+2026-05-18 14:57:24,808 [INFO] __main__: Step 3/5: URL収集...
+2026-05-18 14:57:28,136 [INFO] recruit_url_finder: 求人サイトURL収集開始: 株式会社長谷工コミュニティ (正規化: '長谷工コミュニティ')
+2026-05-18 14:57:30,952 [INFO] recruit_url_finder:   [マイナビ転職] 2件取り込み (累計 2件)
+2026-05-18 14:57:33,691 [INFO] recruit_url_finder:   [マイナビ新卒] 2件取り込み (累計 4件)
+2026-05-18 14:57:36,430 [INFO] recruit_url_finder:   [リクナビ] 2件取り込み (累計 6件)
+2026-05-18 14:57:39,274 [INFO] recruit_url_finder:   [DODA] 2件取り込み (累計 8件)
+2026-05-18 14:57:42,080 [INFO] recruit_url_finder:   [エン転職] 2件取り込み (累計 10件)
+2026-05-18 14:57:42,086 [INFO] recruit_url_finder: 求人サイトURL収集完了: 株式会社長谷工コミュニティ → 合計 10 件
+2026-05-18 14:57:42,086 [INFO] __main__:   → 内部リンク:30件, 求人サイト:10件, 合計:40件
+2026-05-18 14:57:42,086 [INFO] __main__: Step 4/5: コンテンツ生成... (試行 1/3)
+2026-05-18 14:57:45,899 [INFO] __main__:   [検証] コンテンツ生成画面のヘッダーが対象企業に切替済か確認...
+2026-05-18 14:57:45,899 [INFO] web_app_operator: サイドバーから企業選択開始: 株式会社長谷工コミュニティ
+2026-05-18 14:57:53,990 [INFO] web_app_operator:   ヘッダー検証中: 企業名=株式会社長谷工コミュニティ, ID=haseko-hcm
+2026-05-18 14:57:54,096 [INFO] web_app_operator:   [OK] ヘッダー検証成功: 「🤖 株式会社長谷工コミュニティ コンテンツ生成」
+2026-05-18 14:57:54,096 [INFO] web_app_operator: サイドバー企業選択完了: 株式会社長谷工コミュニティ
+2026-05-18 14:57:54,096 [INFO] web_app_operator: URL入力開始: 40件
+2026-05-18 14:57:57,906 [INFO] web_app_operator:   「全入力を処理」ボタンをクリックしました
+2026-05-18 14:58:32,467 [INFO] web_app_operator: URL入力・処理開始完了: 40件
+2026-05-18 14:58:32,468 [INFO] web_app_operator: コンテンツ生成開始...
+2026-05-18 14:58:43,167 [INFO] web_app_operator:   生成準備完了の待機中...
+2026-05-18 14:59:23,191 [WARNING] web_app_operator:   生成準備完了メッセージが特定できませんでしたが、続行を試みます
+2026-05-18 14:59:43,212 [WARNING] web_app_operator:   コンテンツ生成ボタン未検出 (試行 1/6) — 生成タブを再クリック
+2026-05-18 15:00:13,861 [WARNING] web_app_operator:   コンテンツ生成ボタン未検出 (試行 2/6) — 生成タブを再クリック
+2026-05-18 15:00:24,550 [INFO] web_app_operator:   コンテンツ生成ボタン検出 (試行 3/6)
+2026-05-18 15:00:25,125 [INFO] web_app_operator: コンテンツ生成中... (最大5分待機)
+2026-05-18 15:01:12,583 [INFO] web_app_operator: 生成完了検出 (経過: 45.0秒, スピナー出現: True)
+2026-05-18 15:01:12,583 [INFO] web_app_operator:   [検証] 生成結果のFAQ実体を確認: 株式会社長谷工コミュニティ (id=haseko-hcm)
+2026-05-18 15:03:15,312 [WARNING] __main__:   [RETRY] 保存/生成検証失敗 (生成完了検出後、FAQ実体がページに現れません (パターン一致: 1件、120s経過)。生成失敗 or 別企業のデータ残存疑い。スクショ: screenshots/gen_verify_fail_haseko-hcm.png) → Step 4 から再試行 (次回 2/3)
+2026-05-18 15:03:15,313 [INFO] web_app_operator: ページを閉じて再ログインを開始...
+2026-05-18 15:03:15,355 [INFO] web_app_operator:   古いページタブを閉じました
+2026-05-18 15:03:15,441 [INFO] web_app_operator:   新しいページタブを開きました
+2026-05-18 15:03:15,441 [INFO] web_app_operator: 管理画面にログイン中...
+2026-05-18 15:03:22,354 [INFO] web_app_operator: ログイン成功
+2026-05-18 15:03:22,354 [INFO] web_app_operator: ページクローズ＆再ログイン完了
+2026-05-18 15:03:22,354 [INFO] __main__: Step 4/5: コンテンツ生成... (試行 2/3)
+2026-05-18 15:03:26,156 [INFO] __main__:   [検証] コンテンツ生成画面のヘッダーが対象企業に切替済か確認...
+2026-05-18 15:03:26,156 [INFO] web_app_operator: サイドバーから企業選択開始: 株式会社長谷工コミュニティ
+2026-05-18 15:03:34,229 [INFO] web_app_operator:   ヘッダー検証中: 企業名=株式会社長谷工コミュニティ, ID=haseko-hcm
+2026-05-18 15:03:34,309 [INFO] web_app_operator:   [OK] ヘッダー検証成功: 「🤖 株式会社長谷工コミュニティ コンテンツ生成」
+2026-05-18 15:03:34,310 [INFO] web_app_operator: サイドバー企業選択完了: 株式会社長谷工コミュニティ
+2026-05-18 15:03:34,310 [INFO] web_app_operator: URL入力開始: 40件
+2026-05-18 15:03:38,058 [INFO] web_app_operator:   「全入力を処理」ボタンをクリックしました
+2026-05-18 15:04:12,617 [INFO] web_app_operator: URL入力・処理開始完了: 40件
+2026-05-18 15:04:12,617 [INFO] web_app_operator: コンテンツ生成開始...
+2026-05-18 15:04:23,304 [INFO] web_app_operator:   生成準備完了の待機中...
+2026-05-18 15:05:03,321 [WARNING] web_app_operator:   生成準備完了メッセージが特定できませんでしたが、続行を試みます
+2026-05-18 15:05:23,338 [WARNING] web_app_operator:   コンテンツ生成ボタン未検出 (試行 1/6) — 生成タブを再クリック
+2026-05-18 15:05:53,578 [INFO] web_app_operator:   コンテンツ生成ボタン検出 (試行 2/6)
+2026-05-18 15:05:54,145 [INFO] web_app_operator: コンテンツ生成中... (最大5分待機)
+2026-05-18 15:06:51,405 [INFO] web_app_operator: 生成完了検出 (経過: 54.0秒, スピナー出現: True)
+2026-05-18 15:06:51,406 [INFO] web_app_operator:   [検証] 生成結果のFAQ実体を確認: 株式会社長谷工コミュニティ (id=haseko-hcm)
+2026-05-18 15:08:54,294 [WARNING] __main__:   [RETRY] 保存/生成検証失敗 (生成完了検出後、FAQ実体がページに現れません (パターン一致: 1件、120s経過)。生成失敗 or 別企業のデータ残存疑い。スクショ: screenshots/gen_verify_fail_haseko-hcm.png) → Step 4 から再試行 (次回 3/3)
+2026-05-18 15:08:54,294 [INFO] web_app_operator: ページを閉じて再ログインを開始...
+2026-05-18 15:08:54,329 [INFO] web_app_operator:   古いページタブを閉じました
+2026-05-18 15:08:54,427 [INFO] web_app_operator:   新しいページタブを開きました
+2026-05-18 15:08:54,427 [INFO] web_app_operator: 管理画面にログイン中...
+2026-05-18 15:09:00,492 [INFO] web_app_operator: ログイン成功
+2026-05-18 15:09:00,492 [INFO] web_app_operator: ページクローズ＆再ログイン完了
+2026-05-18 15:09:00,492 [INFO] __main__: Step 4/5: コンテンツ生成... (試行 3/3)
+2026-05-18 15:09:04,302 [INFO] __main__:   [検証] コンテンツ生成画面のヘッダーが対象企業に切替済か確認...
+2026-05-18 15:09:04,302 [INFO] web_app_operator: サイドバーから企業選択開始: 株式会社長谷工コミュニティ
+2026-05-18 15:09:12,384 [INFO] web_app_operator:   ヘッダー検証中: 企業名=株式会社長谷工コミュニティ, ID=haseko-hcm
+2026-05-18 15:09:12,497 [INFO] web_app_operator:   [OK] ヘッダー検証成功: 「🤖 株式会社長谷工コミュニティ コンテンツ生成」
+2026-05-18 15:09:12,497 [INFO] web_app_operator: サイドバー企業選択完了: 株式会社長谷工コミュニティ
+2026-05-18 15:09:12,497 [INFO] web_app_operator: URL入力開始: 40件
+2026-05-18 15:09:16,325 [INFO] web_app_operator:   「全入力を処理」ボタンをクリックしました
+2026-05-18 15:09:50,887 [INFO] web_app_operator: URL入力・処理開始完了: 40件
+2026-05-18 15:09:50,889 [INFO] web_app_operator: コンテンツ生成開始...
+2026-05-18 15:10:01,553 [INFO] web_app_operator:   生成準備完了の待機中...
+2026-05-18 15:10:41,576 [WARNING] web_app_operator:   生成準備完了メッセージが特定できませんでしたが、続行を試みます
+2026-05-18 15:11:01,590 [WARNING] web_app_operator:   コンテンツ生成ボタン未検出 (試行 1/6) — 生成タブを再クリック
+2026-05-18 15:11:32,229 [WARNING] web_app_operator:   コンテンツ生成ボタン未検出 (試行 2/6) — 生成タブを再クリック
+2026-05-18 15:11:43,210 [INFO] web_app_operator:   コンテンツ生成ボタン検出 (試行 3/6)
+2026-05-18 15:11:43,803 [INFO] web_app_operator: コンテンツ生成中... (最大5分待機)
+2026-05-18 15:12:48,979 [INFO] web_app_operator: 生成完了検出 (経過: 63.0秒, スピナー出現: True)
+2026-05-18 15:12:48,985 [INFO] web_app_operator:   [検証] 生成結果のFAQ実体を確認: 株式会社長谷工コミュニティ (id=haseko-hcm)
+2026-05-18 15:14:51,931 [ERROR] __main__:   [ERR] FAQ/企業情報の保存検証に 3回失敗。最終的に失敗とします: 生成完了検出後、FAQ実体がページに現れません (パターン一致: 1件、120s経過)。生成失敗 or 別企業のデータ残存疑い。スクショ: screenshots/gen_verify_fail_haseko-hcm.png
+2026-05-18 15:14:51,931 [ERROR] __main__: [ERROR] 株式会社長谷工コミュニティ: 処理失敗 -- 生成完了検出後、FAQ実体がページに現れません (パターン一致: 1件、120s経過)。生成失敗 or 別企業のデータ残存疑い。スクショ: screenshots/gen_verify_fail_haseko-hcm.png
+2026-05-18 15:14:51,934 [INFO] spreadsheet_manager: 企業リスト保存完了: 63社 → C:\Users\NC00018174\Desktop\DOCdemo_update_project\data\company_list.csv
+2026-05-18 15:14:51,935 [INFO] __main__: 
+2026-05-18 15:14:51,935 [INFO] __main__: 1件処理完了 → 再ログイン＆キャッシュクリアを実行
+2026-05-18 15:14:51,935 [INFO] web_app_operator: 再ログイン＆キャッシュクリア開始...
+2026-05-18 15:14:51,947 [INFO] web_app_operator:   LocalStorage/SessionStorageをクリアしました
+2026-05-18 15:14:51,962 [INFO] web_app_operator:   Cookieをクリアしました
+2026-05-18 15:14:53,977 [INFO] web_app_operator: 管理画面にログイン中...
+2026-05-18 15:15:00,167 [INFO] web_app_operator: ログイン成功
+2026-05-18 15:15:00,168 [INFO] web_app_operator: 再ログイン＆キャッシュクリア完了
+2026-05-18 15:15:00,168 [INFO] __main__: 
+2026-05-18 15:15:00,168 [INFO] __main__: ──────────────────────────────────────────────────
+2026-05-18 15:15:00,169 [INFO] __main__: [3/47] 株式会社鳥忠 (ステータス: 同名企業該当)
+2026-05-18 15:15:00,169 [INFO] __main__: ──────────────────────────────────────────────────
+2026-05-18 15:15:00,169 [INFO] __main__: Step 1/5: URL確定済の企業を Stage 2 で処理: http://kobe-torichu.com
+2026-05-18 15:15:00,171 [INFO] spreadsheet_manager: 企業リスト保存完了: 63社 → C:\Users\NC00018174\Desktop\DOCdemo_update_project\data\company_list.csv
+2026-05-18 15:15:00,172 [INFO] __main__: Step 2/6: 企業追加...
+2026-05-18 15:15:00,172 [INFO] web_app_operator: 企業追加開始: 株式会社鳥忠
+2026-05-18 15:15:14,660 [INFO] web_app_operator: 企業追加完了: 株式会社鳥忠 (ID: kobe-torichu)
+2026-05-18 15:15:14,660 [INFO] __main__: Step 2.5/6: 追加企業のID検証...
+2026-05-18 15:15:14,660 [INFO] web_app_operator:   企業ID検証中: 期待ID=kobe-torichu, URL=http://kobe-torichu.com
