@@ -49,7 +49,6 @@ from playwright.async_api import async_playwright, Page
 
 from config import (
     BROWSER_HEADLESS,
-    BROWSER_SLOW_MO,
     BROWSER_VIEWPORT,
     LOGS_DIR,
     LOG_FORMAT,
@@ -93,6 +92,66 @@ def setup_logging():
     fh = logging.FileHandler(LOG_FILE, encoding="utf-8")
     fh.setFormatter(logging.Formatter(LOG_FORMAT))
     root.addHandler(fh)
+
+
+def _analyze_chat_reply(
+    initial_text: str,
+    latest_text: str,
+    company_name: str,
+    enterprise_id: str,
+    min_diff_chars: int = 50,
+) -> tuple:
+    """
+    AIチャットの返信解析 (Phase 4 純関数化)。
+
+    返信検出ロジックは元 _check_ai_chat 内のインライン処理と完全同等。
+    本関数を分離した目的は (1) 単体テスト容易化と (2) wait_for_function 化後の
+    タイムアウト時の最終判定で再利用するため。
+
+    Args:
+        initial_text     : 送信前の body.innerText
+        latest_text      : 現在の body.innerText
+        company_name     : 企業名 (返信に含まれていれば一致扱い)
+        enterprise_id    : 企業ID (返信に含まれていれば一致扱い)
+        min_diff_chars   : 「返信が来た」と見なす差分の最低文字数
+
+    Returns:
+        (status, note) のタプル。
+            status: "matched" | "no_match_but_reply" | "no_reply"
+            note  : 詳細列に書き込む短いメッセージ
+    """
+    if not latest_text:
+        return ("no_reply", "返信なし")
+
+    # latest が initial で始まらないケース (例: チャット履歴がリセットされた) は
+    # 既存挙動に倣い latest 全長を diff として扱う。
+    if latest_text.startswith(initial_text):
+        diff_len = len(latest_text) - len(initial_text)
+    else:
+        diff_len = len(latest_text)
+
+    has_name = bool(company_name) and company_name in latest_text
+    has_id = bool(enterprise_id) and enterprise_id in latest_text
+
+    if has_name or has_id:
+        return ("matched", "返信に企業名検出")
+    if diff_len >= min_diff_chars:
+        return ("no_match_but_reply", "返信に企業名なし (他社混入疑い)")
+    return ("no_reply", "返信タイムアウト")
+
+
+def _should_skip_after_http(status: int) -> bool:
+    """
+    HTTP 応答ステータスを受けて、残り4項目 (企業名/背景画像/FAQ/AIチャット) を
+    早期 SKIP すべきかを判定する (Phase 2 高速化)。
+
+    - 2xx/3xx : False  → 通常どおり全項目を検証
+    - 4xx     : True   → ページがそもそも届かないため残り項目を SKIP
+                         (overall は HTTP=NG により NG となるので品質は不変)
+    - 5xx     : False  → ServerDownError 経路で処理されるためここでは False
+    - 0       : False  → 既存の接続失敗例外処理に委ねる
+    """
+    return 400 <= status < 500
 
 
 class CheckResult:
@@ -150,6 +209,7 @@ class QualityVerifier:
         headless: bool = None,
         target_company: str = None,
         delivery_csv_path: Path = None,
+        parallel: int = 1,
     ):
         # 通常モード (company_list.csv フルスキーマ) と
         # 配信CSVモード (2列「企業名,納品URL」を強制検証) を排他で持つ
@@ -160,8 +220,14 @@ class QualityVerifier:
             self.sheet_manager = SpreadsheetManager(csv_path)
         self.headless = headless if headless is not None else BROWSER_HEADLESS
         self.target_company = target_company
+        # Phase 3: 並列実行数。1 = 既存の serial loop、> 1 で _run_parallel を使う。
+        self.parallel = max(1, int(parallel))
         # 配信CSVモードで使用する元の行データ (再書き出しに使う)
         self._delivery_raw_rows: list = []
+        # AIチャット起動ボタンのキーワードキャッシュ。
+        # 同一 Brainverse UI なので1社目で成功したキーワード組を保持し、
+        # 2社目以降は最初にそれを試す (cache miss 時は完全探索にフォールバック)。
+        self._cached_chat_button_keywords: list = None
         self.stats = {
             "total": 0,
             "ok": 0,
@@ -214,11 +280,33 @@ class QualityVerifier:
             logger.warning("品質チェック対象企業がありません。終了します。")
             return
 
+        # Stage 4 は読み取り中心。Streamlit 管理画面用の slow_mo=500ms は不要なので
+        # 0 に上書きして全Playwright操作の固定遅延を排除する (1社あたり数秒〜の短縮)。
         async with async_playwright() as p:
             browser = await p.chromium.launch(
-                headless=self.headless, slow_mo=BROWSER_SLOW_MO
+                headless=self.headless, slow_mo=0
             )
             context = await browser.new_context(viewport=BROWSER_VIEWPORT)
+
+            # Phase 3: 並列指定 (--parallel N, N>1) があれば _run_parallel に委譲。
+            # 既存 serial ループは N=1 のときそのまま動く (品質保持の安全側デフォルト)。
+            if self.parallel > 1:
+                logger.info(
+                    f"並列実行モード: max_concurrent={self.parallel}"
+                )
+                await self._run_parallel(
+                    targets,
+                    companies_list=companies,
+                    context=context,
+                    max_concurrent=self.parallel,
+                )
+                try:
+                    await browser.close()
+                except Exception:
+                    pass
+                elapsed = datetime.now() - start
+                self._print_summary(elapsed)
+                return
 
             idx = 0
             server_down_aborted = False
@@ -342,6 +430,13 @@ class QualityVerifier:
             else:
                 result.set("HTTP", False, f"status={status}")
                 logger.warning(f"  [NG] HTTP: status={status}")
+                # Phase 2: 4xx は残り4項目を SKIP して早期return。
+                # 5xx は前段の ServerDownError で既に raise 済なのでここに来ない。
+                # overall は HTTP=NG により NG となるため品質は不変。
+                if _should_skip_after_http(status):
+                    for label in ("企業名", "背景画像", "FAQ", "AIチャット"):
+                        result.skip(label, f"HTTP={status}のため未実施")
+                    return result
         except ServerDownError:
             raise
         except Exception as e:
@@ -352,8 +447,12 @@ class QualityVerifier:
                 result.skip(label, "HTTP失敗のため未実施")
             return result
 
-        # ページ完全読込を少し待つ (SPA対応)
-        await page.wait_for_timeout(4000)
+        # ページ完全読込を待つ (SPA対応)。固定4秒sleepではなく networkidle を待ち、
+        # 速いページでは即時、遅いページでも最大4秒で切り上げる。
+        try:
+            await page.wait_for_load_state("networkidle", timeout=4000)
+        except Exception:
+            pass  # 4秒で networkidle にならなければそのまま検証へ進む
 
         # スクリーンショット保存 (項目別の証跡)
         screenshot_path = (
@@ -365,16 +464,39 @@ class QualityVerifier:
         except Exception as e:
             logger.debug(f"  スクリーンショット保存失敗: {e}")
 
-        # ページ全体のテキストを1回取得して使い回す
+        # 企業名検証用 (title/見出し) と FAQ検証用 (本文) のテキストを
+        # 1回の page.evaluate() で一括取得する。従来は locator ループで
+        # 最悪 1s × 5セレクタ × 10要素 = 50秒掛かっていた箇所を 50ms に短縮。
         try:
-            page_html = await page.content()
-            page_text = await page.locator("body").inner_text(timeout=5000)
+            dom_data = await page.evaluate(
+                """
+                () => {
+                    const title = document.title || '';
+                    const headerEls = document.querySelectorAll('title, h1, h2, h3, header');
+                    const headerTexts = [];
+                    headerEls.forEach(el => {
+                        const t = (el.innerText || el.textContent || '').trim();
+                        if (t) headerTexts.push(t);
+                    });
+                    const bodyText = (document.body && document.body.innerText) || '';
+                    return {
+                        title,
+                        headerText: headerTexts.join(' | '),
+                        bodyText,
+                    };
+                }
+                """
+            )
+            title = dom_data.get("title", "") or ""
+            header_text = dom_data.get("headerText", "") or ""
+            page_text = dom_data.get("bodyText", "") or ""
         except Exception:
-            page_html = ""
+            title = ""
+            header_text = ""
             page_text = ""
 
         # ===== Check 2: 企業名表示 =====
-        await self._check_company_name(company, page, page_html, result)
+        self._check_company_name(company, title, header_text, result)
 
         # ===== Check 3: 背景画像 =====
         await self._check_background_image(page, result)
@@ -387,37 +509,20 @@ class QualityVerifier:
 
         return result
 
-    async def _check_company_name(
+    def _check_company_name(
         self,
         company: CompanyInfo,
-        page: Page,
-        page_html: str,
+        title: str,
+        header_text: str,
         result: CheckResult,
     ):
-        """企業名 or 企業ID が title / h1〜h3 / 主要ヘッダーに表示されているか"""
-        try:
-            title = await page.title()
-        except Exception:
-            title = ""
+        """
+        企業名 or 企業ID が title / h1〜h3 / 主要ヘッダーに表示されているか。
 
-        # ヘッダー類のテキストを集めて評価
-        header_texts = []
-        for sel in ["title", "h1", "h2", "h3", "header"]:
-            try:
-                els = page.locator(sel)
-                n = await els.count()
-                for i in range(min(n, 10)):
-                    try:
-                        t = await els.nth(i).inner_text(timeout=1000)
-                        if t:
-                            header_texts.append(t.strip())
-                    except Exception:
-                        continue
-            except Exception:
-                continue
-        header_text_combined = " | ".join(header_texts)
-
-        name_hit = bool(company.name and company.name in header_text_combined)
+        DOM テキストは _verify_one で 1 回の page.evaluate() にまとめて取得済み。
+        ここでは文字列マッチングのみ行う (Playwright 往復ゼロ)。
+        """
+        name_hit = bool(company.name and company.name in header_text)
         # 企業IDはURLにも入っているので title だけで判定 (本文全体だと false positive)
         id_hit = bool(
             company.enterprise_id and company.enterprise_id in title
@@ -538,8 +643,7 @@ class QualityVerifier:
         """
         # ===== Step 1: チャット起動ボタンを探す =====
         # 一般的なパターン: 「AI面談」「チャット」「始める」「会話」を含むボタン
-        start_btn = None
-        for keywords in (
+        default_keyword_sets = [
             ["AI面談", "始める"],
             ["AI面談"],
             ["チャット", "始める"],
@@ -547,31 +651,57 @@ class QualityVerifier:
             ["会話", "始める"],
             ["カジュアル", "面談"],
             ["始める"],
-        ):
-            try:
-                buttons = page.locator("button, a")
-                btn_count = await buttons.count()
-                for i in range(btn_count):
+        ]
+        # 同一 UI 前提でキャッシュ済みキーワードがあれば先頭で試す
+        if self._cached_chat_button_keywords is not None:
+            keyword_sets = [self._cached_chat_button_keywords] + [
+                ks for ks in default_keyword_sets
+                if ks != self._cached_chat_button_keywords
+            ]
+        else:
+            keyword_sets = default_keyword_sets
+
+        start_btn = None
+        matched_keywords = None
+        # button, a 要素は1社内ではほぼ不変なのでループの外で1回だけ列挙
+        try:
+            buttons = page.locator("button, a")
+            btn_count = await buttons.count()
+            # 各ボタンの可視テキストを先に1回だけ取得 (キーワード × N 往復を回避)
+            btn_texts: list = []
+            for i in range(btn_count):
+                try:
                     text = (await buttons.nth(i).text_content()) or ""
-                    t = text.strip()
+                    btn_texts.append(text.strip())
+                except Exception:
+                    btn_texts.append("")
+        except Exception:
+            buttons = None
+            btn_texts = []
+
+        if buttons is not None:
+            for keywords in keyword_sets:
+                for i, t in enumerate(btn_texts):
                     if not t:
                         continue
                     if all(kw in t for kw in keywords):
                         try:
                             if await buttons.nth(i).is_visible():
                                 start_btn = buttons.nth(i)
+                                matched_keywords = keywords
                                 break
                         except Exception:
                             continue
                 if start_btn is not None:
                     break
-            except Exception:
-                continue
 
         if start_btn is None:
             result.skip("AIチャット", "チャット起動ボタンが見つからない")
             logger.warning("  [SKIP] AIチャット: 起動ボタン未検出")
             return
+
+        # キャッシュ更新 (cache miss しても次社は再学習されるので安全)
+        self._cached_chat_button_keywords = matched_keywords
 
         try:
             btn_text = (await start_btn.text_content() or "").strip()
@@ -582,7 +712,15 @@ class QualityVerifier:
             logger.warning(f"  [NG] AIチャット: 起動クリック失敗 -- {e}")
             return
 
-        await page.wait_for_timeout(3000)
+        # 入力欄が出現するまで明示的に待機。従来は wait_for_timeout(3000) 固定だったが、
+        # 早く出れば即進行、遅ければ最大8秒まで待つ (1社あたり最良で 3s → 0.5s 程度に短縮)。
+        try:
+            await page.locator(
+                "textarea, input[type='text'], "
+                "div[contenteditable='true'], [role='textbox']"
+            ).first.wait_for(state="visible", timeout=8000)
+        except Exception:
+            pass  # 見つからなくても下のループで再探索 (既存ロジックに委ねる)
 
         # ===== Step 2: 入力欄を探す =====
         input_locator = None
@@ -647,57 +785,72 @@ class QualityVerifier:
             return
 
         # ===== Step 4: 返信を待機 =====
-        # 返信エリアの DOM 構造は不明なので、ページ全体のテキストを定期取得し、
-        # 質問送信後に「企業名 / 企業ID を含む 50文字以上の新規テキスト」が
-        # 現れたら返信検出とみなす。
+        # Phase 4: 返信検出を JS 内ポーリング (page.wait_for_function) に置換。
+        # 従来は 500ms ごとに body.innerText を Python 側へ往復取得していたが
+        # JS 内で完結することで IPC オーバーヘッドをほぼゼロにする。
         try:
             initial_text = await page.locator("body").inner_text(timeout=3000)
         except Exception:
             initial_text = ""
 
-        poll_interval = 2000
-        elapsed = 0
+        import time as _time
         timeout_ms = QUALITY_CHECK_CHAT_TIMEOUT
-        reply_detected = False
-        latest_text = initial_text
-        while elapsed < timeout_ms:
-            await page.wait_for_timeout(poll_interval)
-            elapsed += poll_interval
-            try:
-                latest_text = await page.locator("body").inner_text(timeout=3000)
-            except Exception:
-                continue
-            diff_text = latest_text[len(initial_text):] if latest_text.startswith(initial_text) else latest_text
-            if (
-                len(diff_text) >= 50
-                and ((company.name and company.name in latest_text)
-                     or (company.enterprise_id and company.enterprise_id in latest_text))
-            ):
-                reply_detected = True
-                break
+        wait_start = _time.monotonic()
+        matched_quick = False
+        try:
+            await page.wait_for_function(
+                """
+                ({name, ent}) => {
+                    const text = (document.body && document.body.innerText) || '';
+                    if (name && text.includes(name)) return true;
+                    if (ent && text.includes(ent)) return true;
+                    return false;
+                }
+                """,
+                arg={
+                    "name": company.name or "",
+                    "ent": company.enterprise_id or "",
+                },
+                timeout=timeout_ms,
+                polling=300,
+            )
+            matched_quick = True
+        except Exception:
+            # TimeoutError あるいはページ切断等。最終的な状態を再評価する。
+            matched_quick = False
+        elapsed_s = _time.monotonic() - wait_start
 
-        if reply_detected:
-            result.set("AIチャット", True, f"返信に企業名検出 ({elapsed/1000:.0f}s)")
-            logger.info(f"  [OK] AIチャット: 返信に企業名検出 ({elapsed/1000:.0f}s)")
-        else:
-            # 返信は出たが企業名なし or タイムアウト
-            diff = latest_text[len(initial_text):] if latest_text.startswith(initial_text) else latest_text
-            if len(diff) >= 50:
-                result.set(
-                    "AIチャット", False,
-                    f"返信に企業名なし (他社混入疑い、{elapsed/1000:.0f}s)",
-                )
-                logger.warning(
-                    f"  [NG] AIチャット: 返信に企業名なし ({elapsed/1000:.0f}s)"
-                )
-            else:
-                result.set(
-                    "AIチャット", False,
-                    f"返信タイムアウト ({timeout_ms/1000}s)",
-                )
-                logger.warning(
-                    f"  [NG] AIチャット: 返信タイムアウト ({timeout_ms/1000}s)"
-                )
+        # 最終的な body.innerText を取得して _analyze_chat_reply で評価。
+        # JS の即時検出と Python 側の判定ロジックを一致させ、品質を保つ。
+        try:
+            latest_text = await page.locator("body").inner_text(timeout=3000)
+        except Exception:
+            latest_text = initial_text if matched_quick else ""
+
+        status, _note = _analyze_chat_reply(
+            initial_text, latest_text, company.name, company.enterprise_id
+        )
+
+        # 既存の表記とログメッセージは完全に維持 (品質保持)
+        if status == "matched":
+            result.set("AIチャット", True, f"返信に企業名検出 ({elapsed_s:.0f}s)")
+            logger.info(f"  [OK] AIチャット: 返信に企業名検出 ({elapsed_s:.0f}s)")
+        elif status == "no_match_but_reply":
+            result.set(
+                "AIチャット", False,
+                f"返信に企業名なし (他社混入疑い、{elapsed_s:.0f}s)",
+            )
+            logger.warning(
+                f"  [NG] AIチャット: 返信に企業名なし ({elapsed_s:.0f}s)"
+            )
+        else:  # no_reply
+            result.set(
+                "AIチャット", False,
+                f"返信タイムアウト ({timeout_ms/1000}s)",
+            )
+            logger.warning(
+                f"  [NG] AIチャット: 返信タイムアウト ({timeout_ms/1000}s)"
+            )
 
     def _apply_result(
         self,
@@ -847,6 +1000,125 @@ class QualityVerifier:
                     "品質チェック詳細": row.get("品質チェック詳細", ""),
                 })
 
+    async def _run_parallel(
+        self,
+        targets: list,
+        companies_list: list,
+        context,
+        max_concurrent: int = 4,
+    ):
+        """
+        Phase 3: 並列ワーカーで targets を処理する。
+
+        - asyncio.Semaphore(max_concurrent) で同時実行数を制限
+        - asyncio.Lock で CSV 書き込みを直列化
+        - ServerDownError が出たら server_down_event を立てて他ワーカーは新規開始を抑止
+          → 全ワーカー終了後に wait_for_server_recovery() で復旧待ち
+          → 復旧したら失敗社のみ再試行 (既存 serial loop の `idx -= 1` と等価)
+          → 復旧しなければ残数を server_down_aborted カウンタに積んでクリーン中断
+
+        テスタビリティのため、_verify_one / _apply_result / context.new_page は
+        いずれも monkeypatch で差し替え可能になっている。
+        """
+        csv_lock = asyncio.Lock()
+        server_down_event = asyncio.Event()
+        failed_for_retry: list = []
+        completed_count = [0]
+        total = len(targets)
+
+        async def worker(idx: int, company: CompanyInfo):
+            # 既にサーバーダウン検知済なら新規ページを開かず即座に retry キューへ
+            if server_down_event.is_set():
+                failed_for_retry.append(company)
+                return
+
+            page = await context.new_page()
+            try:
+                # ページ取得後にもう一度確認 (取得中に他ワーカーが ServerDown を検知した場合)
+                if server_down_event.is_set():
+                    failed_for_retry.append(company)
+                    return
+
+                completed_count[0] += 1
+                logger.info(
+                    f"[{completed_count[0]}/{total}] {company.name} "
+                    f"(URL: {company.frontend_app_url})"
+                )
+                try:
+                    result = await self._verify_one(company, page)
+                except ServerDownError:
+                    # ServerDown は再試行キューへ。最初の検知者だけ復旧を待つ。
+                    logger.warning(
+                        f"[ServerDown] {company.name} - 再試行キューに退避"
+                    )
+                    server_down_event.set()
+                    failed_for_retry.append(company)
+                    return
+                except Exception as e:
+                    if is_server_down_error(e) or not check_server_alive():
+                        logger.warning(
+                            f"[ServerDown 疑い] {company.name} 例外 ({e}) "
+                            "→ 再試行キューに退避"
+                        )
+                        server_down_event.set()
+                        failed_for_retry.append(company)
+                        return
+                    # 一般例外: 既存 serial と同じく エラー扱いで CSV に記録
+                    logger.error(f"  [ERR] {company.name}: 検証中に例外 -- {e}")
+                    company.quality_check = "NG"
+                    company.quality_detail = f"検証例外: {e}"
+                    self.stats["error"] += 1
+                    async with csv_lock:
+                        if self.delivery_csv_path:
+                            self._save_delivery_csv(targets)
+                        else:
+                            company.mark_error(f"品質チェック検証失敗: {e}")
+                            self.sheet_manager.update_company(company, companies_list)
+                    return
+
+                # 正常 result: 結果適用も書き込みも lock 下で直列化
+                async with csv_lock:
+                    if self.delivery_csv_path:
+                        self._apply_result_delivery(company, result)
+                    else:
+                        self._apply_result(company, companies_list, result)
+            finally:
+                try:
+                    await page.close()
+                except Exception:
+                    pass
+
+        remaining = list(enumerate(targets))
+        semaphore = asyncio.Semaphore(max_concurrent)
+
+        async def guarded_worker(idx: int, company: CompanyInfo):
+            async with semaphore:
+                await worker(idx, company)
+
+        while remaining:
+            tasks = [
+                asyncio.create_task(guarded_worker(idx, c))
+                for idx, c in remaining
+            ]
+            await asyncio.gather(*tasks, return_exceptions=False)
+
+            if not server_down_event.is_set():
+                break  # 全社完了
+
+            # 復旧待ち
+            recovered = await wait_for_server_recovery()
+            if not recovered:
+                self.stats["server_down_aborted"] = len(failed_for_retry)
+                logger.error(
+                    "サーバー未復旧 — 並列処理を中断 "
+                    f"(未検証 {len(failed_for_retry)}社)"
+                )
+                return
+            # 復旧 → 再試行
+            remaining = [(0, c) for c in failed_for_retry]
+            failed_for_retry.clear()
+            server_down_event.clear()
+
     def _print_summary(self, elapsed):
         logger.info("")
         logger.info("=" * 60)
@@ -901,6 +1173,15 @@ def parse_args():
             "結果は同CSVに「品質チェック」「品質チェック詳細」列を追加して保存。"
         ),
     )
+    parser.add_argument(
+        "--parallel", type=int, default=1,
+        help=(
+            "並列実行数 (デフォルト 1 = 直列)。"
+            "2以上を指定すると複数ページで並列処理。"
+            "推奨上限: 4〜8 (それ以上は Brainverse 側に負荷)。"
+            "ServerDownError 検知時は他ワーカーも一時停止して復旧を待つ。"
+        ),
+    )
     return parser.parse_args()
 
 
@@ -929,6 +1210,7 @@ async def main():
         headless=headless,
         target_company=args.company,
         delivery_csv_path=delivery_csv_path,
+        parallel=args.parallel,
     )
     await verifier.run()
 

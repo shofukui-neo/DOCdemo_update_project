@@ -49,14 +49,27 @@ class ContentSaveVerificationError(Exception):
     FAQ/企業情報の生成・保存検証に失敗したことを示す例外。
 
     orchestrator はこれを捕捉して Step 4 (コンテンツ生成) から再試行する。
-    発生条件:
-        - 生成完了検出後、FAQ実体がページに反映されていない
-        - 「プレビュー・保存」タブにFAQプレビューが表示されていない
-        - コンテンツ管理タブの FAQ/企業情報 が空 (未保存)
-        - コンテンツ管理タブに対象企業以外のデータが表示されている (混入)
-        - FAQ保存/企業情報保存ボタンが特定できない
+
+    Attributes:
+        reason_code: 失敗カテゴリ
+            - "no_faq_on_any_tab"   : 全タブ走査してもFAQが見つからない (生成失敗の可能性大)
+            - "server_error"        : Streamlit の st.error alert が検出された
+            - "wrong_company"       : FAQ は出ているが対象企業のデータではない (混入疑い)
+            - "tab_unreachable"     : 「プレビュー・保存」タブの DOM 切替が反映されなかった
+            - "save_button_missing" : FAQ保存ボタンが特定できない
+        diagnostics: 失敗時の追加情報 (検証タブ・パターン一致件数・抜粋テキスト等)
     """
-    pass
+
+    def __init__(
+        self,
+        message: str,
+        *,
+        reason_code: str = "unknown",
+        diagnostics: Optional[dict] = None,
+    ):
+        super().__init__(message)
+        self.reason_code = reason_code
+        self.diagnostics = diagnostics or {}
 
 
 class ServerDownError(Exception):
@@ -367,20 +380,61 @@ class WebAppOperator:
         logger.info("ページクローズ＆再ログイン完了")
 
     async def ensure_logged_in(self):
-        """ログイン済みか確認し、未ログインなら再ログイン"""
+        """ログイン済みか確認し、未ログインなら再ログイン。
+
+        セッション切れ判定は誤検出を避けるため強化:
+            旧: 「ログイン」テキストを含む button が visible なら切れ判定
+                → ページ内に残った別ボタン (例: ヘッダーの「ログイン」、ログアウト
+                確認モーダル等) に反応し、ログイン済みなのに再ログインを誘発し、
+                10s × 3回のメール欄探索タイムアウトに繋がっていた。
+            新: 以下を AND 条件で要求する:
+                1. サイドバーが visible でない (= 認証後ページではない)
+                2. メールアドレス入力欄 が visible (= ログイン画面に居る)
+                3. パスワード入力欄 が visible (= ログインフォーム描画完了)
+                これによりログイン画面に戻された場合のみ再ログイン実行する。
+        """
         if not self._logged_in:
             await self.login()
             return
 
-        # セッション切れチェック
+        # セッション切れチェック (誤検出回避のため複数条件 AND)
         try:
-            login_btn = self.page.locator('button:has-text("ログイン")')
-            if await login_btn.is_visible():
-                logger.warning("セッション切れ検出 -> 再ログイン")
+            sidebar = self.page.locator("[data-testid='stSidebar']").first
+            email_field = self.page.locator(
+                'input[aria-label="メールアドレス"]'
+            ).first
+            password_field = self.page.locator(
+                'input[aria-label="パスワード"]'
+            ).first
+
+            sidebar_visible = False
+            try:
+                sidebar_visible = await sidebar.is_visible()
+            except Exception:
+                pass
+
+            # サイドバーが見えていれば認証後ページ → セッション維持と判断
+            if sidebar_visible:
+                return
+
+            # ログインフォームの「両方」が visible なときだけ切れ判定
+            email_visible = False
+            password_visible = False
+            try:
+                email_visible = await email_field.is_visible()
+                password_visible = await password_field.is_visible()
+            except Exception:
+                pass
+
+            if email_visible and password_visible:
+                logger.warning(
+                    "セッション切れ検出 (ログインフォーム再表示) → 再ログイン"
+                )
                 self._logged_in = False
                 await self.login()
-        except Exception:
-            pass
+            # それ以外の中間状態 (Streamlit rerun 直後等) は静観
+        except Exception as e:
+            logger.debug(f"  ensure_logged_in 中の例外を無視: {e}")
 
     # =========================================================================
     # ナビゲーション
@@ -388,37 +442,161 @@ class WebAppOperator:
     async def _navigate_sidebar(self, link_text: str):
         """サイドバーのリンクをクリックしてページ遷移する。
 
-        セクションヘッダー (stNavSectionHeader) が折りたたまれていて配下のナビ
-        リンクが非表示の場合、ヘッダーをクリックして展開してから再試行する。
-        例: 「システム設定」は「⚙️ システム設定」セクション配下にあるが、
-        デフォルトで折りたたまれているケースがある。
+        ナビゲーション戦略 (優先度順):
+            1. ``stSidebarNavLink:has-text(link_text)`` の visible マッチ
+            2. すべての ``stNavSectionHeader`` を順次展開して再試行
+            3. ``sidebar.get_by_text(link_text)`` の visible 要素のみ採用
+
+        強化点 (2026-05-19):
+            - 旧フォールバック ``sidebar.get_by_text(link_text).first`` は非可視
+              要素 (collapsed section 内のスタブ等) を掴み、click が 30s
+              タイムアウトしていた → visible 要素のみ採用。
+            - サイドバー自体の visible を保証してから探索 (描画前/ログアウト後
+              の不毛な探索を省く)。
+            - 全戦略失敗時は診断情報付き RuntimeError を上げる
+              (旧: 0件 locator に click → 30s タイムアウトで終了)。
+            - click タイムアウトを Playwright デフォルト 30s → 10s に短縮。
+              (リトライ含めて 90s 浪費していたのを 30s に抑制)
         """
         await self.ensure_logged_in()
         logger.debug(f"ナビゲーション: {link_text}")
 
         sidebar = self.page.locator("[data-testid='stSidebar']")
-        nav_link = sidebar.locator(
-            f'[data-testid="stSidebarNavLink"]:has-text("{link_text}")'
-        ).first
 
-        if await nav_link.count() == 0:
-            section_header = sidebar.locator(
-                f'[data-testid="stNavSectionHeader"]:has-text("{link_text}")'
+        # サイドバー自体の visible 保証
+        try:
+            await sidebar.first.wait_for(
+                state="visible", timeout=ELEMENT_WAIT_TIMEOUT
+            )
+        except Exception as wait_err:
+            if is_server_down_error(wait_err):
+                raise ServerDownError(
+                    f"サイドバー描画前に管理画面サーバー到達不能: {wait_err}"
+                ) from wait_err
+            logger.warning(
+                f"  サイドバー未表示 ({wait_err}) → セッション復旧を試行"
+            )
+            self._logged_in = False
+            await self.ensure_logged_in()
+            await sidebar.first.wait_for(
+                state="visible", timeout=ELEMENT_WAIT_TIMEOUT
+            )
+
+        async def _find_visible_nav_link():
+            link = sidebar.locator(
+                f'[data-testid="stSidebarNavLink"]:has-text("{link_text}")'
             ).first
-            if await section_header.count() > 0:
-                logger.debug(f"  セクション '{link_text}' が折りたたまれているため展開")
-                await section_header.click()
-                await self.page.wait_for_timeout(800)
-                nav_link = sidebar.locator(
-                    f'[data-testid="stSidebarNavLink"]:has-text("{link_text}")'
-                ).first
+            try:
+                if await link.count() > 0 and await link.is_visible():
+                    return link
+            except Exception:
+                pass
+            return None
 
-        if await nav_link.count() == 0:
-            # フォールバック: 旧挙動 (任意テキスト要素)
-            logger.debug(f"  '{link_text}' ナビリンクが見つからないためテキスト一致でフォールバック")
-            nav_link = sidebar.get_by_text(link_text, exact=False).first
+        nav_link = await _find_visible_nav_link()
 
-        await nav_link.click()
+        # 折りたたまれた可能性のあるセクションヘッダーを順に展開
+        if nav_link is None:
+            section_headers = sidebar.locator(
+                '[data-testid="stNavSectionHeader"]'
+            )
+            try:
+                section_count = await section_headers.count()
+            except Exception:
+                section_count = 0
+
+            for sh_idx in range(section_count):
+                header = section_headers.nth(sh_idx)
+                try:
+                    if not await header.is_visible():
+                        continue
+                    header_text = (await header.text_content()) or ""
+                except Exception:
+                    continue
+                logger.debug(
+                    f"  セクション '{header_text.strip()}' を展開して "
+                    f"'{link_text}' を再探索"
+                )
+                try:
+                    await header.click(timeout=3000)
+                    await self.page.wait_for_timeout(600)
+                except Exception as click_err:
+                    logger.debug(
+                        f"  セクション展開クリック失敗 (続行): {click_err}"
+                    )
+                    continue
+
+                nav_link = await _find_visible_nav_link()
+                if nav_link is not None:
+                    break
+
+        # フォールバック: テキスト一致 (visible のみ採用)
+        if nav_link is None:
+            logger.debug(
+                f"  '{link_text}' ナビリンクが見つからないためテキスト一致で"
+                "フォールバック"
+            )
+            candidate = sidebar.get_by_text(link_text, exact=False)
+            try:
+                cand_count = await candidate.count()
+            except Exception:
+                cand_count = 0
+            for ci in range(cand_count):
+                el = candidate.nth(ci)
+                try:
+                    if await el.is_visible():
+                        nav_link = el
+                        break
+                except Exception:
+                    continue
+
+        if nav_link is None:
+            screenshot_err = (
+                f"screenshots/sidebar_nav_not_found_{link_text}.png"
+            )
+            try:
+                await self.page.screenshot(path=screenshot_err, full_page=True)
+            except Exception:
+                screenshot_err = "<screenshot 取得失敗>"
+            try:
+                sidebar_text_excerpt = (
+                    (await sidebar.first.inner_text(timeout=2000))[:300]
+                )
+            except Exception:
+                sidebar_text_excerpt = "<inner_text 取得失敗>"
+            raise RuntimeError(
+                f"サイドバーに '{link_text}' ナビリンクが見つかりません。"
+                f" スクショ: {screenshot_err} / サイドバー抜粋: "
+                f"{sidebar_text_excerpt!r}"
+            )
+
+        # クリック直前に visible 再確認 (DOM rerun でフェードアウト中の可能性)
+        try:
+            await nav_link.wait_for(state="visible", timeout=5000)
+        except Exception:
+            pass
+
+        # クリックタイムアウトを 30s → 10s に短縮
+        try:
+            await nav_link.click(timeout=ELEMENT_WAIT_TIMEOUT)
+        except Exception as click_err:
+            screenshot_err = (
+                f"screenshots/sidebar_nav_click_fail_{link_text}.png"
+            )
+            try:
+                await self.page.screenshot(path=screenshot_err, full_page=True)
+            except Exception:
+                screenshot_err = "<screenshot 取得失敗>"
+            if is_server_down_error(click_err):
+                raise ServerDownError(
+                    f"サイドバー '{link_text}' クリック中に管理画面サーバー"
+                    f"到達不能: {click_err}"
+                ) from click_err
+            raise RuntimeError(
+                f"サイドバー '{link_text}' クリック失敗: {click_err} / "
+                f"スクショ: {screenshot_err}"
+            ) from click_err
+
         await self._wait_for_streamlit_load()
 
     async def navigate_to_company_setup(self):
@@ -1161,6 +1339,16 @@ class WebAppOperator:
               メイン領域に 2件以上存在
             - (company指定時) 対象企業の名前 or 企業IDも同時に存在
 
+        改善 (2026-05-19):
+            - 「FAQを生成中…」「企業情報を生成中…」が画面に残っている間は
+              生成は継続中とみなして検証タイマーをリセットし、
+              info ボックスが消えてから FAQ_VERIFY_TIMEOUT_SECONDS の純粋な
+              検証ウィンドウを開始する。
+              (旧実装は単純に時間経過のみで失敗判定し、生成完了前にタイムアウト
+               する不安定さがあった)
+            - 「生成中」が残ったままの最大追加待機 (= CONTENT_GENERATION_TIMEOUT)
+              を超えたら、生成本体が固まったと判断して失敗を出す。
+
         失敗時は ContentSaveVerificationError を送出し、orchestrator が
         Step 4 から再試行できるようにする。
         """
@@ -1176,13 +1364,19 @@ class WebAppOperator:
             re.compile(r"^\s*Q\s*[:：]\s*", re.MULTILINE),
             re.compile(r"よくある質問"),
         ]
+        in_progress_pattern = re.compile(
+            r"(FAQ.{0,3}生成中|企業情報.{0,3}生成中|生成中\.{2,}|生成しています)"
+        )
 
         poll_interval_ms = 2500
-        elapsed_ms = 0
         max_ms = max_wait_seconds * 1000
+        GEN_TAIL_MAX_MS = CONTENT_GENERATION_TIMEOUT
+        verify_elapsed_ms = 0    # 「生成中」消失後の純粋な検証経過時間
+        gen_tail_elapsed_ms = 0  # 「生成中」表示中の累計待機時間
         last_match_count = 0
+        last_progress_log_ms = -15000
 
-        while elapsed_ms < max_ms:
+        while True:
             try:
                 main = self.page.locator(
                     "main, [data-testid='stMain'], section[role='main']"
@@ -1194,6 +1388,40 @@ class WebAppOperator:
             except Exception:
                 page_text = ""
 
+            # まだ「生成中…」が画面に残っている → 生成継続。検証タイマーリセット
+            in_progress_still = bool(
+                page_text and in_progress_pattern.search(page_text)
+            )
+            if in_progress_still:
+                if gen_tail_elapsed_ms - last_progress_log_ms >= 15000:
+                    logger.info(
+                        f"  [検証] 「生成中…」表示が継続中 — 検証タイマーは"
+                        f"開始しません (生成尾部待機 {gen_tail_elapsed_ms/1000:.0f}s)"
+                    )
+                    last_progress_log_ms = gen_tail_elapsed_ms
+                if gen_tail_elapsed_ms >= GEN_TAIL_MAX_MS:
+                    ts = company.enterprise_id if company else "unknown"
+                    screenshot = f"screenshots/gen_verify_fail_{ts}.png"
+                    try:
+                        await self.page.screenshot(path=screenshot, full_page=True)
+                    except Exception:
+                        pass
+                    raise ContentSaveVerificationError(
+                        f"「生成中…」表示が {GEN_TAIL_MAX_MS/1000:.0f}秒経過しても消えません。"
+                        f"生成本体が停止/異常終了の疑い。スクショ: {screenshot}",
+                        reason_code="generation_stuck",
+                        diagnostics={
+                            "gen_tail_elapsed_seconds": gen_tail_elapsed_ms / 1000,
+                            "screenshot": screenshot,
+                        },
+                    )
+                await self.page.wait_for_timeout(poll_interval_ms)
+                gen_tail_elapsed_ms += poll_interval_ms
+                verify_elapsed_ms = 0  # 検証タイマーリセット
+                last_match_count = 0
+                continue
+
+            # 生成中表示は消えた → FAQ 実体検証フェーズ
             match_count = sum(1 for p in faq_patterns if p.search(page_text))
             company_ok = True
             if company:
@@ -1205,26 +1433,165 @@ class WebAppOperator:
             if match_count >= 2 and company_ok:
                 logger.info(
                     f"  [OK] FAQ実体を確認 (パターン一致: {match_count}件, "
-                    f"経過: {elapsed_ms/1000:.0f}s)"
+                    f"検証経過: {verify_elapsed_ms/1000:.0f}s, "
+                    f"生成尾部待機: {gen_tail_elapsed_ms/1000:.0f}s)"
                 )
                 return
 
             last_match_count = max(last_match_count, match_count)
-            await self.page.wait_for_timeout(poll_interval_ms)
-            elapsed_ms += poll_interval_ms
 
-        # === 検証失敗 ===
+            if verify_elapsed_ms >= max_ms:
+                break
+
+            await self.page.wait_for_timeout(poll_interval_ms)
+            verify_elapsed_ms += poll_interval_ms
+
+        # === 検証失敗 — 失敗原因の分類 ===
         ts = company.enterprise_id if company else "unknown"
         screenshot = f"screenshots/gen_verify_fail_{ts}.png"
         try:
             await self.page.screenshot(path=screenshot, full_page=True)
         except Exception:
             pass
+
+        # 1) Streamlit エラー alert の有無を診断 (server-side 生成失敗の可能性)
+        server_error_text = ""
+        try:
+            error_alerts = self.page.locator(
+                "[data-testid='stAlert'], [data-baseweb='notification']"
+            )
+            alert_count = await error_alerts.count()
+            for ai in range(alert_count):
+                try:
+                    txt = (await error_alerts.nth(ai).text_content()) or ""
+                except Exception:
+                    continue
+                if any(
+                    kw in txt for kw in ("エラー", "Error", "失敗", "Failed", "例外")
+                ):
+                    server_error_text = txt.strip()[:300]
+                    break
+        except Exception:
+            pass
+
+        # 2) 「プレビュー・保存」タブを開いて再検証 (タブ未切替が原因の可能性)
+        #    現在「生成」タブのままだと FAQ プレビューが DOM に乗らないケースに対応
+        try:
+            await self._click_tab_by_text("プレビュー", "保存")
+            await self.page.wait_for_timeout(3000)
+            await self._wait_for_streamlit_load()
+            try:
+                main = self.page.locator(
+                    "main, [data-testid='stMain'], section[role='main']"
+                )
+                if await main.count() > 0:
+                    retry_text = await main.first.inner_text(timeout=3000)
+                else:
+                    retry_text = await self.page.locator("body").inner_text(
+                        timeout=3000
+                    )
+            except Exception:
+                retry_text = ""
+            retry_match = sum(
+                1 for p in faq_patterns if p.search(retry_text or "")
+            )
+            retry_company_ok = True
+            if company:
+                retry_company_ok = (
+                    (company.enterprise_id and company.enterprise_id in retry_text)
+                    or (company.name and company.name in retry_text)
+                )
+            if retry_match >= 2 and retry_company_ok:
+                logger.info(
+                    f"  [OK] 「プレビュー・保存」タブ切替後にFAQ実体を確認 "
+                    f"(パターン一致: {retry_match}件)"
+                )
+                return
+            # タブ切替後も見つからなければ最終失敗確定
+            last_match_count = max(last_match_count, retry_match)
+        except Exception as tab_err:
+            logger.debug(f"  プレビュータブ切替再検証中の例外: {tab_err}")
+
+        # 失敗カテゴリの推定
+        if server_error_text:
+            reason_code = "server_error"
+            msg = (
+                f"生成中にサーバー側エラーを検出: '{server_error_text}'. "
+                f"スクショ: {screenshot}"
+            )
+        elif company and last_match_count >= 2:
+            # FAQ パターンは見えたが対象企業のデータではない
+            reason_code = "wrong_company"
+            msg = (
+                f"FAQ実体は検出 (パターン一致: {last_match_count}件) ですが、"
+                f"対象企業 {company.name}({company.enterprise_id}) のデータが"
+                f"含まれていません。混入の疑い。スクショ: {screenshot}"
+            )
+        else:
+            reason_code = "no_faq_on_any_tab"
+            msg = (
+                f"生成完了検出後、FAQ実体がページに現れません "
+                f"(パターン一致: {last_match_count}件、検証経過 {max_wait_seconds}s、"
+                f"生成尾部待機 {gen_tail_elapsed_ms/1000:.0f}s)。"
+                f"生成失敗 or 別企業のデータ残存疑い。スクショ: {screenshot}"
+            )
+
         raise ContentSaveVerificationError(
-            f"生成完了検出後、FAQ実体がページに現れません "
-            f"(パターン一致: {last_match_count}件、{max_wait_seconds}s経過)。"
-            f"生成失敗 or 別企業のデータ残存疑い。スクショ: {screenshot}"
+            msg,
+            reason_code=reason_code,
+            diagnostics={
+                "match_count": last_match_count,
+                "verify_elapsed_seconds": max_wait_seconds,
+                "gen_tail_elapsed_seconds": gen_tail_elapsed_ms / 1000,
+                "server_error_text": server_error_text,
+                "screenshot": screenshot,
+                "company_name": company.name if company else None,
+                "enterprise_id": company.enterprise_id if company else None,
+            },
         )
+
+    async def _click_tab_by_text(self, *keywords: str):
+        """指定キーワードのいずれかを含むタブをクリックする (visible なもののみ)。
+
+        Args:
+            *keywords: タブのテキストに含まれるキーワード (OR 条件)
+
+        Returns:
+            True : クリックに成功
+            False: 該当タブが見つからない or クリック失敗
+        """
+        # まずは id 属性パターンマッチ (Streamlit のタブは tab-N の id を持つ)
+        for keyword in keywords:
+            try:
+                sel = f'[id*="tab-"]:has-text("{keyword}")'
+                tab = self.page.locator(sel).first
+                if await tab.count() > 0 and await tab.is_visible():
+                    await tab.click(timeout=5000)
+                    await self.page.wait_for_timeout(800)
+                    return True
+            except Exception:
+                continue
+
+        # フォールバック: data-baseweb='tab' を走査
+        try:
+            tabs = self.page.locator("[data-baseweb='tab'], [role='tab']")
+            tab_count = await tabs.count()
+            for i in range(tab_count):
+                try:
+                    text = (await tabs.nth(i).text_content()) or ""
+                    if not text.strip():
+                        continue
+                    if any(kw in text for kw in keywords):
+                        if not await tabs.nth(i).is_visible():
+                            continue
+                        await tabs.nth(i).click(timeout=5000)
+                        await self.page.wait_for_timeout(800)
+                        return True
+                except Exception:
+                    continue
+        except Exception:
+            pass
+        return False
 
     async def _find_action_button(
         self,
@@ -1269,6 +1636,71 @@ class WebAppOperator:
             return all_buttons.nth(i)
         return None
 
+    async def _wait_for_in_progress_to_clear(
+        self,
+        max_wait_ms: int = 300000,
+        source: str = "unknown",
+    ):
+        """
+        画面に「FAQを生成中…」「企業情報を生成中…」「生成中..」等が表示されて
+        いる間、最大 max_wait_ms まで消失をポーリングする。
+
+        Streamlit の生成処理は spinner ではなく st.info()/st.empty() で
+        生成中表示を出すため、これらが消えるまでが本当の生成完了。
+        save_content() の冒頭などに念のための最終ガードとして使う。
+
+        Args:
+            max_wait_ms: 最大待機ミリ秒
+            source:      ログ識別子
+        """
+        in_progress_pattern = re.compile(
+            r"(FAQ.{0,3}生成中|企業情報.{0,3}生成中|生成中\.{2,}|生成しています)"
+        )
+        poll_interval_ms = 2500
+        elapsed_ms = 0
+        last_log_ms = -15000
+
+        while elapsed_ms < max_wait_ms:
+            try:
+                main = self.page.locator(
+                    "main, [data-testid='stMain'], section[role='main']"
+                )
+                if await main.count() > 0:
+                    page_text = await main.first.inner_text(timeout=3000)
+                else:
+                    page_text = await self.page.locator("body").inner_text(
+                        timeout=3000
+                    )
+            except Exception:
+                page_text = ""
+
+            still_running = bool(
+                page_text and in_progress_pattern.search(page_text)
+            )
+            if not still_running:
+                if elapsed_ms > 0:
+                    logger.info(
+                        f"  [{source}] 「生成中…」表示は消えました "
+                        f"(待機 {elapsed_ms/1000:.0f}s)"
+                    )
+                return
+
+            if elapsed_ms - last_log_ms >= 15000:
+                logger.info(
+                    f"  [{source}] 「生成中…」継続中 → 待機 "
+                    f"({elapsed_ms/1000:.0f}s / 上限 {max_wait_ms/1000:.0f}s)"
+                )
+                last_log_ms = elapsed_ms
+
+            await self.page.wait_for_timeout(poll_interval_ms)
+            elapsed_ms += poll_interval_ms
+
+        # 上限到達 — 警告のみ (呼び出し元に判断を委ねる)
+        logger.warning(
+            f"  [{source}] 「生成中…」表示が {max_wait_ms/1000:.0f}秒経過しても"
+            "消えませんでした (後続処理は失敗する可能性あり)"
+        )
+
     async def _click_generation_tab(self):
         """コンテンツ生成画面の「生成」タブをクリックする。"""
         gen_tab = self.page.locator('[id*="tab-1"]:has-text("生成")')
@@ -1295,8 +1727,22 @@ class WebAppOperator:
            間を空けずに即クリック（保存トーストが出なければ1回だけ再クリック）
         2. ページを進めて 赤い「企業情報を保存」ボタンをクリック
         3. 「コンテンツ管理」タブで保存が正しく行われたか確認
+
+        改善 (2026-05-19):
+            - 保存タブに遷移する前に「FAQを生成中…」「企業情報を生成中…」が
+              残っていないか念のため確認。残っていれば最大 5分まで消失を待つ。
+              ボタン表示前の generation-tail で誤クリックする事故を防ぐ。
         """
         logger.info("コンテンツ保存開始...")
+
+        # === 念のため最終生成中ガード ===
+        try:
+            await self._wait_for_in_progress_to_clear(
+                max_wait_ms=CONTENT_GENERATION_TIMEOUT,
+                source="save_content",
+            )
+        except Exception as e:
+            logger.warning(f"  生成中ガード待機中の例外 (続行): {e}")
 
         # 「プレビュー・保存」タブをクリック
         save_tab = self.page.locator('[id*="tab-2"]:has-text("プレビュー"), [id*="tab-2"]:has-text("保存")')
@@ -1334,10 +1780,19 @@ class WebAppOperator:
             screenshot_err = (
                 f"screenshots/faq_not_found_{company.enterprise_id}.png"
             )
-            await self.page.screenshot(path=screenshot_err)
+            try:
+                await self.page.screenshot(path=screenshot_err)
+            except Exception:
+                pass
             raise ContentSaveVerificationError(
                 f"FAQ保存ボタンが表示されません (FAQプレビュー未生成 or "
-                f"対象企業のページ未表示)。スクショ: {screenshot_err}"
+                f"対象企業のページ未表示)。スクショ: {screenshot_err}",
+                reason_code="save_button_missing",
+                diagnostics={
+                    "stage": "wait_visible",
+                    "enterprise_id": company.enterprise_id,
+                    "screenshot": screenshot_err,
+                },
             )
 
         # 厳密にテキスト一致するボタンを取得 (タブの「プレビュー・保存」を除外)
@@ -1349,10 +1804,19 @@ class WebAppOperator:
             screenshot_err = (
                 f"screenshots/faq_save_btn_not_found_{company.enterprise_id}.png"
             )
-            await self.page.screenshot(path=screenshot_err)
+            try:
+                await self.page.screenshot(path=screenshot_err)
+            except Exception:
+                pass
             raise ContentSaveVerificationError(
                 f"FAQ保存ボタンが特定できません (見えるボタンの中に「FAQ」+「保存」"
-                f"を含むものなし)。スクショ: {screenshot_err}"
+                f"を含むものなし)。スクショ: {screenshot_err}",
+                reason_code="save_button_missing",
+                diagnostics={
+                    "stage": "find_action_button",
+                    "enterprise_id": company.enterprise_id,
+                    "screenshot": screenshot_err,
+                },
             )
 
         # === 確認直後、間を空けずに即クリック ===
@@ -1419,10 +1883,19 @@ class WebAppOperator:
             screenshot_path = (
                 f"screenshots/save_btn_not_found_{company.enterprise_id}.png"
             )
-            await self.page.screenshot(path=screenshot_path)
+            try:
+                await self.page.screenshot(path=screenshot_path)
+            except Exception:
+                pass
             raise ContentSaveVerificationError(
                 f"「企業情報保存」ボタンが見つかりませんでした。"
-                f"スクリーンショット: {screenshot_path}"
+                f"スクリーンショット: {screenshot_path}",
+                reason_code="save_button_missing",
+                diagnostics={
+                    "stage": "company_info_save_button",
+                    "enterprise_id": company.enterprise_id,
+                    "screenshot": screenshot_path,
+                },
             )
 
         btn_text = (await red_save_target.text_content() or "").strip()
@@ -1495,7 +1968,16 @@ class WebAppOperator:
                 f"スクショ: {screenshot_path}"
             )
             logger.error(f"  [ERR] {msg}")
-            raise ContentSaveVerificationError(msg)
+            raise ContentSaveVerificationError(
+                msg,
+                reason_code="content_mgmt_missing",
+                diagnostics={
+                    "stage": "content_management_page",
+                    "enterprise_id": company.enterprise_id,
+                    "company_name": company.name,
+                    "screenshot": screenshot_path,
+                },
+            )
 
         logger.info(
             f"  [OK] コンテンツ管理ページ: {company.enterprise_id} の存在を確認"
@@ -1519,7 +2001,19 @@ class WebAppOperator:
                 f"id={company.enterprise_id}, スクショ: {screenshot_path})"
             )
             logger.error(f"  [ERR] {msg}")
-            raise ContentSaveVerificationError(msg)
+            raise ContentSaveVerificationError(
+                msg,
+                reason_code="content_mgmt_tab_failed",
+                diagnostics={
+                    "stage": "content_management_tabs",
+                    "faq_ok": faq_ok,
+                    "faq_reason": faq_reason,
+                    "info_ok": info_ok,
+                    "info_reason": info_reason,
+                    "enterprise_id": company.enterprise_id,
+                    "screenshot": screenshot_path,
+                },
+            )
 
         logger.info("  [OK] FAQ・企業情報タブともに対象企業のコンテンツを確認")
 
@@ -2110,15 +2604,36 @@ class WebAppOperator:
 
         改善 (2026-05-13):
             - クリック直後にスピナーが現れる前から「完了」判定する誤検知を防止
-              (過去ログで「生成完了検出 5.0秒」という早すぎの誤検知が発生)
             - 最低待機時間 (MIN_WAIT_MS) を確保
             - スピナー出現を 15秒まで待ってから消失検出フェーズに入る
+
+        改善 (2026-05-19):
+            - **スピナー消失だけでは生成完了とみなさない**。
+              Streamlit の生成処理は st.info() の青いボックスで
+              「FAQを生成中...」「企業情報を生成中...」を表示し、
+              spinner は早期に消えるが info ボックスは生成中の間ずっと残る。
+              → spinner 不可視 AND 「生成中」info ボックス不存在 になって
+                 初めて完了とみなす。
+            - 完了の正シグナルとして「✅ … 生成完了」「保存可能」等の
+              成功メッセージが出現したら即時完了に切り上げる。
         """
         MIN_WAIT_MS = 15000           # 最低この時間は完了判定しない
         SPINNER_APPEAR_TIMEOUT = 15000  # スピナー出現待ち
         poll_interval = 3000
         elapsed = 0
         spinner_selector = "[data-testid='stSpinner'], .stSpinner"
+
+        # 「生成中...」表示を判定するためのテキストパターン
+        # Streamlit の st.info() / st.status() / 一般 div いずれにも対応
+        in_progress_pattern = re.compile(
+            r"(FAQ.{0,3}生成中|企業情報.{0,3}生成中|生成中\.{2,}|"
+            r"生成しています|処理中\.{2,}|⏳|スピナー)"
+        )
+        # 完了シグナル (これが出たら即完了)
+        completion_pattern = re.compile(
+            r"(生成完了|生成が完了|保存可能|保存準備|"
+            r"プレビューで確認|プレビュー・保存で確認)"
+        )
 
         # フェーズ1: スピナー出現を待つ (出なくても最低待機後に消失検出へ移行)
         spinner_seen = False
@@ -2133,11 +2648,13 @@ class WebAppOperator:
                 "  スピナー出現せず → 最低待機時間後に完了判定"
             )
 
-        # フェーズ2: スピナー消失をポーリング + 最低待機時間を保証
+        # フェーズ2: スピナー消失 + 「生成中」テキスト消失をポーリング
+        last_in_progress_logged_at = -10000  # 過剰ログ抑制用
         while elapsed < CONTENT_GENERATION_TIMEOUT:
             await self.page.wait_for_timeout(poll_interval)
             elapsed += poll_interval
 
+            # ----- スピナー可視性 -----
             spinner_visible = False
             try:
                 spinner = self.page.locator(spinner_selector)
@@ -2145,7 +2662,26 @@ class WebAppOperator:
             except Exception:
                 pass
 
-            # エラーチェック
+            # ----- 生成中テキスト可視性 (新規) -----
+            in_progress_visible = False
+            page_text = ""
+            try:
+                main = self.page.locator(
+                    "main, [data-testid='stMain'], section[role='main']"
+                )
+                if await main.count() > 0:
+                    page_text = await main.first.inner_text(timeout=3000)
+                else:
+                    page_text = await self.page.locator("body").inner_text(
+                        timeout=3000
+                    )
+            except Exception:
+                page_text = ""
+
+            if page_text and in_progress_pattern.search(page_text):
+                in_progress_visible = True
+
+            # ----- エラー検出 -----
             try:
                 error = self.page.locator("[data-testid='stAlert']")
                 if await error.count() > 0:
@@ -2153,7 +2689,7 @@ class WebAppOperator:
                     if (
                         "エラー" in (error_text or "")
                         or "Error" in (error_text or "")
-                    ):
+                    ) and "生成中" not in (error_text or ""):
                         raise RuntimeError(
                             f"コンテンツ生成エラー: {error_text}"
                         )
@@ -2162,15 +2698,36 @@ class WebAppOperator:
             except Exception:
                 pass
 
-            # 完了判定: スピナーが見えない & 最低待機時間を経過
-            if not spinner_visible and elapsed >= MIN_WAIT_MS:
+            # ----- 完了正シグナル: 最低待機時間後なら即完了に切り上げ -----
+            completion_signal = False
+            if page_text and completion_pattern.search(page_text):
+                completion_signal = True
+
+            # ----- 完了判定 -----
+            # 条件: スピナー不可視 AND 「生成中」テキスト不可視 AND 最低待機時間経過
+            # OR: 明示的な完了シグナル + 最低待機時間経過
+            if (
+                elapsed >= MIN_WAIT_MS
+                and (
+                    (not spinner_visible and not in_progress_visible)
+                    or completion_signal
+                )
+            ):
                 logger.info(
                     f"生成完了検出 (経過: {elapsed / 1000}秒, "
-                    f"スピナー出現: {spinner_seen})"
+                    f"スピナー出現: {spinner_seen}, "
+                    f"完了シグナル: {completion_signal})"
                 )
                 return
 
-            logger.debug(f"生成中... (経過: {elapsed / 1000}秒)")
+            # 進捗ログ (10秒ごと、過剰ログ抑制)
+            if elapsed - last_in_progress_logged_at >= 10000:
+                logger.info(
+                    f"  生成中... (経過: {elapsed / 1000:.0f}秒, "
+                    f"spinner={spinner_visible}, "
+                    f"in_progress_text={in_progress_visible})"
+                )
+                last_in_progress_logged_at = elapsed
 
         raise TimeoutError(
             f"コンテンツ生成がタイムアウト ({CONTENT_GENERATION_TIMEOUT / 1000}秒)"

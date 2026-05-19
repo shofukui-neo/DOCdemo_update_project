@@ -521,15 +521,31 @@ class Orchestrator:
                     logger.info("  → コンテンツ生成・保存・検証完了")
                     break
                 except ContentSaveVerificationError as e:
+                    reason_code = getattr(e, "reason_code", "unknown")
+                    diagnostics = getattr(e, "diagnostics", {}) or {}
+
+                    # サーバー側生成エラーは試行回数を消費せず即座にエラー扱い
+                    # (リトライしても同じ結果になる可能性が高い + リソース節約)
+                    if reason_code == "server_error":
+                        logger.error(
+                            f"  [ERR] サーバー側生成エラーを検出 — リトライしません: "
+                            f"{e} / diagnostics={diagnostics}"
+                        )
+                        raise
+
                     if attempt >= max_attempts:
                         logger.error(
                             f"  [ERR] FAQ/企業情報の保存検証に "
-                            f"{max_attempts}回失敗。最終的に失敗とします: {e}"
+                            f"{max_attempts}回失敗。最終的に失敗とします "
+                            f"(reason_code={reason_code}): {e} / "
+                            f"diagnostics={diagnostics}"
                         )
                         raise
                     logger.warning(
-                        f"  [RETRY] 保存/生成検証失敗 ({e}) "
-                        f"→ Step 4 から再試行 (次回 {attempt + 1}/{max_attempts})"
+                        f"  [RETRY] 保存/生成検証失敗 "
+                        f"(reason_code={reason_code}): {e} "
+                        f"→ Step 4 から再試行 (次回 {attempt + 1}/{max_attempts}) / "
+                        f"diagnostics={diagnostics}"
                     )
                     # ページ状態をクリーンにしてから次の試行へ
                     try:
