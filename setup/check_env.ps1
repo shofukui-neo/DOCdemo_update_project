@@ -185,8 +185,10 @@ if (Test-Path $pwCachePath) {
 Write-Section "Git ユーザー設定"
 
 if (Test-Command git) {
-    $gitUser  = (& git config --global user.name 2>&1).Trim()
-    $gitEmail = (& git config --global user.email 2>&1).Trim()
+    $gitUserRaw  = & git config --global user.name 2>$null
+    $gitEmailRaw = & git config --global user.email 2>$null
+    $gitUser  = if ($gitUserRaw)  { $gitUserRaw.ToString().Trim()  } else { "" }
+    $gitEmail = if ($gitEmailRaw) { $gitEmailRaw.ToString().Trim() } else { "" }
 
     if ($gitUser)  { Write-Item "user.name"  "OK" $gitUser  } else { Write-Item "user.name"  "NG" "未設定" }
     if ($gitEmail) { Write-Item "user.email" "OK" $gitEmail } else { Write-Item "user.email" "NG" "未設定" }

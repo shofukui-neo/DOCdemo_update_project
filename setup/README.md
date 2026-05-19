@@ -8,6 +8,7 @@
 |---------|------|
 | `check_env.ps1` | 現在のインストール状況を調査して `env_report.txt` に保存 |
 | `setup_env.bat` | 不足分を自動でインストール（winget + pip + playwright） |
+| `setup_env_py312.bat` | Python 3.12.10 で開発環境を自動構築 |
 | `env_report.txt` | `check_env.ps1` が出力する調査結果（実行後に生成） |
 
 ---
@@ -36,7 +37,7 @@ powershell -ExecutionPolicy Bypass -File .\setup\check_env.ps1
 
 ### ② 自動構築（不足があれば実行）
 
-`setup_env.bat` を **右クリック → 管理者として実行**
+`setup_env.bat` または `setup_env_py312.bat` を **右クリック → 管理者として実行**
 
 実行ステップ:
 1. **winget** で Git / Python 3.12 / VSCode をインストール（既にあればスキップ）

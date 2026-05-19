@@ -103,8 +103,8 @@ REM Python が認識できない場合は再起動が必要
 where python >nul 2>&1
 if %errorlevel% neq 0 (
     echo.
-    echo [重要] Python が PATH で認識できません。
-    echo        一度このウィンドウを閉じて、PCを再起動後に再実行してください。
+    echo [IMPORTANT] Python is not recognized in PATH.
+    echo        Close this window, restart your PC, and run the batch again.
     pause
     exit /b 1
 )
