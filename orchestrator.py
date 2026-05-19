@@ -42,13 +42,21 @@ from config import (
     RETRY_COUNT,
     RETRY_DELAY,
     FAQ_SAVE_MAX_RETRIES,
+    SERVER_RECOVERY_MAX_WAIT_MINUTES,
 )
 from models import CompanyInfo, ProcessStatus
 from spreadsheet_manager import SpreadsheetManager
 from url_finder import URLFinder
 from image_fetcher import extract_enterprise_id_from_url
 from recruit_url_finder import find_recruit_site_urls
-from web_app_operator import WebAppOperator, ContentSaveVerificationError
+from web_app_operator import (
+    WebAppOperator,
+    ContentSaveVerificationError,
+    ServerDownError,
+    check_server_alive,
+    is_server_down_error,
+    wait_for_server_recovery,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -121,6 +129,7 @@ class Orchestrator:
             "skipped": 0,
             "duplicate": 0,  # URL企業ID不一致候補複数のため手動確認待ち
             "error": 0,
+            "server_down_aborted": 0,  # サーバーダウンで残処理を中断した社数
         }
 
     async def run(self):
@@ -173,7 +182,12 @@ class Orchestrator:
             await web_operator.login()
 
             # 各企業を順次処理
-            for idx, company in enumerate(pending, start=1):
+            # サーバーダウン復旧後の再試行を扱うため idx ベースの while ループを使う
+            idx = 0
+            server_down_aborted = False
+            while idx < len(pending):
+                company = pending[idx]
+                idx += 1
                 logger.info("")
                 logger.info(f"{'─' * 50}")
                 logger.info(
@@ -189,7 +203,40 @@ class Orchestrator:
                     # 成功カウントは COMPLETED に達した場合のみ
                     if company.status == ProcessStatus.COMPLETED:
                         self.stats["success"] += 1
+                except ServerDownError as sd_err:
+                    # === サーバーダウン検出 → 復旧待ち & 同企業を再試行 ===
+                    recovered = await self._handle_server_down(
+                        sd_err, company, companies, web_operator,
+                        idx_one_based=idx, total=len(pending),
+                    )
+                    if not recovered:
+                        # 残り処理を中断
+                        remaining = len(pending) - idx + 1  # 本企業含む
+                        self.stats["server_down_aborted"] = remaining
+                        server_down_aborted = True
+                        break
+                    # 復旧した → 同じ企業を再度キューに戻して次イテレーションで再実行
+                    idx -= 1
+                    continue
                 except Exception as e:
+                    # ヘルスチェックで「実はサーバーダウンだった」を救済
+                    if is_server_down_error(e) or not check_server_alive():
+                        logger.warning(
+                            f"[サーバーダウン疑い] {company.name} 処理中の例外 ({e}) は"
+                            "サーバー側の問題と判定 — 復旧待機に入ります"
+                        )
+                        recovered = await self._handle_server_down(
+                            e, company, companies, web_operator,
+                            idx_one_based=idx, total=len(pending),
+                        )
+                        if not recovered:
+                            remaining = len(pending) - idx + 1
+                            self.stats["server_down_aborted"] = remaining
+                            server_down_aborted = True
+                            break
+                        idx -= 1
+                        continue
+
                     logger.error(f"[ERROR] {company.name}: 処理失敗 -- {e}")
                     company.mark_error(str(e))
                     self.sheet_manager.update_company(company, companies)
@@ -203,11 +250,38 @@ class Orchestrator:
                     logger.info("1件処理完了 → 再ログイン＆キャッシュクリアを実行")
                     try:
                         await web_operator.re_login_with_cache_clear()
+                    except ServerDownError as sd_err:
+                        # 再ログイン中にサーバーダウン → 次企業に進む前に復旧待ち
+                        recovered = await self._handle_server_down(
+                            sd_err, company, companies, web_operator,
+                            idx_one_based=idx, total=len(pending),
+                            during_relogin=True,
+                        )
+                        if not recovered:
+                            remaining = len(pending) - idx
+                            self.stats["server_down_aborted"] = remaining
+                            server_down_aborted = True
+                            break
                     except Exception as e:
                         logger.warning(f"再ログイン失敗（続行）: {e}")
 
             # クリーンアップ
-            await browser.close()
+            try:
+                await browser.close()
+            except Exception:
+                pass
+
+            if server_down_aborted:
+                logger.error("=" * 60)
+                logger.error(
+                    f"サーバー未復旧のため処理を中断しました "
+                    f"(未処理 {self.stats['server_down_aborted']}社)。"
+                )
+                logger.error(
+                    "サーバー復旧後に同じCSVで `python orchestrator.py` を再実行すると "
+                    "途中ステータスから自動再開します。"
+                )
+                logger.error("=" * 60)
 
         # 最終レポート
         elapsed = datetime.now() - start_time
@@ -215,6 +289,80 @@ class Orchestrator:
 
         # 納品URLのみのCSVを自動生成 (クライアント納品用)
         self._write_delivery_urls_csv()
+
+    async def _handle_server_down(
+        self,
+        err: BaseException,
+        company: CompanyInfo,
+        companies: list,
+        web_operator: WebAppOperator,
+        idx_one_based: int,
+        total: int,
+        during_relogin: bool = False,
+    ) -> bool:
+        """
+        サーバーダウン検出時の共通処理。
+
+        手順:
+            1. 現企業のステータスは「エラー」に落とさず保持 (途中状態のまま)
+               → サーバー復旧後の再実行で続きから自動再開できる
+            2. 現在の CSV 状態を保存
+            3. サーバー復旧をポーリング待機
+            4. 復旧したら再ログインを試み、呼び出し元に True を返す
+               (呼び出し元は同企業を再試行 or 次企業へ進む)
+            5. 復旧しなければ False を返す (呼び出し元は break する)
+
+        Returns:
+            True  : 復旧 (呼び出し元は処理続行可能)
+            False : 未復旧 (呼び出し元は中断すべき)
+        """
+        logger.error("=" * 60)
+        logger.error(
+            f"[サーバーダウン検出] {company.name} "
+            f"({idx_one_based}/{total}社目"
+            + ("、再ログイン中" if during_relogin else "")
+            + f") 処理中に Brainverse 管理画面サーバーへの到達が失敗しました"
+        )
+        logger.error(f"  詳細: {err}")
+        logger.error("=" * 60)
+
+        # 現状の CSV 状態を念のため保存 (途中ステータスを失わないため)
+        try:
+            self.sheet_manager.update_company(company, companies)
+        except Exception as save_err:
+            logger.warning(f"  CSV 保存に失敗 (続行): {save_err}")
+
+        # 復旧待機
+        recovered = await wait_for_server_recovery()
+        if not recovered:
+            logger.error(
+                f"サーバーが最大待機時間 ({SERVER_RECOVERY_MAX_WAIT_MINUTES}分) "
+                "以内に復旧しませんでした。"
+            )
+            return False
+
+        # 復旧した → 再ログイン
+        logger.info("サーバー復旧を確認 → 再ログインします")
+        try:
+            await web_operator.close_page_and_relogin()
+        except ServerDownError as sd_err:
+            logger.error(f"復旧直後の再ログイン中に再びサーバーダウン: {sd_err}")
+            return False
+        except Exception as relogin_err:
+            logger.error(f"復旧後の再ログインに失敗: {relogin_err}")
+            # 再ログインのリトライを 1回だけ
+            await asyncio.sleep(RETRY_DELAY)
+            try:
+                await web_operator.close_page_and_relogin()
+            except Exception as e2:
+                logger.error(f"再ログイン 2回目も失敗: {e2} — 中断します")
+                return False
+
+        logger.info(
+            f"{company.name} を再試行します" if not during_relogin
+            else "次企業から処理を再開します"
+        )
+        return True
 
     async def _process_single_company(
         self,
@@ -506,6 +654,11 @@ class Orchestrator:
         logger.info(f"  [HOLD] URL企業ID不一致候補複数: {self.stats['duplicate']}社（手動確認待ち）")
         logger.info(f"  [SKIP] スキップ: {self.stats['skipped']}社")
         logger.info(f"  [ERR] エラー:  {self.stats['error']}社")
+        if self.stats.get("server_down_aborted", 0) > 0:
+            logger.info(
+                f"  [サーバーダウン中断]: {self.stats['server_down_aborted']}社 "
+                "（途中ステータスを保持。サーバー復旧後の再実行で続行可能）"
+            )
         logger.info(f"  所要時間:    {elapsed}")
         logger.info("=" * 60)
         if self.stats['duplicate'] > 0:

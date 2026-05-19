@@ -33862,3 +33862,1184 @@ Call log:
 2026-05-18 15:15:14,660 [INFO] web_app_operator: 企業追加完了: 株式会社鳥忠 (ID: kobe-torichu)
 2026-05-18 15:15:14,660 [INFO] __main__: Step 2.5/6: 追加企業のID検証...
 2026-05-18 15:15:14,660 [INFO] web_app_operator:   企業ID検証中: 期待ID=kobe-torichu, URL=http://kobe-torichu.com
+2026-05-18 15:15:18,710 [INFO] web_app_operator:   [OK] 企業ID 'kobe-torichu' をページ内に確認
+2026-05-18 15:15:18,712 [INFO] spreadsheet_manager: 企業リスト保存完了: 63社 → C:\Users\NC00018174\Desktop\DOCdemo_update_project\data\company_list.csv
+2026-05-18 15:15:18,712 [INFO] __main__:   → 企業追加完了 (ID: kobe-torichu)
+2026-05-18 15:15:18,712 [INFO] __main__: 企業追加完了 → ページを閉じて再ログイン（キャッシュバグ防止）
+2026-05-18 15:15:18,712 [INFO] web_app_operator: ページを閉じて再ログインを開始...
+2026-05-18 15:15:18,726 [INFO] web_app_operator:   古いページタブを閉じました
+2026-05-18 15:15:18,813 [INFO] web_app_operator:   新しいページタブを開きました
+2026-05-18 15:15:18,814 [INFO] web_app_operator: 管理画面にログイン中...
+2026-05-18 15:15:25,496 [INFO] web_app_operator: ログイン成功
+2026-05-18 15:15:25,496 [INFO] web_app_operator: ページクローズ＆再ログイン完了
+2026-05-18 15:15:25,496 [INFO] __main__: Step 3/5: URL収集...
+2026-05-18 15:15:28,641 [INFO] recruit_url_finder: 求人サイトURL収集開始: 株式会社鳥忠 (正規化: '鳥忠')
+2026-05-18 15:15:31,466 [INFO] recruit_url_finder:   [マイナビ転職] 0件取り込み (累計 0件)
+2026-05-18 15:15:34,132 [INFO] recruit_url_finder:   [マイナビ新卒] 0件取り込み (累計 0件)
+2026-05-18 15:15:36,863 [INFO] recruit_url_finder:   [リクナビ] 0件取り込み (累計 0件)
+2026-05-18 15:15:39,666 [INFO] recruit_url_finder:   [DODA] 1件取り込み (累計 1件)
+2026-05-18 15:15:42,341 [INFO] recruit_url_finder:   [エン転職] 2件取り込み (累計 3件)
+2026-05-18 15:15:45,108 [INFO] recruit_url_finder:   [Wantedly] 2件取り込み (累計 5件)
+2026-05-18 15:15:47,791 [INFO] recruit_url_finder:   [Green] 0件取り込み (累計 5件)
+2026-05-18 15:15:50,498 [INFO] recruit_url_finder:   [Indeed] 2件取り込み (累計 7件)
+2026-05-18 15:15:50,498 [INFO] recruit_url_finder: 求人サイトURL収集完了: 株式会社鳥忠 → 合計 7 件
+2026-05-18 15:15:50,498 [INFO] __main__:   → 内部リンク:7件, 求人サイト:7件, 合計:14件
+2026-05-18 15:15:50,498 [INFO] __main__: Step 4/5: コンテンツ生成... (試行 1/3)
+2026-05-18 15:15:54,330 [INFO] __main__:   [検証] コンテンツ生成画面のヘッダーが対象企業に切替済か確認...
+2026-05-18 15:15:54,332 [INFO] web_app_operator: サイドバーから企業選択開始: 株式会社鳥忠
+2026-05-18 15:16:02,435 [INFO] web_app_operator:   ヘッダー検証中: 企業名=株式会社鳥忠, ID=kobe-torichu
+2026-05-18 15:16:02,547 [INFO] web_app_operator:   [OK] ヘッダー検証成功: 「🤖 株式会社鳥忠 コンテンツ生成」
+2026-05-18 15:16:02,547 [INFO] web_app_operator: サイドバー企業選択完了: 株式会社鳥忠
+2026-05-18 15:16:02,547 [INFO] web_app_operator: URL入力開始: 14件
+2026-05-18 15:16:06,373 [INFO] web_app_operator:   「全入力を処理」ボタンをクリックしました
+2026-05-18 15:16:40,926 [INFO] web_app_operator: URL入力・処理開始完了: 14件
+2026-05-18 15:16:40,927 [INFO] web_app_operator: コンテンツ生成開始...
+2026-05-18 15:16:51,629 [INFO] web_app_operator:   生成準備完了の待機中...
+2026-05-18 15:17:31,645 [WARNING] web_app_operator:   生成準備完了メッセージが特定できませんでしたが、続行を試みます
+2026-05-18 15:17:31,689 [INFO] web_app_operator:   コンテンツ生成ボタン検出 (試行 1/6)
+2026-05-18 15:17:32,268 [INFO] web_app_operator: コンテンツ生成中... (最大5分待機)
+2026-05-18 15:18:50,596 [INFO] web_app_operator: 生成完了検出 (経過: 75.0秒, スピナー出現: True)
+2026-05-18 15:18:50,596 [INFO] web_app_operator:   [検証] 生成結果のFAQ実体を確認: 株式会社鳥忠 (id=kobe-torichu)
+2026-05-18 15:20:53,683 [WARNING] __main__:   [RETRY] 保存/生成検証失敗 (生成完了検出後、FAQ実体がページに現れません (パターン一致: 1件、120s経過)。生成失敗 or 別企業のデータ残存疑い。スクショ: screenshots/gen_verify_fail_kobe-torichu.png) → Step 4 から再試行 (次回 2/3)
+2026-05-18 15:20:53,683 [INFO] web_app_operator: ページを閉じて再ログインを開始...
+2026-05-18 15:20:53,721 [INFO] web_app_operator:   古いページタブを閉じました
+2026-05-18 15:20:53,837 [INFO] web_app_operator:   新しいページタブを開きました
+2026-05-18 15:20:53,837 [INFO] web_app_operator: 管理画面にログイン中...
+2026-05-18 15:20:59,843 [INFO] web_app_operator: ログイン成功
+2026-05-18 15:20:59,844 [INFO] web_app_operator: ページクローズ＆再ログイン完了
+2026-05-18 15:20:59,844 [INFO] __main__: Step 4/5: コンテンツ生成... (試行 2/3)
+2026-05-18 15:21:03,663 [INFO] __main__:   [検証] コンテンツ生成画面のヘッダーが対象企業に切替済か確認...
+2026-05-18 15:21:03,663 [INFO] web_app_operator: サイドバーから企業選択開始: 株式会社鳥忠
+2026-05-18 15:21:11,749 [INFO] web_app_operator:   ヘッダー検証中: 企業名=株式会社鳥忠, ID=kobe-torichu
+2026-05-18 15:21:11,853 [INFO] web_app_operator:   [OK] ヘッダー検証成功: 「🤖 株式会社鳥忠 コンテンツ生成」
+2026-05-18 15:21:11,853 [INFO] web_app_operator: サイドバー企業選択完了: 株式会社鳥忠
+2026-05-18 15:21:11,855 [INFO] web_app_operator: URL入力開始: 14件
+2026-05-18 15:21:15,648 [INFO] web_app_operator:   「全入力を処理」ボタンをクリックしました
+2026-05-18 15:21:50,210 [INFO] web_app_operator: URL入力・処理開始完了: 14件
+2026-05-18 15:21:50,211 [INFO] web_app_operator: コンテンツ生成開始...
+2026-05-18 15:22:00,926 [INFO] web_app_operator:   生成準備完了の待機中...
+2026-05-18 15:22:40,943 [WARNING] web_app_operator:   生成準備完了メッセージが特定できませんでしたが、続行を試みます
+2026-05-18 15:22:40,995 [INFO] web_app_operator:   コンテンツ生成ボタン検出 (試行 1/6)
+2026-05-18 15:22:41,579 [INFO] web_app_operator: コンテンツ生成中... (最大5分待機)
+2026-05-18 15:23:25,771 [INFO] web_app_operator: 生成完了検出 (経過: 42.0秒, スピナー出現: True)
+2026-05-18 15:23:25,772 [INFO] web_app_operator:   [検証] 生成結果のFAQ実体を確認: 株式会社鳥忠 (id=kobe-torichu)
+2026-05-18 15:25:28,737 [WARNING] __main__:   [RETRY] 保存/生成検証失敗 (生成完了検出後、FAQ実体がページに現れません (パターン一致: 1件、120s経過)。生成失敗 or 別企業のデータ残存疑い。スクショ: screenshots/gen_verify_fail_kobe-torichu.png) → Step 4 から再試行 (次回 3/3)
+2026-05-18 15:25:28,737 [INFO] web_app_operator: ページを閉じて再ログインを開始...
+2026-05-18 15:25:28,766 [INFO] web_app_operator:   古いページタブを閉じました
+2026-05-18 15:25:28,861 [INFO] web_app_operator:   新しいページタブを開きました
+2026-05-18 15:25:28,861 [INFO] web_app_operator: 管理画面にログイン中...
+2026-05-18 15:25:35,009 [INFO] web_app_operator: ログイン成功
+2026-05-18 15:25:35,009 [INFO] web_app_operator: ページクローズ＆再ログイン完了
+2026-05-18 15:25:35,009 [INFO] __main__: Step 4/5: コンテンツ生成... (試行 3/3)
+2026-05-18 15:25:38,728 [INFO] __main__:   [検証] コンテンツ生成画面のヘッダーが対象企業に切替済か確認...
+2026-05-18 15:25:38,728 [INFO] web_app_operator: サイドバーから企業選択開始: 株式会社鳥忠
+2026-05-18 15:25:46,729 [INFO] web_app_operator:   ヘッダー検証中: 企業名=株式会社鳥忠, ID=kobe-torichu
+2026-05-18 15:25:46,797 [INFO] web_app_operator:   [OK] ヘッダー検証成功: 「🤖 株式会社鳥忠 コンテンツ生成」
+2026-05-18 15:25:46,797 [INFO] web_app_operator: サイドバー企業選択完了: 株式会社鳥忠
+2026-05-18 15:25:46,797 [INFO] web_app_operator: URL入力開始: 14件
+2026-05-18 15:25:50,577 [INFO] web_app_operator:   「全入力を処理」ボタンをクリックしました
+2026-05-18 15:26:25,135 [INFO] web_app_operator: URL入力・処理開始完了: 14件
+2026-05-18 15:26:25,135 [INFO] web_app_operator: コンテンツ生成開始...
+2026-05-18 15:26:35,812 [INFO] web_app_operator:   生成準備完了の待機中...
+2026-05-18 15:27:15,843 [WARNING] web_app_operator:   生成準備完了メッセージが特定できませんでしたが、続行を試みます
+2026-05-18 15:27:15,892 [INFO] web_app_operator:   コンテンツ生成ボタン検出 (試行 1/6)
+2026-05-18 15:27:16,465 [INFO] web_app_operator: コンテンツ生成中... (最大5分待機)
+2026-05-18 15:28:06,498 [INFO] web_app_operator: 生成完了検出 (経過: 48.0秒, スピナー出現: True)
+2026-05-18 15:28:06,499 [INFO] web_app_operator:   [検証] 生成結果のFAQ実体を確認: 株式会社鳥忠 (id=kobe-torichu)
+2026-05-18 15:30:09,308 [ERROR] __main__:   [ERR] FAQ/企業情報の保存検証に 3回失敗。最終的に失敗とします: 生成完了検出後、FAQ実体がページに現れません (パターン一致: 1件、120s経過)。生成失敗 or 別企業のデータ残存疑い。スクショ: screenshots/gen_verify_fail_kobe-torichu.png
+2026-05-18 15:30:09,308 [ERROR] __main__: [ERROR] 株式会社鳥忠: 処理失敗 -- 生成完了検出後、FAQ実体がページに現れません (パターン一致: 1件、120s経過)。生成失敗 or 別企業のデータ残存疑い。スクショ: screenshots/gen_verify_fail_kobe-torichu.png
+2026-05-18 15:30:09,310 [INFO] spreadsheet_manager: 企業リスト保存完了: 63社 → C:\Users\NC00018174\Desktop\DOCdemo_update_project\data\company_list.csv
+2026-05-18 15:30:09,311 [INFO] __main__: 
+2026-05-18 15:30:09,311 [INFO] __main__: 1件処理完了 → 再ログイン＆キャッシュクリアを実行
+2026-05-18 15:30:09,311 [INFO] web_app_operator: 再ログイン＆キャッシュクリア開始...
+2026-05-18 15:30:09,321 [INFO] web_app_operator:   LocalStorage/SessionStorageをクリアしました
+2026-05-18 15:30:09,332 [INFO] web_app_operator:   Cookieをクリアしました
+2026-05-18 15:30:11,340 [INFO] web_app_operator: 管理画面にログイン中...
+2026-05-18 15:30:27,092 [INFO] web_app_operator: ログイン成功
+2026-05-18 15:30:27,093 [INFO] web_app_operator: 再ログイン＆キャッシュクリア完了
+2026-05-18 15:30:27,093 [INFO] __main__: 
+2026-05-18 15:30:27,093 [INFO] __main__: ──────────────────────────────────────────────────
+2026-05-18 15:30:27,093 [INFO] __main__: [4/47] 株式会社福井亀之助商店 (ステータス: 同名企業該当)
+2026-05-18 15:30:27,093 [INFO] __main__: ──────────────────────────────────────────────────
+2026-05-18 15:30:27,093 [INFO] __main__: Step 1/5: URL確定済の企業を Stage 2 で処理: https://www.fukukame.co.jp
+2026-05-18 15:30:27,099 [INFO] spreadsheet_manager: 企業リスト保存完了: 63社 → C:\Users\NC00018174\Desktop\DOCdemo_update_project\data\company_list.csv
+2026-05-18 15:30:27,099 [INFO] __main__: Step 2/6: 企業追加...
+2026-05-18 15:30:27,099 [INFO] web_app_operator: 企業追加開始: 株式会社福井亀之助商店
+2026-05-18 15:30:27,118 [WARNING] web_app_operator: セッション切れ検出 -> 再ログイン
+2026-05-18 15:30:27,118 [INFO] web_app_operator: 管理画面にログイン中...
+2026-05-18 15:30:40,281 [WARNING] web_app_operator: ログイン試行 1/3 失敗: Page.wait_for_selector: Timeout 10000ms exceeded.
+Call log:
+  - waiting for locator("input[aria-label=\"メールアドレス\"]") to be visible
+
+2026-05-18 15:31:12,087 [WARNING] web_app_operator: ログイン試行 2/3 失敗: Page.wait_for_selector: Timeout 10000ms exceeded.
+Call log:
+  - waiting for locator("input[aria-label=\"メールアドレス\"]") to be visible
+
+2026-05-18 15:31:36,635 [WARNING] web_app_operator: ログイン試行 3/3 失敗: Page.wait_for_selector: Timeout 10000ms exceeded.
+Call log:
+  - waiting for locator("input[aria-label=\"メールアドレス\"]") to be visible
+
+2026-05-18 15:32:07,223 [WARNING] __main__:   リトライ 1/3: Locator.click: Timeout 30000ms exceeded.
+Call log:
+  - waiting for locator("[data-testid='stSidebar']").get_by_text("企業の追加").first
+
+2026-05-18 15:32:12,224 [INFO] web_app_operator: 管理画面にログイン中...
+2026-05-18 15:32:21,651 [INFO] web_app_operator: ログイン成功
+2026-05-18 15:32:21,651 [INFO] web_app_operator: 企業追加開始: 株式会社福井亀之助商店
+2026-05-18 15:32:36,670 [INFO] web_app_operator: 企業追加完了: 株式会社福井亀之助商店 (ID: fukukame)
+2026-05-18 15:32:36,671 [INFO] __main__: Step 2.5/6: 追加企業のID検証...
+2026-05-18 15:32:36,671 [INFO] web_app_operator:   企業ID検証中: 期待ID=fukukame, URL=https://www.fukukame.co.jp
+2026-05-18 15:32:40,765 [INFO] web_app_operator:   [OK] 企業ID 'fukukame' をページ内に確認
+2026-05-18 15:32:40,767 [INFO] spreadsheet_manager: 企業リスト保存完了: 63社 → C:\Users\NC00018174\Desktop\DOCdemo_update_project\data\company_list.csv
+2026-05-18 15:32:40,768 [INFO] __main__:   → 企業追加完了 (ID: fukukame)
+2026-05-18 15:32:40,768 [INFO] __main__: 企業追加完了 → ページを閉じて再ログイン（キャッシュバグ防止）
+2026-05-18 15:32:40,768 [INFO] web_app_operator: ページを閉じて再ログインを開始...
+2026-05-18 15:32:40,804 [INFO] web_app_operator:   古いページタブを閉じました
+2026-05-18 15:32:40,918 [INFO] web_app_operator:   新しいページタブを開きました
+2026-05-18 15:32:40,919 [INFO] web_app_operator: 管理画面にログイン中...
+2026-05-18 15:32:59,140 [INFO] web_app_operator: ログイン成功
+2026-05-18 15:32:59,142 [INFO] web_app_operator: ページクローズ＆再ログイン完了
+2026-05-18 15:32:59,144 [INFO] __main__: Step 3/5: URL収集...
+2026-05-18 15:33:02,930 [INFO] recruit_url_finder: 求人サイトURL収集開始: 株式会社福井亀之助商店 (正規化: '福井亀之助商店')
+2026-05-18 15:33:05,770 [INFO] recruit_url_finder:   [マイナビ転職] 2件取り込み (累計 2件)
+2026-05-18 15:33:08,744 [INFO] recruit_url_finder:   [マイナビ新卒] 0件取り込み (累計 2件)
+2026-05-18 15:33:11,710 [INFO] recruit_url_finder:   [リクナビ] 2件取り込み (累計 4件)
+2026-05-18 15:33:14,714 [INFO] recruit_url_finder:   [DODA] 2件取り込み (累計 6件)
+2026-05-18 15:33:17,463 [INFO] recruit_url_finder:   [エン転職] 0件取り込み (累計 6件)
+2026-05-18 15:33:20,238 [INFO] recruit_url_finder:   [Wantedly] 0件取り込み (累計 6件)
+2026-05-18 15:33:23,223 [INFO] recruit_url_finder:   [Green] 0件取り込み (累計 6件)
+2026-05-18 15:33:26,047 [INFO] recruit_url_finder:   [Indeed] 2件取り込み (累計 8件)
+2026-05-18 15:33:26,047 [INFO] recruit_url_finder: 求人サイトURL収集完了: 株式会社福井亀之助商店 → 合計 8 件
+2026-05-18 15:33:26,047 [INFO] __main__:   → 内部リンク:16件, 求人サイト:8件, 合計:24件
+2026-05-18 15:33:26,047 [INFO] __main__: Step 4/5: コンテンツ生成... (試行 1/3)
+2026-05-18 15:33:29,783 [INFO] __main__:   [検証] コンテンツ生成画面のヘッダーが対象企業に切替済か確認...
+2026-05-18 15:33:29,784 [INFO] web_app_operator: サイドバーから企業選択開始: 株式会社福井亀之助商店
+2026-05-18 15:33:37,841 [INFO] web_app_operator:   ヘッダー検証中: 企業名=株式会社福井亀之助商店, ID=fukukame
+2026-05-18 15:33:37,927 [INFO] web_app_operator:   [OK] ヘッダー検証成功: 「🤖 株式会社福井亀之助商店 コンテンツ生成」
+2026-05-18 15:33:37,927 [INFO] web_app_operator: サイドバー企業選択完了: 株式会社福井亀之助商店
+2026-05-18 15:33:37,927 [INFO] web_app_operator: URL入力開始: 24件
+2026-05-18 15:33:41,670 [INFO] web_app_operator:   「全入力を処理」ボタンをクリックしました
+2026-05-18 15:34:16,229 [INFO] web_app_operator: URL入力・処理開始完了: 24件
+2026-05-18 15:34:16,230 [INFO] web_app_operator: コンテンツ生成開始...
+2026-05-18 15:34:26,890 [INFO] web_app_operator:   生成準備完了の待機中...
+2026-05-18 15:35:06,907 [WARNING] web_app_operator:   生成準備完了メッセージが特定できませんでしたが、続行を試みます
+2026-05-18 15:35:26,925 [WARNING] web_app_operator:   コンテンツ生成ボタン未検出 (試行 1/6) — 生成タブを再クリック
+2026-05-18 15:35:51,344 [INFO] web_app_operator:   コンテンツ生成ボタン検出 (試行 2/6)
+2026-05-18 15:35:51,918 [INFO] web_app_operator: コンテンツ生成中... (最大5分待機)
+2026-05-18 15:36:45,615 [INFO] web_app_operator: 生成完了検出 (経過: 51.0秒, スピナー出現: True)
+2026-05-18 15:36:45,615 [INFO] web_app_operator:   [検証] 生成結果のFAQ実体を確認: 株式会社福井亀之助商店 (id=fukukame)
+2026-05-18 15:38:48,515 [WARNING] __main__:   [RETRY] 保存/生成検証失敗 (生成完了検出後、FAQ実体がページに現れません (パターン一致: 1件、120s経過)。生成失敗 or 別企業のデータ残存疑い。スクショ: screenshots/gen_verify_fail_fukukame.png) → Step 4 から再試行 (次回 2/3)
+2026-05-18 15:38:48,515 [INFO] web_app_operator: ページを閉じて再ログインを開始...
+2026-05-18 15:38:48,553 [INFO] web_app_operator:   古いページタブを閉じました
+2026-05-18 15:38:48,656 [INFO] web_app_operator:   新しいページタブを開きました
+2026-05-18 15:38:48,656 [INFO] web_app_operator: 管理画面にログイン中...
+2026-05-18 15:38:57,629 [INFO] web_app_operator: ログイン成功
+2026-05-18 15:38:57,631 [INFO] web_app_operator: ページクローズ＆再ログイン完了
+2026-05-18 15:38:57,631 [INFO] __main__: Step 4/5: コンテンツ生成... (試行 2/3)
+2026-05-18 15:39:01,388 [INFO] __main__:   [検証] コンテンツ生成画面のヘッダーが対象企業に切替済か確認...
+2026-05-18 15:39:01,388 [INFO] web_app_operator: サイドバーから企業選択開始: 株式会社福井亀之助商店
+2026-05-18 15:39:09,354 [INFO] web_app_operator:   ヘッダー検証中: 企業名=株式会社福井亀之助商店, ID=fukukame
+2026-05-18 15:39:09,467 [INFO] web_app_operator:   [OK] ヘッダー検証成功: 「🤖 株式会社福井亀之助商店 コンテンツ生成」
+2026-05-18 15:39:09,467 [INFO] web_app_operator: サイドバー企業選択完了: 株式会社福井亀之助商店
+2026-05-18 15:39:09,469 [INFO] web_app_operator: URL入力開始: 24件
+2026-05-18 15:39:13,263 [INFO] web_app_operator:   「全入力を処理」ボタンをクリックしました
+2026-05-18 15:39:17,817 [INFO] web_app_operator: URL入力・処理開始完了: 24件
+2026-05-18 15:39:17,818 [INFO] web_app_operator: コンテンツ生成開始...
+2026-05-18 15:39:28,522 [INFO] web_app_operator:   生成準備完了の待機中...
+2026-05-18 15:40:08,540 [WARNING] web_app_operator:   生成準備完了メッセージが特定できませんでしたが、続行を試みます
+2026-05-18 15:40:28,561 [WARNING] web_app_operator:   コンテンツ生成ボタン未検出 (試行 1/6) — 生成タブを再クリック
+2026-05-18 15:40:59,249 [WARNING] web_app_operator:   コンテンツ生成ボタン未検出 (試行 2/6) — 生成タブを再クリック
+2026-05-18 15:41:29,883 [WARNING] web_app_operator:   コンテンツ生成ボタン未検出 (試行 3/6) — 生成タブを再クリック
+2026-05-18 15:41:40,575 [INFO] web_app_operator:   コンテンツ生成ボタン検出 (試行 4/6)
+2026-05-18 15:41:41,132 [INFO] web_app_operator: コンテンツ生成中... (最大5分待機)
+2026-05-18 15:42:28,799 [INFO] web_app_operator: 生成完了検出 (経過: 45.0秒, スピナー出現: True)
+2026-05-18 15:42:28,801 [INFO] web_app_operator:   [検証] 生成結果のFAQ実体を確認: 株式会社福井亀之助商店 (id=fukukame)
+2026-05-18 15:44:31,934 [WARNING] __main__:   [RETRY] 保存/生成検証失敗 (生成完了検出後、FAQ実体がページに現れません (パターン一致: 1件、120s経過)。生成失敗 or 別企業のデータ残存疑い。スクショ: screenshots/gen_verify_fail_fukukame.png) → Step 4 から再試行 (次回 3/3)
+2026-05-18 15:44:31,935 [INFO] web_app_operator: ページを閉じて再ログインを開始...
+2026-05-18 15:44:31,981 [INFO] web_app_operator:   古いページタブを閉じました
+2026-05-18 15:44:32,090 [INFO] web_app_operator:   新しいページタブを開きました
+2026-05-18 15:44:32,090 [INFO] web_app_operator: 管理画面にログイン中...
+2026-05-18 15:44:39,586 [INFO] web_app_operator: ログイン成功
+2026-05-18 15:44:39,586 [INFO] web_app_operator: ページクローズ＆再ログイン完了
+2026-05-18 15:44:39,586 [INFO] __main__: Step 4/5: コンテンツ生成... (試行 3/3)
+2026-05-18 15:44:43,399 [INFO] __main__:   [検証] コンテンツ生成画面のヘッダーが対象企業に切替済か確認...
+2026-05-18 15:44:43,401 [INFO] web_app_operator: サイドバーから企業選択開始: 株式会社福井亀之助商店
+2026-05-18 15:44:51,486 [INFO] web_app_operator:   ヘッダー検証中: 企業名=株式会社福井亀之助商店, ID=fukukame
+2026-05-18 15:44:51,590 [INFO] web_app_operator:   [OK] ヘッダー検証成功: 「🤖 株式会社福井亀之助商店 コンテンツ生成」
+2026-05-18 15:44:51,590 [INFO] web_app_operator: サイドバー企業選択完了: 株式会社福井亀之助商店
+2026-05-18 15:44:51,590 [INFO] web_app_operator: URL入力開始: 24件
+2026-05-18 15:44:55,397 [INFO] web_app_operator:   「全入力を処理」ボタンをクリックしました
+2026-05-18 15:45:29,972 [INFO] web_app_operator: URL入力・処理開始完了: 24件
+2026-05-18 15:45:29,972 [INFO] web_app_operator: コンテンツ生成開始...
+2026-05-18 15:45:40,690 [INFO] web_app_operator:   生成準備完了の待機中...
+2026-05-18 15:46:20,717 [WARNING] web_app_operator:   生成準備完了メッセージが特定できませんでしたが、続行を試みます
+2026-05-18 15:46:40,732 [WARNING] web_app_operator:   コンテンツ生成ボタン未検出 (試行 1/6) — 生成タブを再クリック
+2026-05-18 15:47:04,779 [INFO] web_app_operator:   コンテンツ生成ボタン検出 (試行 2/6)
+2026-05-18 15:47:05,381 [INFO] web_app_operator: コンテンツ生成中... (最大5分待機)
+2026-05-18 15:48:05,577 [INFO] web_app_operator: 生成完了検出 (経過: 48.0秒, スピナー出現: True)
+2026-05-18 15:48:05,578 [INFO] web_app_operator:   [検証] 生成結果のFAQ実体を確認: 株式会社福井亀之助商店 (id=fukukame)
+2026-05-18 15:50:08,702 [ERROR] __main__:   [ERR] FAQ/企業情報の保存検証に 3回失敗。最終的に失敗とします: 生成完了検出後、FAQ実体がページに現れません (パターン一致: 1件、120s経過)。生成失敗 or 別企業のデータ残存疑い。スクショ: screenshots/gen_verify_fail_fukukame.png
+2026-05-18 15:50:08,702 [ERROR] __main__: [ERROR] 株式会社福井亀之助商店: 処理失敗 -- 生成完了検出後、FAQ実体がページに現れません (パターン一致: 1件、120s経過)。生成失敗 or 別企業のデータ残存疑い。スクショ: screenshots/gen_verify_fail_fukukame.png
+2026-05-18 15:50:08,704 [INFO] spreadsheet_manager: 企業リスト保存完了: 63社 → C:\Users\NC00018174\Desktop\DOCdemo_update_project\data\company_list.csv
+2026-05-18 15:50:08,705 [INFO] __main__: 
+2026-05-18 15:50:08,705 [INFO] __main__: 1件処理完了 → 再ログイン＆キャッシュクリアを実行
+2026-05-18 15:50:08,705 [INFO] web_app_operator: 再ログイン＆キャッシュクリア開始...
+2026-05-18 15:50:08,717 [INFO] web_app_operator:   LocalStorage/SessionStorageをクリアしました
+2026-05-18 15:50:08,729 [INFO] web_app_operator:   Cookieをクリアしました
+2026-05-18 15:50:10,732 [INFO] web_app_operator: 管理画面にログイン中...
+2026-05-18 15:50:29,653 [INFO] web_app_operator: ログイン成功
+2026-05-18 15:50:29,654 [INFO] web_app_operator: 再ログイン＆キャッシュクリア完了
+2026-05-18 15:50:29,654 [INFO] __main__: 
+2026-05-18 15:50:29,654 [INFO] __main__: ──────────────────────────────────────────────────
+2026-05-18 15:50:29,654 [INFO] __main__: [5/47] 社会福祉法人博由社 (ステータス: 同名企業該当)
+2026-05-18 15:50:29,654 [INFO] __main__: ──────────────────────────────────────────────────
+2026-05-18 15:50:29,655 [INFO] __main__: Step 1/5: URL確定済の企業を Stage 2 で処理: https://hakuyusha.or.jp
+2026-05-18 15:50:29,658 [INFO] spreadsheet_manager: 企業リスト保存完了: 63社 → C:\Users\NC00018174\Desktop\DOCdemo_update_project\data\company_list.csv
+2026-05-18 15:50:29,658 [INFO] __main__: Step 2/6: 企業追加...
+2026-05-18 15:50:29,658 [INFO] web_app_operator: 企業追加開始: 社会福祉法人博由社
+2026-05-18 15:50:44,486 [INFO] web_app_operator: 企業追加完了: 社会福祉法人博由社 (ID: hakuyusha)
+2026-05-18 15:50:44,486 [INFO] __main__: Step 2.5/6: 追加企業のID検証...
+2026-05-18 15:50:44,486 [INFO] web_app_operator:   企業ID検証中: 期待ID=hakuyusha, URL=https://hakuyusha.or.jp
+2026-05-18 15:50:48,572 [INFO] web_app_operator:   [OK] 企業ID 'hakuyusha' をページ内に確認
+2026-05-18 15:50:48,578 [INFO] spreadsheet_manager: 企業リスト保存完了: 63社 → C:\Users\NC00018174\Desktop\DOCdemo_update_project\data\company_list.csv
+2026-05-18 15:50:48,578 [INFO] __main__:   → 企業追加完了 (ID: hakuyusha)
+2026-05-18 15:50:48,578 [INFO] __main__: 企業追加完了 → ページを閉じて再ログイン（キャッシュバグ防止）
+2026-05-18 15:50:48,578 [INFO] web_app_operator: ページを閉じて再ログインを開始...
+2026-05-18 15:50:48,625 [INFO] web_app_operator:   古いページタブを閉じました
+2026-05-18 15:50:48,729 [INFO] web_app_operator:   新しいページタブを開きました
+2026-05-18 15:50:48,730 [INFO] web_app_operator: 管理画面にログイン中...
+2026-05-18 15:51:07,962 [WARNING] web_app_operator: ログイン試行 1/3 失敗: Page.wait_for_selector: Timeout 10000ms exceeded.
+Call log:
+  - waiting for locator("input[aria-label=\"メールアドレス\"]") to be visible
+
+2026-05-18 15:51:28,642 [WARNING] web_app_operator: ログイン試行 2/3 失敗: Page.wait_for_selector: Timeout 10000ms exceeded.
+Call log:
+  - waiting for locator("input[aria-label=\"メールアドレス\"]") to be visible
+
+2026-05-18 15:51:48,733 [WARNING] web_app_operator: ログイン試行 3/3 失敗: Page.wait_for_selector: Timeout 10000ms exceeded.
+Call log:
+  - waiting for locator("input[aria-label=\"メールアドレス\"]") to be visible
+
+2026-05-18 15:51:48,734 [WARNING] __main__:   ページクローズ＆再ログインに失敗（続行）: Page.wait_for_selector: Timeout 10000ms exceeded.
+Call log:
+  - waiting for locator("input[aria-label=\"メールアドレス\"]") to be visible
+
+2026-05-18 15:51:48,734 [INFO] __main__: Step 3/5: URL収集...
+2026-05-18 15:51:52,261 [INFO] recruit_url_finder: 求人サイトURL収集開始: 社会福祉法人博由社 (正規化: '博由社')
+2026-05-18 15:51:54,988 [INFO] recruit_url_finder:   [マイナビ転職] 0件取り込み (累計 0件)
+2026-05-18 15:51:57,744 [INFO] recruit_url_finder:   [マイナビ新卒] 2件取り込み (累計 2件)
+2026-05-18 15:52:00,377 [INFO] recruit_url_finder:   [リクナビ] 2件取り込み (累計 4件)
+2026-05-18 15:52:02,878 [INFO] recruit_url_finder:   [DODA] 2件取り込み (累計 6件)
+2026-05-18 15:52:05,408 [INFO] recruit_url_finder:   [エン転職] 0件取り込み (累計 6件)
+2026-05-18 15:52:07,962 [INFO] recruit_url_finder:   [Wantedly] 0件取り込み (累計 6件)
+2026-05-18 15:52:10,575 [INFO] recruit_url_finder:   [Green] 0件取り込み (累計 6件)
+2026-05-18 15:52:13,412 [INFO] recruit_url_finder:   [Indeed] 2件取り込み (累計 8件)
+2026-05-18 15:52:13,412 [INFO] recruit_url_finder: 求人サイトURL収集完了: 社会福祉法人博由社 → 合計 8 件
+2026-05-18 15:52:13,413 [INFO] __main__:   → 内部リンク:24件, 求人サイト:8件, 合計:32件
+2026-05-18 15:52:13,414 [INFO] __main__: Step 4/5: コンテンツ生成... (試行 1/3)
+2026-05-18 15:52:13,414 [INFO] web_app_operator: 管理画面にログイン中...
+2026-05-18 15:52:21,864 [INFO] web_app_operator: ログイン成功
+2026-05-18 15:52:25,716 [INFO] __main__:   [検証] コンテンツ生成画面のヘッダーが対象企業に切替済か確認...
+2026-05-18 15:52:25,716 [INFO] web_app_operator: サイドバーから企業選択開始: 社会福祉法人博由社
+2026-05-18 15:52:33,754 [INFO] web_app_operator:   ヘッダー検証中: 企業名=社会福祉法人博由社, ID=hakuyusha
+2026-05-18 15:52:33,827 [INFO] web_app_operator:   [OK] ヘッダー検証成功: 「🤖 社会福祉法人博由社 コンテンツ生成」
+2026-05-18 15:52:33,830 [INFO] web_app_operator: サイドバー企業選択完了: 社会福祉法人博由社
+2026-05-18 15:52:33,830 [INFO] web_app_operator: URL入力開始: 32件
+2026-05-18 15:52:37,572 [INFO] web_app_operator:   「全入力を処理」ボタンをクリックしました
+2026-05-18 15:53:12,144 [INFO] web_app_operator: URL入力・処理開始完了: 32件
+2026-05-18 15:53:12,145 [INFO] web_app_operator: コンテンツ生成開始...
+2026-05-18 15:53:22,814 [INFO] web_app_operator:   生成準備完了の待機中...
+2026-05-18 15:54:02,841 [WARNING] web_app_operator:   生成準備完了メッセージが特定できませんでしたが、続行を試みます
+2026-05-18 15:54:22,864 [WARNING] web_app_operator:   コンテンツ生成ボタン未検出 (試行 1/6) — 生成タブを再クリック
+2026-05-18 15:54:49,998 [INFO] web_app_operator:   コンテンツ生成ボタン検出 (試行 2/6)
+2026-05-18 15:54:50,586 [INFO] web_app_operator: コンテンツ生成中... (最大5分待機)
+2026-05-18 15:56:42,804 [INFO] web_app_operator: 生成完了検出 (経過: 108.0秒, スピナー出現: True)
+2026-05-18 15:56:42,804 [INFO] web_app_operator:   [検証] 生成結果のFAQ実体を確認: 社会福祉法人博由社 (id=hakuyusha)
+2026-05-18 15:58:45,796 [WARNING] __main__:   [RETRY] 保存/生成検証失敗 (生成完了検出後、FAQ実体がページに現れません (パターン一致: 1件、120s経過)。生成失敗 or 別企業のデータ残存疑い。スクショ: screenshots/gen_verify_fail_hakuyusha.png) → Step 4 から再試行 (次回 2/3)
+2026-05-18 15:58:45,797 [INFO] web_app_operator: ページを閉じて再ログインを開始...
+2026-05-18 15:58:45,846 [INFO] web_app_operator:   古いページタブを閉じました
+2026-05-18 15:58:45,961 [INFO] web_app_operator:   新しいページタブを開きました
+2026-05-18 15:58:45,961 [INFO] web_app_operator: 管理画面にログイン中...
+2026-05-18 15:58:53,472 [INFO] web_app_operator: ログイン成功
+2026-05-18 15:58:53,472 [INFO] web_app_operator: ページクローズ＆再ログイン完了
+2026-05-18 15:58:53,472 [INFO] __main__: Step 4/5: コンテンツ生成... (試行 2/3)
+2026-05-18 15:58:57,263 [INFO] __main__:   [検証] コンテンツ生成画面のヘッダーが対象企業に切替済か確認...
+2026-05-18 15:58:57,264 [INFO] web_app_operator: サイドバーから企業選択開始: 社会福祉法人博由社
+2026-05-18 15:59:05,276 [INFO] web_app_operator:   ヘッダー検証中: 企業名=社会福祉法人博由社, ID=hakuyusha
+2026-05-18 15:59:05,374 [INFO] web_app_operator:   [OK] ヘッダー検証成功: 「🤖 社会福祉法人博由社 コンテンツ生成」
+2026-05-18 15:59:05,374 [INFO] web_app_operator: サイドバー企業選択完了: 社会福祉法人博由社
+2026-05-18 15:59:05,374 [INFO] web_app_operator: URL入力開始: 32件
+2026-05-18 15:59:09,175 [INFO] web_app_operator:   「全入力を処理」ボタンをクリックしました
+2026-05-18 15:59:43,739 [INFO] web_app_operator: URL入力・処理開始完了: 32件
+2026-05-18 15:59:43,740 [INFO] web_app_operator: コンテンツ生成開始...
+2026-05-18 15:59:54,438 [INFO] web_app_operator:   生成準備完了の待機中...
+2026-05-18 16:00:34,455 [WARNING] web_app_operator:   生成準備完了メッセージが特定できませんでしたが、続行を試みます
+2026-05-18 16:00:54,484 [WARNING] web_app_operator:   コンテンツ生成ボタン未検出 (試行 1/6) — 生成タブを再クリック
+2026-05-18 16:01:22,540 [INFO] web_app_operator:   コンテンツ生成ボタン検出 (試行 2/6)
+2026-05-18 16:01:23,137 [INFO] web_app_operator: コンテンツ生成中... (最大5分待機)
+2026-05-18 16:02:19,839 [INFO] web_app_operator: 生成完了検出 (経過: 54.0秒, スピナー出現: True)
+2026-05-18 16:02:19,840 [INFO] web_app_operator:   [検証] 生成結果のFAQ実体を確認: 社会福祉法人博由社 (id=hakuyusha)
+2026-05-18 16:04:22,852 [WARNING] __main__:   [RETRY] 保存/生成検証失敗 (生成完了検出後、FAQ実体がページに現れません (パターン一致: 1件、120s経過)。生成失敗 or 別企業のデータ残存疑い。スクショ: screenshots/gen_verify_fail_hakuyusha.png) → Step 4 から再試行 (次回 3/3)
+2026-05-18 16:04:22,852 [INFO] web_app_operator: ページを閉じて再ログインを開始...
+2026-05-18 16:04:22,885 [INFO] web_app_operator:   古いページタブを閉じました
+2026-05-18 16:04:22,984 [INFO] web_app_operator:   新しいページタブを開きました
+2026-05-18 16:04:22,984 [INFO] web_app_operator: 管理画面にログイン中...
+2026-05-18 16:04:30,821 [INFO] web_app_operator: ログイン成功
+2026-05-18 16:04:30,821 [INFO] web_app_operator: ページクローズ＆再ログイン完了
+2026-05-18 16:04:30,821 [INFO] __main__: Step 4/5: コンテンツ生成... (試行 3/3)
+2026-05-18 16:04:34,657 [INFO] __main__:   [検証] コンテンツ生成画面のヘッダーが対象企業に切替済か確認...
+2026-05-18 16:04:34,657 [INFO] web_app_operator: サイドバーから企業選択開始: 社会福祉法人博由社
+2026-05-18 16:04:42,773 [INFO] web_app_operator:   ヘッダー検証中: 企業名=社会福祉法人博由社, ID=hakuyusha
+2026-05-18 16:04:42,854 [INFO] web_app_operator:   [OK] ヘッダー検証成功: 「🤖 社会福祉法人博由社 コンテンツ生成」
+2026-05-18 16:04:42,854 [INFO] web_app_operator: サイドバー企業選択完了: 社会福祉法人博由社
+2026-05-18 16:04:42,854 [INFO] web_app_operator: URL入力開始: 32件
+2026-05-18 16:04:46,608 [INFO] web_app_operator:   「全入力を処理」ボタンをクリックしました
+2026-05-18 16:05:21,164 [INFO] web_app_operator: URL入力・処理開始完了: 32件
+2026-05-18 16:05:21,164 [INFO] web_app_operator: コンテンツ生成開始...
+2026-05-18 16:05:31,827 [INFO] web_app_operator:   生成準備完了の待機中...
+2026-05-18 16:06:11,854 [WARNING] web_app_operator:   生成準備完了メッセージが特定できませんでしたが、続行を試みます
+2026-05-18 16:06:31,882 [WARNING] web_app_operator:   コンテンツ生成ボタン未検出 (試行 1/6) — 生成タブを再クリック
+2026-05-18 16:07:02,551 [WARNING] web_app_operator:   コンテンツ生成ボタン未検出 (試行 2/6) — 生成タブを再クリック
+2026-05-18 16:07:13,473 [INFO] web_app_operator:   コンテンツ生成ボタン検出 (試行 3/6)
+2026-05-18 16:07:14,055 [INFO] web_app_operator: コンテンツ生成中... (最大5分待機)
+2026-05-18 16:08:24,353 [INFO] web_app_operator: 生成完了検出 (経過: 54.0秒, スピナー出現: False)
+2026-05-18 16:08:24,353 [INFO] web_app_operator:   [検証] 生成結果のFAQ実体を確認: 社会福祉法人博由社 (id=hakuyusha)
+2026-05-18 16:10:27,599 [ERROR] __main__:   [ERR] FAQ/企業情報の保存検証に 3回失敗。最終的に失敗とします: 生成完了検出後、FAQ実体がページに現れません (パターン一致: 1件、120s経過)。生成失敗 or 別企業のデータ残存疑い。スクショ: screenshots/gen_verify_fail_hakuyusha.png
+2026-05-18 16:10:27,601 [ERROR] __main__: [ERROR] 社会福祉法人博由社: 処理失敗 -- 生成完了検出後、FAQ実体がページに現れません (パターン一致: 1件、120s経過)。生成失敗 or 別企業のデータ残存疑い。スクショ: screenshots/gen_verify_fail_hakuyusha.png
+2026-05-18 16:10:27,603 [INFO] spreadsheet_manager: 企業リスト保存完了: 63社 → C:\Users\NC00018174\Desktop\DOCdemo_update_project\data\company_list.csv
+2026-05-18 16:10:27,603 [INFO] __main__: 
+2026-05-18 16:10:27,604 [INFO] __main__: 1件処理完了 → 再ログイン＆キャッシュクリアを実行
+2026-05-18 16:10:27,604 [INFO] web_app_operator: 再ログイン＆キャッシュクリア開始...
+2026-05-18 16:10:27,614 [INFO] web_app_operator:   LocalStorage/SessionStorageをクリアしました
+2026-05-18 16:10:27,624 [INFO] web_app_operator:   Cookieをクリアしました
+2026-05-18 16:10:29,635 [INFO] web_app_operator: 管理画面にログイン中...
+2026-05-18 16:10:40,803 [INFO] web_app_operator: ログイン成功
+2026-05-18 16:10:40,805 [INFO] web_app_operator: 再ログイン＆キャッシュクリア完了
+2026-05-18 16:10:40,806 [INFO] __main__: 
+2026-05-18 16:10:40,806 [INFO] __main__: ──────────────────────────────────────────────────
+2026-05-18 16:10:40,807 [INFO] __main__: [6/47] 浜田電気工業株式会社 (ステータス: URL特定済)
+2026-05-18 16:10:40,807 [INFO] __main__: ──────────────────────────────────────────────────
+2026-05-18 16:10:40,807 [INFO] __main__: Step 2/6: 企業追加...
+2026-05-18 16:10:40,808 [INFO] web_app_operator: 企業追加開始: 浜田電気工業株式会社
+2026-05-18 16:10:55,642 [INFO] web_app_operator: 企業追加完了: 浜田電気工業株式会社 (ID: hama-grp)
+2026-05-18 16:10:55,642 [INFO] __main__: Step 2.5/6: 追加企業のID検証...
+2026-05-18 16:10:55,645 [INFO] web_app_operator:   企業ID検証中: 期待ID=hama-grp, URL=https://hama-grp.com
+2026-05-18 16:10:59,779 [INFO] web_app_operator:   [OK] 企業ID 'hama-grp' をページ内に確認
+2026-05-18 16:10:59,782 [INFO] spreadsheet_manager: 企業リスト保存完了: 63社 → C:\Users\NC00018174\Desktop\DOCdemo_update_project\data\company_list.csv
+2026-05-18 16:10:59,782 [INFO] __main__:   → 企業追加完了 (ID: hama-grp)
+2026-05-18 16:10:59,782 [INFO] __main__: 企業追加完了 → ページを閉じて再ログイン（キャッシュバグ防止）
+2026-05-18 16:10:59,782 [INFO] web_app_operator: ページを閉じて再ログインを開始...
+2026-05-18 16:10:59,814 [INFO] web_app_operator:   古いページタブを閉じました
+2026-05-18 16:10:59,927 [INFO] web_app_operator:   新しいページタブを開きました
+2026-05-18 16:10:59,928 [INFO] web_app_operator: 管理画面にログイン中...
+2026-05-18 16:11:12,731 [WARNING] web_app_operator: ログイン試行 1/3 失敗: Page.wait_for_selector: Timeout 10000ms exceeded.
+Call log:
+  - waiting for locator("input[aria-label=\"メールアドレス\"]") to be visible
+
+2026-05-18 16:11:33,449 [WARNING] web_app_operator: ログイン試行 2/3 失敗: Page.wait_for_selector: Timeout 10000ms exceeded.
+Call log:
+  - waiting for locator("input[aria-label=\"メールアドレス\"]") to be visible
+
+2026-05-18 16:12:02,424 [WARNING] web_app_operator: ログイン試行 3/3 失敗: Page.wait_for_selector: Timeout 10000ms exceeded.
+Call log:
+  - waiting for locator("input[aria-label=\"メールアドレス\"]") to be visible
+
+2026-05-18 16:12:02,425 [WARNING] __main__:   ページクローズ＆再ログインに失敗（続行）: Page.wait_for_selector: Timeout 10000ms exceeded.
+Call log:
+  - waiting for locator("input[aria-label=\"メールアドレス\"]") to be visible
+
+2026-05-18 16:12:02,426 [INFO] __main__: Step 3/5: URL収集...
+2026-05-18 16:12:05,608 [INFO] recruit_url_finder: 求人サイトURL収集開始: 浜田電気工業株式会社 (正規化: '浜田電気工業')
+2026-05-18 16:12:08,406 [INFO] recruit_url_finder:   [マイナビ転職] 0件取り込み (累計 0件)
+2026-05-18 16:12:11,199 [INFO] recruit_url_finder:   [マイナビ新卒] 2件取り込み (累計 2件)
+2026-05-18 16:12:13,948 [INFO] recruit_url_finder:   [リクナビ] 2件取り込み (累計 4件)
+2026-05-18 16:12:16,687 [INFO] recruit_url_finder:   [DODA] 1件取り込み (累計 5件)
+2026-05-18 16:12:19,487 [INFO] recruit_url_finder:   [エン転職] 0件取り込み (累計 5件)
+2026-05-18 16:12:22,319 [INFO] recruit_url_finder:   [Wantedly] 0件取り込み (累計 5件)
+2026-05-18 16:12:25,018 [INFO] recruit_url_finder:   [Green] 0件取り込み (累計 5件)
+2026-05-18 16:12:27,693 [INFO] recruit_url_finder:   [Indeed] 2件取り込み (累計 7件)
+2026-05-18 16:12:27,693 [INFO] recruit_url_finder: 求人サイトURL収集完了: 浜田電気工業株式会社 → 合計 7 件
+2026-05-18 16:12:27,693 [INFO] __main__:   → 内部リンク:25件, 求人サイト:7件, 合計:32件
+2026-05-18 16:12:27,695 [INFO] __main__: Step 4/5: コンテンツ生成... (試行 1/3)
+2026-05-18 16:12:27,695 [INFO] web_app_operator: 管理画面にログイン中...
+2026-05-18 16:12:46,308 [INFO] web_app_operator: ログイン成功
+2026-05-18 16:12:51,866 [INFO] __main__:   [検証] コンテンツ生成画面のヘッダーが対象企業に切替済か確認...
+2026-05-18 16:12:51,867 [INFO] web_app_operator: サイドバーから企業選択開始: 浜田電気工業株式会社
+2026-05-18 16:12:59,914 [INFO] web_app_operator:   ヘッダー検証中: 企業名=浜田電気工業株式会社, ID=hama-grp
+2026-05-18 16:13:00,200 [WARNING] web_app_operator:   [WARN] ヘッダー要素には特定できなかったが ページ内に企業情報を確認 (スクショ: screenshots/title_warn_hama-grp.png)
+2026-05-18 16:13:00,200 [INFO] web_app_operator: サイドバー企業選択完了: 浜田電気工業株式会社
+2026-05-18 16:13:00,201 [INFO] web_app_operator: URL入力開始: 32件
+2026-05-18 16:13:03,974 [INFO] web_app_operator:   「全入力を処理」ボタンをクリックしました
+2026-05-18 16:13:38,526 [INFO] web_app_operator: URL入力・処理開始完了: 32件
+2026-05-18 16:13:38,528 [INFO] web_app_operator: コンテンツ生成開始...
+2026-05-18 16:13:49,193 [INFO] web_app_operator:   生成準備完了の待機中...
+2026-05-18 16:14:29,212 [WARNING] web_app_operator:   生成準備完了メッセージが特定できませんでしたが、続行を試みます
+2026-05-18 16:14:29,250 [INFO] web_app_operator:   コンテンツ生成ボタン検出 (試行 1/6)
+2026-05-18 16:14:29,836 [INFO] web_app_operator: コンテンツ生成中... (最大5分待機)
+2026-05-18 16:15:28,555 [INFO] web_app_operator: 生成完了検出 (経過: 45.0秒, スピナー出現: True)
+2026-05-18 16:15:28,556 [INFO] web_app_operator:   [検証] 生成結果のFAQ実体を確認: 浜田電気工業株式会社 (id=hama-grp)
+2026-05-18 16:17:31,439 [WARNING] __main__:   [RETRY] 保存/生成検証失敗 (生成完了検出後、FAQ実体がページに現れません (パターン一致: 1件、120s経過)。生成失敗 or 別企業のデータ残存疑い。スクショ: screenshots/gen_verify_fail_hama-grp.png) → Step 4 から再試行 (次回 2/3)
+2026-05-18 16:17:31,439 [INFO] web_app_operator: ページを閉じて再ログインを開始...
+2026-05-18 16:17:31,487 [INFO] web_app_operator:   古いページタブを閉じました
+2026-05-18 16:17:31,595 [INFO] web_app_operator:   新しいページタブを開きました
+2026-05-18 16:17:31,595 [INFO] web_app_operator: 管理画面にログイン中...
+2026-05-18 16:17:44,718 [WARNING] web_app_operator: ログイン試行 1/3 失敗: Page.wait_for_selector: Timeout 10000ms exceeded.
+Call log:
+  - waiting for locator("input[aria-label=\"メールアドレス\"]") to be visible
+
+2026-05-18 16:18:22,041 [WARNING] web_app_operator: ログイン試行 2/3 失敗: Page.wait_for_selector: Timeout 10000ms exceeded.
+Call log:
+  - waiting for locator("input[aria-label=\"メールアドレス\"]") to be visible
+
+2026-05-18 16:18:39,837 [WARNING] web_app_operator: ログイン試行 3/3 失敗: Page.wait_for_selector: Timeout 10000ms exceeded.
+Call log:
+  - waiting for locator("input[aria-label=\"メールアドレス\"]") to be visible
+
+2026-05-18 16:18:39,838 [WARNING] __main__:   再ログイン失敗（続行）: Page.wait_for_selector: Timeout 10000ms exceeded.
+Call log:
+  - waiting for locator("input[aria-label=\"メールアドレス\"]") to be visible
+
+2026-05-18 16:18:39,838 [INFO] __main__: Step 4/5: コンテンツ生成... (試行 2/3)
+2026-05-18 16:18:39,838 [INFO] web_app_operator: 管理画面にログイン中...
+2026-05-18 16:19:01,133 [WARNING] web_app_operator: ログイン試行 1/3 失敗: Page.wait_for_selector: Timeout 10000ms exceeded.
+Call log:
+  - waiting for locator("input[aria-label=\"メールアドレス\"]") to be visible
+
+2026-05-18 16:19:18,905 [WARNING] web_app_operator: ログイン試行 2/3 失敗: Page.wait_for_selector: Timeout 10000ms exceeded.
+Call log:
+  - waiting for locator("input[aria-label=\"メールアドレス\"]") to be visible
+
+2026-05-18 16:19:34,873 [INFO] web_app_operator: ログイン成功
+2026-05-18 16:19:38,649 [INFO] __main__:   [検証] コンテンツ生成画面のヘッダーが対象企業に切替済か確認...
+2026-05-18 16:19:38,649 [INFO] web_app_operator: サイドバーから企業選択開始: 浜田電気工業株式会社
+2026-05-18 16:19:46,827 [INFO] web_app_operator:   ヘッダー検証中: 企業名=浜田電気工業株式会社, ID=hama-grp
+2026-05-18 16:19:47,183 [WARNING] web_app_operator:   [WARN] ヘッダー要素には特定できなかったが ページ内に企業情報を確認 (スクショ: screenshots/title_warn_hama-grp.png)
+2026-05-18 16:19:47,183 [INFO] web_app_operator: サイドバー企業選択完了: 浜田電気工業株式会社
+2026-05-18 16:19:47,183 [INFO] web_app_operator: URL入力開始: 32件
+2026-05-18 16:19:50,930 [INFO] web_app_operator:   「全入力を処理」ボタンをクリックしました
+2026-05-18 16:20:25,479 [INFO] web_app_operator: URL入力・処理開始完了: 32件
+2026-05-18 16:20:25,480 [INFO] web_app_operator: コンテンツ生成開始...
+2026-05-18 16:20:36,150 [INFO] web_app_operator:   生成準備完了の待機中...
+2026-05-18 16:21:16,171 [WARNING] web_app_operator:   生成準備完了メッセージが特定できませんでしたが、続行を試みます
+2026-05-18 16:21:16,219 [INFO] web_app_operator:   コンテンツ生成ボタン検出 (試行 1/6)
+2026-05-18 16:21:16,784 [INFO] web_app_operator: コンテンツ生成中... (最大5分待機)
+2026-05-18 16:22:07,041 [INFO] web_app_operator: 生成完了検出 (経過: 48.0秒, スピナー出現: True)
+2026-05-18 16:22:07,044 [INFO] web_app_operator:   [検証] 生成結果のFAQ実体を確認: 浜田電気工業株式会社 (id=hama-grp)
+2026-05-18 16:24:10,255 [WARNING] __main__:   [RETRY] 保存/生成検証失敗 (生成完了検出後、FAQ実体がページに現れません (パターン一致: 1件、120s経過)。生成失敗 or 別企業のデータ残存疑い。スクショ: screenshots/gen_verify_fail_hama-grp.png) → Step 4 から再試行 (次回 3/3)
+2026-05-18 16:24:10,256 [INFO] web_app_operator: ページを閉じて再ログインを開始...
+2026-05-18 16:24:10,295 [INFO] web_app_operator:   古いページタブを閉じました
+2026-05-18 16:24:10,394 [INFO] web_app_operator:   新しいページタブを開きました
+2026-05-18 16:24:10,395 [INFO] web_app_operator: 管理画面にログイン中...
+2026-05-18 16:24:20,372 [INFO] web_app_operator: ログイン成功
+2026-05-18 16:24:20,372 [INFO] web_app_operator: ページクローズ＆再ログイン完了
+2026-05-18 16:24:20,373 [INFO] __main__: Step 4/5: コンテンツ生成... (試行 3/3)
+2026-05-18 16:24:24,127 [INFO] __main__:   [検証] コンテンツ生成画面のヘッダーが対象企業に切替済か確認...
+2026-05-18 16:24:24,127 [INFO] web_app_operator: サイドバーから企業選択開始: 浜田電気工業株式会社
+2026-05-18 16:24:32,162 [INFO] web_app_operator:   ヘッダー検証中: 企業名=浜田電気工業株式会社, ID=hama-grp
+2026-05-18 16:24:32,258 [INFO] web_app_operator:   [OK] ヘッダー検証成功: 「🤖 浜田電気工業株式会社 コンテンツ生成」
+2026-05-18 16:24:32,259 [INFO] web_app_operator: サイドバー企業選択完了: 浜田電気工業株式会社
+2026-05-18 16:24:32,259 [INFO] web_app_operator: URL入力開始: 32件
+2026-05-18 16:24:36,081 [INFO] web_app_operator:   「全入力を処理」ボタンをクリックしました
+2026-05-18 16:25:10,643 [INFO] web_app_operator: URL入力・処理開始完了: 32件
+2026-05-18 16:25:10,644 [INFO] web_app_operator: コンテンツ生成開始...
+2026-05-18 16:25:21,336 [INFO] web_app_operator:   生成準備完了の待機中...
+2026-05-18 16:26:01,362 [WARNING] web_app_operator:   生成準備完了メッセージが特定できませんでしたが、続行を試みます
+2026-05-18 16:26:01,406 [INFO] web_app_operator:   コンテンツ生成ボタン検出 (試行 1/6)
+2026-05-18 16:26:01,953 [INFO] web_app_operator: コンテンツ生成中... (最大5分待機)
+2026-05-18 16:26:50,558 [INFO] web_app_operator: 生成完了検出 (経過: 45.0秒, スピナー出現: True)
+2026-05-18 16:26:50,559 [INFO] web_app_operator:   [検証] 生成結果のFAQ実体を確認: 浜田電気工業株式会社 (id=hama-grp)
+2026-05-18 16:28:53,615 [ERROR] __main__:   [ERR] FAQ/企業情報の保存検証に 3回失敗。最終的に失敗とします: 生成完了検出後、FAQ実体がページに現れません (パターン一致: 1件、120s経過)。生成失敗 or 別企業のデータ残存疑い。スクショ: screenshots/gen_verify_fail_hama-grp.png
+2026-05-18 16:28:53,615 [ERROR] __main__: [ERROR] 浜田電気工業株式会社: 処理失敗 -- 生成完了検出後、FAQ実体がページに現れません (パターン一致: 1件、120s経過)。生成失敗 or 別企業のデータ残存疑い。スクショ: screenshots/gen_verify_fail_hama-grp.png
+2026-05-18 16:28:53,619 [INFO] spreadsheet_manager: 企業リスト保存完了: 63社 → C:\Users\NC00018174\Desktop\DOCdemo_update_project\data\company_list.csv
+2026-05-18 16:28:53,619 [INFO] __main__: 
+2026-05-18 16:28:53,619 [INFO] __main__: 1件処理完了 → 再ログイン＆キャッシュクリアを実行
+2026-05-18 16:28:53,619 [INFO] web_app_operator: 再ログイン＆キャッシュクリア開始...
+2026-05-18 16:28:53,628 [INFO] web_app_operator:   LocalStorage/SessionStorageをクリアしました
+2026-05-18 16:28:53,638 [INFO] web_app_operator:   Cookieをクリアしました
+2026-05-18 16:28:55,640 [INFO] web_app_operator: 管理画面にログイン中...
+2026-05-18 16:29:08,584 [WARNING] web_app_operator: ログイン試行 1/3 失敗: Page.wait_for_selector: Timeout 10000ms exceeded.
+Call log:
+  - waiting for locator("input[aria-label=\"メールアドレス\"]") to be visible
+
+2026-05-18 16:29:27,469 [WARNING] web_app_operator: ログイン試行 2/3 失敗: Page.wait_for_selector: Timeout 10000ms exceeded.
+Call log:
+  - waiting for locator("input[aria-label=\"メールアドレス\"]") to be visible
+
+2026-05-18 16:29:48,665 [WARNING] web_app_operator: ログイン試行 3/3 失敗: Page.wait_for_selector: Timeout 10000ms exceeded.
+Call log:
+  - waiting for locator("input[aria-label=\"メールアドレス\"]") to be visible
+
+2026-05-18 16:29:48,665 [WARNING] __main__: 再ログイン失敗（続行）: Page.wait_for_selector: Timeout 10000ms exceeded.
+Call log:
+  - waiting for locator("input[aria-label=\"メールアドレス\"]") to be visible
+
+2026-05-18 16:29:48,665 [INFO] __main__: 
+2026-05-18 16:29:48,667 [INFO] __main__: ──────────────────────────────────────────────────
+2026-05-18 16:29:48,667 [INFO] __main__: [7/47] アテナ工業株式会社 (ステータス: 同名企業該当)
+2026-05-18 16:29:48,667 [INFO] __main__: ──────────────────────────────────────────────────
+2026-05-18 16:29:48,667 [INFO] __main__: Step 1/5: URL確定済の企業を Stage 2 で処理: https://athena-kogyo.co.jp
+2026-05-18 16:29:48,671 [INFO] spreadsheet_manager: 企業リスト保存完了: 63社 → C:\Users\NC00018174\Desktop\DOCdemo_update_project\data\company_list.csv
+2026-05-18 16:29:48,671 [INFO] __main__: Step 2/6: 企業追加...
+2026-05-18 16:29:48,671 [INFO] web_app_operator: 企業追加開始: アテナ工業株式会社
+2026-05-18 16:29:48,671 [INFO] web_app_operator: 管理画面にログイン中...
+2026-05-18 16:30:04,658 [WARNING] web_app_operator: ログイン試行 1/3 失敗: Page.wait_for_selector: Timeout 10000ms exceeded.
+Call log:
+  - waiting for locator("input[aria-label=\"メールアドレス\"]") to be visible
+
+2026-05-18 16:30:22,430 [WARNING] web_app_operator: ログイン試行 2/3 失敗: Page.wait_for_selector: Timeout 10000ms exceeded.
+Call log:
+  - waiting for locator("input[aria-label=\"メールアドレス\"]") to be visible
+
+2026-05-18 16:30:41,907 [WARNING] web_app_operator: ログイン試行 3/3 失敗: Page.wait_for_selector: Timeout 10000ms exceeded.
+Call log:
+  - waiting for locator("input[aria-label=\"メールアドレス\"]") to be visible
+
+2026-05-18 16:30:41,907 [WARNING] __main__:   リトライ 1/3: Page.wait_for_selector: Timeout 10000ms exceeded.
+Call log:
+  - waiting for locator("input[aria-label=\"メールアドレス\"]") to be visible
+
+2026-05-18 16:30:46,920 [INFO] web_app_operator: 管理画面にログイン中...
+2026-05-18 16:31:17,263 [WARNING] web_app_operator: ログイン試行 1/3 失敗: Page.wait_for_selector: Timeout 10000ms exceeded.
+Call log:
+  - waiting for locator("input[aria-label=\"メールアドレス\"]") to be visible
+
+2026-05-18 16:31:35,092 [WARNING] web_app_operator: ログイン試行 2/3 失敗: Page.wait_for_selector: Timeout 10000ms exceeded.
+Call log:
+  - waiting for locator("input[aria-label=\"メールアドレス\"]") to be visible
+
+2026-05-18 16:31:46,935 [INFO] web_app_operator: ログイン成功
+2026-05-18 16:31:46,936 [INFO] web_app_operator: 企業追加開始: アテナ工業株式会社
+2026-05-18 16:32:03,896 [INFO] web_app_operator: 企業追加完了: アテナ工業株式会社 (ID: athena-kogyo)
+2026-05-18 16:32:03,897 [INFO] __main__: Step 2.5/6: 追加企業のID検証...
+2026-05-18 16:32:03,898 [INFO] web_app_operator:   企業ID検証中: 期待ID=athena-kogyo, URL=https://athena-kogyo.co.jp
+2026-05-18 16:32:07,983 [INFO] web_app_operator:   [OK] 企業ID 'athena-kogyo' をページ内に確認
+2026-05-18 16:32:07,994 [INFO] spreadsheet_manager: 企業リスト保存完了: 63社 → C:\Users\NC00018174\Desktop\DOCdemo_update_project\data\company_list.csv
+2026-05-18 16:32:07,994 [INFO] __main__:   → 企業追加完了 (ID: athena-kogyo)
+2026-05-18 16:32:07,996 [INFO] __main__: 企業追加完了 → ページを閉じて再ログイン（キャッシュバグ防止）
+2026-05-18 16:32:07,996 [INFO] web_app_operator: ページを閉じて再ログインを開始...
+2026-05-18 16:32:08,043 [INFO] web_app_operator:   古いページタブを閉じました
+2026-05-18 16:32:08,164 [INFO] web_app_operator:   新しいページタブを開きました
+2026-05-18 16:32:08,164 [INFO] web_app_operator: 管理画面にログイン中...
+2026-05-18 16:32:30,972 [INFO] web_app_operator: ログイン成功
+2026-05-18 16:32:30,973 [INFO] web_app_operator: ページクローズ＆再ログイン完了
+2026-05-18 16:32:30,974 [INFO] __main__: Step 3/5: URL収集...
+2026-05-18 16:32:34,301 [INFO] recruit_url_finder: 求人サイトURL収集開始: アテナ工業株式会社 (正規化: 'アテナ工業')
+2026-05-18 16:32:37,159 [INFO] recruit_url_finder:   [マイナビ転職] 2件取り込み (累計 2件)
+2026-05-18 16:32:39,934 [INFO] recruit_url_finder:   [マイナビ新卒] 1件取り込み (累計 3件)
+2026-05-18 16:32:42,651 [INFO] recruit_url_finder:   [リクナビ] 2件取り込み (累計 5件)
+2026-05-18 16:32:45,457 [INFO] recruit_url_finder:   [DODA] 2件取り込み (累計 7件)
+2026-05-18 16:32:48,179 [INFO] recruit_url_finder:   [エン転職] 0件取り込み (累計 7件)
+2026-05-18 16:32:50,823 [INFO] recruit_url_finder:   [Wantedly] 0件取り込み (累計 7件)
+2026-05-18 16:32:53,450 [INFO] recruit_url_finder:   [Green] 0件取り込み (累計 7件)
+2026-05-18 16:32:56,149 [INFO] recruit_url_finder:   [Indeed] 2件取り込み (累計 9件)
+2026-05-18 16:32:56,152 [INFO] recruit_url_finder: 求人サイトURL収集完了: アテナ工業株式会社 → 合計 9 件
+2026-05-18 16:32:56,153 [INFO] __main__:   → 内部リンク:12件, 求人サイト:9件, 合計:21件
+2026-05-18 16:32:56,153 [INFO] __main__: Step 4/5: コンテンツ生成... (試行 1/3)
+2026-05-18 16:32:59,930 [INFO] __main__:   [検証] コンテンツ生成画面のヘッダーが対象企業に切替済か確認...
+2026-05-18 16:32:59,930 [INFO] web_app_operator: サイドバーから企業選択開始: アテナ工業株式会社
+2026-05-18 16:33:07,993 [INFO] web_app_operator:   ヘッダー検証中: 企業名=アテナ工業株式会社, ID=athena-kogyo
+2026-05-18 16:33:08,374 [WARNING] web_app_operator:   [WARN] ヘッダー要素には特定できなかったが ページ内に企業情報を確認 (スクショ: screenshots/title_warn_athena-kogyo.png)
+2026-05-18 16:33:08,374 [INFO] web_app_operator: サイドバー企業選択完了: アテナ工業株式会社
+2026-05-18 16:33:08,375 [INFO] web_app_operator: URL入力開始: 21件
+2026-05-18 16:33:12,144 [INFO] web_app_operator:   「全入力を処理」ボタンをクリックしました
+2026-05-18 16:33:46,691 [INFO] web_app_operator: URL入力・処理開始完了: 21件
+2026-05-18 16:33:46,693 [INFO] web_app_operator: コンテンツ生成開始...
+2026-05-18 16:33:57,390 [INFO] web_app_operator:   生成準備完了の待機中...
+2026-05-18 16:34:37,400 [WARNING] web_app_operator:   生成準備完了メッセージが特定できませんでしたが、続行を試みます
+2026-05-18 16:34:57,419 [WARNING] web_app_operator:   コンテンツ生成ボタン未検出 (試行 1/6) — 生成タブを再クリック
+2026-05-18 16:35:20,881 [INFO] web_app_operator:   コンテンツ生成ボタン検出 (試行 2/6)
+2026-05-18 16:35:21,486 [INFO] web_app_operator: コンテンツ生成中... (最大5分待機)
+2026-05-18 16:36:33,987 [INFO] web_app_operator: 生成完了検出 (経過: 69.0秒, スピナー出現: True)
+2026-05-18 16:36:33,988 [INFO] web_app_operator:   [検証] 生成結果のFAQ実体を確認: アテナ工業株式会社 (id=athena-kogyo)
+2026-05-18 16:38:36,791 [WARNING] __main__:   [RETRY] 保存/生成検証失敗 (生成完了検出後、FAQ実体がページに現れません (パターン一致: 1件、120s経過)。生成失敗 or 別企業のデータ残存疑い。スクショ: screenshots/gen_verify_fail_athena-kogyo.png) → Step 4 から再試行 (次回 2/3)
+2026-05-18 16:38:36,792 [INFO] web_app_operator: ページを閉じて再ログインを開始...
+2026-05-18 16:38:36,828 [INFO] web_app_operator:   古いページタブを閉じました
+2026-05-18 16:38:36,936 [INFO] web_app_operator:   新しいページタブを開きました
+2026-05-18 16:38:36,936 [INFO] web_app_operator: 管理画面にログイン中...
+2026-05-18 16:38:49,793 [WARNING] web_app_operator: ログイン試行 1/3 失敗: Page.wait_for_selector: Timeout 10000ms exceeded.
+Call log:
+  - waiting for locator("input[aria-label=\"メールアドレス\"]") to be visible
+
+2026-05-18 16:39:38,474 [WARNING] web_app_operator: ログイン試行 2/3 失敗: Page.wait_for_selector: Timeout 10000ms exceeded.
+Call log:
+  - waiting for locator("input[aria-label=\"メールアドレス\"]") to be visible
+
+2026-05-18 16:40:26,295 [WARNING] web_app_operator: ログイン試行 3/3 失敗: Page.wait_for_selector: Timeout 10000ms exceeded.
+Call log:
+  - waiting for locator("input[aria-label=\"メールアドレス\"]") to be visible
+
+2026-05-18 16:40:26,296 [WARNING] __main__:   再ログイン失敗（続行）: Page.wait_for_selector: Timeout 10000ms exceeded.
+Call log:
+  - waiting for locator("input[aria-label=\"メールアドレス\"]") to be visible
+
+2026-05-18 16:40:26,296 [INFO] __main__: Step 4/5: コンテンツ生成... (試行 2/3)
+2026-05-18 16:40:26,296 [INFO] web_app_operator: 管理画面にログイン中...
+2026-05-18 16:41:09,088 [WARNING] web_app_operator: ログイン試行 1/3 失敗: Page.wait_for_selector: Timeout 10000ms exceeded.
+Call log:
+  - waiting for locator("input[aria-label=\"メールアドレス\"]") to be visible
+
+2026-05-18 16:41:56,871 [WARNING] web_app_operator: ログイン試行 2/3 失敗: Page.wait_for_selector: Timeout 10000ms exceeded.
+Call log:
+  - waiting for locator("input[aria-label=\"メールアドレス\"]") to be visible
+
+2026-05-18 16:43:15,786 [WARNING] web_app_operator: ログイン試行 3/3 失敗: Page.wait_for_selector: Timeout 10000ms exceeded.
+Call log:
+  - waiting for locator("input[aria-label=\"メールアドレス\"]") to be visible
+
+2026-05-18 16:43:15,787 [ERROR] __main__: [ERROR] アテナ工業株式会社: 処理失敗 -- Page.wait_for_selector: Timeout 10000ms exceeded.
+Call log:
+  - waiting for locator("input[aria-label=\"メールアドレス\"]") to be visible
+
+2026-05-18 16:43:15,793 [INFO] spreadsheet_manager: 企業リスト保存完了: 63社 → C:\Users\NC00018174\Desktop\DOCdemo_update_project\data\company_list.csv
+2026-05-18 16:43:15,794 [INFO] __main__: 
+2026-05-18 16:43:15,794 [INFO] __main__: 1件処理完了 → 再ログイン＆キャッシュクリアを実行
+2026-05-18 16:43:15,795 [INFO] web_app_operator: 再ログイン＆キャッシュクリア開始...
+2026-05-18 16:43:15,814 [INFO] web_app_operator:   LocalStorage/SessionStorageをクリアしました
+2026-05-18 16:43:15,834 [INFO] web_app_operator:   Cookieをクリアしました
+2026-05-18 16:43:17,839 [INFO] web_app_operator: 管理画面にログイン中...
+2026-05-18 16:44:00,650 [WARNING] web_app_operator: ログイン試行 1/3 失敗: Page.wait_for_selector: Timeout 10000ms exceeded.
+Call log:
+  - waiting for locator("input[aria-label=\"メールアドレス\"]") to be visible
+
+2026-05-18 16:44:48,471 [WARNING] web_app_operator: ログイン試行 2/3 失敗: Page.wait_for_selector: Timeout 10000ms exceeded.
+Call log:
+  - waiting for locator("input[aria-label=\"メールアドレス\"]") to be visible
+
+2026-05-18 16:45:36,228 [WARNING] web_app_operator: ログイン試行 3/3 失敗: Page.wait_for_selector: Timeout 10000ms exceeded.
+Call log:
+  - waiting for locator("input[aria-label=\"メールアドレス\"]") to be visible
+
+2026-05-18 16:45:36,228 [WARNING] __main__: 再ログイン失敗（続行）: Page.wait_for_selector: Timeout 10000ms exceeded.
+Call log:
+  - waiting for locator("input[aria-label=\"メールアドレス\"]") to be visible
+
+2026-05-18 16:45:36,229 [INFO] __main__: 
+2026-05-18 16:45:36,230 [INFO] __main__: ──────────────────────────────────────────────────
+2026-05-18 16:45:36,230 [INFO] __main__: [8/47] イシハラ株式会社 (ステータス: 同名企業該当)
+2026-05-18 16:45:36,231 [INFO] __main__: ──────────────────────────────────────────────────
+2026-05-18 16:45:36,231 [INFO] __main__: Step 1/5: URL確定済の企業を Stage 2 で処理: https://www.ishihara-group.co.jp
+2026-05-18 16:45:36,234 [INFO] spreadsheet_manager: 企業リスト保存完了: 63社 → C:\Users\NC00018174\Desktop\DOCdemo_update_project\data\company_list.csv
+2026-05-18 16:45:36,235 [INFO] __main__: Step 2/6: 企業追加...
+2026-05-18 16:45:36,235 [INFO] web_app_operator: 企業追加開始: イシハラ株式会社
+2026-05-18 16:45:36,235 [INFO] web_app_operator: 管理画面にログイン中...
+2026-05-18 16:46:19,033 [WARNING] web_app_operator: ログイン試行 1/3 失敗: Page.wait_for_selector: Timeout 10000ms exceeded.
+Call log:
+  - waiting for locator("input[aria-label=\"メールアドレス\"]") to be visible
+
+2026-05-18 16:47:06,830 [WARNING] web_app_operator: ログイン試行 2/3 失敗: Page.wait_for_selector: Timeout 10000ms exceeded.
+Call log:
+  - waiting for locator("input[aria-label=\"メールアドレス\"]") to be visible
+
+2026-05-18 16:47:54,585 [WARNING] web_app_operator: ログイン試行 3/3 失敗: Page.wait_for_selector: Timeout 10000ms exceeded.
+Call log:
+  - waiting for locator("input[aria-label=\"メールアドレス\"]") to be visible
+
+2026-05-18 16:47:54,585 [WARNING] __main__:   リトライ 1/3: Page.wait_for_selector: Timeout 10000ms exceeded.
+Call log:
+  - waiting for locator("input[aria-label=\"メールアドレス\"]") to be visible
+
+2026-05-18 16:47:59,593 [INFO] web_app_operator: 管理画面にログイン中...
+2026-05-18 16:48:42,305 [WARNING] web_app_operator: ログイン試行 1/3 失敗: Page.wait_for_selector: Timeout 10000ms exceeded.
+Call log:
+  - waiting for locator("input[aria-label=\"メールアドレス\"]") to be visible
+
+2026-05-18 16:49:30,075 [WARNING] web_app_operator: ログイン試行 2/3 失敗: Page.wait_for_selector: Timeout 10000ms exceeded.
+Call log:
+  - waiting for locator("input[aria-label=\"メールアドレス\"]") to be visible
+
+2026-05-18 16:50:17,833 [WARNING] web_app_operator: ログイン試行 3/3 失敗: Page.wait_for_selector: Timeout 10000ms exceeded.
+Call log:
+  - waiting for locator("input[aria-label=\"メールアドレス\"]") to be visible
+
+2026-05-18 16:50:17,833 [ERROR] __main__: [ERROR] イシハラ株式会社: 処理失敗 -- Page.wait_for_selector: Timeout 10000ms exceeded.
+Call log:
+  - waiting for locator("input[aria-label=\"メールアドレス\"]") to be visible
+
+2026-05-18 16:50:17,837 [INFO] spreadsheet_manager: 企業リスト保存完了: 63社 → C:\Users\NC00018174\Desktop\DOCdemo_update_project\data\company_list.csv
+2026-05-18 16:50:17,838 [INFO] __main__: 
+2026-05-18 16:50:17,838 [INFO] __main__: 1件処理完了 → 再ログイン＆キャッシュクリアを実行
+2026-05-18 16:50:17,839 [INFO] web_app_operator: 再ログイン＆キャッシュクリア開始...
+2026-05-18 16:50:17,855 [INFO] web_app_operator:   LocalStorage/SessionStorageをクリアしました
+2026-05-18 16:50:17,866 [INFO] web_app_operator:   Cookieをクリアしました
+2026-05-18 16:50:19,870 [INFO] web_app_operator: 管理画面にログイン中...
+2026-05-18 16:51:02,633 [WARNING] web_app_operator: ログイン試行 1/3 失敗: Page.wait_for_selector: Timeout 10000ms exceeded.
+Call log:
+  - waiting for locator("input[aria-label=\"メールアドレス\"]") to be visible
+
+2026-05-18 16:51:50,396 [WARNING] web_app_operator: ログイン試行 2/3 失敗: Page.wait_for_selector: Timeout 10000ms exceeded.
+Call log:
+  - waiting for locator("input[aria-label=\"メールアドレス\"]") to be visible
+
+2026-05-18 16:52:38,126 [WARNING] web_app_operator: ログイン試行 3/3 失敗: Page.wait_for_selector: Timeout 10000ms exceeded.
+Call log:
+  - waiting for locator("input[aria-label=\"メールアドレス\"]") to be visible
+
+2026-05-18 16:52:38,126 [WARNING] __main__: 再ログイン失敗（続行）: Page.wait_for_selector: Timeout 10000ms exceeded.
+Call log:
+  - waiting for locator("input[aria-label=\"メールアドレス\"]") to be visible
+
+2026-05-18 16:52:38,127 [INFO] __main__: 
+2026-05-18 16:52:38,127 [INFO] __main__: ──────────────────────────────────────────────────
+2026-05-18 16:52:38,127 [INFO] __main__: [9/47] ウチダ株式会社 (ステータス: URL特定済)
+2026-05-18 16:52:38,127 [INFO] __main__: ──────────────────────────────────────────────────
+2026-05-18 16:52:38,128 [INFO] __main__: Step 2/6: 企業追加...
+2026-05-18 16:52:38,128 [INFO] web_app_operator: 企業追加開始: ウチダ株式会社
+2026-05-18 16:52:38,128 [INFO] web_app_operator: 管理画面にログイン中...
+2026-05-18 16:53:20,856 [WARNING] web_app_operator: ログイン試行 1/3 失敗: Page.wait_for_selector: Timeout 10000ms exceeded.
+Call log:
+  - waiting for locator("input[aria-label=\"メールアドレス\"]") to be visible
+
+2026-05-18 16:54:08,625 [WARNING] web_app_operator: ログイン試行 2/3 失敗: Page.wait_for_selector: Timeout 10000ms exceeded.
+Call log:
+  - waiting for locator("input[aria-label=\"メールアドレス\"]") to be visible
+
+2026-05-18 16:54:56,357 [WARNING] web_app_operator: ログイン試行 3/3 失敗: Page.wait_for_selector: Timeout 10000ms exceeded.
+Call log:
+  - waiting for locator("input[aria-label=\"メールアドレス\"]") to be visible
+
+2026-05-18 16:54:56,358 [WARNING] __main__:   リトライ 1/3: Page.wait_for_selector: Timeout 10000ms exceeded.
+Call log:
+  - waiting for locator("input[aria-label=\"メールアドレス\"]") to be visible
+
+2026-05-18 16:55:01,358 [INFO] web_app_operator: 管理画面にログイン中...
+2026-05-18 16:55:44,088 [WARNING] web_app_operator: ログイン試行 1/3 失敗: Page.wait_for_selector: Timeout 10000ms exceeded.
+Call log:
+  - waiting for locator("input[aria-label=\"メールアドレス\"]") to be visible
+
+2026-05-18 16:56:31,829 [WARNING] web_app_operator: ログイン試行 2/3 失敗: Page.wait_for_selector: Timeout 10000ms exceeded.
+Call log:
+  - waiting for locator("input[aria-label=\"メールアドレス\"]") to be visible
+
+2026-05-18 16:57:19,611 [WARNING] web_app_operator: ログイン試行 3/3 失敗: Page.wait_for_selector: Timeout 10000ms exceeded.
+Call log:
+  - waiting for locator("input[aria-label=\"メールアドレス\"]") to be visible
+
+2026-05-18 16:57:19,613 [ERROR] __main__: [ERROR] ウチダ株式会社: 処理失敗 -- Page.wait_for_selector: Timeout 10000ms exceeded.
+Call log:
+  - waiting for locator("input[aria-label=\"メールアドレス\"]") to be visible
+
+2026-05-18 16:57:19,617 [INFO] spreadsheet_manager: 企業リスト保存完了: 63社 → C:\Users\NC00018174\Desktop\DOCdemo_update_project\data\company_list.csv
+2026-05-18 16:57:19,618 [INFO] __main__: 
+2026-05-18 16:57:19,618 [INFO] __main__: 1件処理完了 → 再ログイン＆キャッシュクリアを実行
+2026-05-18 16:57:19,618 [INFO] web_app_operator: 再ログイン＆キャッシュクリア開始...
+2026-05-18 16:57:19,636 [INFO] web_app_operator:   LocalStorage/SessionStorageをクリアしました
+2026-05-18 16:57:19,652 [INFO] web_app_operator:   Cookieをクリアしました
+2026-05-18 16:57:21,656 [INFO] web_app_operator: 管理画面にログイン中...
+2026-05-18 16:58:04,421 [WARNING] web_app_operator: ログイン試行 1/3 失敗: Page.wait_for_selector: Timeout 10000ms exceeded.
+Call log:
+  - waiting for locator("input[aria-label=\"メールアドレス\"]") to be visible
+
+2026-05-18 16:58:52,170 [WARNING] web_app_operator: ログイン試行 2/3 失敗: Page.wait_for_selector: Timeout 10000ms exceeded.
+Call log:
+  - waiting for locator("input[aria-label=\"メールアドレス\"]") to be visible
+
+2026-05-18 16:59:39,954 [WARNING] web_app_operator: ログイン試行 3/3 失敗: Page.wait_for_selector: Timeout 10000ms exceeded.
+Call log:
+  - waiting for locator("input[aria-label=\"メールアドレス\"]") to be visible
+
+2026-05-18 16:59:39,955 [WARNING] __main__: 再ログイン失敗（続行）: Page.wait_for_selector: Timeout 10000ms exceeded.
+Call log:
+  - waiting for locator("input[aria-label=\"メールアドレス\"]") to be visible
+
+2026-05-18 16:59:39,956 [INFO] __main__: 
+2026-05-18 16:59:39,956 [INFO] __main__: ──────────────────────────────────────────────────
+2026-05-18 16:59:39,956 [INFO] __main__: [10/47] サンケンフォーキャスト株式会社 (ステータス: 同名企業該当)
+2026-05-18 16:59:39,958 [INFO] __main__: ──────────────────────────────────────────────────
+2026-05-18 16:59:39,958 [INFO] __main__: Step 1/5: URL確定済の企業を Stage 2 で処理: https://www.skfc.jp
+2026-05-18 16:59:39,963 [INFO] spreadsheet_manager: 企業リスト保存完了: 63社 → C:\Users\NC00018174\Desktop\DOCdemo_update_project\data\company_list.csv
+2026-05-18 16:59:39,963 [INFO] __main__: Step 2/6: 企業追加...
+2026-05-18 16:59:39,963 [INFO] web_app_operator: 企業追加開始: サンケンフォーキャスト株式会社
+2026-05-18 16:59:39,963 [INFO] web_app_operator: 管理画面にログイン中...
+2026-05-18 17:00:22,734 [WARNING] web_app_operator: ログイン試行 1/3 失敗: Page.wait_for_selector: Timeout 10000ms exceeded.
+Call log:
+  - waiting for locator("input[aria-label=\"メールアドレス\"]") to be visible
+
+2026-05-18 17:01:10,522 [WARNING] web_app_operator: ログイン試行 2/3 失敗: Page.wait_for_selector: Timeout 10000ms exceeded.
+Call log:
+  - waiting for locator("input[aria-label=\"メールアドレス\"]") to be visible
+
+2026-05-18 17:01:58,346 [WARNING] web_app_operator: ログイン試行 3/3 失敗: Page.wait_for_selector: Timeout 10000ms exceeded.
+Call log:
+  - waiting for locator("input[aria-label=\"メールアドレス\"]") to be visible
+
+2026-05-18 17:01:58,347 [WARNING] __main__:   リトライ 1/3: Page.wait_for_selector: Timeout 10000ms exceeded.
+Call log:
+  - waiting for locator("input[aria-label=\"メールアドレス\"]") to be visible
+
+2026-05-18 17:02:03,360 [INFO] web_app_operator: 管理画面にログイン中...
+2026-05-18 17:02:46,146 [WARNING] web_app_operator: ログイン試行 1/3 失敗: Page.wait_for_selector: Timeout 10000ms exceeded.
+Call log:
+  - waiting for locator("input[aria-label=\"メールアドレス\"]") to be visible
+
+2026-05-18 17:03:33,950 [WARNING] web_app_operator: ログイン試行 2/3 失敗: Page.wait_for_selector: Timeout 10000ms exceeded.
+Call log:
+  - waiting for locator("input[aria-label=\"メールアドレス\"]") to be visible
+
+2026-05-18 17:04:21,717 [WARNING] web_app_operator: ログイン試行 3/3 失敗: Page.wait_for_selector: Timeout 10000ms exceeded.
+Call log:
+  - waiting for locator("input[aria-label=\"メールアドレス\"]") to be visible
+
+2026-05-18 17:04:21,718 [ERROR] __main__: [ERROR] サンケンフォーキャスト株式会社: 処理失敗 -- Page.wait_for_selector: Timeout 10000ms exceeded.
+Call log:
+  - waiting for locator("input[aria-label=\"メールアドレス\"]") to be visible
+
+2026-05-18 17:04:21,722 [INFO] spreadsheet_manager: 企業リスト保存完了: 63社 → C:\Users\NC00018174\Desktop\DOCdemo_update_project\data\company_list.csv
+2026-05-18 17:04:21,722 [INFO] __main__: 
+2026-05-18 17:04:21,723 [INFO] __main__: 1件処理完了 → 再ログイン＆キャッシュクリアを実行
+2026-05-18 17:04:21,723 [INFO] web_app_operator: 再ログイン＆キャッシュクリア開始...
+2026-05-18 17:04:21,739 [INFO] web_app_operator:   LocalStorage/SessionStorageをクリアしました
+2026-05-18 17:04:21,752 [INFO] web_app_operator:   Cookieをクリアしました
+2026-05-18 17:04:23,756 [INFO] web_app_operator: 管理画面にログイン中...
+2026-05-18 17:05:06,537 [WARNING] web_app_operator: ログイン試行 1/3 失敗: Page.wait_for_selector: Timeout 10000ms exceeded.
+Call log:
+  - waiting for locator("input[aria-label=\"メールアドレス\"]") to be visible
+
+2026-05-18 17:05:54,309 [WARNING] web_app_operator: ログイン試行 2/3 失敗: Page.wait_for_selector: Timeout 10000ms exceeded.
+Call log:
+  - waiting for locator("input[aria-label=\"メールアドレス\"]") to be visible
+
+2026-05-18 17:06:42,046 [WARNING] web_app_operator: ログイン試行 3/3 失敗: Page.wait_for_selector: Timeout 10000ms exceeded.
+Call log:
+  - waiting for locator("input[aria-label=\"メールアドレス\"]") to be visible
+
+2026-05-18 17:06:42,047 [WARNING] __main__: 再ログイン失敗（続行）: Page.wait_for_selector: Timeout 10000ms exceeded.
+Call log:
+  - waiting for locator("input[aria-label=\"メールアドレス\"]") to be visible
+
+2026-05-18 17:06:42,047 [INFO] __main__: 
+2026-05-18 17:06:42,047 [INFO] __main__: ──────────────────────────────────────────────────
+2026-05-18 17:06:42,048 [INFO] __main__: [11/47] シーシーアイホールディングス株式会社 (ステータス: 同名企業該当)
+2026-05-18 17:06:42,048 [INFO] __main__: ──────────────────────────────────────────────────
+2026-05-18 17:06:42,049 [INFO] __main__: Step 1/5: URL確定済の企業を Stage 2 で処理: https://cci-corporation.com
+2026-05-18 17:06:42,052 [INFO] spreadsheet_manager: 企業リスト保存完了: 63社 → C:\Users\NC00018174\Desktop\DOCdemo_update_project\data\company_list.csv
+2026-05-18 17:06:42,053 [INFO] __main__: Step 2/6: 企業追加...
+2026-05-18 17:06:42,053 [INFO] web_app_operator: 企業追加開始: シーシーアイホールディングス株式会社
+2026-05-18 17:06:42,053 [INFO] web_app_operator: 管理画面にログイン中...
+2026-05-18 17:07:24,786 [WARNING] web_app_operator: ログイン試行 1/3 失敗: Page.wait_for_selector: Timeout 10000ms exceeded.
+Call log:
+  - waiting for locator("input[aria-label=\"メールアドレス\"]") to be visible
+
+2026-05-18 17:08:12,470 [WARNING] web_app_operator: ログイン試行 2/3 失敗: Page.wait_for_selector: Timeout 10000ms exceeded.
+Call log:
+  - waiting for locator("input[aria-label=\"メールアドレス\"]") to be visible
+
+2026-05-18 17:09:00,239 [WARNING] web_app_operator: ログイン試行 3/3 失敗: Page.wait_for_selector: Timeout 10000ms exceeded.
+Call log:
+  - waiting for locator("input[aria-label=\"メールアドレス\"]") to be visible
+
+2026-05-18 17:09:00,239 [WARNING] __main__:   リトライ 1/3: Page.wait_for_selector: Timeout 10000ms exceeded.
+Call log:
+  - waiting for locator("input[aria-label=\"メールアドレス\"]") to be visible
+
+2026-05-18 17:09:05,247 [INFO] web_app_operator: 管理画面にログイン中...
+2026-05-18 17:09:48,020 [WARNING] web_app_operator: ログイン試行 1/3 失敗: Page.wait_for_selector: Timeout 10000ms exceeded.
+Call log:
+  - waiting for locator("input[aria-label=\"メールアドレス\"]") to be visible
+
+2026-05-18 17:10:16,550 [INFO] web_app_operator: ログイン成功
+2026-05-18 17:10:16,550 [INFO] web_app_operator: 企業追加開始: シーシーアイホールディングス株式会社
+2026-05-18 17:10:16,558 [WARNING] web_app_operator: セッション切れ検出 -> 再ログイン
+2026-05-18 17:10:16,563 [INFO] web_app_operator: 管理画面にログイン中...
+2026-05-18 17:10:24,800 [INFO] web_app_operator: ログイン成功
+2026-05-18 17:10:39,607 [INFO] web_app_operator: 企業追加完了: シーシーアイホールディングス株式会社 (ID: cci-corporation)
+2026-05-18 17:10:39,608 [INFO] __main__: Step 2.5/6: 追加企業のID検証...
+2026-05-18 17:10:39,608 [INFO] web_app_operator:   企業ID検証中: 期待ID=cci-corporation, URL=https://cci-corporation.com
+2026-05-18 17:10:43,704 [INFO] web_app_operator:   [OK] 企業ID 'cci-corporation' をページ内に確認
+2026-05-18 17:10:43,706 [INFO] spreadsheet_manager: 企業リスト保存完了: 63社 → C:\Users\NC00018174\Desktop\DOCdemo_update_project\data\company_list.csv
+2026-05-18 17:10:43,706 [INFO] __main__:   → 企業追加完了 (ID: cci-corporation)
+2026-05-18 17:10:43,706 [INFO] __main__: 企業追加完了 → ページを閉じて再ログイン（キャッシュバグ防止）
+2026-05-18 17:10:43,706 [INFO] web_app_operator: ページを閉じて再ログインを開始...
+2026-05-18 17:10:43,750 [INFO] web_app_operator:   古いページタブを閉じました
+2026-05-18 17:10:43,866 [INFO] web_app_operator:   新しいページタブを開きました
+2026-05-18 17:10:43,866 [INFO] web_app_operator: 管理画面にログイン中...
+2026-05-18 17:10:49,866 [INFO] web_app_operator: ログイン成功
+2026-05-18 17:10:49,866 [INFO] web_app_operator: ページクローズ＆再ログイン完了
+2026-05-18 17:10:49,867 [INFO] __main__: Step 3/5: URL収集...
+2026-05-18 17:10:54,152 [INFO] recruit_url_finder: 求人サイトURL収集開始: シーシーアイホールディングス株式会社 (正規化: 'シーシーアイホールディングス')
+2026-05-18 17:10:57,077 [INFO] recruit_url_finder:   [マイナビ転職] 0件取り込み (累計 0件)
+2026-05-18 17:10:59,925 [INFO] recruit_url_finder:   [マイナビ新卒] 2件取り込み (累計 2件)
+2026-05-18 17:11:02,643 [INFO] recruit_url_finder:   [リクナビ] 2件取り込み (累計 4件)
+2026-05-18 17:11:05,484 [INFO] recruit_url_finder:   [DODA] 1件取り込み (累計 5件)
+2026-05-18 17:11:08,114 [INFO] recruit_url_finder:   [エン転職] 0件取り込み (累計 5件)
+2026-05-18 17:11:10,847 [INFO] recruit_url_finder:   [Wantedly] 0件取り込み (累計 5件)
+2026-05-18 17:11:13,613 [INFO] recruit_url_finder:   [Green] 0件取り込み (累計 5件)
+2026-05-18 17:11:16,489 [INFO] recruit_url_finder:   [Indeed] 1件取り込み (累計 6件)
+2026-05-18 17:11:16,489 [INFO] recruit_url_finder: 求人サイトURL収集完了: シーシーアイホールディングス株式会社 → 合計 6 件
+2026-05-18 17:11:16,489 [INFO] __main__:   → 内部リンク:30件, 求人サイト:6件, 合計:36件
+2026-05-18 17:11:16,489 [INFO] __main__: Step 4/5: コンテンツ生成... (試行 1/3)
+2026-05-18 17:11:20,232 [INFO] __main__:   [検証] コンテンツ生成画面のヘッダーが対象企業に切替済か確認...
+2026-05-18 17:11:20,233 [INFO] web_app_operator: サイドバーから企業選択開始: シーシーアイホールディングス株式会社
+2026-05-18 17:11:28,300 [INFO] web_app_operator:   ヘッダー検証中: 企業名=シーシーアイホールディングス株式会社, ID=cci-corporation
+2026-05-18 17:11:28,384 [INFO] web_app_operator:   [OK] ヘッダー検証成功: 「🤖 シーシーアイホールディングス株式会社 コンテンツ生成」
+2026-05-18 17:11:28,384 [INFO] web_app_operator: サイドバー企業選択完了: シーシーアイホールディングス株式会社
+2026-05-18 17:11:28,385 [INFO] web_app_operator: URL入力開始: 36件
+2026-05-18 17:11:32,143 [INFO] web_app_operator:   「全入力を処理」ボタンをクリックしました
+2026-05-18 17:12:06,693 [INFO] web_app_operator: URL入力・処理開始完了: 36件
+2026-05-18 17:12:06,694 [INFO] web_app_operator: コンテンツ生成開始...
+2026-05-18 17:12:17,396 [INFO] web_app_operator:   生成準備完了の待機中...
+2026-05-18 17:12:57,420 [WARNING] web_app_operator:   生成準備完了メッセージが特定できませんでしたが、続行を試みます
+2026-05-18 17:12:57,470 [INFO] web_app_operator:   コンテンツ生成ボタン検出 (試行 1/6)
+2026-05-18 17:12:58,049 [INFO] web_app_operator: コンテンツ生成中... (最大5分待機)
+2026-05-18 17:14:25,046 [INFO] web_app_operator: 生成完了検出 (経過: 84.0秒, スピナー出現: True)
+2026-05-18 17:14:25,048 [INFO] web_app_operator:   [検証] 生成結果のFAQ実体を確認: シーシーアイホールディングス株式会社 (id=cci-corporation)
+2026-05-18 17:16:28,159 [WARNING] __main__:   [RETRY] 保存/生成検証失敗 (生成完了検出後、FAQ実体がページに現れません (パターン一致: 1件、120s経過)。生成失敗 or 別企業のデータ残存疑い。スクショ: screenshots/gen_verify_fail_cci-corporation.png) → Step 4 から再試行 (次回 2/3)
+2026-05-18 17:16:28,160 [INFO] web_app_operator: ページを閉じて再ログインを開始...
+2026-05-18 17:16:28,190 [INFO] web_app_operator:   古いページタブを閉じました
+2026-05-18 17:16:28,286 [INFO] web_app_operator:   新しいページタブを開きました
+2026-05-18 17:16:28,288 [INFO] web_app_operator: 管理画面にログイン中...
+2026-05-18 17:16:41,132 [WARNING] web_app_operator: ログイン試行 1/3 失敗: Page.wait_for_selector: Timeout 10000ms exceeded.
+Call log:
+  - waiting for locator("input[aria-label=\"メールアドレス\"]") to be visible
+
+2026-05-18 17:16:52,233 [INFO] web_app_operator: ログイン成功
+2026-05-18 17:16:52,233 [INFO] web_app_operator: ページクローズ＆再ログイン完了
+2026-05-18 17:16:52,235 [INFO] __main__: Step 4/5: コンテンツ生成... (試行 2/3)
+2026-05-18 17:16:56,041 [INFO] __main__:   [検証] コンテンツ生成画面のヘッダーが対象企業に切替済か確認...
+2026-05-18 17:16:56,042 [INFO] web_app_operator: サイドバーから企業選択開始: シーシーアイホールディングス株式会社
+2026-05-18 17:17:04,111 [INFO] web_app_operator:   ヘッダー検証中: 企業名=シーシーアイホールディングス株式会社, ID=cci-corporation
+2026-05-18 17:17:04,220 [INFO] web_app_operator:   [OK] ヘッダー検証成功: 「🤖 シーシーアイホールディングス株式会社 コンテンツ生成」
+2026-05-18 17:17:04,220 [INFO] web_app_operator: サイドバー企業選択完了: シーシーアイホールディングス株式会社
+2026-05-18 17:17:04,220 [INFO] web_app_operator: URL入力開始: 36件
+2026-05-18 17:17:08,014 [INFO] web_app_operator:   「全入力を処理」ボタンをクリックしました
+2026-05-18 17:17:42,573 [INFO] web_app_operator: URL入力・処理開始完了: 36件
+2026-05-18 17:17:42,575 [INFO] web_app_operator: コンテンツ生成開始...
+2026-05-18 17:17:53,293 [INFO] web_app_operator:   生成準備完了の待機中...
+2026-05-18 17:18:33,307 [WARNING] web_app_operator:   生成準備完了メッセージが特定できませんでしたが、続行を試みます
+2026-05-18 17:18:33,359 [INFO] web_app_operator:   コンテンツ生成ボタン検出 (試行 1/6)
+2026-05-18 17:18:33,956 [INFO] web_app_operator: コンテンツ生成中... (最大5分待機)
+2026-05-18 17:19:21,039 [INFO] web_app_operator: 生成完了検出 (経過: 45.0秒, スピナー出現: True)
+2026-05-18 17:19:21,041 [INFO] web_app_operator:   [検証] 生成結果のFAQ実体を確認: シーシーアイホールディングス株式会社 (id=cci-corporation)
+2026-05-18 17:21:24,121 [WARNING] __main__:   [RETRY] 保存/生成検証失敗 (生成完了検出後、FAQ実体がページに現れません (パターン一致: 1件、120s経過)。生成失敗 or 別企業のデータ残存疑い。スクショ: screenshots/gen_verify_fail_cci-corporation.png) → Step 4 から再試行 (次回 3/3)
+2026-05-18 17:21:24,121 [INFO] web_app_operator: ページを閉じて再ログインを開始...
+2026-05-18 17:21:24,166 [INFO] web_app_operator:   古いページタブを閉じました
+2026-05-18 17:21:24,261 [INFO] web_app_operator:   新しいページタブを開きました
+2026-05-18 17:21:24,262 [INFO] web_app_operator: 管理画面にログイン中...
+2026-05-18 17:21:40,273 [INFO] web_app_operator: ログイン成功
+2026-05-18 17:21:40,273 [INFO] web_app_operator: ページクローズ＆再ログイン完了
+2026-05-18 17:21:40,276 [INFO] __main__: Step 4/5: コンテンツ生成... (試行 3/3)
+2026-05-18 17:21:40,291 [WARNING] web_app_operator: セッション切れ検出 -> 再ログイン
+2026-05-18 17:21:40,291 [INFO] web_app_operator: 管理画面にログイン中...
+2026-05-18 17:21:53,548 [WARNING] web_app_operator: ログイン試行 1/3 失敗: Page.wait_for_selector: Timeout 10000ms exceeded.
+Call log:
+  - waiting for locator("input[aria-label=\"メールアドレス\"]") to be visible
+
+2026-05-18 17:22:11,393 [WARNING] web_app_operator: ログイン試行 2/3 失敗: Page.wait_for_selector: Timeout 10000ms exceeded.
+Call log:
+  - waiting for locator("input[aria-label=\"メールアドレス\"]") to be visible
+
+2026-05-18 17:22:41,160 [WARNING] web_app_operator: ログイン試行 3/3 失敗: Page.wait_for_selector: Timeout 10000ms exceeded.
+Call log:
+  - waiting for locator("input[aria-label=\"メールアドレス\"]") to be visible
+
+2026-05-18 17:23:11,734 [ERROR] __main__: [ERROR] シーシーアイホールディングス株式会社: 処理失敗 -- Locator.click: Timeout 30000ms exceeded.
+Call log:
+  - waiting for locator("[data-testid='stSidebar']").get_by_text("コンテンツ生成").first
+
+2026-05-18 17:23:11,737 [INFO] spreadsheet_manager: 企業リスト保存完了: 63社 → C:\Users\NC00018174\Desktop\DOCdemo_update_project\data\company_list.csv
+2026-05-18 17:23:11,739 [INFO] __main__: 
+2026-05-18 17:23:11,739 [INFO] __main__: 1件処理完了 → 再ログイン＆キャッシュクリアを実行
+2026-05-18 17:23:11,739 [INFO] web_app_operator: 再ログイン＆キャッシュクリア開始...
+2026-05-18 17:23:11,755 [INFO] web_app_operator:   LocalStorage/SessionStorageをクリアしました
+2026-05-18 17:23:11,767 [INFO] web_app_operator:   Cookieをクリアしました
+2026-05-18 17:23:13,779 [INFO] web_app_operator: 管理画面にログイン中...
+2026-05-18 17:23:32,043 [INFO] web_app_operator: ログイン成功
+2026-05-18 17:23:32,043 [INFO] web_app_operator: 再ログイン＆キャッシュクリア完了
+2026-05-18 17:23:32,043 [INFO] __main__: 
+2026-05-18 17:23:32,043 [INFO] __main__: ──────────────────────────────────────────────────
+2026-05-18 17:23:32,043 [INFO] __main__: [12/47] ショウケンガリレイ株式会社 (ステータス: URL特定済)
+2026-05-18 17:23:32,043 [INFO] __main__: ──────────────────────────────────────────────────
+2026-05-18 17:23:32,043 [INFO] __main__: Step 2/6: 企業追加...
+2026-05-18 17:23:32,043 [INFO] web_app_operator: 企業追加開始: ショウケンガリレイ株式会社
+2026-05-18 17:23:46,981 [INFO] web_app_operator: 企業追加完了: ショウケンガリレイ株式会社 (ID: galilei-shoken)
+2026-05-18 17:23:46,981 [INFO] __main__: Step 2.5/6: 追加企業のID検証...
+2026-05-18 17:23:46,982 [INFO] web_app_operator:   企業ID検証中: 期待ID=galilei-shoken, URL=https://galilei-shoken.co.jp
+2026-05-18 17:23:51,098 [INFO] web_app_operator:   [OK] 企業ID 'galilei-shoken' をページ内に確認
+2026-05-18 17:23:51,102 [INFO] spreadsheet_manager: 企業リスト保存完了: 63社 → C:\Users\NC00018174\Desktop\DOCdemo_update_project\data\company_list.csv
+2026-05-18 17:23:51,102 [INFO] __main__:   → 企業追加完了 (ID: galilei-shoken)
+2026-05-18 17:23:51,102 [INFO] __main__: 企業追加完了 → ページを閉じて再ログイン（キャッシュバグ防止）
+2026-05-18 17:23:51,104 [INFO] web_app_operator: ページを閉じて再ログインを開始...
+2026-05-18 17:23:51,146 [INFO] web_app_operator:   古いページタブを閉じました
+2026-05-18 17:23:51,253 [INFO] web_app_operator:   新しいページタブを開きました
+2026-05-18 17:23:51,253 [INFO] web_app_operator: 管理画面にログイン中...
+2026-05-18 17:24:05,759 [WARNING] web_app_operator: ログイン試行 1/3 失敗: Page.wait_for_selector: Timeout 10000ms exceeded.
+Call log:
+  - waiting for locator("[data-testid='stSidebar']") to be visible
+
+2026-05-18 17:24:37,377 [INFO] web_app_operator: ログイン成功
+2026-05-18 17:24:37,378 [INFO] web_app_operator: ページクローズ＆再ログイン完了
+2026-05-18 17:24:37,378 [INFO] __main__: Step 3/5: URL収集...
+2026-05-18 17:24:41,352 [INFO] recruit_url_finder: 求人サイトURL収集開始: ショウケンガリレイ株式会社 (正規化: 'ショウケンガリレイ')
+2026-05-18 17:24:44,129 [INFO] recruit_url_finder:   [マイナビ転職] 2件取り込み (累計 2件)
+2026-05-18 17:24:46,943 [INFO] recruit_url_finder:   [マイナビ新卒] 2件取り込み (累計 4件)
+2026-05-18 17:24:49,941 [INFO] recruit_url_finder:   [リクナビ] 2件取り込み (累計 6件)
+2026-05-18 17:24:52,629 [INFO] recruit_url_finder:   [DODA] 2件取り込み (累計 8件)
+2026-05-18 17:24:55,312 [INFO] recruit_url_finder:   [エン転職] 0件取り込み (累計 8件)
+2026-05-18 17:24:57,939 [INFO] recruit_url_finder:   [Wantedly] 1件取り込み (累計 9件)
+2026-05-18 17:25:00,525 [INFO] recruit_url_finder:   [Green] 0件取り込み (累計 9件)
+2026-05-18 17:25:03,257 [INFO] recruit_url_finder:   [Indeed] 1件取り込み (累計 10件)
+2026-05-18 17:25:03,258 [INFO] recruit_url_finder: 求人サイトURL収集完了: ショウケンガリレイ株式会社 → 合計 10 件
+2026-05-18 17:25:03,258 [INFO] __main__:   → 内部リンク:30件, 求人サイト:10件, 合計:40件
+2026-05-18 17:25:03,258 [INFO] __main__: Step 4/5: コンテンツ生成... (試行 1/3)
+2026-05-18 17:25:07,009 [INFO] __main__:   [検証] コンテンツ生成画面のヘッダーが対象企業に切替済か確認...
+2026-05-18 17:25:07,010 [INFO] web_app_operator: サイドバーから企業選択開始: ショウケンガリレイ株式会社
+2026-05-18 17:25:15,094 [INFO] web_app_operator:   ヘッダー検証中: 企業名=ショウケンガリレイ株式会社, ID=galilei-shoken
+2026-05-18 17:25:15,452 [WARNING] web_app_operator:   [WARN] ヘッダー要素には特定できなかったが ページ内に企業情報を確認 (スクショ: screenshots/title_warn_galilei-shoken.png)
+2026-05-18 17:25:15,453 [INFO] web_app_operator: サイドバー企業選択完了: ショウケンガリレイ株式会社
+2026-05-18 17:25:15,453 [INFO] web_app_operator: URL入力開始: 40件
+2026-05-18 17:25:19,314 [INFO] web_app_operator:   「全入力を処理」ボタンをクリックしました
+2026-05-18 17:25:23,875 [INFO] web_app_operator: URL入力・処理開始完了: 40件
+2026-05-18 17:25:23,877 [INFO] web_app_operator: コンテンツ生成開始...
+2026-05-18 17:25:34,563 [INFO] web_app_operator:   生成準備完了の待機中...
+2026-05-18 17:26:14,582 [WARNING] web_app_operator:   生成準備完了メッセージが特定できませんでしたが、続行を試みます
+2026-05-18 17:26:34,614 [WARNING] web_app_operator:   コンテンツ生成ボタン未検出 (試行 1/6) — 生成タブを再クリック
+2026-05-18 17:27:05,317 [WARNING] web_app_operator:   コンテンツ生成ボタン未検出 (試行 2/6) — 生成タブを再クリック
+2026-05-18 17:27:35,996 [WARNING] web_app_operator:   コンテンツ生成ボタン未検出 (試行 3/6) — 生成タブを再クリック
+2026-05-18 17:28:03,529 [INFO] web_app_operator:   コンテンツ生成ボタン検出 (試行 4/6)
+2026-05-18 17:28:04,134 [INFO] web_app_operator: コンテンツ生成中... (最大5分待機)
+2026-05-18 17:29:01,982 [INFO] web_app_operator: 生成完了検出 (経過: 48.0秒, スピナー出現: True)
+2026-05-18 17:29:01,982 [INFO] web_app_operator:   [検証] 生成結果のFAQ実体を確認: ショウケンガリレイ株式会社 (id=galilei-shoken)
+2026-05-18 17:31:05,010 [WARNING] __main__:   [RETRY] 保存/生成検証失敗 (生成完了検出後、FAQ実体がページに現れません (パターン一致: 1件、120s経過)。生成失敗 or 別企業のデータ残存疑い。スクショ: screenshots/gen_verify_fail_galilei-shoken.png) → Step 4 から再試行 (次回 2/3)
+2026-05-18 17:31:05,010 [INFO] web_app_operator: ページを閉じて再ログインを開始...
+2026-05-18 17:31:05,051 [INFO] web_app_operator:   古いページタブを閉じました
+2026-05-18 17:31:05,157 [INFO] web_app_operator:   新しいページタブを開きました
+2026-05-18 17:31:05,157 [INFO] web_app_operator: 管理画面にログイン中...
+2026-05-18 17:31:22,305 [INFO] web_app_operator: ログイン成功
+2026-05-18 17:31:22,305 [INFO] web_app_operator: ページクローズ＆再ログイン完了
+2026-05-18 17:31:22,306 [INFO] __main__: Step 4/5: コンテンツ生成... (試行 2/3)
+2026-05-18 17:31:22,325 [WARNING] web_app_operator: セッション切れ検出 -> 再ログイン
+2026-05-18 17:31:22,325 [INFO] web_app_operator: 管理画面にログイン中...
+2026-05-18 17:31:35,974 [WARNING] web_app_operator: ログイン試行 1/3 失敗: Page.wait_for_selector: Timeout 10000ms exceeded.
+Call log:
+  - waiting for locator("input[aria-label=\"メールアドレス\"]") to be visible
+
+2026-05-18 17:31:53,845 [WARNING] web_app_operator: ログイン試行 2/3 失敗: Page.wait_for_selector: Timeout 10000ms exceeded.
+Call log:
+  - waiting for locator("input[aria-label=\"メールアドレス\"]") to be visible
+
+2026-05-18 17:32:15,378 [WARNING] web_app_operator: ログイン試行 3/3 失敗: Page.wait_for_selector: Timeout 10000ms exceeded.
+Call log:
+  - waiting for locator("input[aria-label=\"メールアドレス\"]") to be visible
+
+2026-05-18 17:32:45,935 [ERROR] __main__: [ERROR] ショウケンガリレイ株式会社: 処理失敗 -- Locator.click: Timeout 30000ms exceeded.
+Call log:
+  - waiting for locator("[data-testid='stSidebar']").get_by_text("コンテンツ生成").first
+
+2026-05-18 17:32:45,935 [INFO] spreadsheet_manager: 企業リスト保存完了: 63社 → C:\Users\NC00018174\Desktop\DOCdemo_update_project\data\company_list.csv
+2026-05-18 17:32:45,935 [INFO] __main__: 
+2026-05-18 17:32:45,939 [INFO] __main__: 1件処理完了 → 再ログイン＆キャッシュクリアを実行
+2026-05-18 17:32:45,939 [INFO] web_app_operator: 再ログイン＆キャッシュクリア開始...
+2026-05-18 17:32:45,959 [INFO] web_app_operator:   LocalStorage/SessionStorageをクリアしました
+2026-05-18 17:32:45,978 [INFO] web_app_operator:   Cookieをクリアしました
+2026-05-18 17:32:47,992 [INFO] web_app_operator: 管理画面にログイン中...
+2026-05-18 17:33:00,796 [WARNING] web_app_operator: ログイン試行 1/3 失敗: Page.wait_for_selector: Timeout 10000ms exceeded.
+Call log:
+  - waiting for locator("input[aria-label=\"メールアドレス\"]") to be visible
+
+2026-05-18 17:33:29,210 [WARNING] web_app_operator: ログイン試行 2/3 失敗: Page.wait_for_selector: Timeout 10000ms exceeded.
+Call log:
+  - waiting for locator("input[aria-label=\"メールアドレス\"]") to be visible
+
+2026-05-18 17:33:59,449 [WARNING] web_app_operator: ログイン試行 3/3 失敗: Page.wait_for_selector: Timeout 10000ms exceeded.
+Call log:
+  - waiting for locator("input[aria-label=\"メールアドレス\"]") to be visible
+
+2026-05-18 17:33:59,449 [WARNING] __main__: 再ログイン失敗（続行）: Page.wait_for_selector: Timeout 10000ms exceeded.
+Call log:
+  - waiting for locator("input[aria-label=\"メールアドレス\"]") to be visible
+
+2026-05-18 17:33:59,454 [INFO] __main__: 
+2026-05-18 17:33:59,454 [INFO] __main__: ──────────────────────────────────────────────────
+2026-05-18 17:33:59,454 [INFO] __main__: [13/47] シンコール株式会社 (ステータス: 同名企業該当)
+2026-05-18 17:33:59,454 [INFO] __main__: ──────────────────────────────────────────────────
+2026-05-18 17:33:59,454 [INFO] __main__: Step 1/5: URL確定済の企業を Stage 2 で処理: https://www.sincol.co.jp
+2026-05-18 17:33:59,458 [INFO] spreadsheet_manager: 企業リスト保存完了: 63社 → C:\Users\NC00018174\Desktop\DOCdemo_update_project\data\company_list.csv
+2026-05-18 17:33:59,458 [INFO] __main__: Step 2/6: 企業追加...
+2026-05-18 17:33:59,460 [INFO] web_app_operator: 企業追加開始: シンコール株式会社
+2026-05-18 17:33:59,460 [INFO] web_app_operator: 管理画面にログイン中...
+2026-05-18 17:34:12,296 [WARNING] web_app_operator: ログイン試行 1/3 失敗: Page.wait_for_selector: Timeout 10000ms exceeded.
+Call log:
+  - waiting for locator("input[aria-label=\"メールアドレス\"]") to be visible
+
+2026-05-18 17:34:38,014 [WARNING] web_app_operator: ログイン試行 2/3 失敗: Page.wait_for_selector: Timeout 10000ms exceeded.
+Call log:
+  - waiting for locator("input[aria-label=\"メールアドレス\"]") to be visible
+
+2026-05-18 17:35:09,185 [WARNING] web_app_operator: ログイン試行 3/3 失敗: Page.wait_for_selector: Timeout 10000ms exceeded.
+Call log:
+  - waiting for locator("input[aria-label=\"メールアドレス\"]") to be visible
+
+2026-05-18 17:35:09,185 [WARNING] __main__:   リトライ 1/3: Page.wait_for_selector: Timeout 10000ms exceeded.
+Call log:
+  - waiting for locator("input[aria-label=\"メールアドレス\"]") to be visible
+
+2026-05-18 17:35:14,186 [INFO] web_app_operator: 管理画面にログイン中...
+2026-05-18 17:36:16,672 [WARNING] web_app_operator: ログイン試行 1/3 失敗: Page.wait_for_selector: Timeout 10000ms exceeded.
+Call log:
+  - waiting for locator("input[aria-label=\"メールアドレス\"]") to be visible
+
+2026-05-18 17:37:22,261 [WARNING] web_app_operator: ログイン試行 2/3 失敗: Page.goto: Timeout 60000ms exceeded.
+Call log:
+  - navigating to "https://casual-interview-api-dev.brainverse-ai.com/", waiting until "networkidle"
+
+2026-05-18 17:37:40,098 [WARNING] web_app_operator: ログイン試行 3/3 失敗: Page.wait_for_selector: Timeout 10000ms exceeded.
+Call log:
+  - waiting for locator("input[aria-label=\"メールアドレス\"]") to be visible
+
+2026-05-18 17:37:40,098 [ERROR] __main__: [ERROR] シンコール株式会社: 処理失敗 -- Page.wait_for_selector: Timeout 10000ms exceeded.
+Call log:
+  - waiting for locator("input[aria-label=\"メールアドレス\"]") to be visible
+
+2026-05-18 17:37:40,098 [INFO] spreadsheet_manager: 企業リスト保存完了: 63社 → C:\Users\NC00018174\Desktop\DOCdemo_update_project\data\company_list.csv
+2026-05-18 17:37:40,098 [INFO] __main__: 
+2026-05-18 17:37:40,105 [INFO] __main__: 1件処理完了 → 再ログイン＆キャッシュクリアを実行
+2026-05-18 17:37:40,105 [INFO] web_app_operator: 再ログイン＆キャッシュクリア開始...
+2026-05-18 17:37:40,121 [INFO] web_app_operator:   LocalStorage/SessionStorageをクリアしました
+2026-05-18 17:37:40,136 [INFO] web_app_operator:   Cookieをクリアしました
+2026-05-18 17:37:42,143 [INFO] web_app_operator: 管理画面にログイン中...
+2026-05-18 17:38:24,893 [WARNING] web_app_operator: ログイン試行 1/3 失敗: Page.wait_for_selector: Timeout 10000ms exceeded.
+Call log:
+  - waiting for locator("input[aria-label=\"メールアドレス\"]") to be visible
+
+2026-05-18 17:39:12,533 [WARNING] web_app_operator: ログイン試行 2/3 失敗: Page.wait_for_selector: Timeout 10000ms exceeded.
+Call log:
+  - waiting for locator("input[aria-label=\"メールアドレス\"]") to be visible
+
+2026-05-18 17:40:00,147 [WARNING] web_app_operator: ログイン試行 3/3 失敗: Page.wait_for_selector: Timeout 10000ms exceeded.
+Call log:
+  - waiting for locator("input[aria-label=\"メールアドレス\"]") to be visible
+
+2026-05-18 17:40:00,147 [WARNING] __main__: 再ログイン失敗（続行）: Page.wait_for_selector: Timeout 10000ms exceeded.
+Call log:
+  - waiting for locator("input[aria-label=\"メールアドレス\"]") to be visible
+
+2026-05-18 17:40:00,147 [INFO] __main__: 
+2026-05-18 17:40:00,147 [INFO] __main__: ──────────────────────────────────────────────────
+2026-05-18 17:40:00,148 [INFO] __main__: [14/47] スターキャット株式会社 (ステータス: URL特定済)
+2026-05-18 17:40:00,148 [INFO] __main__: ──────────────────────────────────────────────────
+2026-05-18 17:40:00,148 [INFO] __main__: Step 2/6: 企業追加...
+2026-05-18 17:40:00,148 [INFO] web_app_operator: 企業追加開始: スターキャット株式会社
+2026-05-18 17:40:00,148 [INFO] web_app_operator: 管理画面にログイン中...
+2026-05-18 17:40:42,771 [WARNING] web_app_operator: ログイン試行 1/3 失敗: Page.wait_for_selector: Timeout 10000ms exceeded.
+Call log:
+  - waiting for locator("input[aria-label=\"メールアドレス\"]") to be visible
+
+2026-05-18 17:41:30,403 [WARNING] web_app_operator: ログイン試行 2/3 失敗: Page.wait_for_selector: Timeout 10000ms exceeded.
+Call log:
+  - waiting for locator("input[aria-label=\"メールアドレス\"]") to be visible
+
+2026-05-18 17:46:15,180 [INFO] __main__: ============================================================
+2026-05-18 17:46:15,180 [INFO] __main__: Stage 4: 納品URL品質チェック 開始
+2026-05-18 17:46:15,181 [INFO] __main__: 開始時刻: 2026-05-18 17:46:15
+2026-05-18 17:46:15,181 [INFO] __main__: 対象CSV: C:\Users\NC00018174\Desktop\DOCdemo_update_project\data\company_list.csv
+2026-05-18 17:46:15,181 [INFO] __main__: ============================================================
+2026-05-18 17:46:15,184 [INFO] spreadsheet_manager: 企業リスト読み込み完了: 63社
+2026-05-18 17:46:15,184 [INFO] spreadsheet_manager: 品質チェック対象企業: 0社 / 全63社
+2026-05-18 17:46:15,185 [WARNING] __main__: 品質チェック対象企業がありません。終了します。
+2026-05-18 17:52:28,269 [INFO] __main__: ============================================================
+2026-05-18 17:52:28,271 [INFO] __main__: DOCdemo 自動化フロー 開始 (Stage 2: デモ作成)
+2026-05-18 17:52:28,272 [INFO] __main__: 開始時刻: 2026-05-18 17:52:28
+2026-05-18 17:52:28,272 [INFO] __main__: ============================================================
+2026-05-18 17:52:28,272 [INFO] spreadsheet_manager: 企業リスト読み込み完了: 63社
+2026-05-18 17:52:28,272 [INFO] spreadsheet_manager: 処理対象企業: 34社 / 全63社
+2026-05-18 17:52:28,272 [INFO] __main__: 処理対象: 34社
+2026-05-18 17:52:29,082 [INFO] web_app_operator: 管理画面にログイン中...

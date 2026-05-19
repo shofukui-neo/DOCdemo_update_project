@@ -93,6 +93,37 @@ FAQ_SAVE_MAX_RETRIES = 2
 FAQ_VERIFY_TIMEOUT_SECONDS = 120
 
 # =============================================================================
+# サーバーダウン検知 / 復旧待機設定 (Brainverse 管理画面が落ちた時の挙動)
+# =============================================================================
+# 「サーバーダウン」と判定する HTTP ステータスコード
+SERVER_DOWN_HTTP_STATUSES = {500, 502, 503, 504, 521, 522, 523, 524}
+
+# Playwright/接続例外メッセージに含まれていればサーバーダウンと判定するパターン
+SERVER_DOWN_ERROR_PATTERNS = (
+    "ERR_CONNECTION_REFUSED",
+    "ERR_CONNECTION_RESET",
+    "ERR_CONNECTION_CLOSED",
+    "ERR_CONNECTION_TIMED_OUT",
+    "ERR_CONNECTION_ABORTED",
+    "ERR_NAME_NOT_RESOLVED",
+    "ERR_INTERNET_DISCONNECTED",
+    "ERR_EMPTY_RESPONSE",
+    "ERR_NETWORK_CHANGED",
+    "ERR_TUNNEL_CONNECTION_FAILED",
+    "ERR_ADDRESS_UNREACHABLE",
+    "ERR_SOCKET_NOT_CONNECTED",
+)
+
+# ヘルスチェック (check_server_alive) のタイムアウト秒数
+SERVER_HEALTH_CHECK_TIMEOUT_SECONDS = 10
+
+# 復旧待機の最大時間 (分)。これを超えても復旧しなければ処理を中断する
+SERVER_RECOVERY_MAX_WAIT_MINUTES = 30
+
+# 復旧待機中のポーリング間隔 (秒)
+SERVER_RECOVERY_POLL_INTERVAL_SECONDS = 30
+
+# =============================================================================
 # Stage 4 (verify_quality.py) 設定
 # =============================================================================
 # AIチャットに送信するテスト質問 (返信に企業名が含まれるか検証する)

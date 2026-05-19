@@ -30,15 +30,20 @@ DOCdemo 自動化フロー — Stage 4: 納品URL品質チェック
     python verify_quality.py --csv data/foo.csv
     python verify_quality.py --no-headless           # ブラウザ表示で実行
     python verify_quality.py --company "株式会社サンプル"  # 1社のみテスト
+
+    # 2列CSV (企業名,納品URL) を強制的に検証 (ステータスフィルタ無視)
+    python verify_quality.py --delivery-csv data/company_list_delivery_urls.csv
 """
 
 import argparse
 import asyncio
+import csv
 import logging
 import re
 import sys
 from datetime import datetime
 from pathlib import Path
+from urllib.parse import urlparse
 
 from playwright.async_api import async_playwright, Page
 
@@ -54,9 +59,17 @@ from config import (
     QUALITY_CHECK_CHAT_QUESTION,
     QUALITY_CHECK_CHAT_TIMEOUT,
     QUALITY_SCREENSHOTS_DIR,
+    SERVER_DOWN_HTTP_STATUSES,
+    SERVER_RECOVERY_MAX_WAIT_MINUTES,
 )
 from models import CompanyInfo, ProcessStatus
 from spreadsheet_manager import SpreadsheetManager
+from web_app_operator import (
+    ServerDownError,
+    check_server_alive,
+    is_server_down_error,
+    wait_for_server_recovery,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -136,16 +149,26 @@ class QualityVerifier:
         csv_path: Path = None,
         headless: bool = None,
         target_company: str = None,
+        delivery_csv_path: Path = None,
     ):
-        self.sheet_manager = SpreadsheetManager(csv_path)
+        # 通常モード (company_list.csv フルスキーマ) と
+        # 配信CSVモード (2列「企業名,納品URL」を強制検証) を排他で持つ
+        self.delivery_csv_path = delivery_csv_path
+        if delivery_csv_path:
+            self.sheet_manager = None
+        else:
+            self.sheet_manager = SpreadsheetManager(csv_path)
         self.headless = headless if headless is not None else BROWSER_HEADLESS
         self.target_company = target_company
+        # 配信CSVモードで使用する元の行データ (再書き出しに使う)
+        self._delivery_raw_rows: list = []
         self.stats = {
             "total": 0,
             "ok": 0,
             "partial": 0,
             "ng": 0,
             "error": 0,
+            "server_down_aborted": 0,  # サーバーダウンで途中中断した社数
         }
 
     async def run(self):
@@ -154,22 +177,37 @@ class QualityVerifier:
         logger.info("=" * 60)
         logger.info("Stage 4: 納品URL品質チェック 開始")
         logger.info(f"開始時刻: {start.strftime('%Y-%m-%d %H:%M:%S')}")
-        logger.info(f"対象CSV: {self.sheet_manager.csv_path}")
+        if self.delivery_csv_path:
+            logger.info(f"対象CSV: {self.delivery_csv_path} (配信CSVモード)")
+        else:
+            logger.info(f"対象CSV: {self.sheet_manager.csv_path}")
         logger.info("=" * 60)
 
         QUALITY_SCREENSHOTS_DIR.mkdir(parents=True, exist_ok=True)
 
-        companies = self.sheet_manager.read_company_list()
-        targets = self.sheet_manager.get_completed_companies(
-            companies, require_delivery_url=True
-        )
-        if self.target_company:
-            targets = [c for c in targets if self.target_company in c.name]
-            if not targets:
-                logger.error(
-                    f"対象企業が見つかりません (完了済かつURL有): {self.target_company}"
-                )
-                return
+        # 配信CSVモード: 2列CSVを直接読み、status フィルタを無視
+        if self.delivery_csv_path:
+            companies = self._read_delivery_csv(self.delivery_csv_path)
+            targets = companies
+            if self.target_company:
+                targets = [c for c in targets if self.target_company in c.name]
+                if not targets:
+                    logger.error(
+                        f"対象企業が見つかりません: {self.target_company}"
+                    )
+                    return
+        else:
+            companies = self.sheet_manager.read_company_list()
+            targets = self.sheet_manager.get_completed_companies(
+                companies, require_delivery_url=True
+            )
+            if self.target_company:
+                targets = [c for c in targets if self.target_company in c.name]
+                if not targets:
+                    logger.error(
+                        f"対象企業が見つかりません (完了済かつURL有): {self.target_company}"
+                    )
+                    return
 
         self.stats["total"] = len(targets)
         if not targets:
@@ -182,7 +220,11 @@ class QualityVerifier:
             )
             context = await browser.new_context(viewport=BROWSER_VIEWPORT)
 
-            for idx, company in enumerate(targets, start=1):
+            idx = 0
+            server_down_aborted = False
+            while idx < len(targets):
+                company = targets[idx]
+                idx += 1
                 logger.info("")
                 logger.info("─" * 50)
                 logger.info(
@@ -194,21 +236,77 @@ class QualityVerifier:
                 page = await context.new_page()
                 try:
                     result = await self._verify_one(company, page)
-                    self._apply_result(company, companies, result)
+                    if self.delivery_csv_path:
+                        self._apply_result_delivery(company, result)
+                    else:
+                        self._apply_result(company, companies, result)
+                except ServerDownError as sd_err:
+                    logger.error("=" * 60)
+                    logger.error(
+                        f"[サーバーダウン検出] {company.name} "
+                        f"({idx}/{len(targets)}社目) 検証中に Brainverse 側へ到達不能"
+                    )
+                    logger.error(f"  詳細: {sd_err}")
+                    logger.error("=" * 60)
+                    # この企業の品質判定は触らず保留 (復旧後の再実行で正しく判定する)
+                    recovered = await wait_for_server_recovery()
+                    if not recovered:
+                        remaining = len(targets) - idx + 1
+                        self.stats["server_down_aborted"] = remaining
+                        server_down_aborted = True
+                        try:
+                            await page.close()
+                        except Exception:
+                            pass
+                        break
+                    # 復旧 → 同企業を再試行
+                    idx -= 1
                 except Exception as e:
-                    logger.error(f"  [ERR] {company.name}: 検証中に例外 -- {e}")
-                    company.quality_check = "NG"
-                    company.quality_detail = f"検証例外: {e}"
-                    company.mark_error(f"品質チェック検証失敗: {e}")
-                    self.sheet_manager.update_company(company, companies)
-                    self.stats["error"] += 1
+                    # ヘルスチェックで「実はサーバーダウン」を救済
+                    if is_server_down_error(e) or not check_server_alive():
+                        logger.warning(
+                            f"[サーバーダウン疑い] 検証中の例外 ({e}) はサーバー側の問題と判定"
+                        )
+                        recovered = await wait_for_server_recovery()
+                        if not recovered:
+                            remaining = len(targets) - idx + 1
+                            self.stats["server_down_aborted"] = remaining
+                            server_down_aborted = True
+                            try:
+                                await page.close()
+                            except Exception:
+                                pass
+                            break
+                        idx -= 1
+                    else:
+                        logger.error(f"  [ERR] {company.name}: 検証中に例外 -- {e}")
+                        company.quality_check = "NG"
+                        company.quality_detail = f"検証例外: {e}"
+                        self.stats["error"] += 1
+                        if self.delivery_csv_path:
+                            self._save_delivery_csv(targets)
+                        else:
+                            company.mark_error(f"品質チェック検証失敗: {e}")
+                            self.sheet_manager.update_company(company, companies)
                 finally:
                     try:
                         await page.close()
                     except Exception:
                         pass
 
-            await browser.close()
+            try:
+                await browser.close()
+            except Exception:
+                pass
+
+            if server_down_aborted:
+                logger.error("=" * 60)
+                logger.error(
+                    f"サーバー未復旧のため Stage 4 を中断 "
+                    f"(未検証 {self.stats['server_down_aborted']}社)。"
+                    f"サーバー復旧後に `python verify_quality.py` を再実行してください。"
+                )
+                logger.error("=" * 60)
 
         elapsed = datetime.now() - start
         self._print_summary(elapsed)
@@ -220,16 +318,32 @@ class QualityVerifier:
 
         # ===== Check 1: HTTP応答 =====
         try:
-            response = await page.goto(
-                url, wait_until="domcontentloaded", timeout=PAGE_LOAD_TIMEOUT
-            )
+            try:
+                response = await page.goto(
+                    url, wait_until="domcontentloaded", timeout=PAGE_LOAD_TIMEOUT
+                )
+            except Exception as goto_err:
+                # 接続不可系は ServerDownError として再 raise (上位ループが復旧待機する)
+                if is_server_down_error(goto_err):
+                    raise ServerDownError(
+                        f"納品URL ({url}) 接続不可: {goto_err}"
+                    ) from goto_err
+                raise
+
             status = response.status if response else 0
+            # 5xx はサーバーダウン扱い (品質判定ではなく上位で復旧待ち)
+            if status in SERVER_DOWN_HTTP_STATUSES or (status >= 500):
+                raise ServerDownError(
+                    f"納品URL ({url}) が HTTP {status} を返しました"
+                )
             if 200 <= status < 400:
                 result.set("HTTP", True, f"status={status}")
                 logger.info(f"  [OK] HTTP: status={status}")
             else:
                 result.set("HTTP", False, f"status={status}")
                 logger.warning(f"  [NG] HTTP: status={status}")
+        except ServerDownError:
+            raise
         except Exception as e:
             result.set("HTTP", False, f"接続失敗: {e}")
             logger.warning(f"  [NG] HTTP: {e}")
@@ -615,6 +729,124 @@ class QualityVerifier:
 
         self.sheet_manager.update_company(company, companies)
 
+    def _apply_result_delivery(
+        self,
+        company: CompanyInfo,
+        result: CheckResult,
+    ):
+        """
+        配信CSVモードの結果反映。
+        ステータス列がないので status は変更せず、品質チェック結果のみ反映し
+        2列+品質列の CSV を書き戻す。
+        """
+        overall = result.overall()
+        company.quality_check = overall
+        company.quality_detail = result.detail()
+
+        if overall == "OK":
+            self.stats["ok"] += 1
+            logger.info(f"  [総合] {company.name}: OK")
+        elif overall == "部分OK":
+            self.stats["partial"] += 1
+            logger.warning(f"  [総合] {company.name}: 部分OK")
+        elif overall == "NG":
+            self.stats["ng"] += 1
+            logger.warning(f"  [総合] {company.name}: NG")
+        else:
+            logger.warning(f"  [総合] {company.name}: 判定不能")
+
+        # 全件で逐次保存 (50行程度なので毎回でも軽い)
+        # CSV へ書き戻し: 元の raw_rows と対象企業リストから再構築
+        # 注: run() ループは targets を渡すが、ここでは保持リストから検索する
+        self._save_delivery_csv_for_company(company)
+
+    def _read_delivery_csv(self, path: Path) -> list:
+        """
+        2列CSV (企業名, 納品URL) を読み込み、CompanyInfo リストを返す。
+
+        - "[推定] " プレフィックスは自動除去
+        - 既存の「品質チェック」「品質チェック詳細」列があれば読み込む
+        - 企業ID は URL 末尾のパスセグメントから抽出 (title 検証で使用)
+        - status は便宜上 COMPLETED にしておく (フィルタを通すため)
+        """
+        if not path.exists():
+            raise FileNotFoundError(f"配信CSVが見つかりません: {path}")
+
+        companies = []
+        raw_rows = []
+        with open(path, "r", encoding="utf-8-sig", newline="") as f:
+            reader = csv.DictReader(f)
+            for i, row in enumerate(reader):
+                raw_rows.append(dict(row))
+                name = (row.get("企業名") or "").strip()
+                url_raw = (row.get("納品URL") or "").strip()
+                if not name or not url_raw:
+                    continue
+
+                # "[推定] " プレフィックスを剥がす
+                url = re.sub(r"^\[推定\]\s*", "", url_raw).strip()
+
+                # URL 末尾のパスセグメントを企業ID として採用
+                try:
+                    parsed = urlparse(url)
+                    ent_id = parsed.path.strip("/").split("/")[-1] if parsed.path else ""
+                except Exception:
+                    ent_id = ""
+
+                company = CompanyInfo(
+                    row_index=i,
+                    name=name,
+                    enterprise_id=ent_id or CompanyInfo.generate_enterprise_id(name),
+                    frontend_app_url=url,
+                    status=ProcessStatus.COMPLETED,
+                    quality_check=(row.get("品質チェック") or "").strip(),
+                    quality_detail=(row.get("品質チェック詳細") or "").strip(),
+                )
+                companies.append(company)
+
+        self._delivery_raw_rows = raw_rows
+        logger.info(f"配信CSV読み込み完了: {len(companies)}社 → {path}")
+        return companies
+
+    def _save_delivery_csv_for_company(self, company: CompanyInfo):
+        """1社の結果を反映して配信CSVを書き戻す (逐次保存)"""
+        if not self.delivery_csv_path:
+            return
+        # raw_rows の該当行を更新
+        for row in self._delivery_raw_rows:
+            if (row.get("企業名") or "").strip() == company.name:
+                row["品質チェック"] = company.quality_check
+                row["品質チェック詳細"] = company.quality_detail
+                break
+        self._write_delivery_csv()
+
+    def _save_delivery_csv(self, companies: list):
+        """全社の結果を反映して配信CSVを書き戻す"""
+        if not self.delivery_csv_path:
+            return
+        name_to_company = {c.name: c for c in companies}
+        for row in self._delivery_raw_rows:
+            name = (row.get("企業名") or "").strip()
+            c = name_to_company.get(name)
+            if c:
+                row["品質チェック"] = c.quality_check
+                row["品質チェック詳細"] = c.quality_detail
+        self._write_delivery_csv()
+
+    def _write_delivery_csv(self):
+        """配信CSVを 4列スキーマ (企業名, 納品URL, 品質チェック, 品質チェック詳細) で書き戻す"""
+        fieldnames = ["企業名", "納品URL", "品質チェック", "品質チェック詳細"]
+        with open(self.delivery_csv_path, "w", encoding="utf-8-sig", newline="") as f:
+            writer = csv.DictWriter(f, fieldnames=fieldnames)
+            writer.writeheader()
+            for row in self._delivery_raw_rows:
+                writer.writerow({
+                    "企業名": row.get("企業名", ""),
+                    "納品URL": row.get("納品URL", ""),
+                    "品質チェック": row.get("品質チェック", ""),
+                    "品質チェック詳細": row.get("品質チェック詳細", ""),
+                })
+
     def _print_summary(self, elapsed):
         logger.info("")
         logger.info("=" * 60)
@@ -625,6 +857,11 @@ class QualityVerifier:
         logger.info(f"  [部分OK]:    {self.stats['partial']}社")
         logger.info(f"  [NG]:        {self.stats['ng']}社 (ステータスをエラーに戻しました)")
         logger.info(f"  [検証例外]:  {self.stats['error']}社")
+        if self.stats.get("server_down_aborted", 0) > 0:
+            logger.info(
+                f"  [サーバーダウン中断]: {self.stats['server_down_aborted']}社 "
+                "（品質判定保留。サーバー復旧後に再実行で判定可能）"
+            )
         logger.info(f"  所要時間:    {elapsed}")
         logger.info("=" * 60)
         if self.stats["ng"] > 0 or self.stats["error"] > 0:
@@ -655,6 +892,15 @@ def parse_args():
         "--company", type=str, default=None,
         help="特定企業のみテスト実行",
     )
+    parser.add_argument(
+        "--delivery-csv", type=str, default=None,
+        help=(
+            "配信CSVモード: 2列CSV (企業名,納品URL) を直接検証する。"
+            "company_list.csv のステータスフィルタを無視し、"
+            "全行に対して5項目チェックを実行する。"
+            "結果は同CSVに「品質チェック」「品質チェック詳細」列を追加して保存。"
+        ),
+    )
     return parser.parse_args()
 
 
@@ -669,11 +915,20 @@ async def main():
         headless = True
 
     csv_path = Path(args.csv) if args.csv else None
+    delivery_csv_path = Path(args.delivery_csv) if args.delivery_csv else None
+
+    if csv_path and delivery_csv_path:
+        logger.error(
+            "--csv と --delivery-csv は同時に指定できません。"
+            "どちらか一方を使ってください。"
+        )
+        return
 
     verifier = QualityVerifier(
         csv_path=csv_path,
         headless=headless,
         target_company=args.company,
+        delivery_csv_path=delivery_csv_path,
     )
     await verifier.run()
 

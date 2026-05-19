@@ -33,6 +33,11 @@ from config import (
     RETRY_COUNT,
     RETRY_DELAY,
     FAQ_VERIFY_TIMEOUT_SECONDS,
+    SERVER_DOWN_HTTP_STATUSES,
+    SERVER_DOWN_ERROR_PATTERNS,
+    SERVER_HEALTH_CHECK_TIMEOUT_SECONDS,
+    SERVER_RECOVERY_MAX_WAIT_MINUTES,
+    SERVER_RECOVERY_POLL_INTERVAL_SECONDS,
 )
 from models import CompanyInfo
 
@@ -52,6 +57,95 @@ class ContentSaveVerificationError(Exception):
         - FAQ保存/企業情報保存ボタンが特定できない
     """
     pass
+
+
+class ServerDownError(Exception):
+    """
+    Brainverse 管理画面サーバーが落ちている (5xx / 接続不可) ことを示す例外。
+
+    orchestrator / verify_quality はこれを捕捉して:
+        1. 現企業の進捗ステータスは「エラー」に落とさず保持
+        2. サーバー復旧を一定時間ポーリング待機 (wait_for_server_recovery)
+        3. 復旧したら再ログインして同じ企業から処理再開
+        4. 復旧しなければクリーンに中断して残数を報告
+    """
+    pass
+
+
+def is_server_down_error(err: BaseException) -> bool:
+    """例外メッセージから「サーバー到達不能」サインを検出する。"""
+    if err is None:
+        return False
+    msg = str(err) or ""
+    return any(pat in msg for pat in SERVER_DOWN_ERROR_PATTERNS)
+
+
+def check_server_alive(
+    url: str = WEB_APP_BASE_URL,
+    timeout: float = SERVER_HEALTH_CHECK_TIMEOUT_SECONDS,
+) -> bool:
+    """
+    管理画面サーバーが生きているかを軽量に確認する (同期・requests版)。
+
+    判定:
+        True  : HTTPステータス < 500 を返した (401/403/302 等もログイン必要だが生存)
+        False : 接続不可 (ECONNREFUSED等) or 5xx
+    """
+    try:
+        import requests
+    except ImportError:
+        logger.warning("requests 未インストールのため check_server_alive をスキップ (生存扱い)")
+        return True
+
+    try:
+        r = requests.get(url, timeout=timeout, allow_redirects=True)
+        alive = r.status_code not in SERVER_DOWN_HTTP_STATUSES and r.status_code < 600
+        logger.debug(f"check_server_alive({url}) → status={r.status_code} alive={alive}")
+        return alive
+    except Exception as e:
+        logger.debug(f"check_server_alive({url}) → 例外 {type(e).__name__}: {e}")
+        return False
+
+
+async def wait_for_server_recovery(
+    url: str = WEB_APP_BASE_URL,
+    max_wait_minutes: int = SERVER_RECOVERY_MAX_WAIT_MINUTES,
+    poll_interval_seconds: int = SERVER_RECOVERY_POLL_INTERVAL_SECONDS,
+) -> bool:
+    """
+    サーバー復旧をポーリング待機する。
+
+    Returns:
+        True  : 復旧を検出
+        False : max_wait_minutes を超えても復旧しなかった
+    """
+    import time
+
+    deadline = time.monotonic() + max_wait_minutes * 60
+    attempt = 0
+    logger.warning(
+        f"[ServerDown] 復旧を待機します (最大 {max_wait_minutes}分、"
+        f"{poll_interval_seconds}秒おきにヘルスチェック)"
+    )
+    # 1回目は即チェック (落ち始めの瞬間に呼ばれた可能性があるため)
+    while True:
+        attempt += 1
+        if check_server_alive(url):
+            logger.info(
+                f"[ServerDown] サーバー復旧を検出 (ヘルスチェック {attempt} 回目)"
+            )
+            return True
+        remaining = int(deadline - time.monotonic())
+        if remaining <= 0:
+            logger.error(
+                f"[ServerDown] 最大待機時間 {max_wait_minutes}分 を超過 — 復旧を諦めます"
+            )
+            return False
+        logger.warning(
+            f"[ServerDown] サーバー未復旧 (試行 {attempt} 回目、残り {remaining}秒) — "
+            f"{poll_interval_seconds}秒後に再確認"
+        )
+        await asyncio.sleep(min(poll_interval_seconds, max(remaining, 1)))
 
 
 class WebAppOperator:
@@ -83,11 +177,28 @@ class WebAppOperator:
 
         for attempt in range(RETRY_COUNT):
             try:
-                await self.page.goto(
-                    WEB_APP_BASE_URL,
-                    wait_until="networkidle",
-                    timeout=PAGE_LOAD_TIMEOUT,
-                )
+                try:
+                    response = await self.page.goto(
+                        WEB_APP_BASE_URL,
+                        wait_until="networkidle",
+                        timeout=PAGE_LOAD_TIMEOUT,
+                    )
+                except Exception as goto_err:
+                    # 接続不可系のエラー (ERR_CONNECTION_REFUSED 等) は即 ServerDownError
+                    if is_server_down_error(goto_err):
+                        raise ServerDownError(
+                            f"管理画面 ({WEB_APP_BASE_URL}) への接続に失敗: {goto_err}"
+                        ) from goto_err
+                    raise
+
+                # 5xx を返した場合もサーバーダウン扱い
+                if response is not None:
+                    status = response.status
+                    if status in SERVER_DOWN_HTTP_STATUSES or status >= 500:
+                        raise ServerDownError(
+                            f"管理画面 ({WEB_APP_BASE_URL}) が HTTP {status} を返しました"
+                        )
+
                 await self._wait_for_streamlit_load()
                 await self._dismiss_popup()
 
@@ -134,7 +245,16 @@ class WebAppOperator:
                 logger.info("ログイン成功")
                 return
 
+            except ServerDownError:
+                # サーバー側がダウンしている場合は試行を重ねても無駄 → 即座に伝播
+                raise
             except Exception as e:
+                # 例外メッセージから「実はサーバーダウン」を救済判定
+                if is_server_down_error(e):
+                    raise ServerDownError(
+                        f"ログイン中に管理画面サーバー到達不能: {e}"
+                    ) from e
+
                 # メール欄不在 + サイドバー出現で「既にログイン済み」だった可能性を救済
                 try:
                     if await self.page.locator(sidebar_selector).first.is_visible():
@@ -151,6 +271,11 @@ class WebAppOperator:
                 if attempt < RETRY_COUNT - 1:
                     await asyncio.sleep(RETRY_DELAY)
                 else:
+                    # 最終試行も失敗 → ヘルスチェックで「実はサーバーダウン」を最終救済
+                    if not check_server_alive():
+                        raise ServerDownError(
+                            f"ログイン全試行失敗 + ヘルスチェック陰性 — サーバーダウンと判定: {e}"
+                        ) from e
                     raise e
 
     async def re_login_with_cache_clear(self):

@@ -437,6 +437,28 @@ python generate_checklist.py         # → verification_checklist.md
 | エンコード文字化け | Windows コンソール cp932 問題 | 環境変数 `PYTHONIOENCODING=utf-8` を設定 |
 | ブラウザが見えない | `DOCDEMO_HEADLESS=true` で起動 | `--no-headless` オプション、または `.env` を `false` に |
 | 既存企業に対する再実行でエラー | Brainverse側が稀に重複IDを拒否 | 当該企業のステータスを `完了` のままにして他社のみ処理 |
+| **「サーバーダウン検出」ログが出て処理が中断する** | Brainverse 側の管理画面サーバー (`*.brainverse-ai.com`) が一時的にダウン or 502/503/504 を返している | 自動で最大 30分まで復旧をポーリング待機 → 復旧したら同じ企業から再開。30分経っても復旧しなければ中断して途中ステータスを保持するので、復旧後にもう一度同じコマンドを再実行すれば続きから自動再開する |
+
+### 5-1. サーバーダウン時の自動挙動 (Stage 2 / Stage 4)
+
+Brainverse 管理画面サーバーが落ちた場合、`orchestrator.py` および `verify_quality.py` は以下の手順で自動対応します:
+
+1. 5xx (500/502/503/504 等) または接続不可 (`ERR_CONNECTION_REFUSED` 等) を検知したら `ServerDownError` を送出
+2. その企業のステータスは **「エラー」に落とさず途中状態のまま保持** (再実行時に続きから自動再開できるように)
+3. サーバー復旧を **30秒おきにヘルスチェック (最大 30分)** 待機
+4. 復旧を検出 → 再ログイン → **同じ企業を最初から再試行**
+5. 30分以内に復旧しなければ → 残り企業数を表示してクリーンに終了
+
+「全件が一斉にエラー化」「セッションが壊れたまま走り続ける」といった事故を防ぎます。
+
+各パラメータは [config.py](config.py) で調整可能:
+
+| 設定 | デフォルト | 意味 |
+|---|---|---|
+| `SERVER_RECOVERY_MAX_WAIT_MINUTES` | 30 | 最大復旧待機時間 (分) |
+| `SERVER_RECOVERY_POLL_INTERVAL_SECONDS` | 30 | ヘルスチェック間隔 (秒) |
+| `SERVER_HEALTH_CHECK_TIMEOUT_SECONDS` | 10 | 1回のヘルスチェックタイムアウト (秒) |
+| `SERVER_DOWN_HTTP_STATUSES` | `{500,502,503,504,521-524}` | サーバーダウン扱いとする HTTP ステータス |
 
 ログの詳細は [logs/automation.log](logs/automation.log) を確認。エラー時はスクリーンショットが [screenshots/](screenshots/) に保存されています。
 
