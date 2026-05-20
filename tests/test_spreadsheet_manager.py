@@ -150,3 +150,19 @@ class TestSaveAndUpdate:
 
         assert len(pending) == 1
         assert pending[0].name == "テスト株式会社C"
+
+    def test_read_company_list_with_mixed_delimiters(self, tmp_csv):
+        """ヘッダーがカンマ、データ行がタブ区切りのCSVを読み込めること"""
+        content = (
+            "企業名,ホームページURL,URL候補,企業ID,納品URL,ステータス,エラー詳細,品質チェック,品質チェック詳細,スクリーンショットパス\n"
+            "テスト株式会社A\thttps://example.com\n"
+        )
+        tmp_csv.write_text(content, encoding="utf-8-sig")
+
+        manager = SpreadsheetManager(tmp_csv)
+        companies = manager.read_company_list()
+
+        assert len(companies) == 1
+        assert companies[0].name == "テスト株式会社A"
+        assert companies[0].homepage_url == "https://example.com"
+        assert companies[0].status == ProcessStatus.URL_FOUND
