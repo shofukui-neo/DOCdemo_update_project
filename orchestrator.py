@@ -141,6 +141,11 @@ class Orchestrator:
 
         前提: Stage 1 (`python select_urls.py`) でホームページURLが確定済みの
               CSVを入力とする。URL未入力の行は本ステージでは自動スキップ。
+
+        終了時保証 (2026-05-20):
+            Ctrl+C / 未捕捉例外 / サーバーダウン中断 等で run() を抜けた場合
+            でも、`finally` 節でサマリー出力と納品URL CSV の最終書き出しを
+            必ず実行する。途中まで成功した企業の納品URLが失われない。
         """
         start_time = datetime.now()
         logger.info("=" * 60)
@@ -148,6 +153,22 @@ class Orchestrator:
         logger.info(f"開始時刻: {start_time.strftime('%Y-%m-%d %H:%M:%S')}")
         logger.info("=" * 60)
 
+        try:
+            await self._run_body(start_time)
+        finally:
+            # どんな終わり方をしても納品URL CSV は最新化する
+            try:
+                elapsed = datetime.now() - start_time
+                self._print_summary(elapsed)
+            except Exception as e:
+                logger.warning(f"サマリー出力に失敗（続行）: {e}")
+            try:
+                self._write_delivery_urls_csv()
+            except Exception as e:
+                logger.warning(f"納品URL CSV の最終書き出しに失敗: {e}")
+
+    async def _run_body(self, start_time):
+        """run() の本体。例外時の最終書き出しを finally に集約するため分離。"""
         # 企業リスト読み込み
         companies = self.sheet_manager.read_company_list()
         # Stage 2 はURL確定済の行だけ処理する (URL未入力行は select_urls.py 側で扱う)
@@ -301,12 +322,8 @@ class Orchestrator:
                 )
                 logger.error("=" * 60)
 
-        # 最終レポート
-        elapsed = datetime.now() - start_time
-        self._print_summary(elapsed)
-
-        # 納品URLのみのCSVを自動生成 (クライアント納品用)
-        self._write_delivery_urls_csv()
+        # サマリー出力 & 納品URL CSV 生成は run() 側の finally で集中管理する
+        # (中断時にも確実に走るようにするため、ここでは何もしない)
 
     async def _handle_server_down(
         self,
@@ -610,6 +627,15 @@ class Orchestrator:
             company.status = ProcessStatus.COMPLETED
             self.sheet_manager.update_company(company, companies)
             logger.info(f"  → フロントエンドURL: {frontend_url}")
+
+            # 1社成功するたびに納品URL CSV を更新する。
+            # run() 末尾で1回だけ書き出していた旧実装では、長時間ランの途中で
+            # 中断されると <stem>_delivery_urls.csv が反映されず置き去りになる
+            # 不具合があった。書き込み失敗は本体の処理を止めないよう握り潰す。
+            try:
+                self._write_delivery_urls_csv()
+            except Exception as e:
+                logger.warning(f"  納品URL CSV の途中更新に失敗（続行）: {e}")
 
         logger.info(f"[OK] {company.name}: 全処理完了!")
 
