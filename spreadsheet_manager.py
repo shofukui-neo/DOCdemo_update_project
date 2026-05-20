@@ -82,9 +82,10 @@ class SpreadsheetManager:
                 f"先に create_initial_csv() で初期CSVを作成してください。"
             )
 
-        # ヘッダーを覗いて入力形式を判定 (ステータス列の有無で決める)
+        # 入力CSVの区切り文字を自動判定し、ヘッダーとデータ行を読み込む
+        header_delimiter, row_delimiter = self._detect_delimiters()
         with open(self.csv_path, "r", encoding="utf-8-sig", newline="") as f:
-            r = csv.reader(f)
+            r = csv.reader(f, delimiter=header_delimiter)
             try:
                 header = [h.strip() for h in next(r)]
             except StopIteration:
@@ -95,11 +96,19 @@ class SpreadsheetManager:
         is_full_schema = col["status"] in header
 
         if not is_full_schema:
-            return self._read_minimal_csv(header)
+            return self._read_minimal_csv(header, row_delimiter)
 
-        return self._read_full_schema_csv()
+        # ヘッダーはフルスキーマだが、データ行が最小形式 (企業名 + URL) だけの可能性を考慮。
+        if header_delimiter != row_delimiter:
+            with open(self.csv_path, "r", encoding="utf-8-sig", newline="") as f:
+                f.readline()  # ヘッダー行を読み飛ばす
+                first_row = next(csv.reader(f, delimiter=row_delimiter), None)
+            if first_row and len(first_row) <= 2:
+                return self._read_minimal_csv(header, row_delimiter)
 
-    def _read_minimal_csv(self, header: list) -> List[CompanyInfo]:
+        return self._read_full_schema_csv(header, row_delimiter)
+
+    def _read_minimal_csv(self, header: list, row_delimiter: str = ",") -> List[CompanyInfo]:
         """
         最小入力CSV (1列 or 2列) を読込み、8列スキーマに正規化して書き戻す。
         - 1列: 企業名のみ → status=未処理
@@ -121,21 +130,28 @@ class SpreadsheetManager:
         companies: List[CompanyInfo] = []
         skipped = 0
         with open(self.csv_path, "r", encoding="utf-8-sig", newline="") as f:
-            reader = csv.DictReader(f)
-            for i, row in enumerate(reader):
-                if not row or all(
-                    (v is None or str(v).strip() == "") for v in row.values()
+            f.readline()  # ヘッダー行を読み飛ばす
+            reader = csv.reader(f, delimiter=row_delimiter)
+
+            for i, row_values in enumerate(reader):
+                if not row_values or all(
+                    str(v).strip() == "" for v in row_values
                 ):
                     skipped += 1
                     continue
+
+                row = {
+                    header[idx]: row_values[idx].strip()
+                    if idx < len(row_values) else ""
+                    for idx in range(len(header))
+                }
+
                 company_name = (row.get(name_key) or "").strip()
                 if not company_name:
                     skipped += 1
                     logger.warning(f"  [skip] {i+2}行目: 企業名が空")
                     continue
-                homepage_url = (
-                    (row.get(url_key) or "").strip() if url_key else ""
-                )
+                homepage_url = (row.get(url_key) or "").strip() if url_key else ""
                 company = CompanyInfo(
                     row_index=i,
                     name=company_name,
@@ -153,7 +169,7 @@ class SpreadsheetManager:
         self.save_company_list(companies)
         return companies
 
-    def _read_full_schema_csv(self) -> List[CompanyInfo]:
+    def _read_full_schema_csv(self, header: list, row_delimiter: str = ",") -> List[CompanyInfo]:
         """フルスキーマCSV (8列、旧カラム互換含む) を null-safe に読み込む。"""
         companies: List[CompanyInfo] = []
         col = CSV_COLUMNS
@@ -175,13 +191,21 @@ class SpreadsheetManager:
 
         skipped = 0
         with open(self.csv_path, "r", encoding="utf-8-sig", newline="") as f:
-            reader = csv.DictReader(f)
-            for i, row in enumerate(reader):
-                if not row or all(
-                    (v is None or str(v).strip() == "") for v in row.values()
+            f.readline()  # ヘッダー行を読み飛ばす
+            reader = csv.reader(f, delimiter=row_delimiter)
+
+            for i, row_values in enumerate(reader):
+                if not row_values or all(
+                    str(v).strip() == "" for v in row_values
                 ):
                     skipped += 1
                     continue
+
+                row = {
+                    header[idx]: row_values[idx].strip()
+                    if idx < len(row_values) else ""
+                    for idx in range(len(header))
+                }
 
                 company_name = _safe(row, col["company_name"])
                 if not company_name:
@@ -199,7 +223,10 @@ class SpreadsheetManager:
                     )
                     status = ProcessStatus.PENDING
 
-                # URL候補列をパイプ区切りで読み込み
+                # ホームページURLがあるのにステータスが未設定の場合、URL_FOUND に昇格
+                if status == ProcessStatus.PENDING and _safe(row, col["homepage_url"]):
+                    status = ProcessStatus.URL_FOUND
+
                 candidates_raw = _safe(row, col["url_candidates"])
                 url_candidates = [
                     u.strip() for u in candidates_raw.split("|") if u.strip()
@@ -224,6 +251,32 @@ class SpreadsheetManager:
             logger.info(f"  空欄行をスキップ: {skipped}行")
         logger.info(f"企業リスト読み込み完了: {len(companies)}社")
         return companies
+
+    def _detect_delimiters(self) -> tuple[str, str]:
+        """CSVのヘッダー区切り文字とデータ行区切り文字を推測する。"""
+        sample_size = 8192
+        with open(self.csv_path, "r", encoding="utf-8-sig", newline="") as f:
+            sample = f.read(sample_size)
+
+        lines = [line for line in sample.splitlines() if line.strip()]
+        header_line = lines[0] if lines else ""
+        data_lines = lines[1:6] if len(lines) > 1 else []
+
+        delimiters = [",", "\t", ";"]
+        header_counts = {d: header_line.count(d) for d in delimiters}
+        data_counts = {d: sum(line.count(d) for line in data_lines) for d in delimiters}
+
+        header_delimiter = max(delimiters, key=lambda d: (header_counts[d], -delimiters.index(d)))
+        data_delimiter = max(delimiters, key=lambda d: (data_counts[d], -delimiters.index(d)))
+
+        if data_delimiter != header_delimiter and data_counts[data_delimiter] > 0:
+            return header_delimiter, data_delimiter
+
+        try:
+            dialect = csv.Sniffer().sniff(sample, delimiters="," + "\t" + ";")
+            return dialect.delimiter, dialect.delimiter
+        except csv.Error:
+            return header_delimiter, header_delimiter
 
     def save_company_list(self, companies: List[CompanyInfo]):
         """

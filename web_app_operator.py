@@ -1201,6 +1201,11 @@ class WebAppOperator:
     async def input_urls_for_content(self, urls: list):
         """コンテンツ生成ページのURL欄にURLリストを入力する。"""
         logger.info(f"URL入力開始: {len(urls)}件")
+        if len(urls) > 30:
+            logger.warning(
+                f"  URL件数が30件を超えています ({len(urls)}件) -> 先頭30件に制限します"
+            )
+            urls = urls[:30]
 
         # 「コンテンツ入力」タブをクリック（tab-0）
         input_tab = self.page.locator('[id*="tab-0"]:has-text("コンテンツ入力")')
@@ -1268,18 +1273,21 @@ class WebAppOperator:
             await self._wait_for_streamlit_load()
 
             # 「生成準備完了」メッセージを待機 (出なくても続行)
-            # 初回は 40秒まで延長 (新規作成企業の URL 処理は重い)
+            # 初回は 90秒まで延長。特に URL処理が重い企業では 40秒では不十分な場合がある。
             if attempt == 0:
                 logger.info("  生成準備完了の待機中...")
                 ready_msg = self.page.locator('div, p, span').filter(
-                    has_text=re.compile(r"✅.*準備完了")
+                    has_text=re.compile(
+                        r"(✅.*準備完了|生成準備完了|準備.*完了)"
+                    )
                 )
                 try:
-                    await ready_msg.first.wait_for(state="visible", timeout=40000)
+                    await ready_msg.first.wait_for(state="visible", timeout=90000)
                     logger.info("  生成準備完了を確認しました")
                 except Exception:
                     logger.warning(
-                        "  生成準備完了メッセージが特定できませんでしたが、続行を試みます"
+                        "  生成準備完了メッセージが特定できませんでした。"
+                        "  ただしボタン表示を引き続き待機します。"
                     )
 
             # 「コンテンツ生成」ボタンが visible になるまで待機
@@ -1316,7 +1324,16 @@ class WebAppOperator:
 
         # 生成完了を待機（最大5分）
         logger.info("コンテンツ生成中... (最大5分待機)")
-        await self._wait_for_generation_complete()
+        try:
+            await self._wait_for_generation_complete()
+        except TimeoutError as e:
+            raise ContentSaveVerificationError(
+                str(e),
+                reason_code="generation_timeout",
+                diagnostics={
+                    "timeout_seconds": CONTENT_GENERATION_TIMEOUT / 1000,
+                },
+            )
 
         # === 生成実体検証: FAQ がページに現れたことを確認 ===
         # スピナー消失だけでは「生成完了」と誤判定する場合がある
@@ -2622,14 +2639,17 @@ class WebAppOperator:
         poll_interval = 3000
         elapsed = 0
         spinner_selector = "[data-testid='stSpinner'], .stSpinner"
+        deadline_ms = CONTENT_GENERATION_TIMEOUT
+        timeout_extension_ms = 180000
 
         # 「生成中...」表示を判定するためのテキストパターン
         # Streamlit の st.info() / st.status() / 一般 div いずれにも対応
         in_progress_pattern = re.compile(
             r"(FAQ.{0,3}生成中|企業情報.{0,3}生成中|生成中\.{2,}|"
-            r"生成しています|処理中\.{2,}|⏳|スピナー)"
+            r"生成しています|処理中\.{2,}|⏳|スピナー|コンテンツ生成がタイムアウト)"
         )
-        # 完了シグナル (これが出たら即完了)
+        timeout_pattern = re.compile(r"コンテンツ生成がタイムアウト")
+        # 完了シグナル (これが出たら即完了に切り上げ)
         completion_pattern = re.compile(
             r"(生成完了|生成が完了|保存可能|保存準備|"
             r"プレビューで確認|プレビュー・保存で確認)"
@@ -2650,7 +2670,7 @@ class WebAppOperator:
 
         # フェーズ2: スピナー消失 + 「生成中」テキスト消失をポーリング
         last_in_progress_logged_at = -10000  # 過剰ログ抑制用
-        while elapsed < CONTENT_GENERATION_TIMEOUT:
+        while elapsed < deadline_ms:
             await self.page.wait_for_timeout(poll_interval)
             elapsed += poll_interval
 
@@ -2681,12 +2701,25 @@ class WebAppOperator:
             if page_text and in_progress_pattern.search(page_text):
                 in_progress_visible = True
 
+            if page_text and timeout_pattern.search(page_text):
+                if deadline_ms == CONTENT_GENERATION_TIMEOUT:
+                    deadline_ms = CONTENT_GENERATION_TIMEOUT + timeout_extension_ms
+                    logger.warning(
+                        "  コンテンツ生成タイムアウトメッセージが表示されました。"
+                        "  追加で待機します。"
+                    )
+                in_progress_visible = True
+
             # ----- エラー検出 -----
             try:
                 error = self.page.locator("[data-testid='stAlert']")
                 if await error.count() > 0:
                     error_text = await error.first.text_content()
-                    if (
+                    if error_text and timeout_pattern.search(error_text):
+                        logger.warning(
+                            f"  コンテンツ生成タイムアウトを検出しました: {error_text}"
+                        )
+                    elif (
                         "エラー" in (error_text or "")
                         or "Error" in (error_text or "")
                     ) and "生成中" not in (error_text or ""):

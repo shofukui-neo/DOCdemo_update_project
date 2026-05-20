@@ -17,6 +17,7 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
+import web_app_operator as wop
 from web_app_operator import (  # noqa: E402
     WebAppOperator,
     ContentSaveVerificationError,
@@ -49,6 +50,11 @@ class FakeLocator:
     async def count(self):
         return self._count_provider()
 
+    async def fill(self, text):
+        self._filled_text = text
+        if hasattr(self, "_page"):
+            self._page.last_filled_text = text
+
     async def screenshot(self, **kwargs):
         pass
 
@@ -78,17 +84,19 @@ class FakePage:
 
     def locator(self, selector):
         if "stSpinner" in selector:
-            return FakeLocator(
+            locator = FakeLocator(
                 text_provider=lambda: "",
                 visible_provider=lambda: self._spinner_visible,
             )
-        if "stAlert" in selector:
-            return FakeLocator(
+        elif "stAlert" in selector:
+            locator = FakeLocator(
                 text_provider=lambda: "",
                 count_provider=lambda: 0,
             )
-        # main / body / 一般
-        return FakeLocator(text_provider=self._current_text)
+        else:
+            locator = FakeLocator(text_provider=self._current_text)
+        self.last_locator = locator
+        return locator
 
     async def wait_for_timeout(self, ms):
         self._idx += 1
@@ -179,6 +187,36 @@ def test_verify_faq_waits_through_long_in_progress():
     asyncio.run(
         op._verify_faq_generation(company=company, max_wait_seconds=10)
     )
+
+
+def test_wait_for_generation_complete_extends_on_timeout_message():
+    """コンテンツ生成タイムアウト表示が出ても追加で待機する"""
+    page = FakePage(
+        ["コンテンツ生成がタイムアウト (300.0秒)"] * 4 + [
+            "🤖 株式会社テスト コンテンツ生成\nFAQ 1: ?\nQ1: ?\nFAQ 2: ?\nよくある質問"
+        ],
+        spinner_visible=False,
+    )
+    op = make_operator(page)
+
+    orig_timeout = wop.CONTENT_GENERATION_TIMEOUT
+    wop.CONTENT_GENERATION_TIMEOUT = 9000
+    try:
+        asyncio.run(op._wait_for_generation_complete())
+    finally:
+        wop.CONTENT_GENERATION_TIMEOUT = orig_timeout
+
+
+def test_input_urls_for_content_trims_to_30():
+    """URL入力時は30件超えを30件に制限する"""
+    page = FakePage([""] * 5)
+    op = make_operator(page)
+    urls = [f"https://example.com/{i}" for i in range(40)]
+
+    asyncio.run(op.input_urls_for_content(urls))
+
+    assert page.last_filled_text is not None
+    assert page.last_filled_text.count("\n") == 29
 
 
 def test_in_progress_pattern_matches_real_messages():
