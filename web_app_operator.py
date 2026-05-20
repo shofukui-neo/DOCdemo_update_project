@@ -2625,14 +2625,35 @@ class WebAppOperator:
 
         # 「生成中...」表示を判定するためのテキストパターン
         # Streamlit の st.info() / st.status() / 一般 div いずれにも対応
+        #
+        # 注意 (2026-05-20):
+        #   旧パターンに含めていた `⏳` 絵文字 / `スピナー` という単語は、
+        #   画面のヘルプテキスト・ステータス凡例等に静的に存在する場合があり、
+        #   生成完了後も永続マッチして 5分タイムアウトする不具合があった。
+        #   保守的に `_wait_for_in_progress_to_clear` と同じ語句のみに限定する。
         in_progress_pattern = re.compile(
             r"(FAQ.{0,3}生成中|企業情報.{0,3}生成中|生成中\.{2,}|"
-            r"生成しています|処理中\.{2,}|⏳|スピナー)"
+            r"生成しています|処理中\.{2,})"
         )
         # 完了シグナル (これが出たら即完了)
+        # 修正 (2026-05-20):
+        #   実際の画面に表示される成功メッセージを直接拾うように拡充。
+        #   - 「✅ コンテンツが正常に生成されました」
+        #   - 「✅ 生成されたFAQ」「N個のFAQを生成しました」
+        #   - 「✅ 生成された企業情報」「企業情報が正常に生成されました」
+        #   旧パターン (生成完了 / 保存可能 等) はこの画面には出ないため
+        #   完了検出が永続マッチに頼って 300秒タイムアウトしていた。
         completion_pattern = re.compile(
-            r"(生成完了|生成が完了|保存可能|保存準備|"
-            r"プレビューで確認|プレビュー・保存で確認)"
+            r"("
+            r"コンテンツが正常に生成されました|"
+            r"企業情報が正常に生成されました|"
+            r"FAQを生成しました|"           # 「31個のFAQを生成しました」等
+            r"生成されたFAQ|"
+            r"生成された企業情報|"
+            r"生成完了|生成が完了|"
+            r"保存可能|保存準備|"
+            r"プレビューで確認|プレビュー・保存で確認"
+            r")"
         )
 
         # フェーズ1: スピナー出現を待つ (出なくても最低待機後に消失検出へ移行)
@@ -2662,24 +2683,61 @@ class WebAppOperator:
             except Exception:
                 pass
 
-            # ----- 生成中テキスト可視性 (新規) -----
+            # ----- 生成中テキスト可視性 -----
+            #
+            # 修正 (2026-05-20):
+            #   main 要素全体 (inner_text) を見ると、生成完了後もページ内に
+            #   残った「FAQを生成中…」「企業情報を生成中…」等のステータス
+            #   履歴やタブ見出しに永続マッチして 300秒タイムアウトする不具合
+            #   があった。
+            #   → st.info / st.status / stAlert / stToast 等、
+            #     「現在進行中であることを示す UI 要素」だけを対象に判定する。
             in_progress_visible = False
-            page_text = ""
+            in_progress_match = None
+            page_text = ""  # 診断ログ用 (マッチ要素のテキストを格納)
+            status_selectors = (
+                "[data-testid='stAlert']",          # st.info / st.warning など
+                "[data-testid='stStatusWidget']",   # st.status の Running 状態
+                "[data-testid='stStatus']",          # 旧 API
+                "[data-testid='stToast']",           # st.toast
+                "[data-testid='stNotification']",
+            )
+            try:
+                status_locator = self.page.locator(", ".join(status_selectors))
+                status_count = await status_locator.count()
+                for i in range(status_count):
+                    el = status_locator.nth(i)
+                    try:
+                        if not await el.is_visible():
+                            continue
+                        text = await el.inner_text(timeout=1500)
+                    except Exception:
+                        continue
+                    if not text:
+                        continue
+                    m = in_progress_pattern.search(text)
+                    if m:
+                        in_progress_visible = True
+                        in_progress_match = m
+                        page_text = text
+                        break
+            except Exception:
+                pass
+
+            # 完了シグナル検出用には main 全体のテキストを別途取得する
+            # (こちらは「居残り」で困らないため main 全体で OK)
             try:
                 main = self.page.locator(
                     "main, [data-testid='stMain'], section[role='main']"
                 )
                 if await main.count() > 0:
-                    page_text = await main.first.inner_text(timeout=3000)
+                    full_main_text = await main.first.inner_text(timeout=3000)
                 else:
-                    page_text = await self.page.locator("body").inner_text(
+                    full_main_text = await self.page.locator("body").inner_text(
                         timeout=3000
                     )
             except Exception:
-                page_text = ""
-
-            if page_text and in_progress_pattern.search(page_text):
-                in_progress_visible = True
+                full_main_text = ""
 
             # ----- エラー検出 -----
             try:
@@ -2700,7 +2758,7 @@ class WebAppOperator:
 
             # ----- 完了正シグナル: 最低待機時間後なら即完了に切り上げ -----
             completion_signal = False
-            if page_text and completion_pattern.search(page_text):
+            if full_main_text and completion_pattern.search(full_main_text):
                 completion_signal = True
 
             # ----- 完了判定 -----
@@ -2722,10 +2780,22 @@ class WebAppOperator:
 
             # 進捗ログ (10秒ごと、過剰ログ抑制)
             if elapsed - last_in_progress_logged_at >= 10000:
+                match_info = ""
+                # spinner が消えたのに in_progress_text が居残っている場合は
+                # 何が拾われているか診断ログを出す (永続マッチ不具合の調査用)。
+                if not spinner_visible and in_progress_match:
+                    s_pos = max(0, in_progress_match.start() - 40)
+                    e_pos = min(len(page_text), in_progress_match.end() + 40)
+                    snippet = page_text[s_pos:e_pos].replace("\n", " ⏎ ")
+                    match_info = (
+                        f", matched='{in_progress_match.group(0)}'"
+                        f", context='…{snippet}…'"
+                    )
                 logger.info(
                     f"  生成中... (経過: {elapsed / 1000:.0f}秒, "
                     f"spinner={spinner_visible}, "
-                    f"in_progress_text={in_progress_visible})"
+                    f"in_progress_text={in_progress_visible}"
+                    f"{match_info})"
                 )
                 last_in_progress_logged_at = elapsed
 

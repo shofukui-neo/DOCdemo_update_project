@@ -46,6 +46,11 @@ TRANSIENT_UI_ERROR_PATTERNS = (
     "has been closed",
     # ネットワーク一時障害 (server-down 検出と一部重なるが、ここは UI 側からも判定)
     "net::ERR_",
+    # コンテンツ生成本体のタイムアウト
+    # _wait_for_generation_complete() / _wait_for_in_progress_to_clear() が
+    # 投げる TimeoutError。サーバー混雑・URL 数過多で起きるため再試行で復旧する。
+    "コンテンツ生成がタイムアウト",
+    "生成中…」表示が",
 )
 
 # 自動リトライ上限 (この回数だけ連続失敗したら手動確認に回す)
