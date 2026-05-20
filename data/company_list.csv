@@ -5,27 +5,15 @@
 株式会社福井亀之助商店,https://www.fukukame.co.jp,https://www.fukukame.co.jp|https://www.doraever.jp/job-1258572|https://onomichi-f.com|https://syukatsu-kaigi.jp|https://baytown.or.jp,fukukame,,エラー,生成完了検出後、FAQ実体がページに現れません (パターン一致: 1件、120s経過)。生成失敗 or 別企業のデータ残存疑い。スクショ: screenshots/gen_verify_fail_fukukame.png,,,
 社会福祉法人博由社,https://hakuyusha.or.jp,https://hakuyusha.or.jp|https://hakuyuen.jp|https://happytown-kobe.jp,hakuyusha,,エラー,生成完了検出後、FAQ実体がページに現れません (パターン一致: 1件、120s経過)。生成失敗 or 別企業のデータ残存疑い。スクショ: screenshots/gen_verify_fail_hakuyusha.png,,,
 浜田電気工業株式会社,https://hama-grp.com,https://hama-grp.com,hama-grp,,エラー,生成完了検出後、FAQ実体がページに現れません (パターン一致: 1件、120s経過)。生成失敗 or 別企業のデータ残存疑い。スクショ: screenshots/gen_verify_fail_hama-grp.png,,,
-アテナ工業株式会社,https://athena-kogyo.co.jp,https://athena-kogyo.co.jp|https://gifush.pref.gifu.lg.jp,athena-kogyo,,エラー,"Page.wait_for_selector: Timeout 10000ms exceeded.
+アテナ工業株式会社,https://athena-kogyo.co.jp,https://athena-kogyo.co.jp|https://gifush.pref.gifu.lg.jp,athena-kogyo,,エラー,コンテンツ生成がタイムアウト (300.0秒),,,
+イシハラ株式会社,https://www.ishihara-group.co.jp,https://www.ishihara-group.co.jp|https://www.kk-ishihara.com/index.html|https://www.ishihara-kaitai.com/company,ishihara-group,,エラー,コンテンツ生成がタイムアウト (300.0秒),,,
+ウチダ株式会社,https://www.uchida-kk.jp,https://www.uchida-kk.jp,uchida-kk,,エラー,コンテンツ生成がタイムアウト (300.0秒),,,
+サンケンフォーキャスト株式会社,https://www.skfc.jp,https://www.skfc.jp|https://hakata-kanzeikai.com|https://syukatsu-kaigi.jp,skfc,,エラー,コンテンツ生成がタイムアウト (300.0秒),,,
+シーシーアイホールディングス株式会社,https://cci-corporation.com,https://cci-corporation.com|https://www.ccig.co.jp,cci-corporation,,エラー,"[一時的失敗 1/3] Locator.click: Timeout 30000ms exceeded.
 Call log:
-  - waiting for locator(""input[aria-label=\""メールアドレス\""]"") to be visible",,,
-イシハラ株式会社,https://www.ishihara-group.co.jp,https://www.ishihara-group.co.jp|https://www.kk-ishihara.com/index.html|https://www.ishihara-kaitai.com/company,ishihara-group,,エラー,"Page.wait_for_selector: Timeout 10000ms exceeded.
-Call log:
-  - waiting for locator(""input[aria-label=\""メールアドレス\""]"") to be visible",,,
-ウチダ株式会社,https://www.uchida-kk.jp,https://www.uchida-kk.jp,uchida-kk,,エラー,"Page.wait_for_selector: Timeout 10000ms exceeded.
-Call log:
-  - waiting for locator(""input[aria-label=\""メールアドレス\""]"") to be visible",,,
-サンケンフォーキャスト株式会社,https://www.skfc.jp,https://www.skfc.jp|https://hakata-kanzeikai.com|https://syukatsu-kaigi.jp,skfc,,エラー,"Page.wait_for_selector: Timeout 10000ms exceeded.
-Call log:
-  - waiting for locator(""input[aria-label=\""メールアドレス\""]"") to be visible",,,
-シーシーアイホールディングス株式会社,https://cci-corporation.com,https://cci-corporation.com|https://www.ccig.co.jp,cci-corporation,,エラー,"Locator.click: Timeout 30000ms exceeded.
-Call log:
-  - waiting for locator(""[data-testid='stSidebar']"").get_by_text(""コンテンツ生成"").first",,,
-ショウケンガリレイ株式会社,https://galilei-shoken.co.jp,https://galilei-shoken.co.jp,galilei-shoken,,エラー,"Locator.click: Timeout 30000ms exceeded.
-Call log:
-  - waiting for locator(""[data-testid='stSidebar']"").get_by_text(""コンテンツ生成"").first",,,
-シンコール株式会社,https://www.sincol.co.jp,https://www.sincol.co.jp|https://sincol-group.jp|https://www.sincol-kys.co.jp|https://sincol-it.jp|https://www.o-sincol.co.jp,sincol,,エラー,"Page.wait_for_selector: Timeout 10000ms exceeded.
-Call log:
-  - waiting for locator(""input[aria-label=\""メールアドレス\""]"") to be visible",,,
+  - waiting for locator(""[id*=\""tab-1\""]:has-text(\""生成\"")"").first",,,
+ショウケンガリレイ株式会社,https://galilei-shoken.co.jp,https://galilei-shoken.co.jp,galilei-shoken,,エラー,コンテンツ生成がタイムアウト (300.0秒),,,
+シンコール株式会社,https://www.sincol.co.jp,https://www.sincol.co.jp|https://sincol-group.jp|https://www.sincol-kys.co.jp|https://sincol-it.jp|https://www.o-sincol.co.jp,sincol,,エラー,コンテンツ生成がタイムアウト (300.0秒),,,
 スターキャット株式会社,https://www.starcat.co.jp,https://www.starcat.co.jp,starcat,,エラー,生成完了検出後、FAQ実体がページに現れません (パターン一致: 1件、120s経過)。生成失敗 or 別企業のデータ残存疑い。スクショ: screenshots/gen_verify_fail_starcat.png,,,
 ナガイホールディングス株式会社,https://nagaiholdings.jp,https://nagaiholdings.jp|https://recruit.nagaiholdings.jp,nagaiholdings,,エラー,生成完了検出後、FAQ実体がページに現れません (パターン一致: 1件、120s経過)。生成失敗 or 別企業のデータ残存疑い。スクショ: screenshots/gen_verify_fail_nagaiholdings.png,,,
 伊藤製油株式会社,https://www.itoh-oilchem.co.jp,https://www.itoh-oilchem.co.jp,itoh-oilchem,,エラー,生成完了検出後、FAQ実体がページに現れません (パターン一致: 1件、120s経過)。生成失敗 or 別企業のデータ残存疑い。スクショ: screenshots/gen_verify_fail_itoh-oilchem.png,,,
@@ -56,13 +44,13 @@ Call log:
 株式会社モバイルコム,https://www.mobilecom.co.jp,https://www.mobilecom.co.jp|https://mobilecom.toebisu.biz,mobilecom,,エラー,生成完了検出後、FAQ実体がページに現れません (パターン一致: 1件、120s経過)。生成失敗 or 別企業のデータ残存疑い。スクショ: screenshots/gen_verify_fail_mobilecom.png,,,
 株式会社リモハブ,https://www.remohab.com,https://www.remohab.com,remohab,,エラー,生成完了検出後、FAQ実体がページに現れません (パターン一致: 1件、120s経過)。生成失敗 or 別企業のデータ残存疑い。スクショ: screenshots/gen_verify_fail_remohab.png,,,
 株式会社新通エスピー,https://www.shintsusp.co.jp,https://www.shintsusp.co.jp|https://www.shintsu.co.jp|https://www.shintsusp-job.com/shintsusp/,shintsusp,,エラー,生成完了検出後、FAQ実体がページに現れません (パターン一致: 1件、120s経過)。生成失敗 or 別企業のデータ残存疑い。スクショ: screenshots/gen_verify_fail_shintsusp.png,,,
-株式会社内村,https://www.uchimura.co.jp,https://www.uchimura.co.jp,uchimura,,企業追加済,,,,
-近鉄住宅管理株式会社,https://www.kintetsu-community.co.jp,https://www.kintetsu-community.co.jp|https://www.kanrikyo.or.jp|https://www.kintetsu-re.co.jp/contact/|https://sumachika.com|https://www.osaka-takken.or.jp,近鉄住宅管理,,同名企業該当,,,,
-甲南防災株式会社,https://www.konanbousai.com,https://www.konanbousai.com|https://www.konan-bousai.info|https://www.konanbousai-se.co.jp|https://en-gage.net/konanbousai/,甲南防災,,同名企業該当,,,,
-新潟県土地改良事業団体連合会,https://www.doren-niigata.or.jp,https://www.doren-niigata.or.jp|https://www.inakajin.or.jp|https://www.pref.niigata.lg.jp|https://www.niigata-job.ne.jp,新潟県土地改良事業団体連合会,,同名企業該当,,,,
-静光産業株式会社,https://www.seiko-detergent.com,https://www.seiko-detergent.com|https://www.ipros.com|https://arwrk.net|https://syukatsu-kaigi.jp|https://www.seiko-s.co.jp,静光産業,,同名企業該当,,,,
-大洋興業株式会社,https://www.taiyo21.com,https://www.taiyo21.com|https://www.taiyo-kougyou.jp|http://www.taiyokogyo.ecnet.jp|https://www.nittetsu-hikari-group.com|http://www.taiyou-kk.com,大洋興業,,同名企業該当,,,,
-東洋製罐株式会社,https://www.toyo-seikan.co.jp,https://www.toyo-seikan.co.jp|https://www.tskg-hd.com|https://www.tokan.co.jp,東洋製罐,,同名企業該当,,,,
+株式会社内村,https://www.uchimura.co.jp,https://www.uchimura.co.jp,uchimura,,エラー,生成完了検出後、FAQ実体がページに現れません (パターン一致: 1件、120s経過)。生成失敗 or 別企業のデータ残存疑い。スクショ: screenshots/gen_verify_fail_uchimura.png,,,
+近鉄住宅管理株式会社,https://www.kintetsu-community.co.jp,https://www.kintetsu-community.co.jp|https://www.kanrikyo.or.jp|https://www.kintetsu-re.co.jp/contact/|https://sumachika.com|https://www.osaka-takken.or.jp,kintetsu-community,,エラー,生成完了検出後、FAQ実体がページに現れません (パターン一致: 1件、120s経過)。生成失敗 or 別企業のデータ残存疑い。スクショ: screenshots/gen_verify_fail_kintetsu-community.png,,,
+甲南防災株式会社,https://www.konanbousai.com,https://www.konanbousai.com|https://www.konan-bousai.info|https://www.konanbousai-se.co.jp|https://en-gage.net/konanbousai/,konanbousai,,エラー,生成完了検出後、FAQ実体がページに現れません (パターン一致: 1件、120s経過)。生成失敗 or 別企業のデータ残存疑い。スクショ: screenshots/gen_verify_fail_konanbousai.png,,,
+新潟県土地改良事業団体連合会,https://www.doren-niigata.or.jp,https://www.doren-niigata.or.jp|https://www.inakajin.or.jp|https://www.pref.niigata.lg.jp|https://www.niigata-job.ne.jp,doren-niigata,,エラー,生成完了検出後、FAQ実体がページに現れません (パターン一致: 1件、120s経過)。生成失敗 or 別企業のデータ残存疑い。スクショ: screenshots/gen_verify_fail_doren-niigata.png,,,
+静光産業株式会社,https://www.seiko-detergent.com,https://www.seiko-detergent.com|https://www.ipros.com|https://arwrk.net|https://syukatsu-kaigi.jp|https://www.seiko-s.co.jp,seiko-detergent,,エラー,生成完了検出後、FAQ実体がページに現れません (パターン一致: 1件、120s経過)。生成失敗 or 別企業のデータ残存疑い。スクショ: screenshots/gen_verify_fail_seiko-detergent.png,,,
+大洋興業株式会社,https://www.taiyo21.com,https://www.taiyo21.com|https://www.taiyo-kougyou.jp|http://www.taiyokogyo.ecnet.jp|https://www.nittetsu-hikari-group.com|http://www.taiyou-kk.com,taiyo21,,エラー,コンテンツ生成がタイムアウト (300.0秒),,,
+東洋製罐株式会社,https://www.toyo-seikan.co.jp,https://www.toyo-seikan.co.jp|https://www.tskg-hd.com|https://www.tokan.co.jp,toyo-seikan,,エラー,コンテンツ生成がタイムアウト (300.0秒),,,
 株式会社リンク・トラスト,https://linktrust.co.jp,https://linktrust.co.jp|https://ltgaisan.net/company/|https://linktrust-jp.com/company/|https://www.kotonear.com/linktrust/|http://linktrust-c.co.jp,linktrust,,エラー,生成完了検出後、FAQ実体がページに現れません (パターン一致: 1件、120s経過)。生成失敗 or 別企業のデータ残存疑い。スクショ: screenshots/gen_verify_fail_linktrust.png,,,
 株式会社Mountain Bull,https://mountainbull.co.jp,https://mountainbull.co.jp|https://res-star.com|https://www.gourmetcaree.jp|https://xn--78jxc2b6641ae4c.com|https://adv.tokyo-np.co.jp,mountainbull,,エラー,生成完了検出後、FAQ実体がページに現れません (パターン一致: 1件、120s経過)。生成失敗 or 別企業のデータ残存疑い。スクショ: screenshots/gen_verify_fail_mountainbull.png,,,
 日本製紙木材株式会社,https://www.np-l.co.jp,https://www.np-l.co.jp|https://www.nipponpapergroup.com|https://jet-npl.com|https://np-log.co.jp|https://www.nf-m.co.jp,np-l,,エラー,生成完了検出後、FAQ実体がページに現れません (パターン一致: 1件、120s経過)。生成失敗 or 別企業のデータ残存疑い。スクショ: screenshots/gen_verify_fail_np-l.png,,,
@@ -74,20 +62,5 @@ Call log:
 株式会社ピート,https://www.peetonline.com,https://www.peetonline.com|http://www.peet.co.jp|https://peet-recruit.jp,peetonline,,エラー,生成完了検出後、FAQ実体がページに現れません (パターン一致: 1件、120s経過)。生成失敗 or 別企業のデータ残存疑い。スクショ: screenshots/gen_verify_fail_peetonline.png,,,
 株式会社エスプロシステム,https://www.s-pro.co.jp,https://www.s-pro.co.jp|https://m.esco-net.com,s-pro,,エラー,生成完了検出後、FAQ実体がページに現れません (パターン一致: 1件、120s経過)。生成失敗 or 別企業のデータ残存疑い。スクショ: screenshots/gen_verify_fail_s-pro.png,,,
 京急建設株式会社,https://www.keikyu-const.jp,https://www.keikyu-const.jp,keikyu-const,,エラー,コンテンツ生成がタイムアウト (300.0秒),,,
-齋藤木材工業株式会社,https://saito-mokuzai.co.jp,https://saito-mokuzai.co.jp|https://nagano-sdgs.com,saito-mokuzai,,エラー,"Page.wait_for_selector: Timeout 10000ms exceeded.
-ソントン食品株式会社,https://www.sonton.co.jp,https://www.sonton.co.jp,sonton,,エラー,Page.wait_for_selector: Timeout 10000ms exceeded.",,,
-升川建設株式会社,https://www.masukawa.co.jp,https://www.masukawa.co.jp|https://www.masukawa.jp/about/,masukawa,,エラー,"Page.wait_for_selector: Timeout 10000ms exceeded.
-社会福祉法人あしたば,https://ashitaba.or.jp,https://ashitaba.or.jp|http://ashitaba.planet.bindcloud.jp|https://www.ashitaba-tanpopo.com|https://ashita-ba.co.jp|http://www.ashitabakai.or.jp,ashitaba,,エラー,生成完了検出後、FAQ実体がページに現れません (パターン一致: 1件、120s経過)。生成失敗 or 別企業のデータ残存疑い。スクショ: screenshots/gen_verify_fail_ashitaba.png,,,
-向井建設株式会社,https://mux-hp.jp,https://mux-hp.jp,mux-hp,,エラー,生成完了検出後、FAQ実体がページに現れません (パターン一致: 1件、120s経過)。生成失敗 or 別企業のデータ残存疑い。スクショ: screenshots/gen_verify_fail_mux-hp.png,,,
-チャットプラス株式会社,https://chatplus.jp,https://chatplus.jp|https://chatsupporttool.jp,chatplus,,エラー,生成完了検出後、FAQ実体がページに現れません (パターン一致: 1件、120s経過)。生成失敗 or 別企業のデータ残存疑い。スクショ: screenshots/gen_verify_fail_chatplus.png,,,
-大王パッケージ株式会社,https://www.daio-package.co.jp,https://www.daio-package.co.jp,daio-package,,エラー,生成完了検出後、FAQ実体がページに現れません (パターン一致: 1件、120s経過)。生成失敗 or 別企業のデータ残存疑い。スクショ: screenshots/gen_verify_fail_daio-package.png,,,
-古河産業株式会社,https://www.furusan.co.jp,https://www.furusan.co.jp|https://shop.furukawasangyo.jp|https://jobtalk.jp|https://www.openwork.jp|https://www.furukawakk.co.jp,furusan,,エラー,生成完了検出後、FAQ実体がページに現れません (パターン一致: 1件、120s経過)。生成失敗 or 別企業のデータ残存疑い。スクショ: screenshots/gen_verify_fail_furusan.png,,,
-ウスイホーム株式会社,https://www.usui-home.com,https://www.usui-home.com|https://usui-home.co.jp|https://aeo.washinmura.jp,usui-home,,エラー,生成完了検出後、FAQ実体がページに現れません (パターン一致: 1件、120s経過)。生成失敗 or 別企業のデータ残存疑い。スクショ: screenshots/gen_verify_fail_usui-home.png,,,
-株式会社レツク興発,https://rec-tennis.co.jp,https://rec-tennis.co.jp|https://rec-tennis.com|https://biz-maps.com|https://tennismagazine.jp,rec-tennis,,エラー,生成完了検出後、FAQ実体がページに現れません (パターン一致: 1件、120s経過)。生成失敗 or 別企業のデータ残存疑い。スクショ: screenshots/gen_verify_fail_rec-tennis.png,,,
-日鉄鉱コンサルタント株式会社,https://www.nmconsults.co.jp,https://www.nmconsults.co.jp|https://xtech.nikkei.com|https://www.lakeel.com|https://jsite.mhlw.go.jp,nmconsults,,企業追加済,,,,
-東京水道株式会社,https://www.tokyowater.co.jp,https://www.tokyowater.co.jp|https://jo-katsu.com|https://www.waterworks.metro.tokyo.lg.jp|https://tokyo-waterworks.jp,tokyowater,,URL特定済,,,,
-株式会社ナスタ,https://www.nasta.co.jp,https://www.nasta.co.jp,nasta,,URL特定済,,,,
-株式会社翔泳社,https://www.shoeisha.co.jp,https://www.shoeisha.co.jp|https://www.seshop.com|https://shoeisha.jp,翔泳社,,同名企業該当,,,,
-株式会社巴商会,https://www.tomoeshokai.co.jp,https://www.tomoeshokai.co.jp|https://lifescience.tomoeshokai.co.jp|https://recruit.tomoeshokai.co.jp|https://tomoeshokai.com|https://tomoe-ube.jp,巴商会,,同名企業該当,,,,
-輸出入・港湾関連情報処理センター株式会社,https://www.naccs.jp,https://www.naccs.jp|https://bbs.naccscenter.com|https://www.maff.go.jp|https://www.tsukangyo.or.jp|https://www.oki.com,輸出入・港湾関連情報処理センター,,同名企業該当,,,,
-ADEKA総合設備株式会社,https://www.adkeng.co.jp,https://www.adkeng.co.jp,adkeng,,URL特定済,,,,",,,
+齋藤木材工業株式会社,https://saito-mokuzai.co.jp,https://saito-mokuzai.co.jp|https://nagano-sdgs.com,saito-mokuzai,,エラー,コンテンツ生成がタイムアウト (300.0秒),,,
+升川建設株式会社,https://www.masukawa.co.jp,https://www.masukawa.co.jp|https://www.masukawa.jp/about/,masukawa,,エラー,コンテンツ生成がタイムアウト (300.0秒),,,

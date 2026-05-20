@@ -4,9 +4,91 @@ DOCdemo 自動化フロー — データモデル
 企業情報と処理ステータスを表すデータクラス。
 """
 
+import re
 from dataclasses import dataclass, field
 from enum import Enum
 from typing import Optional
+
+
+# =============================================================================
+# 一時的失敗 (transient UI / timeout / network error) の分類とリトライ予算
+#
+# orchestrator.py が一般 Exception を捕捉した際、
+#   ServerDownError      → サーバー復旧待ち + 同企業再試行 (既存)
+#   一時的失敗            → mark_transient_error() でプレフィックス付与、
+#                          次回 orchestrator 実行で自動リトライ (新規)
+#   それ以外 (業務エラー)  → mark_error() で永続エラー、自動リトライしない (既存)
+# =============================================================================
+
+# 一時的失敗とみなすメッセージパターン (部分一致)。
+# 生成プロセスが Streamlit UI の読み込み遅延・要素レンダ遅延で失敗した場合に
+# 表面化する Playwright タイムアウト系がこの分類に入る。
+TRANSIENT_UI_ERROR_PATTERNS = (
+    # Playwright タイムアウト系
+    "Timeout 10000ms exceeded",
+    "Timeout 30000ms exceeded",
+    "Timeout 60000ms exceeded",
+    "Timeout exceeded",
+    "wait_for_selector",
+    "Page.wait_for_selector",
+    "Locator.click: Timeout",
+    "Locator.fill: Timeout",
+    "Locator.wait_for: Timeout",
+    # Streamlit UI 起因 (ログインフォーム / サイドバー)
+    "stSidebar",
+    "メールアドレス",
+    # Browser / Page 状態異常 (大抵は再ログインで復旧)
+    "Target closed",
+    "Target page",
+    "Page closed",
+    "Browser closed",
+    "Browser has been closed",
+    "has been closed",
+    # ネットワーク一時障害 (server-down 検出と一部重なるが、ここは UI 側からも判定)
+    "net::ERR_",
+)
+
+# 自動リトライ上限 (この回数だけ連続失敗したら手動確認に回す)
+TRANSIENT_RETRY_MAX = 3
+
+# エラーメッセージ先頭に埋め込むリトライ回数プレフィックスの正規表現
+_TRANSIENT_PREFIX_RE = re.compile(r"^\[一時的失敗 (\d+)/(\d+)\]\s*")
+
+
+def is_transient_error_message(message) -> bool:
+    """エラーメッセージが UI/タイムアウト/ネットワーク起因の一時的失敗パターンを含むか。
+
+    `[一時的失敗 N/M]` プレフィックス付きメッセージは既に一時的失敗と確定しているので
+    パターン照合せずとも True を返す (mark_transient_error → is_transient_error の冪等性確保)。
+    """
+    if not message:
+        return False
+    text = str(message)
+    if _TRANSIENT_PREFIX_RE.match(text):
+        return True
+    return any(pat in text for pat in TRANSIENT_UI_ERROR_PATTERNS)
+
+
+def parse_transient_retry_count(message) -> int:
+    """エラーメッセージ先頭の `[一時的失敗 N/M]` プレフィックスから N を取り出す。
+
+    プレフィックスが無ければ 0。これにより、既存の素のタイムアウト
+    メッセージは「まだ 1 度も自動リトライしていない (count=0)」として扱われる。
+    """
+    if not message:
+        return 0
+    m = _TRANSIENT_PREFIX_RE.match(str(message))
+    return int(m.group(1)) if m else 0
+
+
+def format_transient_error(message, attempt: int, max_attempts: int = TRANSIENT_RETRY_MAX) -> str:
+    """一時的失敗メッセージにリトライ回数プレフィックスを付ける。
+
+    既にプレフィックスがあれば剥がしてから付け直す (重ね掛け防止)。
+    """
+    text = str(message) if message else ""
+    cleaned = _TRANSIENT_PREFIX_RE.sub("", text).strip()
+    return f"[一時的失敗 {attempt}/{max_attempts}] {cleaned}".rstrip()
 
 
 class ProcessStatus(Enum):
@@ -119,9 +201,15 @@ class CompanyInfo:
 
         DUPLICATE_DETECTED は人間の手動介入待ちなので、ホームページURLが
         手動で確定された場合のみ処理対象とする。
+
+        ERROR でも「一時的失敗」と分類されたものは自動リトライ対象に含める。
+        (Playwright タイムアウト等の UI 起因失敗は再ログイン+再試行で
+        高確率で復旧するため、手動介入なしでオーケーストレータが拾えるようにする)
         """
         if self.status == ProcessStatus.DUPLICATE_DETECTED:
             return bool(self.homepage_url)
+        if self.status == ProcessStatus.ERROR:
+            return self.transient_retry_remaining() > 0
         return self.status in (
             ProcessStatus.PENDING,
             ProcessStatus.URL_FOUND,
@@ -130,10 +218,56 @@ class CompanyInfo:
             ProcessStatus.IMAGE_UPLOADED,
         )
 
+    def is_transient_error(self) -> bool:
+        """ERROR ステータス かつ メッセージが一時的失敗パターンに合致するか。"""
+        return (
+            self.status == ProcessStatus.ERROR
+            and is_transient_error_message(self.error_message)
+        )
+
+    def transient_retry_remaining(self) -> int:
+        """
+        この企業に残っている自動リトライ回数を返す。
+        - 一時的失敗でなければ 0 (永続エラー / 完了済 / 未処理 等)
+        - 一時的失敗なら max - 累計失敗回数 を返す (最低 0)
+        """
+        if not self.is_transient_error():
+            return 0
+        count = parse_transient_retry_count(self.error_message)
+        return max(0, TRANSIENT_RETRY_MAX - count)
+
     def mark_error(self, message: str):
         """エラー状態にする"""
         self.status = ProcessStatus.ERROR
         self.error_message = message
+
+    def mark_transient_error(self, message: str):
+        """
+        一時的失敗としてマーク。`[一時的失敗 N/MAX]` プレフィックスを付け、
+        N (累計失敗回数) を 1 増やす。既にプレフィックスがあれば置換。
+
+        N が上限に達した時点で is_processable() は False を返し、
+        以降の自動リトライは止まる (手動確認に回す)。
+        """
+        prev_count = parse_transient_retry_count(self.error_message)
+        new_count = min(prev_count + 1, TRANSIENT_RETRY_MAX)
+        self.status = ProcessStatus.ERROR
+        self.error_message = format_transient_error(message, new_count)
+
+    def reset_for_transient_retry(self):
+        """
+        一時的失敗の企業を再処理パスに乗せるため、ステータスを URL_FOUND に戻す。
+        オーケストレータは ERROR ステータスのまま渡されると Step 2 をスキップするため、
+        ループの先頭で本メソッドを呼んで通常の処理経路に合流させる。
+
+        永続エラー / 完了 / スキップ 等はリセット対象外 (no-op)。
+        累計失敗回数 (プレフィックスの N) は mark_transient_error 側で
+        次回失敗時に再カウントされるので、ここで履歴を破棄しても整合は崩れない。
+        """
+        if not self.is_transient_error():
+            return
+        self.status = ProcessStatus.URL_FOUND
+        self.error_message = ""
 
     def mark_skipped(self, reason: str):
         """スキップ状態にする"""
