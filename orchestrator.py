@@ -662,8 +662,17 @@ class Orchestrator:
 
     def _write_delivery_urls_csv(self):
         """
-        企業リストCSV から「企業名」「納品URL」のみを抜き出した簡易CSVを生成する。
-        ファイル名は元CSVから派生 (例: new30_company_list.csv → new30_delivery_urls.csv)。
+        企業リストCSV から「納品URL」が確定している行のみを抜き出し、
+        「企業名 / 納品URL」2列の簡易CSVをクライアント納品用に生成する。
+
+        出力先:
+            元CSVと同じディレクトリに `<stem>_delivery_urls.csv` を書き出す
+            (例: data/company_list.csv → data/company_list_delivery_urls.csv)。
+            `<stem>_company_list` 形式の場合は接尾辞を `_delivery_urls` に置換。
+
+        仕様 (2026-05-20 改訂):
+            - 納品URL が空の行はスキップする (納品済みのみを書き出す)
+            - 該当社が0件の場合でもヘッダ行だけのCSVは生成する
         """
         import csv as csvmod
 
@@ -676,16 +685,20 @@ class Orchestrator:
         out_path = src_path.parent / f"{out_stem}.csv"
 
         companies = self.sheet_manager.read_company_list()
+        delivered_rows = [
+            (c.name, c.frontend_app_url)
+            for c in companies
+            if c.frontend_app_url and c.frontend_app_url.strip()
+        ]
+
         with open(out_path, "w", encoding="utf-8-sig", newline="") as f:
             w = csvmod.writer(f)
             w.writerow(["企業名", "納品URL"])
-            for c in companies:
-                w.writerow([c.name, c.frontend_app_url])
+            w.writerows(delivered_rows)
 
-        delivered = sum(1 for c in companies if c.frontend_app_url)
         logger.info(
             f"納品URL一覧を生成: {out_path} "
-            f"({len(companies)}社中、納品URLあり {delivered}社)"
+            f"({len(companies)}社中、納品URLあり {len(delivered_rows)}社を書き出し)"
         )
 
     def _print_summary(self, elapsed):
