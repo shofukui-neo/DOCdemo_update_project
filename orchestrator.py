@@ -19,6 +19,9 @@ DOCdemo 自動化フロー — メインオーケストレーター
 - 2026-05-11: 企業追加完了後（Step 2.5 後）に、ページを閉じて再ログインする
   処理を追加。ページ内キャッシュによる「別企業のコンテンツ生成」「サイドバー
   選択が反映されない」等の不具合を防止。
+- 2026-05-20: 並列実行 (`--parallel`, `_run_parallel`, `_setup_worker`) を撤去。
+  Brainverse 側のコンテンツ生成エンジンを2社同時に走らせるとタイムアウト
+  (300秒) が頻発したため、品質重視の直列モードに一本化。
 """
 
 import asyncio
@@ -108,7 +111,6 @@ class Orchestrator:
         headless: bool = None,
         test_mode: bool = False,
         target_company: str = None,
-        parallel: int = 1,
     ):
         """
         Args:
@@ -116,15 +118,11 @@ class Orchestrator:
             headless: ヘッドレスモードで実行するか
             test_mode: テストモード（1社のみ処理）
             target_company: テストモード時の対象企業名
-            parallel: 並列実行数。1 = 直列 (既存挙動)、2以上 = マルチコンテキスト並列。
-                各 worker が独立した BrowserContext + ログインを持つので
-                Streamlit session_state は分離される。
         """
         self.sheet_manager = SpreadsheetManager(csv_path)
         self.headless = headless if headless is not None else BROWSER_HEADLESS
         self.test_mode = test_mode
         self.target_company = target_company
-        self.parallel = max(1, int(parallel))
 
         # 統計情報
         self.stats = {
@@ -174,25 +172,6 @@ class Orchestrator:
                 slow_mo=BROWSER_SLOW_MO,
             )
 
-            # 並列モード: 各 worker が独立したコンテキスト + ログインを持つ
-            if self.parallel > 1:
-                logger.info(
-                    f"並列モード: {self.parallel} workers "
-                    f"(各 worker が独立した BrowserContext + ログインを持つ)"
-                )
-                await self._run_parallel(
-                    pending, companies, browser, max_concurrent=self.parallel,
-                )
-                try:
-                    await browser.close()
-                except Exception:
-                    pass
-                elapsed = datetime.now() - start_time
-                self._print_summary(elapsed)
-                self._write_delivery_urls_csv()
-                return
-
-            # === 以下、既存 serial モード ===
             context = await browser.new_context(viewport=BROWSER_VIEWPORT)
 
             # URLファインダー用ページ
@@ -709,212 +688,6 @@ class Orchestrator:
             f"({len(companies)}社中、納品URLあり {delivered}社)"
         )
 
-    # =========================================================================
-    # 並列実行 (マルチコンテキスト)
-    # =========================================================================
-    async def _setup_worker(self, browser):
-        """
-        Worker 1台分の独立した実行環境 (context + WebAppOperator + URLFinder) を構築。
-
-        各 worker は専用 BrowserContext を持つことで Streamlit `session_state` の
-        共有を回避する。ログインまで済ませて返す。
-
-        Returns:
-            (context, url_finder, web_operator) のタプル
-        Raises:
-            ServerDownError: ログイン中にサーバーダウンを検知した場合
-        """
-        context = await browser.new_context(viewport=BROWSER_VIEWPORT)
-        # URL検索用 (Yahoo!検索) ページ
-        url_finder_page = await context.new_page()
-        url_finder = URLFinder(page=url_finder_page)
-        # Webアプリ操作用 (Brainverse) ページ
-        web_app_page = await context.new_page()
-        web_operator = WebAppOperator(page=web_app_page)
-        await web_operator.login()
-        return context, url_finder, web_operator
-
-    async def _run_parallel(
-        self,
-        pending: list,
-        companies: list,
-        browser,
-        max_concurrent: int = 2,
-    ):
-        """
-        Stage 2 のマルチコンテキスト並列実行。
-
-        各 worker は専用の BrowserContext + WebAppOperator + ログインセッションを持ち、
-        共有キューから企業を取り出して処理する。Streamlit session_state は worker
-        内に閉じるため、別企業のFAQが混入する等の不具合が起きない設計。
-
-        - 共有キュー (asyncio.Queue) で企業を分配
-        - CSV 書き込みは asyncio.Lock で直列化
-        - ServerDownError 検知時は server_down_event を立てて他 worker も即時退避
-          → 全 worker 終了後に wait_for_server_recovery() で復旧待ち → 再ワーカー起動
-        - 復旧不能なら failed_for_retry 件数を server_down_aborted カウンタに反映
-        """
-        queue: asyncio.Queue = asyncio.Queue()
-        for c in pending:
-            queue.put_nowait(c)
-
-        csv_lock = asyncio.Lock()
-        server_down_event = asyncio.Event()
-        failed_for_retry: list = []
-        completed_count = [0]
-        total = len(pending)
-
-        async def worker(worker_id: int):
-            # === Worker 専用環境を起動 (ログインまで含む) ===
-            try:
-                context, url_finder, web_operator = await self._setup_worker(browser)
-            except ServerDownError as sd_err:
-                logger.warning(
-                    f"[Worker {worker_id}] ログイン中にサーバーダウン: {sd_err}"
-                )
-                server_down_event.set()
-                # 残キューを失敗扱いに退避
-                while not queue.empty():
-                    try:
-                        failed_for_retry.append(queue.get_nowait())
-                    except asyncio.QueueEmpty:
-                        break
-                return
-            except Exception as e:
-                if is_server_down_error(e) or not check_server_alive():
-                    logger.warning(
-                        f"[Worker {worker_id}] ログイン中の例外 ({e}) はサーバー側問題と判定"
-                    )
-                    server_down_event.set()
-                    while not queue.empty():
-                        try:
-                            failed_for_retry.append(queue.get_nowait())
-                        except asyncio.QueueEmpty:
-                            break
-                else:
-                    logger.error(f"[Worker {worker_id}] 初期化失敗: {e}")
-                return
-
-            try:
-                while True:
-                    if server_down_event.is_set():
-                        break
-                    try:
-                        company = queue.get_nowait()
-                    except asyncio.QueueEmpty:
-                        break
-
-                    completed_count[0] += 1
-                    logger.info("")
-                    logger.info(f"{'─' * 50}")
-                    logger.info(
-                        f"[Worker {worker_id} | {completed_count[0]}/{total}] "
-                        f"{company.name} (ステータス: {company.status.value})"
-                    )
-                    logger.info(f"{'─' * 50}")
-
-                    try:
-                        await self._process_single_company(
-                            company, companies, url_finder, web_operator
-                        )
-                        if company.status == ProcessStatus.COMPLETED:
-                            async with csv_lock:
-                                self.stats["success"] += 1
-                    except ServerDownError as sd_err:
-                        logger.warning(
-                            f"[Worker {worker_id} | ServerDown] {company.name}: {sd_err}"
-                            " → 再試行キューに退避"
-                        )
-                        server_down_event.set()
-                        failed_for_retry.append(company)
-                        break
-                    except Exception as e:
-                        if is_server_down_error(e) or not check_server_alive():
-                            logger.warning(
-                                f"[Worker {worker_id} | ServerDown疑い] "
-                                f"{company.name} 例外 ({e}) → 退避"
-                            )
-                            server_down_event.set()
-                            failed_for_retry.append(company)
-                            break
-
-                        err_msg = str(e)
-                        if is_transient_error_message(err_msg):
-                            company.mark_transient_error(err_msg)
-                            logger.warning(
-                                f"[Worker {worker_id} | 一時的失敗] {company.name}: "
-                                f"{err_msg[:120]} → 残り "
-                                f"{company.transient_retry_remaining()} 回"
-                            )
-                        else:
-                            logger.error(
-                                f"[Worker {worker_id} | ERROR] "
-                                f"{company.name}: 処理失敗 -- {e}"
-                            )
-                            company.mark_error(err_msg)
-                        async with csv_lock:
-                            self.sheet_manager.update_company(company, companies)
-                            self.stats["error"] += 1
-
-                    async with csv_lock:
-                        self.stats["processed"] += 1
-
-                    # 残キューありなら 1件処理ごとに再ログイン (既存 serial 挙動を踏襲)
-                    if not queue.empty() and not server_down_event.is_set():
-                        try:
-                            await web_operator.re_login_with_cache_clear()
-                        except ServerDownError:
-                            logger.warning(
-                                f"[Worker {worker_id}] 再ログイン中にサーバーダウン"
-                            )
-                            server_down_event.set()
-                            break
-                        except Exception as e:
-                            logger.warning(
-                                f"[Worker {worker_id}] 再ログイン失敗（続行）: {e}"
-                            )
-            finally:
-                try:
-                    await context.close()
-                except Exception:
-                    pass
-
-        # === Phase 1: 初回 worker 起動 ===
-        logger.info(
-            f"並列実行開始: {max_concurrent} workers (各 worker が独立した "
-            f"BrowserContext + ログインセッションを持つ)"
-        )
-        workers = [
-            asyncio.create_task(worker(i + 1)) for i in range(max_concurrent)
-        ]
-        await asyncio.gather(*workers, return_exceptions=False)
-
-        # === Phase 2: ServerDown 復旧ループ ===
-        while server_down_event.is_set():
-            logger.error("=" * 60)
-            logger.error(
-                f"[ServerDown] 並列処理を一時停止 (退避 {len(failed_for_retry)}社)"
-            )
-            logger.error("=" * 60)
-            recovered = await wait_for_server_recovery()
-            if not recovered:
-                self.stats["server_down_aborted"] = len(failed_for_retry)
-                logger.error(
-                    f"サーバー未復旧 — 並列処理を中断 "
-                    f"(未検証 {len(failed_for_retry)}社)"
-                )
-                return
-            # 復旧 → 再キュー + worker 再起動
-            for c in failed_for_retry:
-                queue.put_nowait(c)
-            failed_for_retry.clear()
-            server_down_event.clear()
-            logger.info("[ServerDown] 復旧検知 — 並列ワーカーを再起動")
-            workers = [
-                asyncio.create_task(worker(i + 1)) for i in range(max_concurrent)
-            ]
-            await asyncio.gather(*workers, return_exceptions=False)
-
     def _print_summary(self, elapsed):
         """処理完了後のサマリーを出力"""
         logger.info("")
@@ -976,19 +749,6 @@ def parse_args():
         default=None,
         help="テストモード時の対象企業名",
     )
-    parser.add_argument(
-        "--parallel",
-        type=int,
-        default=1,
-        help=(
-            "並列実行数 (デフォルト 1 = 直列・既存挙動)。"
-            "2以上を指定するとマルチコンテキストで並列実行。各 worker は"
-            "独立した BrowserContext + ログインを持つため Streamlit "
-            "session_state は分離される。"
-            "推奨上限: 2〜4 (それ以上は Brainverse 側の負荷増 / "
-            "ログイン同時要求での timeout 増加リスクあり)。"
-        ),
-    )
     return parser.parse_args()
 
 
@@ -1010,7 +770,6 @@ async def main():
         headless=headless,
         test_mode=args.test_mode,
         target_company=args.company,
-        parallel=args.parallel,
     )
 
     await orchestrator.run()

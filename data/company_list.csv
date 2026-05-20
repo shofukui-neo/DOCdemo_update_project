@@ -9,9 +9,7 @@
 イシハラ株式会社,https://www.ishihara-group.co.jp,https://www.ishihara-group.co.jp|https://www.kk-ishihara.com/index.html|https://www.ishihara-kaitai.com/company,ishihara-group,,エラー,コンテンツ生成がタイムアウト (300.0秒),,,
 ウチダ株式会社,https://www.uchida-kk.jp,https://www.uchida-kk.jp,uchida-kk,,エラー,コンテンツ生成がタイムアウト (300.0秒),,,
 サンケンフォーキャスト株式会社,https://www.skfc.jp,https://www.skfc.jp|https://hakata-kanzeikai.com|https://syukatsu-kaigi.jp,skfc,,エラー,コンテンツ生成がタイムアウト (300.0秒),,,
-シーシーアイホールディングス株式会社,https://cci-corporation.com,https://cci-corporation.com|https://www.ccig.co.jp,cci-corporation,,エラー,"[一時的失敗 1/3] Locator.click: Timeout 30000ms exceeded.
-Call log:
-  - waiting for locator(""[id*=\""tab-1\""]:has-text(\""生成\"")"").first",,,
+シーシーアイホールディングス株式会社,https://cci-corporation.com,https://cci-corporation.com|https://www.ccig.co.jp,cci-corporation,,エラー,コンテンツ生成がタイムアウト (300.0秒),,,
 ショウケンガリレイ株式会社,https://galilei-shoken.co.jp,https://galilei-shoken.co.jp,galilei-shoken,,エラー,コンテンツ生成がタイムアウト (300.0秒),,,
 シンコール株式会社,https://www.sincol.co.jp,https://www.sincol.co.jp|https://sincol-group.jp|https://www.sincol-kys.co.jp|https://sincol-it.jp|https://www.o-sincol.co.jp,sincol,,エラー,コンテンツ生成がタイムアウト (300.0秒),,,
 スターキャット株式会社,https://www.starcat.co.jp,https://www.starcat.co.jp,starcat,,エラー,生成完了検出後、FAQ実体がページに現れません (パターン一致: 1件、120s経過)。生成失敗 or 別企業のデータ残存疑い。スクショ: screenshots/gen_verify_fail_starcat.png,,,
