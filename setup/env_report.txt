@@ -1,18 +1,18 @@
 ﻿
 ========== 基本ツールのインストール状況 ==========
 [ OK ] Git                            git version 2.54.0.windows.1
-[ OK ] Python (python)                Python 3.15.0b1
-[ OK ]   └ 実体パス                       C:\Users\NC00016149\AppData\Local\Programs\Python\Python315\python.exe
-[ OK ] pip                            pip 26.1.1 from C:\Users\NC00016149\AppData\Local\Programs\Python\Python315\Lib\site-packages\pip (python 3.15)
+[ OK ] Python (py)                    Python 3.14.5
+[ OK ]   └ 実体パス                       C:\Users\nc00014101\AppData\Local\Programs\Python\Launcher\py.exe
+[ OK ] pip                            pip 26.1.1 from C:\Users\nc00014101\AppData\Local\Programs\Python\Python314\Lib\site-packages\pip (python 3.14)
 [ OK ] VSCode (code)                  v
 [WARN] Node.js                        未インストール (任意。Playwright Python版だけなら不要)
 
 ========== 仮想環境 (.venv) 確認 ==========
-[ OK ] .venv                          Python 3.12.10
-[ OK ]   └ パス                         C:\Users\NC00016149\DOCdemo_update_project\.venv\Scripts\python.exe
+[ OK ] .venv                          Python 3.14.5
+[ OK ]   └ パス                         C:\Users\nc00014101\Desktop\DOCdemo\DOCdemo_update_project\.venv\Scripts\python.exe
 
 ========== Pythonパッケージ (requirements.txt) ==========
-[ OK ] playwright                     v1.59.0
+[ OK ] playwright                     v1.60.0
 [ OK ] gspread                        v6.2.1
 [ OK ] openpyxl                       v3.1.5
 [ OK ] python-dotenv                  v1.2.2
@@ -23,17 +23,17 @@
 [ OK ] google-auth                    v2.53.0
 
 ========== Playwright ブラウザ ==========
-[ OK ] .links                         C:\Users\NC00016149\AppData\Local\ms-playwright\.links
-[ OK ] chromium-1217                  C:\Users\NC00016149\AppData\Local\ms-playwright\chromium-1217
-[ OK ] chromium_headless_shell-1217   C:\Users\NC00016149\AppData\Local\ms-playwright\chromium_headless_shell-1217
-[ OK ] ffmpeg-1011                    C:\Users\NC00016149\AppData\Local\ms-playwright\ffmpeg-1011
-[ OK ] firefox-1511                   C:\Users\NC00016149\AppData\Local\ms-playwright\firefox-1511
-[ OK ] webkit-2272                    C:\Users\NC00016149\AppData\Local\ms-playwright\webkit-2272
-[ OK ] winldd-1007                    C:\Users\NC00016149\AppData\Local\ms-playwright\winldd-1007
+[ OK ] .links                         C:\Users\nc00014101\AppData\Local\ms-playwright\.links
+[ OK ] chromium-1223                  C:\Users\nc00014101\AppData\Local\ms-playwright\chromium-1223
+[ OK ] chromium_headless_shell-1223   C:\Users\nc00014101\AppData\Local\ms-playwright\chromium_headless_shell-1223
+[ OK ] ffmpeg-1011                    C:\Users\nc00014101\AppData\Local\ms-playwright\ffmpeg-1011
+[ OK ] firefox-1522                   C:\Users\nc00014101\AppData\Local\ms-playwright\firefox-1522
+[ OK ] webkit-2287                    C:\Users\nc00014101\AppData\Local\ms-playwright\webkit-2287
+[ OK ] winldd-1007                    C:\Users\nc00014101\AppData\Local\ms-playwright\winldd-1007
 
 ========== Git ユーザー設定 ==========
-[ OK ] user.name                      kinyatanaka-code
-[ OK ] user.email                     kinya.tanaka@neo-career.co.jp
+[ OK ] user.name                      yubradminaba-netizen
+[ OK ] user.email                     yubrad.minaba@neo-career.co.jp
 
 ========== サマリ ==========
 

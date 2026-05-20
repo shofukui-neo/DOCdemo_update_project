@@ -61,17 +61,39 @@ if (Test-Command git) {
 
 # Python (python / py 両方を確認)
 $pythonCmd = $null
-if (Test-Command python) { $pythonCmd = "python" }
-elseif (Test-Command py)  { $pythonCmd = "py" }
+$pythonPath = $null
+foreach ($candidate in @("python", "py")) {
+    if (-not (Test-Command $candidate)) { continue }
+    try {
+        $candidateVer = Get-VersionSafe $candidate --version
+        if ($candidateVer) {
+            $pythonCmd = $candidate
+            $pythonPath = (Get-Command $candidate).Source
+            break
+        }
+    } catch {
+        # broken stub or invalid python command; 次の候補を試す
+    }
+}
 
-if ($pythonCmd) {
+if (-not $pythonCmd) {
+    Write-Item "Python" "NG" "未インストール (winget install --id Python.Python.3.12)"
+} else {
+    if ($pythonCmd -eq "python" -and $pythonPath -match "WindowsApps" -and (Test-Command py)) {
+        try {
+            $candidateVer = Get-VersionSafe py --version
+            if ($candidateVer) {
+                $pythonCmd = "py"
+                $pythonPath = (Get-Command py).Source
+            }
+        } catch {
+            # py の確認に失敗しても python を使い続ける
+        }
+    }
+
     $ver = Get-VersionSafe $pythonCmd --version
     Write-Item "Python ($pythonCmd)" "OK" $ver
-    # PATHに入っているか
-    $path = (Get-Command $pythonCmd).Source
-    Write-Item "  └ 実体パス" "OK" $path
-} else {
-    Write-Item "Python" "NG" "未インストール (winget install --id Python.Python.3.12)"
+    Write-Item "  └ 実体パス" "OK" $pythonPath
 }
 
 # pip
@@ -80,7 +102,17 @@ if ($pythonCmd) {
     if ($LASTEXITCODE -eq 0) {
         Write-Item "pip" "OK" $pipOut.Trim()
     } else {
-        Write-Item "pip" "NG" "python -m ensurepip で復旧可能"
+        if ($pythonCmd -ne "py" -and (Test-Command py)) {
+            $pipOut = & py -m pip --version 2>&1 | Out-String
+            if ($LASTEXITCODE -eq 0) {
+                $pythonCmd = "py"
+                Write-Item "pip" "OK" $pipOut.Trim()
+            } else {
+                Write-Item "pip" "NG" "python -m ensurepip で復旧可能"
+            }
+        } else {
+            Write-Item "pip" "NG" "python -m ensurepip で復旧可能"
+        }
     }
 }
 
