@@ -161,6 +161,25 @@ async def wait_for_server_recovery(
         await asyncio.sleep(min(poll_interval_seconds, max(remaining, 1)))
 
 
+# 生成完了の正シグナル (画面上の成功メッセージ)。
+# 「✅ コンテンツが正常に生成されました！」「31個のFAQを生成しました」
+# 「企業情報が正常に生成されました」等が画面に出ていれば、
+# たとえ st.status のラベルに「FAQを生成中…」が居残っていても
+# 「生成は完了している」と判定するためのオーバーライド用パターン。
+GENERATION_COMPLETE_PATTERN = re.compile(
+    r"("
+    r"コンテンツが正常に生成されました|"
+    r"企業情報が正常に生成されました|"
+    r"FAQを生成しました|"           # 「31個のFAQを生成しました」等
+    r"生成されたFAQ|"
+    r"生成された企業情報|"
+    r"生成完了|生成が完了|"
+    r"保存可能|保存準備|"
+    r"プレビューで確認|プレビュー・保存で確認"
+    r")"
+)
+
+
 class WebAppOperator:
     """
     Webアプリ管理画面を自動操作するクラス。
@@ -1376,6 +1395,14 @@ class WebAppOperator:
         last_match_count = 0
         last_progress_log_ms = -15000
 
+        # 修正 (2026-05-20):
+        #   FAQ 実体は「生成」タブには現れず、「プレビュー・保存」タブに描画される。
+        #   旧実装は max_ms 待ってからフォールバックでタブ切替していたため、
+        #   毎回 max_ms (= 180s) を無駄にしていた。
+        #   → 完了シグナル検出時点で即タブ切替する。
+        preview_switched = False
+        completion_signal_logged = False
+
         while True:
             try:
                 main = self.page.locator(
@@ -1392,6 +1419,47 @@ class WebAppOperator:
             in_progress_still = bool(
                 page_text and in_progress_pattern.search(page_text)
             )
+
+            # オーバーライド (2026-05-20):
+            #   st.status(state="complete") はラベル文字列を維持するため、
+            #   画面に「FAQを生成中」等が残っても完了済みのケースがある。
+            #   完了正シグナル ("✅ コンテンツが正常に生成されました" 等) が
+            #   本文にあれば、in_progress 居残りを無視して検証に進む。
+            completion_present = bool(
+                page_text and GENERATION_COMPLETE_PATTERN.search(page_text)
+            )
+            if in_progress_still and completion_present:
+                if not completion_signal_logged:
+                    logger.info(
+                        "  [検証] 完了シグナルを検出 — in_progress 居残りを無視"
+                    )
+                    completion_signal_logged = True
+                in_progress_still = False
+
+            # 完了シグナル検出 → 即「プレビュー・保存」タブに切替
+            # (FAQ 実体は preview タブで描画されるため、待っても無駄)
+            if completion_present and not preview_switched:
+                try:
+                    await self._click_tab_by_text("プレビュー", "保存")
+                    await self.page.wait_for_timeout(2000)
+                    await self._wait_for_streamlit_load()
+                    preview_switched = True
+                    logger.info(
+                        "  [検証] 完了シグナル検出 → 「プレビュー・保存」タブに切替"
+                    )
+                    # 切替後のテキストを再取得
+                    try:
+                        if await main.count() > 0:
+                            page_text = await main.first.inner_text(timeout=3000)
+                        else:
+                            page_text = await self.page.locator("body").inner_text(
+                                timeout=3000
+                            )
+                    except Exception:
+                        pass
+                except Exception as e:
+                    logger.debug(f"  プレビュータブ切替で例外 (続行): {e}")
+
             if in_progress_still:
                 if gen_tail_elapsed_ms - last_progress_log_ms >= 15000:
                     logger.info(
@@ -1677,6 +1745,16 @@ class WebAppOperator:
             still_running = bool(
                 page_text and in_progress_pattern.search(page_text)
             )
+
+            # オーバーライド (2026-05-20):
+            #   完了正シグナルが本文にあれば、in_progress 居残りを無視。
+            #   st.status(state="complete") のラベル残存で 300秒待ちにならないように。
+            if still_running and page_text and GENERATION_COMPLETE_PATTERN.search(page_text):
+                logger.info(
+                    f"  [{source}] 完了シグナルを検出 — 居残りを無視して継続"
+                )
+                still_running = False
+
             if not still_running:
                 if elapsed_ms > 0:
                     logger.info(
@@ -2038,11 +2116,13 @@ class WebAppOperator:
         """
         logger.info(f"  [{tab_label}タブ] 検証開始")
 
+        clicked = False
+
+        # 経路1: タブ (旧 UI 用 / 互換)
         tab_locators = self.page.locator(
             "[data-baseweb='tab'], [role='tab'], button[role='tab']"
         )
         tab_count = await tab_locators.count()
-        clicked = False
 
         for i in range(tab_count):
             try:
@@ -2057,34 +2137,121 @@ class WebAppOperator:
             except Exception:
                 continue
 
+        # 経路2: ラジオボタン (現行 Streamlit UI のコンテンツ管理ページは
+        #  「📁 FAQ管理 / 📁 企業情報 / 📊 コンテンツ分析 / 🔖 バージョン履歴」
+        #  のラジオでセクション切替する)
+        if not clicked:
+            for kw in tab_keywords:
+                try:
+                    radio_option = self.page.locator(
+                        "[data-testid='stRadio'] label"
+                    ).filter(has_text=kw)
+                    if await radio_option.count() == 0:
+                        continue
+                    await radio_option.first.click()
+                    await self.page.wait_for_timeout(1500)
+                    await self._wait_for_streamlit_load()
+                    logger.info(
+                        f"  [{tab_label}タブ] ラジオボタンで選択: 「{kw}」"
+                    )
+                    clicked = True
+                    break
+                except Exception:
+                    continue
+
         if not clicked:
             logger.warning(
-                f"  [{tab_label}タブ] が見つかりません（タブ未表示の可能性）"
+                f"  [{tab_label}タブ] が見つかりません（タブ/ラジオ未表示の可能性）"
             )
-            return False, "タブが見つからない"
+            return False, "タブ/ラジオが見つからない"
 
-        # タブパネル本文を取得 (サイドバー等を除外)
-        panel_text = await self._get_active_tab_panel_text()
-
+        # 修正 (2026-05-20):
+        #   ラジオ UI のセクション (例: 企業情報) は内部に Edit/Preview タブを
+        #   持ち、Edit モードの本文は <textarea> の value に入るため
+        #   inner_text では取得できない上、Streamlit の再描画とのレースで
+        #   inner_text が一時的に空になることがある。
+        #   → get_by_text() で DOM 内テキストを直接照合し、最大 5秒まで
+        #     リトライする。それでも見つからない場合のみ未保存と判定。
         screenshot_path = (
             f"screenshots/tab_{tab_label}_{company.enterprise_id}.png"
         )
+
+        async def _has_company_text() -> bool:
+            scope = self.page.locator(
+                "main, [data-testid='stMain'], section[role='main']"
+            )
+            if await scope.count() == 0:
+                scope = self.page.locator("body")
+            for needle in (company.enterprise_id, company.name):
+                if not needle:
+                    continue
+                try:
+                    if await scope.first.get_by_text(needle, exact=False).count() > 0:
+                        return True
+                except Exception:
+                    pass
+                # textarea の value (Edit モード markdown 等) も検証
+                try:
+                    textareas = scope.first.locator("textarea")
+                    ta_count = await textareas.count()
+                    for ti in range(ta_count):
+                        try:
+                            val = await textareas.nth(ti).input_value(timeout=1000)
+                        except Exception:
+                            continue
+                        if val and needle in val:
+                            return True
+                except Exception:
+                    pass
+            return False
+
+        in_company = False
+        retry_max = 5
+        for retry_i in range(retry_max):
+            if await _has_company_text():
+                in_company = True
+                break
+            await self.page.wait_for_timeout(1000)
+
         await self.page.screenshot(path=screenshot_path)
 
-        # 1. 対象企業の名前/IDが本文に出現するか
-        in_company = (
-            (company.enterprise_id and company.enterprise_id in panel_text)
-            or (company.name and company.name in panel_text)
-        )
         if not in_company:
             logger.warning(
                 f"  [WARN] [{tab_label}タブ] 企業名/IDを確認できませんでした "
-                f"(スクショ: {screenshot_path})"
+                f"({retry_max}回リトライ後、スクショ: {screenshot_path})"
             )
             return False, "対象企業の名前/IDがタブ本文に見つからない"
 
+        # 実体コンテンツ検証用に main 全体 + textarea を合算
+        try:
+            main = self.page.locator(
+                "main, [data-testid='stMain'], section[role='main']"
+            )
+            main_text = (
+                await main.first.inner_text(timeout=3000)
+                if await main.count() > 0 else ""
+            )
+        except Exception:
+            main_text = ""
+        textarea_values = []
+        try:
+            textareas = self.page.locator(
+                "main textarea, [data-testid='stMain'] textarea"
+            )
+            ta_count = await textareas.count()
+            for ti in range(ta_count):
+                try:
+                    val = await textareas.nth(ti).input_value(timeout=1500)
+                except Exception:
+                    continue
+                if val:
+                    textarea_values.append(val)
+        except Exception:
+            pass
+        combined_text = "\n".join(t for t in (main_text, *textarea_values) if t)
+
         # 2. タブパネル内にコンテンツの実体があるか (未保存検出)
-        if not self._tab_has_substantive_content(panel_text, tab_label):
+        if not self._tab_has_substantive_content(combined_text, tab_label):
             logger.warning(
                 f"  [WARN] [{tab_label}タブ] 本文の実体コンテンツが確認できません "
                 f"(未保存疑い、スクショ: {screenshot_path})"
@@ -2643,18 +2810,7 @@ class WebAppOperator:
         #   - 「✅ 生成された企業情報」「企業情報が正常に生成されました」
         #   旧パターン (生成完了 / 保存可能 等) はこの画面には出ないため
         #   完了検出が永続マッチに頼って 300秒タイムアウトしていた。
-        completion_pattern = re.compile(
-            r"("
-            r"コンテンツが正常に生成されました|"
-            r"企業情報が正常に生成されました|"
-            r"FAQを生成しました|"           # 「31個のFAQを生成しました」等
-            r"生成されたFAQ|"
-            r"生成された企業情報|"
-            r"生成完了|生成が完了|"
-            r"保存可能|保存準備|"
-            r"プレビューで確認|プレビュー・保存で確認"
-            r")"
-        )
+        completion_pattern = GENERATION_COMPLETE_PATTERN
 
         # フェーズ1: スピナー出現を待つ (出なくても最低待機後に消失検出へ移行)
         spinner_seen = False
